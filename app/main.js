@@ -2,7 +2,7 @@ import React, {Component} from 'react-native'
 import {Provider} from 'react-redux'
 import configureStore from './configureStore'
 
-import Home from './screens/Home'
+import App from './screens'
 
 const store = configureStore()
 
@@ -10,7 +10,7 @@ class Root extends Component {
   render () {
     return (
       <Provider store={store}>
-        <Home />
+        <App />
       </Provider>
     )
   }
