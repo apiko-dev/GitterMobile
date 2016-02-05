@@ -1,0 +1,23 @@
+{
+  "name": "gittermobile",
+  "version": "0.0.1",
+  "description": "Gitter mobile client for both Android and iOS",
+  "author": "Terry Sahaidak <terry@sahaidak.com> (http://sahaidak.com)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/terrysahaidak/gittermobile.git"
+  },
+  "bugs": {
+    "url": "https://github.com/terrysahaidak/gittermobile/issues"
+  },
+  "homepage": "https://github.com/terrysahaidak/gittermobile#readme",
+  "private": true,
+  "scripts": {
+    "start": "sh node_modules/react-native/packager/packager.sh",
+    "android:check": "adb devices && adb reverse tcp:8081 tcp:8081",
+    "android": "npm run android:check && react-native run-android"
+  },
+  "dependencies": {
+    "react-native": "^0.19.0"
+  }
+}
