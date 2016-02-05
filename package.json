@@ -18,6 +18,12 @@
     "android": "npm run android:check && react-native run-android"
   },
   "dependencies": {
-    "react-native": "^0.19.0"
+    "lodash": "^4.2.1",
+    "react-native": "^0.19.0",
+    "react-redux": "^4.3.0",
+    "redux": "^3.2.1",
+    "redux-logger": "^2.5.0",
+    "redux-thunk": "^1.0.3",
+    "remote-redux-devtools": "^0.1.1"
   }
 }
