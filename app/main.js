@@ -1,4 +1,4 @@
-import React, {Component, AsyncStorage} from 'react-native'
+import React, {Component} from 'react-native'
 import {Provider} from 'react-redux'
 import configureStore from './configureStore'
 
@@ -11,7 +11,7 @@ const store = configureStore()
 store.dispatch(init())
 
 class Root extends Component {
-  render () {
+  render() {
     return (
       <Provider store={store}>
         <App />

@@ -1,0 +1,22 @@
+{
+  "parser": "babel-eslint",
+  "extends": "airbnb",
+  "env": {
+    "browser": true,
+    "node": true,
+    "jasmine": true
+  },
+  "rules": {
+    "no-use-before-define": [2, "nofunc"],
+    "object-curly-spacing": 0,
+    "react/jsx-indent-props": 0,
+    "react/jsx-closing-bracket-location": [2, "after-props"],
+    "react/wrap-multilines": 0,
+    "new-cap": 0,
+    "indent": [2, 2],
+    "semi": 0,
+    "comma-dangle": [1, "never"],
+    "no-else-return": 0,
+    "no-unused-vars": 1
+  }
+}

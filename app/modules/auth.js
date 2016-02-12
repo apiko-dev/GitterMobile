@@ -11,7 +11,6 @@ export const LOGIN_USER = 'auth/LOGIN_USER'
  */
 
 
-
 /**
  * Reducer
  */
@@ -25,21 +24,20 @@ const initialState = {
 
 export default function auth(state = initialState, action) {
   switch (action.type) {
-    case INITIALIZED:
-    {
-      if (!!action.token) {
-        return {...state,
-          loginedIn: true,
-          token: action.token
-        }
-      } else {
-        return {...state,
-          error: true,
-          errors: action.error
-        }
+  case INITIALIZED: {
+    if (!!action.token) {
+      return {...state,
+        loginedIn: true,
+        token: action.token
+      }
+    } else {
+      return {...state,
+        error: true,
+        errors: action.error
       }
     }
-    default:
-      return state
+  }
+  default:
+    return state
   }
 }

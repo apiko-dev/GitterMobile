@@ -15,7 +15,8 @@
   "scripts": {
     "start": "sh node_modules/react-native/packager/packager.sh",
     "android:check": "adb devices && adb reverse tcp:8081 tcp:8081",
-    "android": "npm run android:check && react-native run-android"
+    "android": "npm run android:check && react-native run-android",
+    "lint": "node node_modules/eslint/bin/eslint -c .eslintrc ./"
   },
   "dependencies": {
     "lodash": "^4.2.1",
@@ -25,5 +26,11 @@
     "redux-logger": "^2.5.0",
     "redux-thunk": "^1.0.3",
     "remote-redux-devtools": "^0.1.1"
+  },
+  "devDependencies": {
+    "eslint": "~1.10.3",
+    "eslint-config-airbnb": "~2.1.1",
+    "eslint-plugin-react": "~3.13.1",
+    "babel-eslint": "~4.1.6"
   }
 }
