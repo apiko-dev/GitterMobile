@@ -1,10 +1,8 @@
 import React, {
   Component,
-  StyleSheet,
   PropTypes
 } from 'react-native'
 import {connect} from 'react-redux'
-
 
 import MainNavigator from './MainNavigator'
 import LoginScreen from './LoginScreen'
@@ -29,11 +27,6 @@ App.propTypes = {
   token: PropTypes.string
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1
-  }
-})
 
 export default connect(state => {
   const {isLoginedIn, token} = state.auth

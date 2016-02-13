@@ -1,37 +1,70 @@
 import React, {
   Component,
-  StyleSheet,
-  Text,
-  View
+  PropTypes,
+  Navigator,
+  BackAndroid
 } from 'react-native'
+import s from '../styles/LoginStyles'
+import {connect} from 'react-redux'
+import LoginWelcome from '../components/LoginWelcome'
 
-export default class HomeScreen extends Component {
+const NAV_REF = 'navigator'
+
+class LoginScreen extends Component {
+  constructor(props) {
+    super(props)
+  }
+
+  componentWillMount() {
+    BackAndroid.addEventListener('hardwareBackPress', () => {
+      const navigator = this.refs[NAV_REF]
+      if (navigator && navigator.getCurrentRoutes().length > 1) {
+        navigator.pop()
+        return true
+      }
+      return false
+    })
+  }
+
+  componentWillUnmount() {
+    BackAndroid.removeEventListener('hardwareBackPress')
+  }
+
+  configureScene() {
+    return Navigator.SceneConfigs.FadeAndroid
+  }
+
+  renderScene(route, navigator) {
+    switch (route.name) {
+    case 'welcome':
+      return (
+        <LoginWelcome navigateTo={this.navigateTo} route={route}/>
+      )
+    default:
+      return (
+        <LoginWelcome navigateTo={this.navigateTo} route={route}/>
+      )
+    }
+  }
+
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Login screen.
-        </Text>
-      </View>
+      <Navigator
+        style={s.container}
+        ref={NAV_REF}
+        initialRoute={{name: 'welcome'}}
+        configureScene={this.configureScene}
+        renderScene={this.renderScene} />
     )
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF'
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5
-  }
-})
+LoginScreen.propTypes = {
+
+}
+
+function mapStateToProps(state) {
+  return {}
+}
+
+export default connect(mapStateToProps)(LoginScreen)
