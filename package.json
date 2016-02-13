@@ -21,6 +21,7 @@
   "dependencies": {
     "lodash": "^4.2.1",
     "react-native": "^0.20.0-rc1",
+    "react-native-material-kit": "^0.3.0",
     "react-redux": "^4.3.0",
     "redux": "^3.2.1",
     "redux-logger": "^2.5.0",

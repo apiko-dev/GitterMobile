@@ -1,3 +1,4 @@
 rootProject.name = 'gittermobile'
 
-include ':app'
+include ':app', ':RNMaterialKit'
+project(':RNMaterialKit').projectDir = file('../node_modules/react-native-material-kit/android')
