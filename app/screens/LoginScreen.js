@@ -7,12 +7,16 @@ import React, {
 import s from '../styles/LoginStyles'
 import {connect} from 'react-redux'
 import LoginWelcome from '../components/LoginWelcome'
+import LoginByToken from '../components/LoginByToken'
 
 const NAV_REF = 'navigator'
 
 class LoginScreen extends Component {
   constructor(props) {
     super(props)
+
+    this.renderScene = this.renderScene.bind(this)
+    this.handleByToken = this.handleByToken.bind(this)
   }
 
   componentWillMount() {
@@ -34,11 +38,19 @@ class LoginScreen extends Component {
     return Navigator.SceneConfigs.FadeAndroid
   }
 
+  handleByToken() {
+    this.refs[NAV_REF].push({name: 'byToken'})
+  }
+
   renderScene(route, navigator) {
     switch (route.name) {
     case 'welcome':
       return (
-        <LoginWelcome navigateTo={this.navigateTo} route={route}/>
+        <LoginWelcome onToken={this.handleByToken.bind(this)}/>
+      )
+    case 'byToken':
+      return (
+        <LoginByToken navigateTo={this.navigateTo} route={route}/>
       )
     default:
       return (

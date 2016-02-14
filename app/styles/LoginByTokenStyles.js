@@ -1,4 +1,4 @@
-import {StyleSheet, Dimensions} from 'react-native'
+import {StyleSheet} from 'react-native'
 import backgroundImage from './common/BackgroundImage'
 import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault
@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
   container: {
     ...backgroundImage,
     justifyContent: 'space-around',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   logo: {
     fontSize: 40,
@@ -20,8 +20,8 @@ const styles = StyleSheet.create({
     color: 'white',
     lineHeight: 40
   },
-  buttonGroup: {
-    flexDirection: 'row'
+  group: {
+    // flexDirection: 'column'
   },
   buttonStyle: {
     margin: 10,
@@ -36,6 +36,10 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontWeight: 'bold'
+  },
+  textfield: {
+    width: 250,
+    height: 40
   }
 })
 

@@ -27,15 +27,15 @@ export default class LoginWelcome extends Component {
             style={s.buttonStyle}
             onPress={() => {}}>
             <Text pointerEvents="none"
-                  style={{color: 'white', fontWeight: 'bold'}}>
+              style={s.buttonText}>
               Login by WebView
             </Text>
           </MKButton>
           <MKButton
             style={s.buttonStyle}
-            onPress={() => {}}>
+            onPress={() => this.props.onToken()}>
             <Text pointerEvents="none"
-                  style={{color: 'white', fontWeight: 'bold'}}>
+              style={s.buttonText}>
               Login by token
             </Text>
           </MKButton>
@@ -46,5 +46,5 @@ export default class LoginWelcome extends Component {
 }
 
 LoginWelcome.propTypes = {
-
+  onToken: PropTypes.func.isRequired
 }
