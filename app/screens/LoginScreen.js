@@ -6,6 +6,8 @@ import React, {
 } from 'react-native'
 import s from '../styles/LoginStyles'
 import {connect} from 'react-redux'
+import {bindActionCreators} from 'redux'
+import {loginByToken} from '../modules/auth'
 import LoginWelcome from '../components/LoginWelcome'
 import LoginByToken from '../components/LoginByToken'
 
@@ -46,15 +48,15 @@ class LoginScreen extends Component {
     switch (route.name) {
     case 'welcome':
       return (
-        <LoginWelcome onToken={this.handleByToken.bind(this)}/>
+        <LoginWelcome onToken={this.handleByToken.bind(this)} />
       )
     case 'byToken':
       return (
-        <LoginByToken navigateTo={this.navigateTo} route={route}/>
+        <LoginByToken onSubmit={this.props.loginByToken} />
       )
     default:
       return (
-        <LoginWelcome navigateTo={this.navigateTo} route={route}/>
+        <LoginWelcome onToken={this.handleByToken.bind(this)} />
       )
     }
   }
@@ -72,11 +74,13 @@ class LoginScreen extends Component {
 }
 
 LoginScreen.propTypes = {
-
+  loginByToken: PropTypes.func.isRequired
 }
 
-function mapStateToProps(state) {
-  return {}
+function mapDispatchToProps(dispatch) {
+  return {
+    loginByToken: bindActionCreators(loginByToken, dispatch)
+  }
 }
 
-export default connect(mapStateToProps)(LoginScreen)
+export default connect(state => state, mapDispatchToProps)(LoginScreen)

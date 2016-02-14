@@ -40,7 +40,7 @@ export default class LoginByToken extends Component {
             onChangeText={(e) => this.setState({token: e})} />
           <MKButton
             style={s.buttonStyle}
-            onPress={() => console.warn(this.state.token)}>
+            onPress={() => this.props.onSubmit(this.state.token)}>
             <Text pointerEvents="none"
               style={s.buttonText}>
               Submit
@@ -53,5 +53,5 @@ export default class LoginByToken extends Component {
 }
 
 LoginByToken.propTypes = {
-  onSubmit: PropTypes.func
+  onSubmit: PropTypes.func.isRequired
 }

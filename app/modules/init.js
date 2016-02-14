@@ -1,4 +1,4 @@
-import {AsyncStorage} from 'react-native'
+import {getItem} from '../utils/storage'
 
 /**
  * Constants
@@ -13,7 +13,7 @@ export const INITIALIZED = 'init/INITIALIZED'
 export function init() {
   return async (dispatch, getState) => {
     try {
-      const token = await AsyncStorage.getItem('token')
+      const token = await getItem('token')
       dispatch({ type: INITIALIZED, token })
     } catch (error) {
       dispatch({ type: INITIALIZED, error })
