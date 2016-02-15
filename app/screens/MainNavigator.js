@@ -4,7 +4,6 @@ import React, {
   BackAndroid,
   Navigator,
   StyleSheet,
-  ToolbarAndroid,
   Text,
   View
 } from 'react-native'
@@ -24,6 +23,7 @@ export default class MainNavigator extends Component {
     this.renderDrawer = this.renderDrawer.bind(this)
     this.navigateTo = this.navigateTo.bind(this)
     this.navigateToFromDrawer = this.navigateToFromDrawer.bind(this)
+    this.onMenuTap = this.onMenuTap.bind(this)
     this.renderScene = this.renderScene.bind(this)
   }
 
@@ -66,6 +66,9 @@ export default class MainNavigator extends Component {
     }
   }
 
+  onMenuTap() {
+    this.refs.drawer.openDrawer()
+  }
 
   renderScene(route, navigator) {
     // this need to back button work
@@ -77,7 +80,10 @@ export default class MainNavigator extends Component {
     switch (route.name) {
     case 'home':
       return (
-        <HomeScreen navigateTo={this.navigateTo} route={route}/>
+        <HomeScreen
+          navigateTo={this.navigateTo}
+          route={route}
+          onMenuTap={this.onMenuTap.bind(this)}/>
       )
     default:
       return (
@@ -95,6 +101,7 @@ export default class MainNavigator extends Component {
 
   render() {
     const initialRoute = {name: 'home'}
+
     return (
       <DrawerLayoutAndroid
         ref="drawer"
