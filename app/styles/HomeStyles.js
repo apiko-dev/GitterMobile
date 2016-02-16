@@ -2,28 +2,38 @@ import {StyleSheet} from 'react-native'
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#F5FCFF',
+    backgroundColor: 'black',
 
     flex: 1
   },
   scrollContainer: {
 
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   toolbar: {
     height: 56,
-    elevation: 4
+    elevation: 8
   },
   welcome: {
-    fontSize: 20,
+
+    fontSize: 24,
     textAlign: 'center',
-    margin: 10
+    color: 'white',
+    paddingBottom: 20
   },
   instructions: {
     textAlign: 'center',
     color: '#333333',
     marginBottom: 5
+  },
+  heading: {
+    flex: 1
+  },
+  headingBgImage: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-end'
   }
 })
 

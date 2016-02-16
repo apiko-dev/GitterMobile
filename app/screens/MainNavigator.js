@@ -95,7 +95,9 @@ export default class MainNavigator extends Component {
 
   renderDrawer() {
     return (
-      <Text>DRAWER!</Text>
+      <View style={{flex: 1, backgroundColor: 'white'}}>
+        <Text>DRAWER!</Text>
+      </View>
     )
   }
 
