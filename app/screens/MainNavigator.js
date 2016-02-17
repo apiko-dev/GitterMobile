@@ -12,6 +12,7 @@ import {connect} from 'react-redux'
 import _ from 'lodash'
 
 import HomeScreen from './HomeScreen'
+import Drawer from './Drawer'
 
 // this need for handling android back hardware button press
 let _navigator
@@ -95,9 +96,7 @@ export default class MainNavigator extends Component {
 
   renderDrawer() {
     return (
-      <View style={{flex: 1, backgroundColor: 'white'}}>
-        <Text>DRAWER!</Text>
-      </View>
+      <Drawer navigator={this.navigateToFromDrawer.bind(this)}/>
     )
   }
 
