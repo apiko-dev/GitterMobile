@@ -1,4 +1,5 @@
-import Api from '../api/gitter'
+import * as Api from '../api/gitter'
+import {getRooms, getSuggestedRooms} from './rooms'
 
 /**
  * Constants
@@ -17,11 +18,13 @@ export const CURRENT_USER_FAILED = 'viewer/CURRENT_USER_FAILED'
  */
 export function getCurrentUser() {
   return async (dispatch, getState) => {
-    const {token} = getState.auth
+    const {token} = getState().auth
     try {
       dispatch({type: CURRENT_USER})
       const payload = await Api.currentUser(token)
-      dispatch({type: CURRENT_USER_RECEIVED, payload})
+      dispatch({type: CURRENT_USER_RECEIVED, payload: payload[0]})
+      dispatch(getRooms())
+      dispatch(getSuggestedRooms())
     } catch (error) {
       dispatch({CURRENT_USER_FAILED, error})
     }

@@ -2,6 +2,8 @@ export const THEMES = {
   gitterDefault: {
     name: 'Gitter default theme',
     colors: {
+      brand: '#E20354',
+
       sidebarBackground: '#383435',
 
       primaryButton: '#46bc99',

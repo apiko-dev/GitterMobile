@@ -15,7 +15,7 @@ class App extends Component {
   render() {
     const {isLoginedIn, token} = this.props
     if (!isLoginedIn && token) {
-      return <MainNavigator />
+      return <MainNavigator dispatch={this.props.dispatch}/>
     } else {
       return <LoginScreen />
     }
@@ -24,14 +24,16 @@ class App extends Component {
 
 App.propTypes = {
   isLoginedIn: PropTypes.bool,
-  token: PropTypes.string
+  token: PropTypes.string,
+  dispatch: PropTypes.func
 }
 
-
-export default connect(state => {
+function mapStateToProps(state) {
   const {isLoginedIn, token} = state.auth
   return {
     isLoginedIn,
     token
   }
-})(App)
+}
+
+export default connect(mapStateToProps)(App)

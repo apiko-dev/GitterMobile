@@ -1,4 +1,4 @@
-import Api from '../api/gitter'
+import * as Api from '../api/gitter'
 import normalize from '../utils/normalize'
 
 
@@ -24,10 +24,8 @@ export const SUGGESTED_ROOMS_FAILED = 'rooms/SUGGESTED_ROOMS_FAILED'
 export function getRooms() {
   return async (dispatch, getState) => {
     const {token} = getState().auth
-
+    dispatch({type: CURRENT_USER_ROOMS})
     try {
-      dispatch({type: CURRENT_USER_ROOMS})
-
       const payload = await Api.currentUserRooms(token)
       dispatch({type: CURRENT_USER_ROOMS_RECEIVED, payload})
     } catch (error) {
@@ -44,9 +42,9 @@ export function getSuggestedRooms() {
     const {token} = getState().auth
     const {id} = getState().viewer.user
 
-    try {
-      dispatch({type: SUGGESTED_ROOMS})
+    dispatch({type: SUGGESTED_ROOMS})
 
+    try {
       const payload = await Api.currentUserSuggested(token, id)
       dispatch({type: SUGGESTED_ROOMS_RECEIVED, payload})
     } catch (error) {

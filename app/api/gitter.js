@@ -24,3 +24,4 @@ function callApi(endpoint, token, options = {method: 'get'}) {
   })
 }
 // https://gitter.im/api/v1/user/555e610f15522ed4b3e0c169/suggestedRooms
+// https://gitter.im/api/v1/repo-info?repo=dev-ua%2Freactjs

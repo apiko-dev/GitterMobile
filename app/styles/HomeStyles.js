@@ -2,7 +2,7 @@ import {StyleSheet} from 'react-native'
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'black',
+    backgroundColor: 'white',
 
     flex: 1
   },
@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
   },
   welcome: {
 
-    fontSize: 24,
+    fontSize: 20,
     textAlign: 'center',
     color: 'white',
     paddingBottom: 20
@@ -30,10 +30,21 @@ const styles = StyleSheet.create({
   heading: {
     flex: 1
   },
-  headingBgImage: {
-    flex: 1,
+  foreground: {
     alignItems: 'center',
-    justifyContent: 'flex-end'
+    justifyContent: 'center'
+  },
+  bottom: {
+    flex: 1,
+    backgroundColor: 'white',
+    alignSelf: 'stretch',
+    paddingTop: 20
+  },
+  bottomSectionHeading: {
+    fontSize: 24,
+    color: 'black',
+    marginBottom: 10,
+    marginLeft: 20
   }
 })
 

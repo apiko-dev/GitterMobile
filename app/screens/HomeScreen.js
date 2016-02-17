@@ -1,90 +1,136 @@
 import React, {
   Component,
   PropTypes,
-  ScrollView,
   ToolbarAndroid,
+  Dimensions,
   Image,
   Text,
   View
 } from 'react-native'
-import _ from 'lodash'
+import {connect} from 'react-redux'
 import s from '../styles/HomeStyles'
-import {THEMES} from '../constants'
 import ParallaxScrollView from '../components/ParallaxScrollView'
+import HomeRoomItem from '../components/HomeRoomItem'
+import Loading from '../components/Loading'
+import {getCurrentUser} from '../modules/viewer'
+import {getRooms, getSuggestedRooms} from '../modules/rooms'
 
+import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault
 
-export default class HomeScreen extends Component {
+const PARALLAX_HEADER_HEIGHT = 400
+const LOADING_HEIGHT = Dimensions.get('window').height - PARALLAX_HEADER_HEIGHT
+
+class HomeScreen extends Component {
   constructor(props) {
     super(props)
-    this.onChangeHeaderVisibility = this.onChangeHeaderVisibility.bind(this)
-
-    this.state = {
-      visible: false
-    }
+    this.renderBottom = this.renderBottom.bind(this)
+    this.renderStickyHeader = this.renderStickyHeader.bind(this)
   }
 
   componentDidMount() {
+    const {dispatch} = this.props
+    dispatch(getCurrentUser())
   }
 
-  onChangeHeaderVisibility(value) {
-    if (value === this.state.visible) return
-
-    this.setState({visible: value})
-  }
-
-  renderOrgs() {
+  renderOrgs(orgs) {
+    if (orgs.length === 0) {
+      return null
+    }
     return (
-      <View style={{
-        margin: 4,
-        marginTop: 0,
-        elevation: 2,
-        backgroundColor: 'white',
-        alignSelf: 'stretch'
-      }}>
-        {_.range(50).map(_ => <View style={{height: 50}}><Text>Your organization</Text></View>)}
+      <View style={s.roomItem}>
+        <Text style={s.bottomSectionHeading}>Organizations</Text>
+        {orgs.map(org => <HomeRoomItem {...org} />)}
       </View>
+    )
+  }
+
+  renderFavorite(favorites) {
+    if (favorites.length === 0) {
+      return null
+    }
+    return (
+      <View style={s.roomItem}>
+        <Text style={s.bottomSectionHeading}>Favorites</Text>
+        {favorites.map(favorite => <HomeRoomItem {...favorite} />)}
+      </View>
+    )
+  }
+
+  renderSuggested(suggested) {
+    if (suggested.length === 0) {
+      return null
+    }
+    return (
+      <View style={s.roomItem}>
+        <Text style={s.bottomSectionHeading}>Suggested rooms</Text>
+        {suggested.map(room => <HomeRoomItem id={room.id} name={room.uri} oneToOne={false} {...room}/>)}
+      </View>
+    )
+  }
+
+  renderBottom() {
+    const {isLoadingRooms, isLoadingViewer, rooms, roomsIds, suggested} = this.props
+
+    if (isLoadingRooms || isLoadingViewer || !suggested) {
+      return (
+        <Loading
+          height={LOADING_HEIGHT}
+          color={colors.brand}/>
+      )
+    }
+
+    const favorites = roomsIds.filter(id => rooms[id].hasOwnProperty('favourite')).map(id => rooms[id])
+    const orgs = roomsIds.filter(id => (rooms[id].githubType === 'ORG')).map(id => rooms[id])
+
+    return (
+      <View style={s.bottom}>
+        {this.renderOrgs(orgs)}
+        {this.renderFavorite(favorites)}
+        {this.renderSuggested(suggested)}
+      </View>
+    )
+  }
+
+  renderStickyHeader() {
+    const actions = [
+      {title: 'Search', icon: require('image!ic_search_white_24dp'), show: 'always'}
+    ]
+    return (
+      <ToolbarAndroid
+        actions={actions}
+        navIcon={require('image!ic_menu_white_24dp')}
+        onIconClicked={this.props.onMenuTap}
+        title="Home"
+        titleColor="white"
+        style={s.toolbar} />
+    )
+  }
+
+  renderForeground() {
+    return (
+      <View style={[s.foreground, { height: PARALLAX_HEADER_HEIGHT}]}>
+         <Text style={s.welcome}>
+           Welcome to Gitter mobile!
+         </Text>
+       </View>
     )
   }
 
 
   render() {
-    const elevation = this.state.visible ? {height: 100} : {}
     return (
       <View style={s.container}>
-
           <ParallaxScrollView
-             backgroundColor={colors.green}
-             contentBackgroundColor="pink"
-             parallaxHeaderHeight={400}
+             backgroundColor={colors.brand}
+             contentBackgroundColor="white"
+             parallaxHeaderHeight={PARALLAX_HEADER_HEIGHT}
              pivotOffset={56}
+             renderStickyHeader={() => this.renderStickyHeader()}
+             renderBackground={() => <Image source={require('../images/gitter-background.jpg')}/>}
+             renderForeground={() => this.renderForeground()} >
 
-             renderStickyHeader={() => (
-               <ToolbarAndroid
-                 actions={[{title: 'Search', icon: require('image!ic_search_white_24dp'), show: 'always'}]}
-                 navIcon={require('image!ic_menu_white_24dp')}
-                 onIconClicked={this.props.onMenuTap}
-                 title="Home"
-                 titleColor="white"
-                 style={[s.toolbar, elevation]} />
-             )}
-
-             renderBackground={() => (
-               <Image
-                 source={require('../images/gitter-background.jpg')}/>
-             )}
-             renderForeground={() => (
-              <View style={{ height: 400, flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                 <Text style={s.welcome}>
-                   Welcome to Gitter mobile!
-                 </Text>
-               </View>
-             )}>
-
-          {this.renderOrgs()}
-          <Text style={s.instructions}>
-            Shake or press menu button for dev menu
-          </Text>
+          {this.renderBottom()}
         </ParallaxScrollView>
       </View>
     )
@@ -93,6 +139,31 @@ export default class HomeScreen extends Component {
 
 HomeScreen.propTypes = {
   onMenuTap: PropTypes.func.isRequired,
-  suggestedRooms: PropTypes.array,
-  favorites: PropTypes.array
+  isLoadingRooms: PropTypes.bool,
+  isLoadingViewer: PropTypes.bool,
+  userId: PropTypes.string,
+  rooms: PropTypes.object,
+  roomsIds: PropTypes.array,
+  suggested: PropTypes.array,
+  dispatch: PropTypes.func
 }
+
+HomeScreen.defaultProps = {
+  isLoadingRooms: true,
+  isLoadingViewer: true
+}
+
+function mapStateToProps(state) {
+  const {viewer, rooms} = state
+
+  return {
+    isLoadingRooms: rooms.isLoading,
+    isLoadingViewer: viewer.isLoading,
+    userId: viewer.user.id,
+    roomsIds: rooms.ids,
+    rooms: rooms.rooms,
+    suggested: rooms.suggestedRooms
+  }
+}
+
+export default connect(mapStateToProps)(HomeScreen)

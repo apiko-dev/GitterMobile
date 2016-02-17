@@ -1,5 +1,6 @@
 import React, {
   Component,
+  PropTypes,
   DrawerLayoutAndroid,
   BackAndroid,
   Navigator,
@@ -8,7 +9,6 @@ import React, {
   View
 } from 'react-native'
 import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux'
 import _ from 'lodash'
 
 import HomeScreen from './HomeScreen'
@@ -41,6 +41,9 @@ export default class MainNavigator extends Component {
     BackAndroid.removeEventListener('hardwareBackPress')
   }
 
+  onMenuTap() {
+    this.refs.drawer.openDrawer()
+  }
 
   navigateTo(route) {
     const routes = _navigator.getCurrentRoutes()
@@ -66,10 +69,6 @@ export default class MainNavigator extends Component {
     }
   }
 
-  onMenuTap() {
-    this.refs.drawer.openDrawer()
-  }
-
   renderScene(route, navigator) {
     // this need to back button work
     // also to pass navigator to Drawer component
@@ -83,7 +82,8 @@ export default class MainNavigator extends Component {
         <HomeScreen
           navigateTo={this.navigateTo}
           route={route}
-          onMenuTap={this.onMenuTap.bind(this)}/>
+          onMenuTap={this.onMenuTap.bind(this)}
+          dispatch={this.props.dispatch} />
       )
     default:
       return (
@@ -120,6 +120,10 @@ export default class MainNavigator extends Component {
       </DrawerLayoutAndroid>
     )
   }
+}
+
+MainNavigator.propTypes = {
+  dispatch: PropTypes.func
 }
 
 const styles = StyleSheet.create({
