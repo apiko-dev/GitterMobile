@@ -8,6 +8,9 @@ import {connect} from 'react-redux'
 import s from '../styles/DrawerStyles'
 import DrawerUserInfo from '../components/DrawerUserInfo'
 
+import {THEMES} from '../constants'
+const {colors} = THEMES.gitterDefault
+
 class Drawer extends Component {
   constructor(props) {
     super(props)
@@ -16,7 +19,7 @@ class Drawer extends Component {
   render() {
     const {user} = this.props
     return (
-      <View style={s.container}>
+      <View style={[s.container, {backgroundColor: colors.dark}]}>
         <DrawerUserInfo {...user}/>
       </View>
     )
