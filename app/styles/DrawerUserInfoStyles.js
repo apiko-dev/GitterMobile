@@ -10,8 +10,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: 'white'
+    elevation: 6
   },
   info: {
     marginLeft: 20,

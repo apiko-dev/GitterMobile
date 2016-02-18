@@ -189,7 +189,7 @@ class ParallaxScrollView extends Component {
     return (
       <Animated.View
         style={[styles.backgroundImage, {
-            backgroundColor: backgroundColor,
+            backgroundColor: styles.stickyHeaderColor,
             height: parallaxHeaderHeight,
             width: viewWidth,
             opacity: fadeOutBackground
@@ -276,7 +276,7 @@ class ParallaxScrollView extends Component {
     if (renderStickyHeader || renderFixedHeader) {
       const p = pivotPoint(parallaxHeaderHeight, stickyHeaderHeight, pivotOffset)
       const rgb = hexToRgb(backgroundColor)
-      const input = `rgba(${rgb},0)`
+      const input = `rgba(${rgb},0.0)`
       const output =  `rgba(${rgb},1.0)`
 
       return (
@@ -285,14 +285,14 @@ class ParallaxScrollView extends Component {
             renderStickyHeader
               ? (
                 <Animated.View
-                  style={{
-                  backgroundColor: scrollY.interpolate({
-                    inputRange: [(parallaxHeaderHeight / 4), p],
-                    outputRange: [input, output],
-                    extrapolate: 'clamp'
-                  }),
-                  height: stickyHeaderHeight
-                }}>
+                  style={[styles.stickyHeaderColor, {
+                    backgroundColor: scrollY.interpolate({
+                      inputRange: [(parallaxHeaderHeight / 4), p],
+                      outputRange: [input, output],
+                      extrapolate: 'clamp'
+                    }),
+                    height: stickyHeaderHeight
+                  }]}>
                   <Animated.View
                     style={{
                     transform: [{
@@ -322,7 +322,7 @@ class ParallaxScrollView extends Component {
 ParallaxScrollView.propTypes = IPropTypes;
 
 ParallaxScrollView.defaultProps = {
-  backgroundScrollSpeed: 20,
+  backgroundScrollSpeed: 3,
   backgroundColor: '#000',
   contentBackgroundColor: '#fff',
   fadeOutForeground: true,

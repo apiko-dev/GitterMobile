@@ -96,7 +96,9 @@ export default class MainNavigator extends Component {
 
   renderDrawer() {
     return (
-      <Drawer navigator={this.navigateToFromDrawer.bind(this)}/>
+      <Drawer
+        navigator={this.navigateToFromDrawer.bind(this)}
+        dispatch={this.props.dispatch} />
     )
   }
 

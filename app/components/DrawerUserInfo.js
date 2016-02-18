@@ -11,7 +11,7 @@ import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault
 
 
-const DrawerUserInfo = ({username, displayName, avatarUrlMedium}) => {
+const DrawerUserInfo = ({username, displayName, avatarUrlMedium, onLogOut}) => {
   return (
     <View style={[s.container,
       {
@@ -25,12 +25,13 @@ const DrawerUserInfo = ({username, displayName, avatarUrlMedium}) => {
           <Text style={[s.displayName, {color: 'white'}]}>{displayName}</Text>
           <Text style={[s.username, {color: 'white'}]}>@{username}</Text>
         </View>
+
         <TouchableNativeFeedback
-           background={TouchableNativeFeedback.SelectableBackgroundBorderless()}
-          onPress={() => console.warn('popup')}>
+          background={TouchableNativeFeedback.SelectableBackgroundBorderless()}
+          onPress={onLogOut}>
           <View style={s.buttonStyle}>
             <Image
-              source={require('image!ic_more_vert_white_24dp')}
+              source={require('image!ic_exit_to_app_white_24dp')}
               style={s.icon} />
           </View>
         </TouchableNativeFeedback>
@@ -42,7 +43,8 @@ const DrawerUserInfo = ({username, displayName, avatarUrlMedium}) => {
 DrawerUserInfo.propTypes = {
   username: PropTypes.string,
   displayName: PropTypes.string,
-  avatarUrlMedium: PropTypes.string
+  avatarUrlMedium: PropTypes.string,
+  onLogOut: PropTypes.func
 }
 
 export default DrawerUserInfo

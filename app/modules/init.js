@@ -1,4 +1,4 @@
-import {getItem} from '../utils/storage'
+import {getItem, removeItem} from '../utils/storage'
 
 /**
  * Constants

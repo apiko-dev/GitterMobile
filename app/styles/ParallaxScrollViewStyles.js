@@ -28,6 +28,9 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     backgroundColor: 'transparent'
+  },
+  stickyHeaderColor: {
+    backgroundColor: 'rgba(0, 0, 0, 0)'
   }
 });
 
