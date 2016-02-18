@@ -6,6 +6,7 @@ import React, {
 } from 'react-native'
 import {connect} from 'react-redux'
 import s from '../styles/DrawerStyles'
+import DrawerUserInfo from '../components/DrawerUserInfo'
 
 class Drawer extends Component {
   constructor(props) {
@@ -13,21 +14,23 @@ class Drawer extends Component {
   }
 
   render() {
+    const {user} = this.props
     return (
       <View style={s.container}>
-        <Text>DRAWER!</Text>
+        <DrawerUserInfo {...user}/>
       </View>
     )
   }
 }
 
 Drawer.propTypes = {
-  navigator: PropTypes.func.isRequired
+  navigator: PropTypes.func.isRequired,
+  user: PropTypes.object
 }
 
 function mapStateToProps(state) {
   return {
-    viewer: state.viewer
+    user: state.viewer.user
   }
 }
 

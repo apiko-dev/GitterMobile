@@ -26,7 +26,13 @@ export const THEMES = {
       blockquoteBorder: '#eee',
 
       codeInlineBorder: 'rgba(192,201,200,.4)',
-      codeInlineBackground: 'rgba(192,201,200,.2'
+      codeInlineBackground: 'rgba(192,201,200,.2',
+
+      darkRed: '#C10040',
+      raspberry: '#E20354',
+      white: '#ffffff',
+      gray: '#E0E0E0',
+      dark: '#424242'
     }
   }
 }

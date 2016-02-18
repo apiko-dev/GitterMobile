@@ -1,20 +1,17 @@
 import React, {
   Component,
   PropTypes,
+  TouchableNativeFeedback,
+  TextInput,
+  View,
   Text,
   Image
 } from 'react-native'
 import s from '../styles/LoginByTokenStyles'
-import {MKButton, MKTextField} from 'react-native-material-kit'
-import Link from './Link'
 
-const Textfield = MKTextField.textfield()
-  .withPlaceholder('Paste token here...')
-  .withStyle(s.textfield)
-  .withTextInputStyle({color: 'white'})
-  .withTintColor('white')
-  .withHighlightColor('white')
-  .build();
+import Link from './Link'
+import {THEMES} from '../constants'
+const {colors} = THEMES.gitterDefault
 
 export default class LoginByToken extends Component {
   constructor(props) {
@@ -35,17 +32,22 @@ export default class LoginByToken extends Component {
         to get your authentication token. Copy it and paste into the textinput below.
         </Text>
 
-          <Textfield
+          <TextInput
             value={this.state.token}
+            placeholder="Paste token here..."
+            style={s.textfield}
+            placeholderTextColor="white"
             onChangeText={(e) => this.setState({token: e})} />
-          <MKButton
-            style={s.buttonStyle}
+          <TouchableNativeFeedback
+            background={TouchableNativeFeedback.Ripple(colors.raspberry, false)}
             onPress={() => this.props.onSubmit(this.state.token)}>
-            <Text pointerEvents="none"
-              style={s.buttonText}>
-              Submit
-            </Text>
-          </MKButton>
+            <View style={[s.buttonStyle, {backgroundColor: colors.darkRed}]}>
+              <Text pointerEvents="none"
+                style={s.buttonText}>
+                Submit
+              </Text>
+            </View>
+          </TouchableNativeFeedback>
 
       </Image>
     )
