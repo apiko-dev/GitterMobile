@@ -1,9 +1,10 @@
 import {StyleSheet} from 'react-native'
-
+import ExtraDimensions from 'react-native-extra-dimensions-android'
+const STATUS_BAR_HEIGHT = ExtraDimensions.get('STATUS_BAR_HEIGHT')
 const styles = StyleSheet.create({
   container: {
-    height: 54,
-    paddingTop: 10,
+    height: 56 * 2 + STATUS_BAR_HEIGHT,
+    paddingTop: 10 + STATUS_BAR_HEIGHT,
     paddingBottom: 10,
     width: 300,
     flexDirection: 'row',

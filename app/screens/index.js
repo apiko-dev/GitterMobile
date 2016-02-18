@@ -4,6 +4,9 @@ import React, {
 } from 'react-native'
 import {connect} from 'react-redux'
 
+// import StatusBarAndroid from 'react-native-android-statusbar'
+// StatusBarAndroid.setARGB(0, 0, 0, 0)
+
 import MainNavigator from './MainNavigator'
 import LoginScreen from './LoginScreen'
 

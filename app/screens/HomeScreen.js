@@ -8,6 +8,7 @@ import React, {
   View
 } from 'react-native'
 import {connect} from 'react-redux'
+import ExtraDimensions from 'react-native-extra-dimensions-android'
 import s from '../styles/HomeStyles'
 import ParallaxScrollView from '../components/ParallaxScrollView'
 import HomeRoomItem from '../components/HomeRoomItem'
@@ -18,6 +19,7 @@ import {getRooms, getSuggestedRooms} from '../modules/rooms'
 import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault
 
+const STATUS_BAR_HEIGHT = ExtraDimensions.get('STATUS_BAR_HEIGHT')
 const PARALLAX_HEADER_HEIGHT = 400
 const LOADING_HEIGHT = Dimensions.get('window').height - PARALLAX_HEADER_HEIGHT
 
@@ -103,7 +105,7 @@ class HomeScreen extends Component {
         onIconClicked={this.props.onMenuTap}
         title="Home"
         titleColor="white"
-        style={s.toolbar} />
+        style={[s.toolbar, {paddingTop: STATUS_BAR_HEIGHT}]} />
     )
   }
 

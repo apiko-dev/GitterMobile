@@ -19,7 +19,7 @@ class Drawer extends Component {
   render() {
     const {user} = this.props
     return (
-      <View style={[s.container, {backgroundColor: colors.dark}]}>
+      <View style={[s.container, {backgroundColor: colors.gray}]}>
         <DrawerUserInfo {...user}/>
       </View>
     )

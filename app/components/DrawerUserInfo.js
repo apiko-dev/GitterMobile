@@ -10,9 +10,15 @@ import Avatar from './Avatar'
 import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault
 
+
 const DrawerUserInfo = ({username, displayName, avatarUrlMedium}) => {
   return (
-    <View style={[s.container, {backgroundColor: colors.raspberry, borderBottomColor: colors.darkRed}]}>
+    <View style={[s.container,
+      {
+        backgroundColor: colors.raspberry,
+        borderBottomColor: colors.darkRed
+      }
+    ]}>
       <Avatar src={avatarUrlMedium} />
 
         <View style={s.info}>
