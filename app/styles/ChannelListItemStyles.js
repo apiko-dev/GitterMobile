@@ -10,7 +10,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white'
   },
   headingContainer: {
-    marginLeft: 10
+    marginLeft: 10,
+    width: 210
   },
   heading: {
     fontSize: 12,
