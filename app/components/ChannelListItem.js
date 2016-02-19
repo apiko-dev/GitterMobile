@@ -22,7 +22,8 @@ const ChannelListItem = ({id, name, oneToOne, user, activeRoom, onRoomPress, unr
 
   return (
     <TouchableHighlight
-      onPress={onRoomPress.bind(this, id)}>
+      onPress={onRoomPress.bind(this, id)}
+      key={id}>
       <View style={[s.container,
         { backgroundColor: itemStyles.backgroundColor,
           elevation: itemStyles.elevation}]}

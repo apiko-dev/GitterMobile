@@ -9,8 +9,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderColor: 'rgba(0,0,0,0.1)',
     borderWidth: 0,
-    textAlign: 'center',
-    textAlignVertical: 'center',
     alignItems: 'center',
     justifyContent: 'center'
   },

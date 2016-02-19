@@ -13,8 +13,6 @@ import s from '../styles/HomeStyles'
 import ParallaxScrollView from '../components/ParallaxScrollView'
 import HomeRoomItem from '../components/HomeRoomItem'
 import Loading from '../components/Loading'
-import {getCurrentUser} from '../modules/viewer'
-import {getRooms, getSuggestedRooms} from '../modules/rooms'
 
 import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault
@@ -31,8 +29,6 @@ class HomeScreen extends Component {
   }
 
   componentDidMount() {
-    const {dispatch} = this.props
-    dispatch(getCurrentUser())
   }
 
   renderOrgs(orgs) {
