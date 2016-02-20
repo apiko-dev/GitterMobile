@@ -20,8 +20,10 @@ export function init() {
       dispatch({ type: INITIALIZED, token })
 
       await dispatch(getCurrentUser())
-      await dispatch(getRooms())
-      await dispatch(getSuggestedRooms())
+      await Promise.all([
+        dispatch(getRooms()),
+        dispatch(getSuggestedRooms())
+      ])
     } catch (error) {
       dispatch({ type: INITIALIZED, error })
     }

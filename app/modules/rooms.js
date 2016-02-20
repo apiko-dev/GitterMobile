@@ -1,5 +1,6 @@
 import * as Api from '../api/gitter'
 import normalize from '../utils/normalize'
+import {LOGOUT} from './auth'
 
 
 /**
@@ -104,6 +105,10 @@ export default function rooms(state = initialState, action) {
     return {...state,
       activeRoom: action.payload
     }
+  }
+
+  case LOGOUT: {
+    return Object.assign({}, initialState)
   }
 
   case SUGGESTED_ROOMS_FAILED:

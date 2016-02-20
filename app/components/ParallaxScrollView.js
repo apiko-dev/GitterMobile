@@ -36,19 +36,12 @@ const IPropTypes = {
   renderForeground: func,
   renderScrollComponent: func,
   renderStickyHeader: func,
-  stickyHeaderHeight: number,
   pivotOffset: number
 };
 
 class ParallaxScrollView extends Component {
   constructor(props) {
     super(props);
-    if (props.renderStickyHeader && !props.stickyHeaderHeight) {
-      console.warn('Property `stickyHeaderHeight` must be set if `renderStickyHeader` is used.');
-    }
-    if (props.renderParallaxHeader !== renderEmpty && !props.renderForeground) {
-      console.warn('Property `renderParallaxHeader` is deprecated. Use `renderForeground` instead.');
-    }
     this.state = {
       scrollY: new Animated.Value(0),
       viewHeight: window.height,

@@ -22,8 +22,7 @@ const ChannelListItem = ({id, name, oneToOne, user, activeRoom, onRoomPress, unr
 
   return (
     <TouchableHighlight
-      onPress={onRoomPress.bind(this, id)}
-      key={id}>
+      onPress={onRoomPress.bind(this, id)}>
       <View style={[s.container,
         { backgroundColor: itemStyles.backgroundColor,
           elevation: itemStyles.elevation}]}
@@ -48,8 +47,15 @@ const ChannelListItem = ({id, name, oneToOne, user, activeRoom, onRoomPress, unr
 }
 
 ChannelListItem.propTypes = {
-  // name: PropTypes.string,
-  // items: PropTypes.array
+  id: PropTypes.stings,
+  name: PropTypes.string,
+  oneToOne: PropTypes.bool,
+  user: PropTypes.object,
+  activeRoom: PropTypes.string,
+  onRoomPress: PropTypes.func,
+  unreadItems: PropTypes.number,
+  mentions: PropTypes.number,
+  lurk: PropTypes.bool
 }
 
 export default ChannelListItem

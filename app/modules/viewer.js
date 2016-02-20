@@ -1,5 +1,5 @@
 import * as Api from '../api/gitter'
-import {getRooms, getSuggestedRooms} from './rooms'
+import {LOGOUT} from './auth'
 
 /**
  * Constants
@@ -23,8 +23,6 @@ export function getCurrentUser() {
       dispatch({type: CURRENT_USER})
       const payload = await Api.currentUser(token)
       dispatch({type: CURRENT_USER_RECEIVED, payload: payload[0]})
-      dispatch(getRooms())
-      dispatch(getSuggestedRooms())
     } catch (error) {
       dispatch({CURRENT_USER_FAILED, error})
     }
@@ -35,14 +33,14 @@ export function getCurrentUser() {
  * Reducer
  */
 
-const initalState = {
+const initialState = {
   isLoading: false,
   error: false,
   errors: [],
   user: {}
 }
 
-export default function viewer(state = initalState, action) {
+export default function viewer(state = initialState, action) {
   switch (action.type) {
   case CURRENT_USER: {
     return {...state,
@@ -55,6 +53,10 @@ export default function viewer(state = initalState, action) {
       isLoading: false,
       user: action.payload
     }
+  }
+
+  case LOGOUT: {
+    return Object.assign({}, initialState)
   }
 
   case CURRENT_USER_FAILED: {

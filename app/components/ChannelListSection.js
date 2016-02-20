@@ -9,7 +9,7 @@ const ChannelListSection = ({name, items, onRoomPress, activeRoom}) => {
         <Text style={s.heading}>{name}</Text>
       </View>
       <View style={s.itemSection}>
-        {items && items.map(item => <ChannelListItem {...item} activeRoom={activeRoom} onRoomPress={onRoomPress}/>)}
+        {items && items.map(item => <ChannelListItem key={item.id} {...item} activeRoom={activeRoom} onRoomPress={onRoomPress}/>)}
       </View>
     </View>
   )

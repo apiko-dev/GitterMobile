@@ -38,7 +38,7 @@ class HomeScreen extends Component {
     return (
       <View style={s.roomItem}>
         <Text style={s.bottomSectionHeading}>Organizations</Text>
-        {orgs.map(org => <HomeRoomItem {...org} />)}
+        {orgs.map(org => <HomeRoomItem key={org.id} {...org} />)}
       </View>
     )
   }
@@ -50,7 +50,7 @@ class HomeScreen extends Component {
     return (
       <View style={s.roomItem}>
         <Text style={s.bottomSectionHeading}>Favorites</Text>
-        {favorites.map(favorite => <HomeRoomItem {...favorite} />)}
+        {favorites.map(favorite => <HomeRoomItem key={favorite.id}{...favorite} />)}
       </View>
     )
   }
@@ -62,7 +62,7 @@ class HomeScreen extends Component {
     return (
       <View style={s.roomItem}>
         <Text style={s.bottomSectionHeading}>Suggested rooms</Text>
-        {suggested.map(room => <HomeRoomItem id={room.id} name={room.uri} oneToOne={false} {...room}/>)}
+        {suggested.map(room => <HomeRoomItem key={room.id} id={room.id} name={room.uri} oneToOne={false} {...room}/>)}
       </View>
     )
   }

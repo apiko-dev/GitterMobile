@@ -13,7 +13,7 @@ export const LOGINED_IN_SUCCESS = 'auth/LOGINED_IN_SUCCESS'
 export const LOGIN_USER = 'auth/LOGIN_USER'
 export const LOGIN_USER_BY_TOKEN = 'auth/LOGIN_USER_BY_TOKEN'
 export const UNEXPECTED_ERROR = 'auth/UNEXPECTED_ERROR'
-export const LOG_OUT = 'auth/LOG_OUT'
+export const LOGOUT = 'auth/LOGOUT'
 
 /**
  * Action Creators
@@ -28,8 +28,10 @@ export function loginByToken(token) {
       dispatch({type: LOGIN_USER_BY_TOKEN, token})
 
       await dispatch(getCurrentUser())
-      await dispatch(getRooms())
-      await dispatch(getSuggestedRooms())
+      await Promise.all([
+        dispatch(getRooms()),
+        dispatch(getSuggestedRooms())
+      ])
 
       dispatch({LOGINED_IN_SUCCESS})
     } catch (err) {
@@ -42,9 +44,9 @@ export function onLogOut() {
   return async dispatch => {
     try {
       await removeItem('token')
-      dispatch({type: LOG_OUT})
+      dispatch({type: LOGOUT})
     } catch (error) {
-      console.warn("Can't sign out. Error: ", error)
+      console.warn("Can't logout. Error: ", error)
     }
   }
 }
@@ -95,7 +97,7 @@ export default function auth(state = initialState, action) {
     }
   }
 
-  case LOG_OUT: {
+  case LOGOUT: {
     return _.merge({}, state, initialState)
   }
   default:
