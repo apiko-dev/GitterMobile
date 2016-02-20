@@ -1,4 +1,6 @@
 import {StyleSheet} from 'react-native'
+import ExtraDimensions from 'react-native-extra-dimensions-android'
+const STATUS_BAR_HEIGHT = ExtraDimensions.get('STATUS_BAR_HEIGHT')
 
 const styles = StyleSheet.create({
   container: {
@@ -12,6 +14,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   toolbar: {
+    marginTop: STATUS_BAR_HEIGHT,
     height: 56,
     elevation: 8
   },

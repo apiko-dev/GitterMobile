@@ -15,9 +15,7 @@ export default class Link extends Component {
     return (
       <Text
         style={[s, {color: colors.link}, {fontSize}]}
-        onPress={() =>
-          Linking.openURL(to)
-        }>
+        onPress={() => Linking.openURL(to)}>
         {children}
       </Text>
     )

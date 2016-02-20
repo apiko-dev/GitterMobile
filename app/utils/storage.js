@@ -7,3 +7,7 @@ export function getItem(key) {
 export function setItem(key, value) {
   return AsyncStorage.setItem(key, value)
 }
+
+export function removeItem(key) {
+  return AsyncStorage.removeItem(key)
+}

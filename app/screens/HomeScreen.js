@@ -8,16 +8,16 @@ import React, {
   View
 } from 'react-native'
 import {connect} from 'react-redux'
+import ExtraDimensions from 'react-native-extra-dimensions-android'
 import s from '../styles/HomeStyles'
 import ParallaxScrollView from '../components/ParallaxScrollView'
 import HomeRoomItem from '../components/HomeRoomItem'
 import Loading from '../components/Loading'
-import {getCurrentUser} from '../modules/viewer'
-import {getRooms, getSuggestedRooms} from '../modules/rooms'
 
 import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault
 
+const STATUS_BAR_HEIGHT = ExtraDimensions.get('STATUS_BAR_HEIGHT')
 const PARALLAX_HEADER_HEIGHT = 400
 const LOADING_HEIGHT = Dimensions.get('window').height - PARALLAX_HEADER_HEIGHT
 
@@ -29,8 +29,6 @@ class HomeScreen extends Component {
   }
 
   componentDidMount() {
-    const {dispatch} = this.props
-    dispatch(getCurrentUser())
   }
 
   renderOrgs(orgs) {
@@ -40,7 +38,7 @@ class HomeScreen extends Component {
     return (
       <View style={s.roomItem}>
         <Text style={s.bottomSectionHeading}>Organizations</Text>
-        {orgs.map(org => <HomeRoomItem {...org} />)}
+        {orgs.map(org => <HomeRoomItem key={org.id} {...org} />)}
       </View>
     )
   }
@@ -52,7 +50,7 @@ class HomeScreen extends Component {
     return (
       <View style={s.roomItem}>
         <Text style={s.bottomSectionHeading}>Favorites</Text>
-        {favorites.map(favorite => <HomeRoomItem {...favorite} />)}
+        {favorites.map(favorite => <HomeRoomItem key={favorite.id}{...favorite} />)}
       </View>
     )
   }
@@ -64,7 +62,7 @@ class HomeScreen extends Component {
     return (
       <View style={s.roomItem}>
         <Text style={s.bottomSectionHeading}>Suggested rooms</Text>
-        {suggested.map(room => <HomeRoomItem id={room.id} name={room.uri} oneToOne={false} {...room}/>)}
+        {suggested.map(room => <HomeRoomItem key={room.id} id={room.id} name={room.uri} oneToOne={false} {...room}/>)}
       </View>
     )
   }
@@ -103,7 +101,7 @@ class HomeScreen extends Component {
         onIconClicked={this.props.onMenuTap}
         title="Home"
         titleColor="white"
-        style={s.toolbar} />
+        style={[s.toolbar, {paddingTop: STATUS_BAR_HEIGHT}]} />
     )
   }
 

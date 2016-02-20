@@ -20,7 +20,9 @@
   },
   "dependencies": {
     "lodash": "^4.2.1",
-    "react-native": "^0.20.0-rc1",
+    "react-native": "^0.20.0",
+    "react-native-android-statusbar": "^0.1.2",
+    "react-native-extra-dimensions-android": "^0.17.0",
     "react-native-material-kit": "^0.3.0",
     "react-native-parallax-scroll-view": "^0.17.4",
     "react-redux": "^4.3.0",

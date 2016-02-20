@@ -1,5 +1,6 @@
 import * as Api from '../api/gitter'
 import normalize from '../utils/normalize'
+import {LOGOUT} from './auth'
 
 
 /**
@@ -12,6 +13,7 @@ export const CURRENT_USER_ROOMS_FAILED = 'rooms/CURRENT_USER_ROOMS_FAILED'
 export const SUGGESTED_ROOMS = 'rooms/SUGGESTED_ROOMS'
 export const SUGGESTED_ROOMS_RECEIVED = 'rooms/SUGGESTED_ROOMS_RECEIVED'
 export const SUGGESTED_ROOMS_FAILED = 'rooms/SUGGESTED_ROOMS_FAILED'
+export const SELECT_ROOM = 'rooms/SELECT_ROOM'
 
 
 /**
@@ -54,6 +56,13 @@ export function getSuggestedRooms() {
 }
 
 /**
+ * Set active room
+ */
+export function selectRoom(roomId) {
+  return {type: SELECT_ROOM, payload: roomId}
+}
+
+/**
  * Reducer
  */
 
@@ -62,6 +71,7 @@ const initialState = {
   ids: [],
   rooms: {},
   suggestedRooms: [],
+  activeRoom: '',
   error: false,
   errors: {}
 }
@@ -89,6 +99,16 @@ export default function rooms(state = initialState, action) {
       isLoading: false,
       suggestedRooms: action.payload
     }
+  }
+
+  case SELECT_ROOM: {
+    return {...state,
+      activeRoom: action.payload
+    }
+  }
+
+  case LOGOUT: {
+    return Object.assign({}, initialState)
   }
 
   case SUGGESTED_ROOMS_FAILED:

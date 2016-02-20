@@ -1,12 +1,14 @@
 import React, {
   Component,
   PropTypes,
+  TouchableNativeFeedback,
   Text,
   Image,
   View
 } from 'react-native'
 import s from '../styles/LoginWelcomeStyles'
-import {MKButton} from 'react-native-material-kit'
+import {THEMES} from '../constants'
+const {colors} = THEMES.gitterDefault
 
 
 export default class LoginWelcome extends Component {
@@ -23,22 +25,26 @@ export default class LoginWelcome extends Component {
           copy/paste authentication token.
         </Text>
         <View style={s.buttonGroup}>
-          <MKButton
-            style={s.buttonStyle}
+          <TouchableNativeFeedback
+            background={TouchableNativeFeedback.Ripple(colors.raspberry, false)}
             onPress={() => {}}>
-            <Text pointerEvents="none"
-              style={s.buttonText}>
-              Login by WebView
-            </Text>
-          </MKButton>
-          <MKButton
-            style={s.buttonStyle}
+            <View style={[s.buttonStyle, {backgroundColor: colors.darkRed}]}>
+              <Text pointerEvents="none"
+                style={s.buttonText}>
+                Login by WebView
+              </Text>
+          </View>
+          </TouchableNativeFeedback>
+          <TouchableNativeFeedback
+            background={TouchableNativeFeedback.Ripple(colors.raspberry, false)}
             onPress={() => this.props.onToken()}>
-            <Text pointerEvents="none"
-              style={s.buttonText}>
-              Login by token
-            </Text>
-          </MKButton>
+            <View style={[s.buttonStyle, {backgroundColor: colors.darkRed}]}>
+              <Text pointerEvents="none"
+                style={s.buttonText}>
+                Login by Token
+              </Text>
+            </View>
+          </TouchableNativeFeedback>
         </View>
       </Image>
     )
