@@ -3,7 +3,7 @@ import {Provider} from 'react-redux'
 import configureStore from './configureStore'
 
 import App from './screens'
-import {init} from './modules/init'
+import {init} from './modules/app'
 
 const store = configureStore()
 

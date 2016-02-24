@@ -1,4 +1,4 @@
-import {INITIALIZED} from './init'
+import {INITIALIZED} from './app'
 import {setItem, removeItem} from '../utils/storage'
 import _ from 'lodash'
 import {getCurrentUser} from './viewer'
