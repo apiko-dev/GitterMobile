@@ -11,6 +11,7 @@ import {DeviceEventEmitter} from 'react-native'
 export const INITIALIZED = 'app/INITIALIZED'
 export const CHANGE_NET_STATUS = 'app/CHANGE_NET_STATUS'
 export const CHANGE_APP_STATE = 'app/CHANGE_APP_STATE'
+export const FAYE_CONNECT = 'app/FAYE_CONNECT'
 
 /**
  * Action Creators
@@ -22,10 +23,6 @@ export function init() {
       const token = await getItem('token')
       dispatch({ type: INITIALIZED, token })
 
-      // setup faye
-      FayeGitter.setAccessToken(token)
-      FayeGitter.create()
-
       // getting base current user's information
       await dispatch(getCurrentUser())
       await Promise.all([
@@ -33,12 +30,26 @@ export function init() {
         dispatch(getSuggestedRooms())
       ])
 
-      // connect to the server and subscribe to rooms changes (Drawer)
-      await FayeGitter.connect()
-      dispatch(subscribeToRooms())
-      dispatch(setupFayeEvents())
+      // setup faye
+      await dispatch(setupFaye())
     } catch (error) {
       dispatch({ type: INITIALIZED, error })
+    }
+  }
+}
+
+function setupFaye() {
+  return async (dispatch, getState) => {
+    FayeGitter.setAccessToken(getState().auth.token)
+    FayeGitter.create()
+    FayeGitter.logger()
+    dispatch(setupFayeEvents())
+    try {
+      const result = await FayeGitter.connect()
+      dispatch({type: FAYE_CONNECT, payload: result})
+      dispatch(subscribeToRooms())
+    } catch (err) {
+      console.log(err)
     }
   }
 }
@@ -46,14 +57,14 @@ export function init() {
 
 function setupFayeEvents() {
   return dispatch => {
-    // DeviceEventEmitter.addListener('FayeGitter:onDisconnected',
-    // DeviceEventEmitter.addListener('FayeGitter:onFailedToCreate',
+    DeviceEventEmitter.addListener('FayeGitter:onDisconnected',log => console.log(log))
+    DeviceEventEmitter.addListener('FayeGitter:onFailedToCreate',log => console.log(log))
     DeviceEventEmitter.addListener('FayeGitter:Message',
       event => dispatch(parseEvent(event))
     )
-    // DeviceEventEmitter.addListener('FayeGitter:SubscribtionFailed',
-    // DeviceEventEmitter.addListener('FayeGitter:Subscribed',
-    // DeviceEventEmitter.addListener('FayeGitter:Unsubscribed',
+    DeviceEventEmitter.addListener('FayeGitter:SubscribtionFailed',log => console.log(log))
+    DeviceEventEmitter.addListener('FayeGitter:Subscribed',log => console.log(log))
+    DeviceEventEmitter.addListener('FayeGitter:Unsubscribed', log => console.log(log))
     DeviceEventEmitter.addListener('FayeGitter:log', log => console.log(log))
   }
 }
@@ -76,7 +87,8 @@ function parseEvent(event) {
 
 const initialState = {
   online: null,
-  appState: null
+  appState: null,
+  fayeConnected: false
 }
 
 export default function app(state = initialState, action) {
@@ -90,6 +102,12 @@ export default function app(state = initialState, action) {
     return {...state,
       appState: action.payload
     }
+
+  case FAYE_CONNECT:
+    return {...state,
+      fayeConnected: action.payload
+    }
+
   default:
     return state
   }

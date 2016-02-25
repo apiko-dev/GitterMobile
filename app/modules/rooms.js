@@ -72,7 +72,6 @@ export function selectRoom(roomId) {
 
 export function subscribeToRooms() {
   return (dispatch, getState) => {
-    console.log('subscribeee')
     const {id} = getState().viewer.user
     FayeGitter.subscribe(`/api/v1/user/${id}/rooms`)
     dispatch({type: ROOMS_SUBSCRIBED})
