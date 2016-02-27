@@ -36,7 +36,7 @@ const ChannelListItem = ({id, name, oneToOne, user, activeRoom, onRoomPress, unr
           <Text style={[s.heading, {color: itemStyles.color}]}>{name}</Text>
         </View>
 
-        {(!!unreadItems || !!mentions || !!lurk && !!unreadItems) &&
+        {(!!unreadItems || !!mentions || !!lurk) &&
           <UnreadBadge
             unreadItems={unreadItems}
             mentions={mentions}

@@ -54,41 +54,14 @@ function setupFaye() {
       dispatch({type: FAYE_CONNECT, payload: result})
       dispatch(subscribeToRooms())
     } catch (err) {
-      console.log(err)
-    }
-  }
-}
-
-
-function setupFayeEvents() {
-  return dispatch => {
-    DeviceEventEmitter.addListener('FayeGitter:onDisconnected', log => dispatch(setupFaye()))
-    // DeviceEventEmitter.addListener('FayeGitter:onFailedToCreate', log => dispatch(setupFaye()))
-    DeviceEventEmitter.addListener('FayeGitter:Message',
-      event => dispatch(parseEvent(event))
-    )
-    DeviceEventEmitter.addListener('FayeGitter:SubscribtionFailed',log => console.log(log))
-    DeviceEventEmitter.addListener('FayeGitter:Subscribed',log => console.log(log))
-    DeviceEventEmitter.addListener('FayeGitter:Unsubscribed', log => console.log(log))
-    DeviceEventEmitter.addListener('FayeGitter:log', log => console.log(log))
-  }
-}
-
-function parseEvent(event) {
-  return (dispatch, getState) => {
-    const message = JSON.parse(event.json)
-    const {id} = getState().viewer.user
-    const roomsChannel = `/api/v1/user/${id}/rooms`
-
-    if (event.channel.match(roomsChannel)) {
-      dispatch(updateRoomState(message))
+      console.log(err) // eslint-disable-line no-console
     }
   }
 }
 
 function onNetStatusChangeFaye(status) {
   return async (dispatch, getState) => {
-    const {fayeConnected, online} = getState().app
+    const {fayeConnected} = getState().app
     if (!status && fayeConnected) {
       dispatch({type: FAYE_CONNECT, payload: status})
     }
@@ -114,6 +87,49 @@ function setupAppStatusListener() {
     AppState.addEventListener('change',
       status => dispatch({type: CHANGE_APP_STATE, payload: status})
     );
+  }
+}
+
+
+function setupFayeEvents() {
+  return (dispatch, getState) => {
+    DeviceEventEmitter
+      .addListener('FayeGitter:onDisconnected', log => {
+        console.warn(log) // eslint-disable-line no-console
+        dispatch(setupFaye())
+      })
+
+    DeviceEventEmitter
+      .addListener('FayeGitter:onFailedToCreate', log => {
+        console.warn(log) // eslint-disable-line no-console
+        if (getState().app.netStatus) {
+          dispatch(setupFaye())
+        }
+      })
+    DeviceEventEmitter
+      .addListener('FayeGitter:Message', event => {
+        dispatch(parseEvent(event))
+      })
+    DeviceEventEmitter
+      .addListener('FayeGitter:SubscribtionFailed', log => console.warn(log)) // eslint-disable-line no-console
+    DeviceEventEmitter
+      .addListener('FayeGitter:Subscribed', log => console.log(log)) // eslint-disable-line no-console
+    DeviceEventEmitter
+      .addListener('FayeGitter:Unsubscribed', log => console.log(log)) // eslint-disable-line no-console
+    DeviceEventEmitter
+      .addListener('FayeGitter:log', log => console.log(log)) // eslint-disable-line no-console
+  }
+}
+
+function parseEvent(event) {
+  return (dispatch, getState) => {
+    const message = JSON.parse(event.json)
+    const {id} = getState().viewer.user
+    const roomsChannel = `/api/v1/user/${id}/rooms`
+
+    if (event.channel.match(roomsChannel)) {
+      dispatch(updateRoomState(message))
+    }
   }
 }
 
