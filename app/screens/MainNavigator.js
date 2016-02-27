@@ -3,21 +3,20 @@ import React, {
   PropTypes,
   DrawerLayoutAndroid,
   BackAndroid,
-  Navigator,
-  StyleSheet,
-  Text,
-  View
+  Navigator
 } from 'react-native'
-import {connect} from 'react-redux'
 import _ from 'lodash'
+import {connect} from 'react-redux'
+import {selectRoom} from '../modules/rooms'
 
 import HomeScreen from './HomeScreen'
+import RoomScreen from './RoomScreen'
 import Drawer from './Drawer'
 
 // this need for handling android back hardware button press
 let _navigator
 
-export default class MainNavigator extends Component {
+class MainNavigator extends Component {
   constructor(props) {
     super(props)
 
@@ -26,11 +25,27 @@ export default class MainNavigator extends Component {
     this.navigateToFromDrawer = this.navigateToFromDrawer.bind(this)
     this.onMenuTap = this.onMenuTap.bind(this)
     this.renderScene = this.renderScene.bind(this)
+
+    this.state = {
+      isDrawerOpen: false
+    }
   }
 
-  componentWillMount() {
+  componentDidMount() {
     BackAndroid.addEventListener('hardwareBackPress', () => {
-      if (_navigator && _navigator.getCurrentRoutes().length > 1) {
+      const routes = _navigator.getCurrentRoutes()
+
+      if (this.state.isDrawerOpen === true) {
+        this.refs.drawer.closeDrawer()
+        return true
+      }
+      if (_navigator && routes.length > 1) {
+        // set active room previous room
+        if (routes[routes.length - 2].name === 'room') {
+          this.props.dispatch(selectRoom(routes[routes.length - 2].roomId))
+        } else {
+          this.props.dispatch(selectRoom(''))
+        }
         _navigator.pop()
         return true
       }
@@ -83,8 +98,14 @@ export default class MainNavigator extends Component {
         <HomeScreen
           navigateTo={this.navigateTo}
           route={route}
-          onMenuTap={this.onMenuTap.bind(this)}
-          dispatch={this.props.dispatch} />
+          onMenuTap={this.onMenuTap.bind(this)} />
+      )
+    case 'room':
+      return (
+        <RoomScreen
+          navigateTo={this.navigateTo}
+          route={route}
+          onMenuTap={this.onMenuTap.bind(this)} />
       )
     default:
       return (
@@ -97,8 +118,7 @@ export default class MainNavigator extends Component {
   renderDrawer() {
     return (
       <Drawer
-        navigator={this.navigateToFromDrawer.bind(this)}
-        dispatch={this.props.dispatch} />
+        navigator={this.navigateToFromDrawer.bind(this)} />
     )
   }
 
@@ -111,9 +131,11 @@ export default class MainNavigator extends Component {
         style={{backgroundColor: 'white'}}
         drawerWidth={300}
         drawerPosition={DrawerLayoutAndroid.positions.Left}
-        renderNavigationView={this.renderDrawer.bind(this)}>
+        renderNavigationView={this.renderDrawer.bind(this)}
+        onDrawerOpen={() => this.setState({isDrawerOpen: true})}
+        onDrawerClose={() => this.setState({isDrawerOpen: false})}>
         <Navigator
-          style={styles.container}
+          style={{flex: 1}}
           ref="nav"
           initialRoute={initialRoute}
           configureScene={this.configureScene}
@@ -127,8 +149,4 @@ MainNavigator.propTypes = {
   dispatch: PropTypes.func
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1
-  }
-})
+export default connect()(MainNavigator)

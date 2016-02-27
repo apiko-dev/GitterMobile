@@ -13,6 +13,10 @@ export function currentUserSuggested(token, id) {
   return callApi(endpoint, token).then(res => res.json())
 }
 
+export function room(id, token) {
+  return callApi('rooms/' + id, token).then(res => res.json())
+}
+
 function callApi(endpoint, token, options = {method: 'get'}) {
   const url = `${apiUrl}/${endpoint}`
 

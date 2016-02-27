@@ -4,9 +4,6 @@ import React, {
 } from 'react-native'
 import {connect} from 'react-redux'
 
-// import StatusBarAndroid from 'react-native-android-statusbar'
-// StatusBarAndroid.setARGB(0, 0, 0, 0)
-
 import MainNavigator from './MainNavigator'
 import LoginScreen from './LoginScreen'
 
@@ -18,7 +15,7 @@ class App extends Component {
   render() {
     const {isLoginedIn, token} = this.props
     if (!isLoginedIn && token) {
-      return <MainNavigator dispatch={this.props.dispatch}/>
+      return <MainNavigator />
     } else {
       return <LoginScreen />
     }

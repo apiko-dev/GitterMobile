@@ -19,6 +19,9 @@ export const SELECT_ROOM = 'rooms/SELECT_ROOM'
 export const ROOMS_SUBSCRIBED = 'rooms/ROOMS_SUBSCRIBED'
 export const ROOMS_UNSUBSCRIBED = 'rooms/ROOMS_UNSUBSCRIBED'
 export const UPDATE_ROOM_STATE = 'rooms/UPDATE_ROOM_STATE'
+export const ROOM = 'rooms/ROOM'
+export const ROOM_RECEIVED = 'rooms/ROOM_RECEIVED'
+export const ROOM_FAILED = 'rooms/ROOM_FAILED'
 
 
 /**
@@ -37,6 +40,23 @@ export function getRooms() {
       dispatch({type: CURRENT_USER_ROOMS_RECEIVED, payload})
     } catch (error) {
       dispatch({type: CURRENT_USER_ROOMS_FAILED, error})
+    }
+  }
+}
+
+/**
+ * Return room by id
+ */
+
+export function getRoom(id) {
+  return async (dispatch, getState) => {
+    const {token} = getState().auth
+    dispatch({type: ROOM})
+    try {
+      const payload = await Api.room(id, token)
+      dispatch({type: ROOM_RECEIVED, payload})
+    } catch (error) {
+      dispatch({type: ROOM_FAILED, error})
     }
   }
 }
@@ -105,6 +125,7 @@ const initialState = {
 
 export default function rooms(state = initialState, action) {
   switch (action.type) {
+  case ROOM:
   case SUGGESTED_ROOMS:
   case CURRENT_USER_ROOMS: {
     return {...state,
@@ -118,6 +139,17 @@ export default function rooms(state = initialState, action) {
       isLoading: false,
       ids: normalized.ids,
       rooms: normalized.entities
+    }
+  }
+
+  case ROOM_RECEIVED: {
+    const {id} = action.payload
+    return {...state,
+      isLoading: false,
+      ids: state.ids.concat(id),
+      rooms: {...state.rooms,
+        [id]: action.payload
+      }
     }
   }
 
@@ -148,6 +180,7 @@ export default function rooms(state = initialState, action) {
     return initialState
   }
 
+  case ROOM_FAILED:
   case SUGGESTED_ROOMS_FAILED:
   case CURRENT_USER_ROOMS_FAILED: {
     return {...state,
