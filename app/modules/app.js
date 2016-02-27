@@ -2,7 +2,7 @@ import {getItem, removeItem} from '../utils/storage'
 import {getCurrentUser} from './viewer'
 import {getRooms, getSuggestedRooms, subscribeToRooms, updateRoomState} from './rooms'
 import FayeGitter from '../../libs/react-native-gitter-faye'
-import {DeviceEventEmitter} from 'react-native'
+import {DeviceEventEmitter, NetInfo, AppState} from 'react-native'
 
 /**
  * Constants
@@ -19,9 +19,14 @@ export const FAYE_CONNECT = 'app/FAYE_CONNECT'
 
 export function init() {
   return async (dispatch, getState) => {
+    dispatch(setupAppStatusListener())
+    dispatch(setupFayeEvents())
     try {
       const token = await getItem('token')
-      dispatch({ type: INITIALIZED, token })
+      const netStatus = await NetInfo.fetch()
+      dispatch({ type: INITIALIZED, token, netStatus })
+
+      // TODO: do things belowe only if the internet is awailible (netStatus)
 
       // getting base current user's information
       await dispatch(getCurrentUser())
@@ -32,6 +37,7 @@ export function init() {
 
       // setup faye
       await dispatch(setupFaye())
+      await dispatch(setupNetStatusListener())
     } catch (error) {
       dispatch({ type: INITIALIZED, error })
     }
@@ -43,7 +49,6 @@ function setupFaye() {
     FayeGitter.setAccessToken(getState().auth.token)
     FayeGitter.create()
     FayeGitter.logger()
-    dispatch(setupFayeEvents())
     try {
       const result = await FayeGitter.connect()
       dispatch({type: FAYE_CONNECT, payload: result})
@@ -57,8 +62,8 @@ function setupFaye() {
 
 function setupFayeEvents() {
   return dispatch => {
-    DeviceEventEmitter.addListener('FayeGitter:onDisconnected',log => console.log(log))
-    DeviceEventEmitter.addListener('FayeGitter:onFailedToCreate',log => console.log(log))
+    DeviceEventEmitter.addListener('FayeGitter:onDisconnected', log => dispatch(setupFaye()))
+    // DeviceEventEmitter.addListener('FayeGitter:onFailedToCreate', log => dispatch(setupFaye()))
     DeviceEventEmitter.addListener('FayeGitter:Message',
       event => dispatch(parseEvent(event))
     )
@@ -71,15 +76,47 @@ function setupFayeEvents() {
 
 function parseEvent(event) {
   return (dispatch, getState) => {
-    const json = JSON.parse(event.json)
+    const message = JSON.parse(event.json)
     const {id} = getState().viewer.user
     const roomsChannel = `/api/v1/user/${id}/rooms`
 
     if (event.channel.match(roomsChannel)) {
-      dispatch(updateRoomState(json))
+      dispatch(updateRoomState(message))
     }
   }
 }
+
+function onNetStatusChangeFaye(status) {
+  return async (dispatch, getState) => {
+    const {fayeConnected, online} = getState().app
+    if (!status && fayeConnected) {
+      dispatch({type: FAYE_CONNECT, payload: status})
+    }
+    if (status && !fayeConnected) {
+      dispatch(setupFaye())
+    }
+  }
+}
+
+function setupNetStatusListener() {
+  return dispatch => {
+    NetInfo.isConnected.addEventListener('change',
+      async status => {
+        dispatch({type: CHANGE_NET_STATUS, payload: status})
+        await dispatch(onNetStatusChangeFaye(status))
+      }
+    );
+  }
+}
+
+function setupAppStatusListener() {
+  return dispatch => {
+    AppState.addEventListener('change',
+      status => dispatch({type: CHANGE_APP_STATE, payload: status})
+    );
+  }
+}
+
 
 /**
  * Reducer
@@ -93,6 +130,11 @@ const initialState = {
 
 export default function app(state = initialState, action) {
   switch (action.type) {
+  case INITIALIZED:
+    return {...state,
+      online: action.netStatus
+    }
+
   case CHANGE_NET_STATUS:
     return {...state,
       online: action.payload
