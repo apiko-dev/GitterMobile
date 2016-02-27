@@ -1,4 +1,6 @@
 import * as Api from '../api/gitter'
+import _ from 'lodash'
+import FayeGitter from '../../libs/react-native-gitter-faye'
 import normalize from '../utils/normalize'
 import {LOGOUT} from './auth'
 
@@ -14,6 +16,9 @@ export const SUGGESTED_ROOMS = 'rooms/SUGGESTED_ROOMS'
 export const SUGGESTED_ROOMS_RECEIVED = 'rooms/SUGGESTED_ROOMS_RECEIVED'
 export const SUGGESTED_ROOMS_FAILED = 'rooms/SUGGESTED_ROOMS_FAILED'
 export const SELECT_ROOM = 'rooms/SELECT_ROOM'
+export const ROOMS_SUBSCRIBED = 'rooms/ROOMS_SUBSCRIBED'
+export const ROOMS_UNSUBSCRIBED = 'rooms/ROOMS_UNSUBSCRIBED'
+export const UPDATE_ROOM_STATE = 'rooms/UPDATE_ROOM_STATE'
 
 
 /**
@@ -63,6 +68,28 @@ export function selectRoom(roomId) {
 }
 
 /**
+ * Subscribe current user rooms changes (Drawer)
+ */
+
+export function subscribeToRooms() {
+  return (dispatch, getState) => {
+    const {id} = getState().viewer.user
+    FayeGitter.subscribe(`/api/v1/user/${id}/rooms`)
+    dispatch({type: ROOMS_SUBSCRIBED})
+  }
+}
+
+/**
+ * Update unread count by faye action
+ */
+
+export function updateRoomState(json) {
+  return dispatch => {
+    dispatch({type: UPDATE_ROOM_STATE, payload: json})
+  }
+}
+
+/**
  * Reducer
  */
 
@@ -107,8 +134,18 @@ export default function rooms(state = initialState, action) {
     }
   }
 
+  case UPDATE_ROOM_STATE: {
+    const {id} = action.payload.model
+    const room = state.rooms[id]
+    return {...state,
+      rooms: {...state.rooms,
+        [id]: _.merge(room, action.payload.model)
+      }
+    }
+  }
+
   case LOGOUT: {
-    return Object.assign({}, initialState)
+    return initialState
   }
 
   case SUGGESTED_ROOMS_FAILED:

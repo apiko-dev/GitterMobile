@@ -9,6 +9,8 @@ import java.util.List;
 
 import ca.jaysoo.extradimensions.ExtraDimensionsPackage;
 
+import com.terrysahaidak.faye.FayeGitterPackage;
+
 public class MainActivity extends ReactActivity {
     /**
      * Returns the name of the main component registered from JavaScript.
@@ -36,7 +38,8 @@ public class MainActivity extends ReactActivity {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
-        new ExtraDimensionsPackage(this)
+        new ExtraDimensionsPackage(this),
+        new FayeGitterPackage()
       );
     }
 }
