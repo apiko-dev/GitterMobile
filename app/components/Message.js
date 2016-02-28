@@ -10,7 +10,7 @@ import Avatar from './Avatar'
 const Message = ({text, fromUser}) => {
   return (
     <View style={s.container}>
-      <Avatar src={fromUser.avatarUrlSmall} size={45} />
+      <Avatar src={fromUser.avatarUrlSmall} size={30} />
       <View style={s.content}>
         <View style={s.top}>
           <Text style={s.username}>{fromUser.username}</Text>

@@ -12,6 +12,7 @@ export const ROOM_MESSAGES_FAILED = 'messages/ROOM_MESSAGES_FAILED'
 export const ROOM_MESSAGES_BEFORE = 'messages/ROOM_MESSAGES_BEFORE'
 export const ROOM_MESSAGES_BEFORE_RECEIVED = 'messages/ROOM_MESSAGES_BEFORE_RECEIVED'
 export const ROOM_MESSAGES_BEFORE_FAILED = 'messages/ROOM_MESSAGES_BEFORE_FAILED'
+export const ROOM_HAS_NO_MORE_MESSAGES = 'messages/ROOM_HAS_NO_MORE_MESSAGES'
 export const PREPARE_LIST_VIEW = 'messages/PREPARE_LIST_VIEW'
 
 /**
@@ -47,7 +48,12 @@ export function getRoomMessagesBefore(roomId) {
     dispatch({type: ROOM_MESSAGES_BEFORE, payload: roomId})
     try {
       const payload = await Api.roomMessagesBefore(token, roomId, lastMessageId)
-      dispatch({type: ROOM_MESSAGES_BEFORE_RECEIVED, roomId, payload})
+
+      if (payload.length === 0) {
+        dispatch({type: ROOM_HAS_NO_MORE_MESSAGES, roomId})
+      } else {
+        dispatch({type: ROOM_MESSAGES_BEFORE_RECEIVED, roomId, payload})
+      }
     } catch (error) {
       dispatch({type: ROOM_MESSAGES_BEFORE_FAILED, error})
     }
@@ -70,6 +76,7 @@ export function prepareListView(ds) {
 
 const initialState = {
   isLoading: false,
+  isLoadingMore: false,
   error: false,
   errors: {},
   byRoom: {
@@ -80,6 +87,9 @@ const initialState = {
     dataSource: null,
     data: [],
     rowIds: []
+  },
+  hasNoMore: {
+    // [id]: bool
   }
 }
 
@@ -88,6 +98,11 @@ export default function messages(state = initialState, action) {
   case ROOM_MESSAGES:
     return {...state,
       isLoading: true
+    }
+
+  case ROOM_MESSAGES_BEFORE:
+    return {...state,
+      isLoadingMore: true
     }
 
   case ROOM_MESSAGES_RECEIVED: {
@@ -127,11 +142,28 @@ export default function messages(state = initialState, action) {
       rowIds.push(data.length - 1)
     }
     return {...state,
-      isLoading: false,
+      isLoadingMore: false,
       byRoom: {...state.byRoom,
         [roomId]: ids.concat(byRoom)
       },
       entities: _.merge({}, state.entities, entities),
+      listView: {
+        dataSource: state.listView.dataSource.cloneWithRows(data, rowIds),
+        data,
+        rowIds
+      }
+    }
+  }
+
+  case ROOM_HAS_NO_MORE_MESSAGES: {
+    const rowIds = [].concat(state.listView.rowIds)
+    const data = [].concat(state.listView.data)
+    data.push({hasNoMore: true})
+    rowIds.push(data.length - 1)
+
+    return {...state,
+      isLoadingMore: false,
+      hasNoMore: {...state.hasNoMore, [action.roomId]: true},
       listView: {
         dataSource: state.listView.dataSource.cloneWithRows(data, rowIds),
         data,

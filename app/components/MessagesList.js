@@ -14,6 +14,12 @@ export default class MessagesList extends Component {
   }
 
   renderRow(rowData, rowId) {
+    if (!!rowData.hasNoMore) {
+      return (
+        <Text>It's a verry beginning of this room messages.</Text>
+      )
+    }
+
     return (
       <Message {...rowData} />
     )

@@ -15,6 +15,7 @@ import {getRoomMessages, prepareListView, getRoomMessagesBefore} from '../module
 
 import Loading from '../components/Loading'
 import MessagesList from '../components/MessagesList'
+import LoadginMoreSnack from '../components/LoadingMoreSnack'
 
 class Room extends Component {
   constructor(props) {
@@ -35,8 +36,10 @@ class Room extends Component {
   }
 
   onEndReached() {
-    const {dispatch, route} = this.props
-    dispatch(getRoomMessagesBefore(route.roomId))
+    const {dispatch, route, hasNoMore, isLoadingMoreMessages} = this.props
+    if (hasNoMore[route.roomId] !== true && isLoadingMoreMessages === false) {
+      dispatch(getRoomMessagesBefore(route.roomId))
+    }
   }
 
   prepareDataSources() {
@@ -64,6 +67,12 @@ class Room extends Component {
     )
   }
 
+  renderLoadingMore() {
+    return (
+      <LoadginMoreSnack />
+    )
+  }
+
   renderListView() {
     const {listViewData, dispatch} = this.props
     return (
@@ -75,7 +84,7 @@ class Room extends Component {
   }
 
   render() {
-    const {rooms, route, isLoadingMessages} = this.props
+    const {rooms, route, isLoadingMessages, isLoadingMoreMessages} = this.props
 
     if (!rooms[route.roomId]) {
       return <Loading color={colors.raspberry}/>
@@ -84,6 +93,7 @@ class Room extends Component {
     return (
       <View style={s.container}>
         {this.renderToolbar()}
+        {isLoadingMoreMessages ? this.renderLoadingMore() : null}
         {!isLoadingMessages ? this.renderListView() : null}
       </View>
     )
@@ -96,8 +106,10 @@ Room.propTypes = {
   route: PropTypes.object,
   dispatch: PropTypes.func,
   isLoadingMessages: PropTypes.bool,
+  isLoadingMoreMessages: PropTypes.bool,
   listViewData: PropTypes.object,
-  byRoom: PropTypes.object
+  byRoom: PropTypes.object,
+  hasNoMore: PropTypes.object
 }
 
 function mapStateToProps(state) {
@@ -105,7 +117,9 @@ function mapStateToProps(state) {
     rooms: state.rooms.rooms,
     listViewData: state.messages.listView,
     isLoadingMessages: state.messages.isLoading,
-    byRoom: state.messages.byRoom
+    isLoadingMoreMessages: state.messages.isLoadingMore,
+    byRoom: state.messages.byRoom,
+    hasNoMore: state.messages.hasNoMore
   }
 }
 
