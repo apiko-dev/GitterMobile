@@ -37,6 +37,7 @@ class Room extends Component {
     const room = rooms[route.roomId]
     return (
       <View>
+        {/* The view below is the crutch for padding top */}
         <View style={s.toolbarPadding} />
         <ToolbarAndroid
           navIcon={require('image!ic_menu_white_24dp')}
@@ -50,9 +51,11 @@ class Room extends Component {
 
   render() {
     const {rooms, route} = this.props
+
     if (!rooms[route.roomId]) {
       return <Loading color={colors.raspberry}/>
     }
+
     return (
       <View style={s.container}>
         {this.renderToolbar()}

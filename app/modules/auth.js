@@ -1,6 +1,5 @@
 import {INITIALIZED} from './app'
 import {setItem, removeItem} from '../utils/storage'
-import _ from 'lodash'
 import {getCurrentUser} from './viewer'
 import {getRooms, getSuggestedRooms} from './rooms'
 
@@ -46,7 +45,7 @@ export function onLogOut() {
       await removeItem('token')
       dispatch({type: LOGOUT})
     } catch (error) {
-      console.warn("Can't logout. Error: ", error)
+      console.warn("Can't logout. Error: ", error) // eslint-disable-line no-console
     }
   }
 }
@@ -98,7 +97,7 @@ export default function auth(state = initialState, action) {
   }
 
   case LOGOUT: {
-    return _.merge({}, state, initialState)
+    return initialState
   }
   default:
     return state
