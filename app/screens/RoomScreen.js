@@ -2,31 +2,49 @@ import React, {
   Component,
   PropTypes,
   ToolbarAndroid,
+  ListView,
   View
 } from 'react-native'
 import {connect} from 'react-redux'
-import ExtraDimensions from 'react-native-extra-dimensions-android'
 import s from '../styles/RoomStyles'
 import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault
 
 import {getRoom} from '../modules/rooms'
+import {getRoomMessages, prepareListView, getRoomMessagesBefore} from '../modules/messages'
 
 import Loading from '../components/Loading'
-
-const STATUS_BAR_HEIGHT = ExtraDimensions.get('STATUS_BAR_HEIGHT')
+import MessagesList from '../components/MessagesList'
+import LoadginMoreSnack from '../components/LoadingMoreSnack'
 
 class Room extends Component {
   constructor(props) {
     super(props)
     this.renderToolbar = this.renderToolbar.bind(this)
+    this.renderListView = this.renderListView.bind(this)
+    this.prepareDataSources = this.prepareDataSources.bind(this)
+    this.onEndReached = this.onEndReached.bind(this)
   }
 
   componentWillMount() {
+    this.prepareDataSources()
     const {rooms, route, dispatch} = this.props
     if (!rooms[route.roomId]) {
       dispatch(getRoom(route.roomId))
     }
+    dispatch(getRoomMessages(route.roomId))
+  }
+
+  onEndReached() {
+    const {dispatch, route, hasNoMore, isLoadingMoreMessages} = this.props
+    if (hasNoMore[route.roomId] !== true && isLoadingMoreMessages === false) {
+      dispatch(getRoomMessagesBefore(route.roomId))
+    }
+  }
+
+  prepareDataSources() {
+    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
+    this.props.dispatch(prepareListView(ds.cloneWithRows([])))
   }
 
   renderToolbar() {
@@ -37,6 +55,7 @@ class Room extends Component {
     const room = rooms[route.roomId]
     return (
       <View>
+        {/* The view below is the crutch for padding top */}
         <View style={s.toolbarPadding} />
         <ToolbarAndroid
           navIcon={require('image!ic_menu_white_24dp')}
@@ -48,14 +67,34 @@ class Room extends Component {
     )
   }
 
+  renderLoadingMore() {
+    return (
+      <LoadginMoreSnack />
+    )
+  }
+
+  renderListView() {
+    const {listViewData, dispatch} = this.props
+    return (
+      <MessagesList
+        listViewData={listViewData}
+        dispatch={dispatch}
+        onEndReached={this.onEndReached.bind(this)} />
+    )
+  }
+
   render() {
-    const {rooms, route} = this.props
+    const {rooms, route, isLoadingMessages, isLoadingMoreMessages} = this.props
+
     if (!rooms[route.roomId]) {
       return <Loading color={colors.raspberry}/>
     }
+
     return (
       <View style={s.container}>
         {this.renderToolbar()}
+        {isLoadingMoreMessages ? this.renderLoadingMore() : null}
+        {!isLoadingMessages ? this.renderListView() : null}
       </View>
     )
   }
@@ -65,12 +104,22 @@ Room.propTypes = {
   rooms: PropTypes.object,
   onMenuTap: PropTypes.func,
   route: PropTypes.object,
-  dispatch: PropTypes.func
+  dispatch: PropTypes.func,
+  isLoadingMessages: PropTypes.bool,
+  isLoadingMoreMessages: PropTypes.bool,
+  listViewData: PropTypes.object,
+  byRoom: PropTypes.object,
+  hasNoMore: PropTypes.object
 }
 
 function mapStateToProps(state) {
   return {
-    rooms: state.rooms.rooms
+    rooms: state.rooms.rooms,
+    listViewData: state.messages.listView,
+    isLoadingMessages: state.messages.isLoading,
+    isLoadingMoreMessages: state.messages.isLoadingMore,
+    byRoom: state.messages.byRoom,
+    hasNoMore: state.messages.hasNoMore
   }
 }
 

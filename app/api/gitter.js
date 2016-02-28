@@ -13,8 +13,16 @@ export function currentUserSuggested(token, id) {
   return callApi(endpoint, token).then(res => res.json())
 }
 
-export function room(id, token) {
+export function room(token, id) {
   return callApi('rooms/' + id, token).then(res => res.json())
+}
+
+export function roomMessages(token, id) {
+  return callApi(`rooms/${id}/chatMessages?limit=50`, token).then(res => res.json())
+}
+
+export function roomMessagesBefore(token, id, beforeId) {
+  return callApi(`rooms/${id}/chatMessages?limit=50&beforeId=${beforeId}`, token).then(res => res.json())
 }
 
 function callApi(endpoint, token, options = {method: 'get'}) {
