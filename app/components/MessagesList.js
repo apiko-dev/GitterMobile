@@ -5,6 +5,8 @@ import React, {
   View,
   Text
 } from 'react-native'
+import InvertibleScrollView from 'react-native-invertible-scroll-view'
+import Message from './Message'
 
 export default class MessagesList extends Component {
   componentWillMount() {
@@ -13,8 +15,8 @@ export default class MessagesList extends Component {
 
   renderRow(rowData, rowId) {
     return (
-      <Text>{rowData.text} -- {rowId}</Text>
-      )
+      <Message {...rowData} />
+    )
   }
 
   render() {
@@ -23,7 +25,10 @@ export default class MessagesList extends Component {
     return (
       <ListView
         ref="listView"
+        renderScrollComponent={props => <InvertibleScrollView {...props} inverted />}
         dataSource={listViewData.dataSource}
+        onEndReached={this.props.onEndReached}
+        onEndReachedThreshold={200}
         pageSize={50}
         initialListSize={50}
         renderRow={(rowData, _, rowId) => this.renderRow(rowData, rowId)} />
@@ -33,5 +38,6 @@ export default class MessagesList extends Component {
 
 MessagesList.propTypes = {
   listViewData: PropTypes.object,
-  dispatch: PropTypes.func
+  dispatch: PropTypes.func,
+  onEndReached: PropTypes.func
 }

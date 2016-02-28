@@ -11,7 +11,7 @@ import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault
 
 import {getRoom} from '../modules/rooms'
-import {getRoomMessages, prepareListView} from '../modules/messages'
+import {getRoomMessages, prepareListView, getRoomMessagesBefore} from '../modules/messages'
 
 import Loading from '../components/Loading'
 import MessagesList from '../components/MessagesList'
@@ -22,6 +22,7 @@ class Room extends Component {
     this.renderToolbar = this.renderToolbar.bind(this)
     this.renderListView = this.renderListView.bind(this)
     this.prepareDataSources = this.prepareDataSources.bind(this)
+    this.onEndReached = this.onEndReached.bind(this)
   }
 
   componentWillMount() {
@@ -31,6 +32,11 @@ class Room extends Component {
       dispatch(getRoom(route.roomId))
     }
     dispatch(getRoomMessages(route.roomId))
+  }
+
+  onEndReached() {
+    const {dispatch, route} = this.props
+    dispatch(getRoomMessagesBefore(route.roomId))
   }
 
   prepareDataSources() {
@@ -63,7 +69,8 @@ class Room extends Component {
     return (
       <MessagesList
         listViewData={listViewData}
-        dispatch={dispatch} />
+        dispatch={dispatch}
+        onEndReached={this.onEndReached.bind(this)} />
     )
   }
 

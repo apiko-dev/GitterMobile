@@ -9,10 +9,17 @@ import _ from 'lodash'
 export const ROOM_MESSAGES = 'messages/ROOM_MESSAGES'
 export const ROOM_MESSAGES_RECEIVED = 'messages/ROOM_MESSAGES_RECEIVED'
 export const ROOM_MESSAGES_FAILED = 'messages/ROOM_MESSAGES_FAILED'
+export const ROOM_MESSAGES_BEFORE = 'messages/ROOM_MESSAGES_BEFORE'
+export const ROOM_MESSAGES_BEFORE_RECEIVED = 'messages/ROOM_MESSAGES_BEFORE_RECEIVED'
+export const ROOM_MESSAGES_BEFORE_FAILED = 'messages/ROOM_MESSAGES_BEFORE_FAILED'
 export const PREPARE_LIST_VIEW = 'messages/PREPARE_LIST_VIEW'
 
 /**
  * Action creators
+ */
+
+/**
+ * Returns first $LIMIT$ messages by room id
  */
 
 export function getRoomMessages(roomId) {
@@ -27,6 +34,29 @@ export function getRoomMessages(roomId) {
     }
   }
 }
+
+/**
+ * Returns messages that are before oldest message
+ */
+
+export function getRoomMessagesBefore(roomId) {
+  return async (dispatch, getState) => {
+    const {token} = getState().auth
+    const {byRoom} = getState().messages
+    const lastMessageId = byRoom[roomId][0]
+    dispatch({type: ROOM_MESSAGES_BEFORE, payload: roomId})
+    try {
+      const payload = await Api.roomMessagesBefore(token, roomId, lastMessageId)
+      dispatch({type: ROOM_MESSAGES_BEFORE_RECEIVED, roomId, payload})
+    } catch (error) {
+      dispatch({type: ROOM_MESSAGES_BEFORE_FAILED, error})
+    }
+  }
+}
+
+/**
+ * Action that needs to pass DataSource object into state.listView.dataSource
+ */
 
 export function prepareListView(ds) {
   return {
@@ -64,13 +94,43 @@ export default function messages(state = initialState, action) {
     const {payload, roomId} = action
     const {ids, entities} = normalize(payload)
     const rowIds = []
-    const data = ids.map((id, index) => {
-      rowIds.push(index)
-      return entities[id]
-    })
+    const data = []
+    // we need to reverse our messages array to display it inverted
+    const reversedIds = [].concat(ids).reverse()
+    for (let i = 0; i < reversedIds.length; i++) {
+      data.push(entities[reversedIds[i]])
+      rowIds.push(data.length - 1)
+    }
     return {...state,
       isLoading: false,
       byRoom: {...state.byRoom, [roomId]: [...ids]},
+      entities: _.merge({}, state.entities, entities),
+      listView: {
+        dataSource: state.listView.dataSource.cloneWithRows(data, rowIds),
+        data,
+        rowIds
+      }
+    }
+  }
+
+  case ROOM_MESSAGES_BEFORE_RECEIVED: {
+    const {payload, roomId} = action
+    const {ids, entities} = normalize(payload)
+    const byRoom = state.byRoom[roomId]
+
+    const rowIds = [].concat(state.listView.rowIds)
+    const data = [].concat(state.listView.data)
+    // we need to reverse our messages array to display it inverted
+    const reversedIds = [].concat(ids).reverse()
+    for (let i = 0; i < reversedIds.length; i++) {
+      data.push(entities[reversedIds[i]])
+      rowIds.push(data.length - 1)
+    }
+    return {...state,
+      isLoading: false,
+      byRoom: {...state.byRoom,
+        [roomId]: ids.concat(byRoom)
+      },
       entities: _.merge({}, state.entities, entities),
       listView: {
         dataSource: state.listView.dataSource.cloneWithRows(data, rowIds),
@@ -89,6 +149,7 @@ export default function messages(state = initialState, action) {
       }
     }
 
+  case ROOM_MESSAGES_BEFORE_FAILED:
   case ROOM_MESSAGES_FAILED:
     return {...state,
       isLoading: false,
