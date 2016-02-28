@@ -2,31 +2,40 @@ import React, {
   Component,
   PropTypes,
   ToolbarAndroid,
+  ListView,
   View
 } from 'react-native'
 import {connect} from 'react-redux'
-import ExtraDimensions from 'react-native-extra-dimensions-android'
 import s from '../styles/RoomStyles'
 import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault
 
 import {getRoom} from '../modules/rooms'
+import {getRoomMessages, prepareListView} from '../modules/messages'
 
 import Loading from '../components/Loading'
-
-const STATUS_BAR_HEIGHT = ExtraDimensions.get('STATUS_BAR_HEIGHT')
+import MessagesList from '../components/MessagesList'
 
 class Room extends Component {
   constructor(props) {
     super(props)
     this.renderToolbar = this.renderToolbar.bind(this)
+    this.renderListView = this.renderListView.bind(this)
+    this.prepareDataSources = this.prepareDataSources.bind(this)
   }
 
   componentWillMount() {
+    this.prepareDataSources()
     const {rooms, route, dispatch} = this.props
     if (!rooms[route.roomId]) {
       dispatch(getRoom(route.roomId))
     }
+    dispatch(getRoomMessages(route.roomId))
+  }
+
+  prepareDataSources() {
+    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
+    this.props.dispatch(prepareListView(ds.cloneWithRows([])))
   }
 
   renderToolbar() {
@@ -49,8 +58,17 @@ class Room extends Component {
     )
   }
 
+  renderListView() {
+    const {listViewData, dispatch} = this.props
+    return (
+      <MessagesList
+        listViewData={listViewData}
+        dispatch={dispatch} />
+    )
+  }
+
   render() {
-    const {rooms, route} = this.props
+    const {rooms, route, isLoadingMessages} = this.props
 
     if (!rooms[route.roomId]) {
       return <Loading color={colors.raspberry}/>
@@ -59,6 +77,7 @@ class Room extends Component {
     return (
       <View style={s.container}>
         {this.renderToolbar()}
+        {!isLoadingMessages ? this.renderListView() : null}
       </View>
     )
   }
@@ -68,12 +87,18 @@ Room.propTypes = {
   rooms: PropTypes.object,
   onMenuTap: PropTypes.func,
   route: PropTypes.object,
-  dispatch: PropTypes.func
+  dispatch: PropTypes.func,
+  isLoadingMessages: PropTypes.bool,
+  listViewData: PropTypes.object,
+  byRoom: PropTypes.object
 }
 
 function mapStateToProps(state) {
   return {
-    rooms: state.rooms.rooms
+    rooms: state.rooms.rooms,
+    listViewData: state.messages.listView,
+    isLoadingMessages: state.messages.isLoading,
+    byRoom: state.messages.byRoom
   }
 }
 

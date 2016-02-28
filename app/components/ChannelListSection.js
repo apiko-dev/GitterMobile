@@ -9,7 +9,13 @@ const ChannelListSection = ({name, items, onRoomPress, activeRoom}) => {
         <Text style={s.heading}>{name}</Text>
       </View>
       <View style={s.itemSection}>
-        {items && items.map(item => <ChannelListItem key={item.id} {...item} activeRoom={activeRoom} onRoomPress={onRoomPress}/>)}
+        {items && items.map(item => (
+          <ChannelListItem
+            key={item.id}
+            {...item}
+            activeRoom={activeRoom}
+            onRoomPress={onRoomPress} />
+        ))}
       </View>
     </View>
   )
@@ -17,7 +23,9 @@ const ChannelListSection = ({name, items, onRoomPress, activeRoom}) => {
 
 ChannelListSection.propTypes = {
   name: PropTypes.string,
-  items: PropTypes.array
+  items: PropTypes.array,
+  onRoomPress: PropTypes.func,
+  activeRoom: PropTypes.string
 }
 
 export default ChannelListSection

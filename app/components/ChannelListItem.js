@@ -47,7 +47,7 @@ const ChannelListItem = ({id, name, oneToOne, user, activeRoom, onRoomPress, unr
 }
 
 ChannelListItem.propTypes = {
-  id: PropTypes.stings,
+  // id: PropTypes.stings,
   name: PropTypes.string,
   oneToOne: PropTypes.bool,
   user: PropTypes.object,
