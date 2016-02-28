@@ -53,7 +53,7 @@ export function getRoom(id) {
     const {token} = getState().auth
     dispatch({type: ROOM})
     try {
-      const payload = await Api.room(id, token)
+      const payload = await Api.room(token, id)
       dispatch({type: ROOM_RECEIVED, payload})
     } catch (error) {
       dispatch({type: ROOM_FAILED, error})
