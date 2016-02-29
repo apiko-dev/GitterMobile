@@ -64,9 +64,9 @@ export function getRoomMessagesBefore(roomId) {
  * Action that needs to pass DataSource object into state.listView.dataSource
  */
 
-export function prepareListView(ds) {
+export function prepareListView(roomId, ds) {
   return {
-    type: PREPARE_LIST_VIEW, payload: ds
+    type: PREPARE_LIST_VIEW, payload: ds, roomId
   }
 }
 
@@ -84,9 +84,7 @@ const initialState = {
   },
   entities: {},
   listView: {
-    dataSource: null,
-    data: [],
-    rowIds: []
+    // [id]: {}
   },
   hasNoMore: {
     // [id]: bool
@@ -120,10 +118,12 @@ export default function messages(state = initialState, action) {
       isLoading: false,
       byRoom: {...state.byRoom, [roomId]: [...ids]},
       entities: _.merge({}, state.entities, entities),
-      listView: {
-        dataSource: state.listView.dataSource.cloneWithRows(data, rowIds),
-        data,
-        rowIds
+      listView: {...state.listView,
+        [roomId]: {
+          dataSource: state.listView[roomId].dataSource.cloneWithRows(data, rowIds),
+          data,
+          rowIds
+        }
       }
     }
   }
@@ -133,8 +133,8 @@ export default function messages(state = initialState, action) {
     const {ids, entities} = normalize(payload)
     const byRoom = state.byRoom[roomId]
 
-    const rowIds = [].concat(state.listView.rowIds)
-    const data = [].concat(state.listView.data)
+    const rowIds = [].concat(state.listView[roomId].rowIds)
+    const data = [].concat(state.listView[roomId].data)
     // we need to reverse our messages array to display it inverted
     const reversedIds = [].concat(ids).reverse()
     for (let i = 0; i < reversedIds.length; i++) {
@@ -147,37 +147,44 @@ export default function messages(state = initialState, action) {
         [roomId]: ids.concat(byRoom)
       },
       entities: _.merge({}, state.entities, entities),
-      listView: {
-        dataSource: state.listView.dataSource.cloneWithRows(data, rowIds),
-        data,
-        rowIds
+      listView: {...state.listView,
+        [roomId]: {
+          dataSource: state.listView[roomId].dataSource.cloneWithRows(data, rowIds),
+          data,
+          rowIds
+        }
       }
     }
   }
 
   case ROOM_HAS_NO_MORE_MESSAGES: {
-    const rowIds = [].concat(state.listView.rowIds)
-    const data = [].concat(state.listView.data)
+    const {roomId} = action
+    const rowIds = [].concat(state.listView[roomId].rowIds)
+    const data = [].concat(state.listView[roomId].data)
     data.push({hasNoMore: true})
     rowIds.push(data.length - 1)
 
     return {...state,
       isLoadingMore: false,
       hasNoMore: {...state.hasNoMore, [action.roomId]: true},
-      listView: {
-        dataSource: state.listView.dataSource.cloneWithRows(data, rowIds),
-        data,
-        rowIds
+      listView: {...state.listView,
+        [action.roomId]: {
+          dataSource: state.listView[roomId].dataSource.cloneWithRows(data, rowIds),
+          data,
+          rowIds
+        }
       }
     }
   }
 
   case PREPARE_LIST_VIEW:
     return {...state,
-      listView: {
-        dataSource: action.payload,
-        data: [],
-        rowIds: []
+      listView: {...state.listView,
+        [action.roomId]: {
+          dataSource: action.payload,
+          data: [],
+          rowIds: []
+        }
       }
     }
 

@@ -34,8 +34,6 @@ class MainNavigator extends Component {
   }
 
   componentDidMount() {
-    this.prepareDataSources()
-
     BackAndroid.addEventListener('hardwareBackPress', () => {
       const routes = _navigator.getCurrentRoutes()
 
@@ -55,7 +53,6 @@ class MainNavigator extends Component {
       }
       return false
     })
-
   }
 
   componentWillUnmount() {
@@ -64,11 +61,6 @@ class MainNavigator extends Component {
 
   onMenuTap() {
     this.refs.drawer.openDrawer()
-  }
-
-  prepareDataSources() {
-    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
-    this.props.dispatch(prepareListView(ds.cloneWithRows([])))
   }
 
   navigateTo(route) {

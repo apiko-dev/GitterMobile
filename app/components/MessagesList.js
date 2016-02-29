@@ -23,14 +23,19 @@ export default class MessagesList extends Component {
 
   render() {
     const {listViewData} = this.props
-    // return <Text>Test</Text>
+
+    if (!listViewData) {
+      return <View style={{flex: 1}} />
+    }
+
     return (
       <ListView
         ref="listView"
         renderScrollComponent={props => <InvertibleScrollView {...props} inverted />}
         dataSource={listViewData.dataSource}
         onEndReached={this.props.onEndReached}
-        onEndReachedThreshold={200}
+        scrollRenderAheadDistance={1000}
+        onEndReachedThreshold={500}
         pageSize={30}
         initialListSize={10}
         renderRow={(rowData, _, rowId) => this.renderRow(rowData, rowId)} />

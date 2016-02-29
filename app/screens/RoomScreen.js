@@ -29,38 +29,37 @@ class Room extends Component {
   }
 
   componentDidMount() {
-    InteractionManager.runAfterInteractions(() => {
-      const {rooms, route: { roomId }, dispatch} = this.props
-      dispatch(selectRoom(roomId))
-      if (!rooms[roomId]) {
-        dispatch(getRoom(roomId))
-      }
-      dispatch(getRoomMessages(roomId))
-    });
-    // this.prepareDataSources()
-  }
-
-  // componentDidMount() {
-  //   const {route, dispatch} = this.props
-  //
-  // }
-
-  componentWillUnmount() {
     this.prepareDataSources()
   }
 
+  componentWillReceiveProps(nextProps) {
+    const {rooms, route: { roomId }, dispatch, listViewData} = this.props
+    InteractionManager.runAfterInteractions(() => {
+      if (!listViewData[roomId]) {
+        dispatch(selectRoom(roomId))
+        if (!rooms[roomId]) {
+          dispatch(getRoom(roomId))
+        }
+        dispatch(getRoomMessages(roomId))
+      }
+    })
+  }
+
   onEndReached() {
-    const {dispatch, route, hasNoMore, isLoadingMoreMessages, isLoadingMessages, listViewData} = this.props
-    if (hasNoMore[route.roomId] !== true && isLoadingMoreMessages === false
-        && isLoadingMessages === false && listViewData.data.length !== 0) {
-      dispatch(getRoomMessagesBefore(route.roomId))
+    const {dispatch, route: {roomId}, hasNoMore, isLoadingMoreMessages, isLoadingMessages, listViewData} = this.props
+    if (hasNoMore[roomId] !== true && isLoadingMoreMessages === false
+        && isLoadingMessages === false && listViewData[roomId].data.length !== 0) {
+      dispatch(getRoomMessagesBefore(roomId))
     }
   }
 
 
   prepareDataSources() {
-    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
-    this.props.dispatch(prepareListView(ds.cloneWithRows([])))
+    const {listViewData, route: {roomId}, dispatch} = this.props
+    if (!listViewData[roomId]) {
+      const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
+      dispatch(prepareListView(roomId, ds.cloneWithRows([])))
+    }
   }
 
   renderToolbar() {
@@ -96,10 +95,10 @@ class Room extends Component {
   }
 
   renderListView() {
-    const {listViewData, dispatch} = this.props
+    const {listViewData, dispatch, route: {roomId}} = this.props
     return (
       <MessagesList
-        listViewData={listViewData}
+        listViewData={listViewData[roomId]}
         dispatch={dispatch}
         onEndReached={this.onEndReached.bind(this)} />
     )
@@ -107,7 +106,7 @@ class Room extends Component {
 
   render() {
     const {rooms, route, isLoadingMessages, isLoadingMoreMessages} = this.props
-    console.log("room!", rooms[route.roomId])
+
     if (!rooms[route.roomId]) {
       return <Loading color={colors.raspberry}/>
     }
