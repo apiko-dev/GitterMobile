@@ -133,8 +133,8 @@ class MainNavigator extends Component {
   }
 
   render() {
-    // const initialRoute = {name: 'home'}
-    const initialRoute = {name: 'room', roomId: '555092a215522ed4b3e0369e'}
+    const initialRoute = {name: 'home'}
+    // const initialRoute = {name: 'room', roomId: '555092a215522ed4b3e0369e'}
 
     return (
       <DrawerLayoutAndroid

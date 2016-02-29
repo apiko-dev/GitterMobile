@@ -9,10 +9,6 @@ import InvertibleScrollView from 'react-native-invertible-scroll-view'
 import Message from './Message'
 
 export default class MessagesList extends Component {
-  componentWillMount() {
-
-  }
-
   renderRow(rowData, rowId) {
     if (!!rowData.hasNoMore) {
       return (
@@ -35,8 +31,8 @@ export default class MessagesList extends Component {
         dataSource={listViewData.dataSource}
         onEndReached={this.props.onEndReached}
         onEndReachedThreshold={200}
-        pageSize={50}
-        initialListSize={50}
+        pageSize={30}
+        initialListSize={10}
         renderRow={(rowData, _, rowId) => this.renderRow(rowData, rowId)} />
     )
   }

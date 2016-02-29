@@ -1,6 +1,7 @@
 import React, {
   Component,
   PropTypes,
+  InteractionManager,
   ToolbarAndroid,
   ListView,
   View
@@ -10,7 +11,7 @@ import s from '../styles/RoomStyles'
 import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault
 
-import {getRoom} from '../modules/rooms'
+import {getRoom, selectRoom} from '../modules/rooms'
 import {getRoomMessages, prepareListView, getRoomMessagesBefore} from '../modules/messages'
 
 import Loading from '../components/Loading'
@@ -28,12 +29,15 @@ class Room extends Component {
   }
 
   componentDidMount() {
+    InteractionManager.runAfterInteractions(() => {
+      const {rooms, route: { roomId }, dispatch} = this.props
+      dispatch(selectRoom(roomId))
+      if (!rooms[roomId]) {
+        dispatch(getRoom(roomId))
+      }
+      dispatch(getRoomMessages(roomId))
+    });
     // this.prepareDataSources()
-    const {rooms, route, dispatch} = this.props
-    if (!rooms[route.roomId]) {
-      dispatch(getRoom(route.roomId))
-    }
-    dispatch(getRoomMessages(route.roomId))
   }
 
   // componentDidMount() {

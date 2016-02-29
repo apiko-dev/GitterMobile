@@ -32,7 +32,6 @@ class HomeScreen extends Component {
   }
 
   onRoomPress(id) {
-    this.props.dispatch(selectRoom(id))
     this.props.navigateTo({name: 'room', roomId: id})
   }
 
