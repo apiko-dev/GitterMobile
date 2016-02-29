@@ -23,8 +23,8 @@ class Drawer extends Component {
   }
 
   onRoomPress(id) {
-    this.props.dispatch(selectRoom(id))
     this.props.navigator({name: 'room', roomId: id})
+    this.props.dispatch(selectRoom(id))
   }
 
   onLogOut() {

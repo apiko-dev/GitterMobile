@@ -3,11 +3,13 @@ import React, {
   PropTypes,
   DrawerLayoutAndroid,
   BackAndroid,
+  ListView,
   Navigator
 } from 'react-native'
 import _ from 'lodash'
 import {connect} from 'react-redux'
 import {selectRoom} from '../modules/rooms'
+import {prepareListView} from '../modules/messages'
 
 import HomeScreen from './HomeScreen'
 import RoomScreen from './RoomScreen'
@@ -32,6 +34,8 @@ class MainNavigator extends Component {
   }
 
   componentDidMount() {
+    this.prepareDataSources()
+
     BackAndroid.addEventListener('hardwareBackPress', () => {
       const routes = _navigator.getCurrentRoutes()
 
@@ -51,6 +55,7 @@ class MainNavigator extends Component {
       }
       return false
     })
+
   }
 
   componentWillUnmount() {
@@ -59,6 +64,11 @@ class MainNavigator extends Component {
 
   onMenuTap() {
     this.refs.drawer.openDrawer()
+  }
+
+  prepareDataSources() {
+    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
+    this.props.dispatch(prepareListView(ds.cloneWithRows([])))
   }
 
   navigateTo(route) {
@@ -124,7 +134,7 @@ class MainNavigator extends Component {
 
   render() {
     // const initialRoute = {name: 'home'}
-    const initialRoute = {name: 'room', roomId: '56a41e0fe610378809bde160'}
+    const initialRoute = {name: 'room', roomId: '555092a215522ed4b3e0369e'}
 
     return (
       <DrawerLayoutAndroid

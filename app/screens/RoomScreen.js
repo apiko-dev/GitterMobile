@@ -16,6 +16,7 @@ import {getRoomMessages, prepareListView, getRoomMessagesBefore} from '../module
 import Loading from '../components/Loading'
 import MessagesList from '../components/MessagesList'
 import LoadginMoreSnack from '../components/LoadingMoreSnack'
+import SendMessageField from '../components/SendMessageField'
 
 class Room extends Component {
   constructor(props) {
@@ -26,8 +27,8 @@ class Room extends Component {
     this.onEndReached = this.onEndReached.bind(this)
   }
 
-  componentWillMount() {
-    this.prepareDataSources()
+  componentDidMount() {
+    // this.prepareDataSources()
     const {rooms, route, dispatch} = this.props
     if (!rooms[route.roomId]) {
       dispatch(getRoom(route.roomId))
@@ -35,12 +36,23 @@ class Room extends Component {
     dispatch(getRoomMessages(route.roomId))
   }
 
+  // componentDidMount() {
+  //   const {route, dispatch} = this.props
+  //
+  // }
+
+  componentWillUnmount() {
+    this.prepareDataSources()
+  }
+
   onEndReached() {
-    const {dispatch, route, hasNoMore, isLoadingMoreMessages} = this.props
-    if (hasNoMore[route.roomId] !== true && isLoadingMoreMessages === false) {
+    const {dispatch, route, hasNoMore, isLoadingMoreMessages, isLoadingMessages, listViewData} = this.props
+    if (hasNoMore[route.roomId] !== true && isLoadingMoreMessages === false
+        && isLoadingMessages === false && listViewData.data.length !== 0) {
       dispatch(getRoomMessagesBefore(route.roomId))
     }
   }
+
 
   prepareDataSources() {
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
@@ -67,6 +79,12 @@ class Room extends Component {
     )
   }
 
+  renderSendMessageFiled() {
+    return (
+      <SendMessageField />
+    )
+  }
+
   renderLoadingMore() {
     return (
       <LoadginMoreSnack />
@@ -85,7 +103,7 @@ class Room extends Component {
 
   render() {
     const {rooms, route, isLoadingMessages, isLoadingMoreMessages} = this.props
-
+    console.log("room!", rooms[route.roomId])
     if (!rooms[route.roomId]) {
       return <Loading color={colors.raspberry}/>
     }
@@ -94,7 +112,8 @@ class Room extends Component {
       <View style={s.container}>
         {this.renderToolbar()}
         {isLoadingMoreMessages ? this.renderLoadingMore() : null}
-        {!isLoadingMessages ? this.renderListView() : null}
+        {isLoadingMessages ? <View style={{flex: 1}} /> : this.renderListView()}
+        {this.renderSendMessageFiled()}
       </View>
     )
   }

@@ -32,7 +32,9 @@ export const THEMES = {
       raspberry: '#E20354',
       white: '#ffffff',
       gray: '#E0E0E0',
-      dark: '#424242'
+      dark: '#424242',
+
+      androidGray: '#f0eef0'
     }
   }
 }

@@ -17,14 +17,14 @@ const style = StyleSheet.create({
     right: 0,
     height: 25,
     width,
-    elevation: 2
+    elevation: 1
   },
   text: {
     textAlign: 'center',
     color: 'white'
   },
   info: {
-    backgroundColor: colors.darkRed
+    backgroundColor: colors.raspberry
   }
 })
 
