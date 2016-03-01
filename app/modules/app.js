@@ -1,6 +1,7 @@
 import {getItem, removeItem} from '../utils/storage'
 import {getCurrentUser} from './viewer'
 import {getRooms, getSuggestedRooms, subscribeToRooms, updateRoomState} from './rooms'
+import {appendMessages} from './messages'
 import FayeGitter from '../../libs/react-native-gitter-faye'
 import {DeviceEventEmitter, NetInfo, AppState} from 'react-native'
 
@@ -125,10 +126,16 @@ function parseEvent(event) {
   return (dispatch, getState) => {
     const message = JSON.parse(event.json)
     const {id} = getState().viewer.user
+    const {activeRoom} = getState().rooms
     const roomsChannel = `/api/v1/user/${id}/rooms`
+    const chatMessages = `/api/v1/rooms/${activeRoom}/chatMessages`
 
     if (event.channel.match(roomsChannel)) {
       dispatch(updateRoomState(message))
+    }
+
+    if (event.channel.match(chatMessages)) {
+      dispatch(appendMessages(activeRoom, [message.model]))
     }
   }
 }

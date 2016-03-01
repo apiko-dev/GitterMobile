@@ -28,7 +28,7 @@ export const THEMES = {
       codeInlineBorder: 'rgba(192,201,200,.4)',
       codeInlineBackground: 'rgba(192,201,200,.2',
 
-      darkRed: '#C10040',
+      darkRed: '#b70345',
       raspberry: '#E20354',
       white: '#ffffff',
       gray: '#E0E0E0',

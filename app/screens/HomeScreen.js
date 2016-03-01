@@ -2,6 +2,7 @@ import React, {
   Component,
   PropTypes,
   ToolbarAndroid,
+  StatusBar,
   Dimensions,
   Image,
   Text,
@@ -140,14 +141,16 @@ class HomeScreen extends Component {
   render() {
     return (
       <View style={s.container}>
-          <ParallaxScrollView
-             backgroundColor={colors.brand}
-             contentBackgroundColor="white"
-             parallaxHeaderHeight={PARALLAX_HEADER_HEIGHT}
-             pivotOffset={56}
-             renderStickyHeader={() => this.renderStickyHeader()}
-             renderBackground={() => <Image source={require('../images/gitter-background.jpg')}/>}
-             renderForeground={() => this.renderForeground()} >
+        <StatusBar
+          backgroundColor={colors.darkRed} />
+        <ParallaxScrollView
+           backgroundColor={colors.brand}
+           contentBackgroundColor="white"
+           parallaxHeaderHeight={PARALLAX_HEADER_HEIGHT}
+           pivotOffset={56}
+           renderStickyHeader={() => this.renderStickyHeader()}
+           renderBackground={() => <Image source={require('../images/gitter-background.jpg')}/>}
+           renderForeground={() => this.renderForeground()} >
 
           {this.renderBottom()}
         </ParallaxScrollView>

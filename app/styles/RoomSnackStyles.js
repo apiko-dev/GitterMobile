@@ -13,18 +13,17 @@ const style = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     position: 'absolute',
-    top: 56 + STATUS_BAR_HEIGHT,
+    top: 56,
     right: 0,
     height: 25,
     width,
-    elevation: 1
+    elevation: 4
   },
   text: {
-    textAlign: 'center',
-    color: 'white'
+    textAlign: 'center'
   },
   info: {
-    backgroundColor: colors.raspberry
+    backgroundColor: colors.androidGray
   }
 })
 

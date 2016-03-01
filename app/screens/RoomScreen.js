@@ -3,6 +3,7 @@ import React, {
   PropTypes,
   InteractionManager,
   ToolbarAndroid,
+  StatusBar,
   ListView,
   View
 } from 'react-native'
@@ -13,7 +14,8 @@ const {colors} = THEMES.gitterDefault
 
 import {getRoom, selectRoom} from '../modules/rooms'
 import {getRoomMessages, prepareListView,
-  getRoomMessagesBefore, getRoomMessagesIfNeeded} from '../modules/messages'
+  getRoomMessagesBefore, getRoomMessagesIfNeeded,
+  subscribeToChatMessages} from '../modules/messages'
 
 import Loading from '../components/Loading'
 import MessagesList from '../components/MessagesList'
@@ -32,6 +34,7 @@ class Room extends Component {
   componentDidMount() {
     this.prepareDataSources()
     const {activeRoom, rooms, route: { roomId }, dispatch, listViewData} = this.props
+    // dispatch(subscribeToChatMessages(roomId))
 
     InteractionManager.runAfterInteractions(() => {
       if (activeRoom !== roomId) {
@@ -72,16 +75,12 @@ class Room extends Component {
     // ]
     const room = rooms[route.roomId]
     return (
-      <View>
-        {/* The view below is the crutch for padding top */}
-        <View style={s.toolbarPadding} />
-        <ToolbarAndroid
-          navIcon={require('image!ic_menu_white_24dp')}
-          onIconClicked={this.props.onMenuTap}
-          title={room.name}
-          titleColor="white"
-          style={s.toolbar} />
-      </View>
+      <ToolbarAndroid
+        navIcon={require('image!ic_menu_white_24dp')}
+        onIconClicked={this.props.onMenuTap}
+        title={room.name}
+        titleColor="white"
+        style={s.toolbar} />
     )
   }
 
@@ -116,6 +115,7 @@ class Room extends Component {
 
     return (
       <View style={s.container}>
+
         {this.renderToolbar()}
         {isLoadingMoreMessages ? this.renderLoadingMore() : null}
         {isLoadingMessages ? <View style={{flex: 1}} /> : this.renderListView()}

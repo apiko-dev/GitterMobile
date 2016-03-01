@@ -14,7 +14,6 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   toolbar: {
-    marginTop: STATUS_BAR_HEIGHT,
     height: 56,
     elevation: 8
   },
