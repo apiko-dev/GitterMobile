@@ -10,9 +10,6 @@ import Avatar from './Avatar'
 const Message = ({text, fromUser, ...props}) => {
   const opacity = props.hasOwnProperty('sending') && props.sending === true ? 0.4 : 1
   const backgroundColor = props.hasOwnProperty('failed') && props.failed === true ? 'red' : 'transparent'
-  if (props.hasOwnProperty('sending') || props.hasOwnProperty('failed')) {
-    debugger
-  }
 
   return (
     <View style={[s.container, {opacity, backgroundColor}]}>

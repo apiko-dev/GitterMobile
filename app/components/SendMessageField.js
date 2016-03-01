@@ -25,7 +25,7 @@ export default class SendMessageField extends Component {
 
   sendMessage() {
     this.props.onSending(this.state.text)
-    this.setState({text: ''})
+    this.setState({text: '', height: 56})
   }
 
   render() {
