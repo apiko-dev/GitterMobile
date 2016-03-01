@@ -30,16 +30,16 @@ class Room extends Component {
 
   componentDidMount() {
     this.prepareDataSources()
-  }
+    const {activeRoom, rooms, route: { roomId }, dispatch, listViewData} = this.props
 
-  componentWillReceiveProps(nextProps) {
-    const {rooms, route: { roomId }, dispatch, listViewData} = this.props
     InteractionManager.runAfterInteractions(() => {
-      if (!listViewData[roomId]) {
+      if (activeRoom !== roomId) {
         dispatch(selectRoom(roomId))
-        if (!rooms[roomId]) {
-          dispatch(getRoom(roomId))
-        }
+      }
+      if (!rooms[roomId]) {
+        dispatch(getRoom(roomId))
+      }
+      if (!listViewData[roomId]) {
         dispatch(getRoomMessages(roomId))
       }
     })
@@ -123,6 +123,7 @@ class Room extends Component {
 }
 
 Room.propTypes = {
+  activeRoom: PropTypes.string,
   rooms: PropTypes.object,
   onMenuTap: PropTypes.func,
   route: PropTypes.object,
@@ -136,6 +137,7 @@ Room.propTypes = {
 
 function mapStateToProps(state) {
   return {
+    activeRoom: state.rooms.activeRoom,
     rooms: state.rooms.rooms,
     listViewData: state.messages.listView,
     isLoadingMessages: state.messages.isLoading,

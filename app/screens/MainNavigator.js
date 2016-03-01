@@ -3,13 +3,11 @@ import React, {
   PropTypes,
   DrawerLayoutAndroid,
   BackAndroid,
-  ListView,
   Navigator
 } from 'react-native'
 import _ from 'lodash'
 import {connect} from 'react-redux'
 import {selectRoom} from '../modules/rooms'
-import {prepareListView} from '../modules/messages'
 
 import HomeScreen from './HomeScreen'
 import RoomScreen from './RoomScreen'
@@ -71,9 +69,15 @@ class MainNavigator extends Component {
 
   navigateToFromDrawer(route) {
     const routes = _navigator.getCurrentRoutes()
-    if (_.isEqual(route, routes[routes.length - 1])) return false
-    _navigator.push(route)
+    if (_.isEqual(route, routes[routes.length - 1])) {
+      return false
+    }
     this.refs.drawer.closeDrawer()
+    if (routes[routes.length - 1].name === 'room' && route.name === 'room') {
+      _navigator.replace(route)
+    } else {
+      _navigator.push(route)
+    }
   }
 
 
@@ -126,7 +130,7 @@ class MainNavigator extends Component {
 
   render() {
     const initialRoute = {name: 'home'}
-    // const initialRoute = {name: 'room', roomId: '555092a215522ed4b3e0369e'}
+    // const initialRoute = {name: 'room', roomId: '56a41e0fe610378809bde160'}
 
     return (
       <DrawerLayoutAndroid
