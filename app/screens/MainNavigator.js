@@ -2,6 +2,7 @@ import React, {
   Component,
   PropTypes,
   DrawerLayoutAndroid,
+  InteractionManager,
   BackAndroid,
   Navigator
 } from 'react-native'
@@ -72,12 +73,17 @@ class MainNavigator extends Component {
     if (_.isEqual(route, routes[routes.length - 1])) {
       return false
     }
+
     this.refs.drawer.closeDrawer()
-    if (routes[routes.length - 1].name === 'room' && route.name === 'room') {
-      _navigator.replace(route)
-    } else {
-      _navigator.push(route)
-    }
+
+    // delay is needed for smoothly drawer closing
+    setTimeout(() => {
+      if (routes[routes.length - 1].name === 'room' && route.name === 'room') {
+        _navigator.replace(route)
+      } else {
+        _navigator.push(route)
+      }
+    }, 500)
   }
 
 

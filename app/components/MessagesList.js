@@ -37,7 +37,7 @@ export default class MessagesList extends Component {
         scrollRenderAheadDistance={1000}
         onEndReachedThreshold={500}
         pageSize={30}
-        initialListSize={10}
+        initialListSize={30}
         renderRow={(rowData, _, rowId) => this.renderRow(rowData, rowId)} />
     )
   }

@@ -13,6 +13,7 @@ export const ROOM_MESSAGES_BEFORE = 'messages/ROOM_MESSAGES_BEFORE'
 export const ROOM_MESSAGES_BEFORE_RECEIVED = 'messages/ROOM_MESSAGES_BEFORE_RECEIVED'
 export const ROOM_MESSAGES_BEFORE_FAILED = 'messages/ROOM_MESSAGES_BEFORE_FAILED'
 export const ROOM_HAS_NO_MORE_MESSAGES = 'messages/ROOM_HAS_NO_MORE_MESSAGES'
+export const ROOM_MESSAGES_RETURN_FROM_CACHE = 'messages/ROOM_MESSAGES_RETURN_FROM_CACHE'
 export const PREPARE_LIST_VIEW = 'messages/PREPARE_LIST_VIEW'
 
 /**
@@ -68,6 +69,39 @@ export function getRoomMessagesBefore(roomId) {
       }
     } catch (error) {
       dispatch({type: ROOM_MESSAGES_BEFORE_FAILED, error})
+    }
+  }
+}
+
+export function getRoomMessagesIfNeeded(roomId) {
+  return async (dispatch, getState) => {
+    const {token} = getState().auth
+    const {listView} = getState().messages
+    const {limit} = getState().settings
+    const data = listView[roomId]
+
+    console.warn("HIIIII!")
+
+    dispatch({type: ROOM_MESSAGES, payload: roomId})
+    try {
+      dispatch({type: ROOM_MESSAGES_RETURN_FROM_CACHE, roomId})
+
+      const payload = await Api.roomMessages(token, roomId, limit)
+      if (_.includes(data, payload[0].id) && _.includes(data, _.last(payload).id)) {
+        console.warn("HIIIII again!")
+        dispatch({type: ROOM_MESSAGES_RETURN_FROM_CACHE, roomId})
+      } else {
+        if (payload.length === 0) {
+          dispatch({type: ROOM_HAS_NO_MORE_MESSAGES, roomId})
+        } else {
+          dispatch({type: ROOM_MESSAGES_RECEIVED, roomId, payload})
+          if (payload.length < limit) {
+            dispatch({type: ROOM_HAS_NO_MORE_MESSAGES, roomId})
+          }
+        }
+      }
+    } catch (error) {
+      dispatch({type: ROOM_MESSAGES_FAILED, error})
     }
   }
 }
@@ -188,6 +222,11 @@ export default function messages(state = initialState, action) {
       }
     }
   }
+
+  case ROOM_MESSAGES_RETURN_FROM_CACHE:
+    return {...state,
+      isLoading: false
+    }
 
   case PREPARE_LIST_VIEW:
     return {...state,

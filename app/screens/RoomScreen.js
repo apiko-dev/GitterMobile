@@ -12,7 +12,8 @@ import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault
 
 import {getRoom, selectRoom} from '../modules/rooms'
-import {getRoomMessages, prepareListView, getRoomMessagesBefore} from '../modules/messages'
+import {getRoomMessages, prepareListView,
+  getRoomMessagesBefore, getRoomMessagesIfNeeded} from '../modules/messages'
 
 import Loading from '../components/Loading'
 import MessagesList from '../components/MessagesList'
@@ -41,6 +42,8 @@ class Room extends Component {
       }
       if (!listViewData[roomId]) {
         dispatch(getRoomMessages(roomId))
+      } else {
+        dispatch(getRoomMessagesIfNeeded(roomId))
       }
     })
   }

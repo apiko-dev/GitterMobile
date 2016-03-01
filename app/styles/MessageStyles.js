@@ -28,8 +28,7 @@ const style = StyleSheet.create({
 
   },
   text: {
-    fontSize: 16,
-    lineHeight: 20
+    fontSize: 14
   }
 })
 
