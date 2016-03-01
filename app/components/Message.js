@@ -7,9 +7,15 @@ import s from '../styles/MessageStyles'
 
 import Avatar from './Avatar'
 
-const Message = ({text, fromUser}) => {
+const Message = ({text, fromUser, ...props}) => {
+  const opacity = props.hasOwnProperty('sending') && props.sending === true ? 0.4 : 1
+  const backgroundColor = props.hasOwnProperty('failed') && props.failed === true ? 'red' : 'transparent'
+  if (props.hasOwnProperty('sending') || props.hasOwnProperty('failed')) {
+    debugger
+  }
+
   return (
-    <View style={s.container}>
+    <View style={[s.container, {opacity, backgroundColor}]}>
       <Avatar src={fromUser.avatarUrlSmall} size={30} />
       <View style={s.content}>
         <View style={s.top}>
@@ -26,7 +32,9 @@ const Message = ({text, fromUser}) => {
 
 Message.propTypes = {
   text: PropTypes.string,
-  fromUser: PropTypes.object
+  fromUser: PropTypes.object,
+  sending: PropTypes.bool,
+  failed: PropTypes.bool
 }
 
 export default Message

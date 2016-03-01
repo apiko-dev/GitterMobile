@@ -1,5 +1,6 @@
 import * as Api from '../api/gitter'
 import normalize from '../utils/normalize'
+import createMessage from '../utils/createMessage'
 import _ from 'lodash'
 import FayeGitter from '../../libs/react-native-gitter-faye'
 
@@ -18,6 +19,10 @@ export const ROOM_MESSAGES_RETURN_FROM_CACHE = 'messages/ROOM_MESSAGES_RETURN_FR
 export const ROOM_MESSAGES_APPEND = 'messages/ROOM_MESSAGES_APPEND'
 export const PREPARE_LIST_VIEW = 'messages/PREPARE_LIST_VIEW'
 export const SUBSCRIBE_TO_CHAT_MESSAGES = 'messages/SUBSCRIBE_TO_CHAT_MESSAGES'
+export const SEND_MESSAGE = 'messages/SEND_MESSAGE'
+export const SEND_MESSAGE_RECEIVED = 'messages/SEND_MESSAGE_RECEIVED'
+export const SEND_MESSAGE_FAILED = 'messages/SEND_MESSAGE_FAILED'
+
 
 /**
  * Action creators
@@ -76,6 +81,10 @@ export function getRoomMessagesBefore(roomId) {
   }
 }
 
+/**
+ * Updates listView if needed
+ */
+
 export function getRoomMessagesIfNeeded(roomId) {
   return async (dispatch, getState) => {
     const {token} = getState().auth
@@ -116,6 +125,10 @@ export function getRoomMessagesIfNeeded(roomId) {
   }
 }
 
+/**
+ * Appending new messages at the begining of list
+ */
+
 export function appendMessages(roomId, payload) {
   return {
     type: ROOM_MESSAGES_APPEND, payload: [...payload], roomId
@@ -132,10 +145,34 @@ export function prepareListView(roomId, ds) {
   }
 }
 
+/**
+ * Subscribe for new room's messages => faye chat messages endpoint
+ */
+
 export function subscribeToChatMessages(roomId) {
   return (dispatch, getState) => {
     FayeGitter.subscribe(`/api/v1/rooms/${roomId}/chatMessages`)
     dispatch({type: SUBSCRIBE_TO_CHAT_MESSAGES, roomId})
+  }
+}
+
+/**
+ * Send messages
+ */
+
+export function sendMessage(roomId, text) {
+  return async (dispatch, getState) => {
+    const {token} = getState().auth
+    const {user} = getState().viewer
+    const message = createMessage(user, text)
+    dispatch({type: SEND_MESSAGE, roomId, message})
+
+    try {
+      const payload = await Api.sendMessage(token, roomId, text)
+      dispatch({type: SEND_MESSAGE_RECEIVED, message, roomId, payload})
+    } catch (error) {
+      dispatch({type: SEND_MESSAGE_FAILED, error, message, roomId, text})
+    }
   }
 }
 
@@ -290,6 +327,75 @@ export default function messages(state = initialState, action) {
         }
       }
     }
+
+  case SEND_MESSAGE: {
+    const {message, roomId} = action
+
+    const rowIds = [].concat(state.listView[roomId].rowIds)
+    const data = [].concat(state.listView[roomId].data)
+
+    data.push(message)
+    rowIds.unshift(data.length - 1)
+    return {...state,
+      listView: {...state.listView,
+        [roomId]: {
+          dataSource: state.listView[roomId].dataSource.cloneWithRows(data, rowIds),
+          data,
+          rowIds
+        }
+      }
+    }
+  }
+
+  case SEND_MESSAGE_RECEIVED: {
+    const {message, roomId, payload} = action
+    const {ids, entities} = normalize([payload])
+    const byRoom = state.byRoom[roomId]
+    const rowIds = [].concat(state.listView[roomId].rowIds)
+    const data = [].concat(state.listView[roomId].data)
+
+    const index = _.indexOf(data, message)
+
+    data[index] = payload
+
+    return {...state,
+      isLoadingMore: false,
+      byRoom: {...state.byRoom,
+        [roomId]: byRoom.concat(ids)
+      },
+      entities: _.merge({}, state.entities, entities),
+      listView: {...state.listView,
+        [roomId]: {
+          dataSource: state.listView[roomId].dataSource.cloneWithRows(data, rowIds),
+          data,
+          rowIds
+        }
+      }
+    }
+  }
+
+  case SEND_MESSAGE_FAILED: {
+    const {message, roomId, error} = action
+
+    const rowIds = [].concat(state.listView[roomId].rowIds)
+    const data = [].concat(state.listView[roomId].data)
+
+    const index = _.indexOf(data, message)
+    data[index].sending = false
+    data[index].failed = true
+
+    return {...state,
+      listView: {...state.listView,
+        [roomId]: {
+          dataSource: state.listView[roomId].dataSource.cloneWithRows(data, rowIds),
+          data,
+          rowIds
+        }
+      },
+      error: true,
+      errors: error
+    }
+  }
 
   case ROOM_MESSAGES_BEFORE_FAILED:
   case ROOM_MESSAGES_FAILED:
