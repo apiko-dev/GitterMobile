@@ -26,10 +26,18 @@ export const PREPARE_LIST_VIEW = 'messages/PREPARE_LIST_VIEW'
 export function getRoomMessages(roomId) {
   return async (dispatch, getState) => {
     const {token} = getState().auth
+    const {limit} = getState().settings
     dispatch({type: ROOM_MESSAGES, payload: roomId})
     try {
-      const payload = await Api.roomMessages(token, roomId)
-      dispatch({type: ROOM_MESSAGES_RECEIVED, roomId, payload})
+      const payload = await Api.roomMessages(token, roomId, limit)
+      if (payload.length === 0) {
+        dispatch({type: ROOM_HAS_NO_MORE_MESSAGES, roomId})
+      } else {
+        dispatch({type: ROOM_MESSAGES_RECEIVED, roomId, payload})
+        if (payload.length < limit) {
+          dispatch({type: ROOM_HAS_NO_MORE_MESSAGES, roomId})
+        }
+      }
     } catch (error) {
       dispatch({type: ROOM_MESSAGES_FAILED, error})
     }
@@ -44,15 +52,19 @@ export function getRoomMessagesBefore(roomId) {
   return async (dispatch, getState) => {
     const {token} = getState().auth
     const {byRoom} = getState().messages
+    const {limit} = getState().settings
     const lastMessageId = byRoom[roomId][0]
     dispatch({type: ROOM_MESSAGES_BEFORE, payload: roomId})
     try {
-      const payload = await Api.roomMessagesBefore(token, roomId, lastMessageId)
+      const payload = await Api.roomMessagesBefore(token, roomId, limit, lastMessageId)
 
       if (payload.length === 0) {
         dispatch({type: ROOM_HAS_NO_MORE_MESSAGES, roomId})
       } else {
         dispatch({type: ROOM_MESSAGES_BEFORE_RECEIVED, roomId, payload})
+        if (payload.length < limit) {
+          dispatch({type: ROOM_HAS_NO_MORE_MESSAGES, roomId})
+        }
       }
     } catch (error) {
       dispatch({type: ROOM_MESSAGES_BEFORE_FAILED, error})

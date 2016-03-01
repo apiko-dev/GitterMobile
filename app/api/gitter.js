@@ -17,12 +17,12 @@ export function room(token, id) {
   return callApi('rooms/' + id, token).then(res => res.json())
 }
 
-export function roomMessages(token, id) {
-  return callApi(`rooms/${id}/chatMessages?limit=30`, token).then(res => res.json())
+export function roomMessages(token, id, limit) {
+  return callApi(`rooms/${id}/chatMessages?limit=${limit}`, token).then(res => res.json())
 }
 
-export function roomMessagesBefore(token, id, beforeId) {
-  return callApi(`rooms/${id}/chatMessages?limit=30&beforeId=${beforeId}`, token).then(res => res.json())
+export function roomMessagesBefore(token, id, limit, beforeId) {
+  return callApi(`rooms/${id}/chatMessages?limit=${limit}&beforeId=${beforeId}`, token).then(res => res.json())
 }
 
 function callApi(endpoint, token, options = {method: 'get'}) {
