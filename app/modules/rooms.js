@@ -137,8 +137,8 @@ export default function rooms(state = initialState, action) {
     const normalized = normalize(action.payload)
     return {...state,
       isLoading: false,
-      ids: normalized.ids,
-      rooms: normalized.entities
+      ids: state.ids.concat(normalized.ids),
+      rooms: _.merge({}, state.rooms, normalized.entities)
     }
   }
 

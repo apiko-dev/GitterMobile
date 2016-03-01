@@ -5,7 +5,8 @@ import React, {
   ToolbarAndroid,
   StatusBar,
   ListView,
-  View
+  View,
+  Text
 } from 'react-native'
 import {connect} from 'react-redux'
 import s from '../styles/RoomStyles'
@@ -21,6 +22,7 @@ import Loading from '../components/Loading'
 import MessagesList from '../components/MessagesList'
 import LoadginMoreSnack from '../components/LoadingMoreSnack'
 import SendMessageField from '../components/SendMessageField'
+import JoinRoomField from '../components/JoinRoomField'
 
 class Room extends Component {
   constructor(props) {
@@ -85,6 +87,12 @@ class Room extends Component {
   }
 
   renderSendMessageFiled() {
+    const {rooms, route: {roomId}} = this.props
+    if (!rooms[roomId].roomMember) {
+      return (
+        <JoinRoomField />
+      )
+    }
     return (
       <SendMessageField />
     )
@@ -108,14 +116,14 @@ class Room extends Component {
 
   render() {
     const {rooms, route, isLoadingMessages, isLoadingMoreMessages} = this.props
-
     if (!rooms[route.roomId]) {
       return <Loading color={colors.raspberry}/>
     }
 
     return (
       <View style={s.container}>
-
+        <StatusBar
+          backgroundColor={colors.darkRed} />
         {this.renderToolbar()}
         {isLoadingMoreMessages ? this.renderLoadingMore() : null}
         {isLoadingMessages ? <View style={{flex: 1}} /> : this.renderListView()}
