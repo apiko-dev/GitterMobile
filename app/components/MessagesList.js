@@ -9,7 +9,14 @@ import InvertibleScrollView from 'react-native-invertible-scroll-view'
 import Message from './Message'
 
 export default class MessagesList extends Component {
+  constructor(props) {
+    super(props)
+
+    this.renderRow = this.renderRow.bind(this)
+  }
+
   renderRow(rowData, rowId) {
+    debugger
     if (!!rowData.hasNoMore) {
       return (
         <Text>It's a verry beginning of this room messages.</Text>
@@ -17,12 +24,16 @@ export default class MessagesList extends Component {
     }
 
     return (
-      <Message {...rowData} />
+      <Message
+        onResendingMessage={this.props.onResendingMessage}
+        rowId={rowId}
+        {...rowData} />
     )
   }
 
   render() {
     const {listViewData} = this.props
+    debugger
 
     if (!listViewData) {
       return <View style={{flex: 1}} />
@@ -44,6 +55,7 @@ export default class MessagesList extends Component {
 }
 
 MessagesList.propTypes = {
+  onResendingMessage: PropTypes.func,
   listViewData: PropTypes.object,
   dispatch: PropTypes.func,
   onEndReached: PropTypes.func

@@ -15,10 +15,17 @@ export default class SendMessageField extends Component {
   constructor(props) {
     super(props)
 
+    this.sendMessage = this.sendMessage.bind(this)
+
     this.state = {
       height: 56,
       text: ''
     }
+  }
+
+  sendMessage() {
+    this.props.onSending(this.state.text)
+    this.setState({text: '', height: 56})
   }
 
   render() {
@@ -38,7 +45,8 @@ export default class SendMessageField extends Component {
           placeholder="Type your message here..." />
         <TouchableNativeFeedback
           background={TouchableNativeFeedback.SelectableBackgroundBorderless()}
-          accessible={!this.state.text.trim() ? false : true}>
+          accessible={!this.state.text.trim() ? false : true}
+          onPress={() => this.sendMessage()}>
           <View style={s.button}>
             <Image
               source={require('image!ic_send_black_24dp')}
@@ -49,4 +57,8 @@ export default class SendMessageField extends Component {
 
     )
   }
+}
+
+SendMessageField.propTypes = {
+  onSending: PropTypes.func
 }

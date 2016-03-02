@@ -3,20 +3,25 @@ import React, {
   PropTypes,
   InteractionManager,
   ToolbarAndroid,
-  StatusBar,
   ListView,
-  View,
-  Text
+  View
 } from 'react-native'
 import {connect} from 'react-redux'
+import _ from 'lodash'
 import s from '../styles/RoomStyles'
 import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault
 
 import {getRoom, selectRoom} from '../modules/rooms'
-import {getRoomMessages, prepareListView,
-  getRoomMessagesBefore, getRoomMessagesIfNeeded,
-  subscribeToChatMessages} from '../modules/messages'
+import {
+  getRoomMessages,
+  prepareListView,
+  getRoomMessagesBefore,
+  getRoomMessagesIfNeeded,
+  subscribeToChatMessages,
+  sendMessage,
+  resendMessage
+} from '../modules/messages'
 
 import Loading from '../components/Loading'
 import MessagesList from '../components/MessagesList'
@@ -31,6 +36,8 @@ class Room extends Component {
     this.renderListView = this.renderListView.bind(this)
     this.prepareDataSources = this.prepareDataSources.bind(this)
     this.onEndReached = this.onEndReached.bind(this)
+    this.onSending = this.onSending.bind(this)
+    this.onResendingMessage = this.onResendingMessage.bind(this)
   }
 
   componentDidMount() {
@@ -61,11 +68,21 @@ class Room extends Component {
     }
   }
 
+  onSending(text) {
+    const {dispatch, route: {roomId}} = this.props
+    dispatch(sendMessage(roomId, text))
+  }
+
+  onResendingMessage(rowId, text) {
+    const {dispatch, route: {roomId}} = this.props
+    dispatch(resendMessage(roomId, rowId, text))
+  }
+
 
   prepareDataSources() {
     const {listViewData, route: {roomId}, dispatch} = this.props
     if (!listViewData[roomId]) {
-      const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
+      const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => !_.isEqual(r1, r2)})
       dispatch(prepareListView(roomId, ds.cloneWithRows([])))
     }
   }
@@ -94,13 +111,20 @@ class Room extends Component {
       )
     }
     return (
-      <SendMessageField />
+      <SendMessageField
+        onSending={this.onSending.bind(this)}/>
     )
   }
 
   renderLoadingMore() {
     return (
-      <LoadginMoreSnack />
+    <LoadginMoreSnack />
+    )
+  }
+
+  renderLoading() {
+    return (
+      <Loading color={colors.raspberry}/>
     )
   }
 
@@ -109,6 +133,7 @@ class Room extends Component {
     return (
       <MessagesList
         listViewData={listViewData[roomId]}
+        onResendingMessage={this.onResendingMessage}
         dispatch={dispatch}
         onEndReached={this.onEndReached.bind(this)} />
     )
@@ -117,16 +142,14 @@ class Room extends Component {
   render() {
     const {rooms, route, isLoadingMessages, isLoadingMoreMessages} = this.props
     if (!rooms[route.roomId]) {
-      return <Loading color={colors.raspberry}/>
+      return this.renderLoading()
     }
 
     return (
       <View style={s.container}>
-        <StatusBar
-          backgroundColor={colors.darkRed} />
         {this.renderToolbar()}
         {isLoadingMoreMessages ? this.renderLoadingMore() : null}
-        {isLoadingMessages ? <View style={{flex: 1}} /> : this.renderListView()}
+        {isLoadingMessages ? this.renderLoading() : this.renderListView()}
         {this.renderSendMessageFiled()}
       </View>
     )

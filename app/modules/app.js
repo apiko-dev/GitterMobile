@@ -1,4 +1,4 @@
-import {getItem, removeItem} from '../utils/storage'
+import {getItem} from '../utils/storage'
 import {getCurrentUser} from './viewer'
 import {getRooms, getSuggestedRooms, subscribeToRooms, updateRoomState} from './rooms'
 import {appendMessages} from './messages'

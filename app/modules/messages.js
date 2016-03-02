@@ -1,5 +1,6 @@
 import * as Api from '../api/gitter'
 import normalize from '../utils/normalize'
+import createMessage from '../utils/createMessage'
 import _ from 'lodash'
 import FayeGitter from '../../libs/react-native-gitter-faye'
 
@@ -18,6 +19,13 @@ export const ROOM_MESSAGES_RETURN_FROM_CACHE = 'messages/ROOM_MESSAGES_RETURN_FR
 export const ROOM_MESSAGES_APPEND = 'messages/ROOM_MESSAGES_APPEND'
 export const PREPARE_LIST_VIEW = 'messages/PREPARE_LIST_VIEW'
 export const SUBSCRIBE_TO_CHAT_MESSAGES = 'messages/SUBSCRIBE_TO_CHAT_MESSAGES'
+export const SEND_MESSAGE = 'messages/SEND_MESSAGE'
+export const SEND_MESSAGE_RECEIVED = 'messages/SEND_MESSAGE_RECEIVED'
+export const SEND_MESSAGE_FAILED = 'messages/SEND_MESSAGE_FAILED'
+export const RESEND_MESSAGE = 'messages/RESEND_MESSAGE'
+// export const RESEND_MESSAGE_RECEIVED = 'messages/RESEND_MESSAGE_RECEIVED'
+// export const RESEND_MESSAGE_FAILED = 'messages/RESEND_MESSAGE_FAILED'
+
 
 /**
  * Action creators
@@ -76,6 +84,10 @@ export function getRoomMessagesBefore(roomId) {
   }
 }
 
+/**
+ * Updates listView if needed
+ */
+
 export function getRoomMessagesIfNeeded(roomId) {
   return async (dispatch, getState) => {
     const {token} = getState().auth
@@ -83,14 +95,14 @@ export function getRoomMessagesIfNeeded(roomId) {
     const {limit} = getState().settings
     const {data} = listView[roomId]
 
-    dispatch({type: ROOM_MESSAGES_RETURN_FROM_CACHE, roomId})
+    dispatch({type: ROOM_MESSAGES_RETURN_FROM_CACHE, roomId, limit})
 
     try {
       const payload = await Api.roomMessages(token, roomId, limit)
 
       if (_.findIndex(data, payload[0]) !== -1
           && _.findIndex(data, _.last(payload)) !== -1) {
-        dispatch({type: ROOM_MESSAGES_RETURN_FROM_CACHE, roomId})
+        dispatch({type: ROOM_MESSAGES_RETURN_FROM_CACHE, roomId, limit})
       } else if (_.findIndex(data, payload[0]) === -1
         && _.findIndex(data, _.last(payload)) !== -1) {
         const newMessages = payload.map(item => {
@@ -116,6 +128,10 @@ export function getRoomMessagesIfNeeded(roomId) {
   }
 }
 
+/**
+ * Appending new messages at the begining of list
+ */
+
 export function appendMessages(roomId, payload) {
   return {
     type: ROOM_MESSAGES_APPEND, payload: [...payload], roomId
@@ -132,10 +148,54 @@ export function prepareListView(roomId, ds) {
   }
 }
 
+/**
+ * Subscribe for new room's messages => faye chat messages endpoint
+ */
+
 export function subscribeToChatMessages(roomId) {
-  return (dispatch, getState) => {
+  return dispatch => {
     FayeGitter.subscribe(`/api/v1/rooms/${roomId}/chatMessages`)
     dispatch({type: SUBSCRIBE_TO_CHAT_MESSAGES, roomId})
+  }
+}
+
+/**
+ * Send messages
+ */
+
+export function sendMessage(roomId, text) {
+  return async (dispatch, getState) => {
+    const {token} = getState().auth
+    const {user} = getState().viewer
+    const message = createMessage(user, text)
+    dispatch({type: SEND_MESSAGE, roomId, message})
+
+    try {
+      const payload = await Api.sendMessage(token, roomId, text)
+      dispatch({type: SEND_MESSAGE_RECEIVED, message, roomId, payload})
+    } catch (error) {
+      dispatch({type: SEND_MESSAGE_FAILED, error, message, roomId})
+    }
+  }
+}
+
+/**
+ * Resend messages
+ */
+
+export function resendMessage(roomId, rowId, text) {
+  return async (dispatch, getState) => {
+    const {token} = getState().auth
+    const {user} = getState().viewer
+    const message = createMessage(user, text)
+    dispatch({type: RESEND_MESSAGE, roomId, message, rowId})
+
+    try {
+      const payload = await Api.sendMessage(token, roomId, text)
+      dispatch({type: SEND_MESSAGE_RECEIVED, message, roomId, payload})
+    } catch (error) {
+      dispatch({type: SEND_MESSAGE_FAILED, error, message, roomId})
+    }
   }
 }
 
@@ -263,6 +323,7 @@ export default function messages(state = initialState, action) {
     rowIds.push(data.length - 1)
 
     return {...state,
+      isLoading: false,
       isLoadingMore: false,
       hasNoMore: {...state.hasNoMore, [action.roomId]: true},
       listView: {...state.listView,
@@ -275,10 +336,36 @@ export default function messages(state = initialState, action) {
     }
   }
 
-  case ROOM_MESSAGES_RETURN_FROM_CACHE:
-    return {...state,
-      isLoading: false
+  case ROOM_MESSAGES_RETURN_FROM_CACHE: {
+    const {roomId, limit} = action
+    const {byRoom, entities} = state
+    const rowIds = []
+    const data = []
+    let hasNoMore = _.merge({}, state.hasNoMore)
+    // we need to reverse our messages array to display it inverted
+    const reversedIds = [].concat(byRoom[roomId]).reverse()
+    for (let i = 0; i < reversedIds.length && i < 30; i++) {
+      data.push(entities[reversedIds[i]])
+      rowIds.push(data.length - 1)
     }
+    if (reversedIds.length < limit) {
+      data.push({hasNoMore: true})
+      rowIds.push(data.length - 1)
+      hasNoMore = {...state.hasNoMore, [roomId]: true}
+    }
+    return {...state,
+      hasNoMore,
+      isLoading: false,
+      listView: {...state.listView,
+        [roomId]: {
+          dataSource: state.listView[roomId].dataSource.cloneWithRows(data, rowIds),
+          data,
+          rowIds
+        }
+      }
+    }
+  }
+
 
   case PREPARE_LIST_VIEW:
     return {...state,
@@ -290,6 +377,95 @@ export default function messages(state = initialState, action) {
         }
       }
     }
+
+  case SEND_MESSAGE: {
+    const {message, roomId} = action
+
+    const rowIds = [].concat(state.listView[roomId].rowIds)
+    const data = [].concat(state.listView[roomId].data)
+
+    data.push(message)
+    rowIds.unshift(data.length - 1)
+    return {...state,
+      listView: {...state.listView,
+        [roomId]: {
+          dataSource: state.listView[roomId].dataSource.cloneWithRows(data, rowIds),
+          data,
+          rowIds
+        }
+      }
+    }
+  }
+
+  case SEND_MESSAGE_RECEIVED: {
+    const {message, roomId, payload} = action
+    const {ids, entities} = normalize([payload])
+    const byRoom = state.byRoom[roomId]
+    const rowIds = [].concat(state.listView[roomId].rowIds)
+    const data = [].concat(state.listView[roomId].data)
+
+    const index = _.findIndex(data, message)
+
+    data[index] = payload
+
+    return {...state,
+      byRoom: {...state.byRoom,
+        [roomId]: byRoom.concat(ids)
+      },
+      entities: _.merge({}, state.entities, entities),
+      listView: {...state.listView,
+        [roomId]: {
+          dataSource: state.listView[roomId].dataSource.cloneWithRows(data, rowIds),
+          data,
+          rowIds
+        }
+      }
+    }
+  }
+
+  case SEND_MESSAGE_FAILED: {
+    const {message, roomId, error} = action
+
+    const rowIds = [].concat(state.listView[roomId].rowIds)
+    const data = [].concat(state.listView[roomId].data)
+    const newMessage = _.merge({}, message)
+    const index = _.findIndex(data, message)
+    newMessage.failed = true
+    newMessage.sending = false
+    newMessage.sent = 'failed'
+    data[index] = newMessage
+
+    return {...state,
+      listView: {...state.listView,
+        [roomId]: {
+          dataSource: state.listView[roomId].dataSource.cloneWithRows(data, rowIds),
+          data,
+          rowIds
+        }
+      },
+      error: true,
+      errors: error
+    }
+  }
+
+  case RESEND_MESSAGE: {
+    const {message, roomId, rowId} = action
+    const rowIds = [].concat(state.listView[roomId].rowIds)
+    const data = [].concat(state.listView[roomId].data)
+    const newMessage = _.merge({}, message)
+
+    data[rowId] = newMessage
+
+    return {...state,
+      listView: {...state.listView,
+        [roomId]: {
+          dataSource: state.listView[roomId].dataSource.cloneWithRows(data, rowIds),
+          data,
+          rowIds
+        }
+      }
+    }
+  }
 
   case ROOM_MESSAGES_BEFORE_FAILED:
   case ROOM_MESSAGES_FAILED:
