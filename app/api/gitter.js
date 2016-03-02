@@ -43,6 +43,12 @@ export function joinRoom(token, uri) {
   })
 }
 
+export function leaveRoom(token, roomId, userId) {
+  return callApi(`/rooms/${roomId}/users/${userId}`, token, {
+    method: 'DELETE'
+  })
+}
+
 /**
  * Private functions
  */

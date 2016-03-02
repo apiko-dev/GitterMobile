@@ -25,6 +25,9 @@ export const ROOM_FAILED = 'rooms/ROOM_FAILED'
 export const JOIN_ROOM = 'rooms/JOIN_ROOM'
 export const JOIN_ROOM_OK = 'rooms/JOIN_ROOM_OK'
 export const JOIN_ROOM_FAILED = 'rooms/JOIN_ROOM_FAILED'
+export const LEAVE_ROOM = 'rooms/LEAVE_ROOM'
+export const LEAVE_ROOM_OK = 'rooms/LEAVE_ROOM_OK'
+export const LEAVE_ROOM_FAILED = 'rooms/LEAVE_ROOM_FAILED'
 
 
 /**
@@ -133,6 +136,31 @@ export function joinRoom(roomId) {
 }
 
 /**
+ * Leave room
+ */
+
+export function leaveRoom(roomId, userId) {
+  return async (dispatch, getState) => {
+    const {token} = getState().auth
+    const newUserId = userId || getState().viewer.user.id
+
+    dispatch({type: LEAVE_ROOM, roomId})
+
+    try {
+      const payload = await Api.leaveRoom(token, roomId, newUserId)
+
+      if (!!payload.success && payload.success === true) {
+        dispatch({type: LEAVE_ROOM_OK, roomId, userId})
+      } else {
+        dispatch({type: LEAVE_ROOM_FAILED, error: `User ${newUserId} can't leave room ${roomId}`})
+      }
+    } catch (error) {
+      dispatch({type: LEAVE_ROOM_FAILED, error})
+    }
+  }
+}
+
+/**
  * Reducer
  */
 
@@ -209,10 +237,23 @@ export default function rooms(state = initialState, action) {
     }
   }
 
+  case LEAVE_ROOM_OK: {
+    const {roomId} = action
+    const room = state.rooms[roomId]
+    const newRoom = _.merge({}, room, {roomMember: false})
+    return {...state,
+      rooms: {...state.rooms,
+        [roomId]: newRoom
+      }
+    }
+  }
+
   case LOGOUT: {
     return initialState
   }
 
+  case LEAVE_ROOM_FAILED:
+  case JOIN_ROOM_FAILED:
   case ROOM_FAILED:
   case SUGGESTED_ROOMS_FAILED:
   case CURRENT_USER_ROOMS_FAILED: {

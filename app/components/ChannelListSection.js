@@ -2,7 +2,7 @@ import React, {PropTypes, View, Text} from 'react-native'
 import s from '../styles/ChannelListSectionStyles'
 import ChannelListItem from './ChannelListItem'
 
-const ChannelListSection = ({name, items, onRoomPress, activeRoom}) => {
+const ChannelListSection = ({name, items, onRoomPress, activeRoom, onLongRoomPress}) => {
   return (
     <View>
       <View style={s.container}>
@@ -14,18 +14,21 @@ const ChannelListSection = ({name, items, onRoomPress, activeRoom}) => {
             key={item.id}
             {...item}
             activeRoom={activeRoom}
-            onRoomPress={onRoomPress} />
+            onRoomPress={onRoomPress}
+            onLongRoomPress={onLongRoomPress} />
         ))}
       </View>
     </View>
   )
 }
 
+
 ChannelListSection.propTypes = {
   name: PropTypes.string,
   items: PropTypes.array,
   onRoomPress: PropTypes.func,
-  activeRoom: PropTypes.string
+  activeRoom: PropTypes.string,
+  onLongRoomPress: PropTypes.funct
 }
 
 export default ChannelListSection
