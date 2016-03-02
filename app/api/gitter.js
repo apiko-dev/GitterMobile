@@ -29,7 +29,7 @@ export function sendMessage(token, roomId, text) {
   return callApi(`/rooms/${roomId}/chatMessages`, token, {
     method: 'POST',
     body: JSON.stringify({
-      "text": text
+      text
     })
   })
 }
@@ -49,5 +49,6 @@ function callApi(endpoint, token, options = {method: 'get'}) {
     }
   }).then(res => res.json())
 }
-// https://gitter.im/api/v1/user/555e610f15522ed4b3e0c169/suggestedRooms
-// https://gitter.im/api/v1/repo-info?repo=dev-ua%2Freactjs
+// GET https://gitter.im/api/v1/user/555e610f15522ed4b3e0c169/suggestedRooms
+// GET https://gitter.im/api/v1/repo-info?repo=dev-ua%2Freactjs
+// DELETE https://gitter.im/api/v1/user/555e610f15522ed4b3e0c169/rooms/54774579db8155e6700d8cc6/unreadItems/all

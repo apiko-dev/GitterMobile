@@ -15,9 +15,15 @@ import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault
 
 import {getRoom, selectRoom} from '../modules/rooms'
-import {getRoomMessages, prepareListView,
-  getRoomMessagesBefore, getRoomMessagesIfNeeded,
-  subscribeToChatMessages, sendMessage} from '../modules/messages'
+import {
+  getRoomMessages,
+  prepareListView,
+  getRoomMessagesBefore,
+  getRoomMessagesIfNeeded,
+  subscribeToChatMessages,
+  sendMessage,
+  resendMessage
+} from '../modules/messages'
 
 import Loading from '../components/Loading'
 import MessagesList from '../components/MessagesList'
@@ -33,6 +39,7 @@ class Room extends Component {
     this.prepareDataSources = this.prepareDataSources.bind(this)
     this.onEndReached = this.onEndReached.bind(this)
     this.onSending = this.onSending.bind(this)
+    this.onResendingMessage = this.onResendingMessage.bind(this)
   }
 
   componentDidMount() {
@@ -66,6 +73,11 @@ class Room extends Component {
   onSending(text) {
     const {dispatch, route: {roomId}} = this.props
     dispatch(sendMessage(roomId, text))
+  }
+
+  onResendingMessage(rowId, text) {
+    const {dispatch, route: {roomId}} = this.props
+    dispatch(resendMessage(roomId, rowId, text))
   }
 
 
@@ -108,7 +120,7 @@ class Room extends Component {
 
   renderLoadingMore() {
     return (
-      <LoadginMoreSnack />
+    <LoadginMoreSnack />
     )
   }
 
@@ -117,6 +129,7 @@ class Room extends Component {
     return (
       <MessagesList
         listViewData={listViewData[roomId]}
+        onResendingMessage={this.onResendingMessage}
         dispatch={dispatch}
         onEndReached={this.onEndReached.bind(this)} />
     )
@@ -130,8 +143,6 @@ class Room extends Component {
 
     return (
       <View style={s.container}>
-        <StatusBar
-          backgroundColor={colors.darkRed} />
         {this.renderToolbar()}
         {isLoadingMoreMessages ? this.renderLoadingMore() : null}
         {isLoadingMessages ? <View style={{flex: 1}} /> : this.renderListView()}

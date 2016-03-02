@@ -22,6 +22,9 @@ export const SUBSCRIBE_TO_CHAT_MESSAGES = 'messages/SUBSCRIBE_TO_CHAT_MESSAGES'
 export const SEND_MESSAGE = 'messages/SEND_MESSAGE'
 export const SEND_MESSAGE_RECEIVED = 'messages/SEND_MESSAGE_RECEIVED'
 export const SEND_MESSAGE_FAILED = 'messages/SEND_MESSAGE_FAILED'
+export const RESEND_MESSAGE = 'messages/RESEND_MESSAGE'
+// export const RESEND_MESSAGE_RECEIVED = 'messages/RESEND_MESSAGE_RECEIVED'
+// export const RESEND_MESSAGE_FAILED = 'messages/RESEND_MESSAGE_FAILED'
 
 
 /**
@@ -171,7 +174,27 @@ export function sendMessage(roomId, text) {
       const payload = await Api.sendMessage(token, roomId, text)
       dispatch({type: SEND_MESSAGE_RECEIVED, message, roomId, payload})
     } catch (error) {
-      setTimeout(() => dispatch({type: SEND_MESSAGE_FAILED, error, message, roomId, text}), 1000)
+      dispatch({type: SEND_MESSAGE_FAILED, error, message, roomId})
+    }
+  }
+}
+
+/**
+ * Resend messages
+ */
+
+export function resendMessage(roomId, rowId, text) {
+  return async (dispatch, getState) => {
+    const {token} = getState().auth
+    const {user} = getState().viewer
+    const message = createMessage(user, text)
+    dispatch({type: RESEND_MESSAGE, roomId, message, rowId})
+
+    try {
+      const payload = await Api.sendMessage(token, roomId, text)
+      dispatch({type: SEND_MESSAGE_RECEIVED, message, roomId, payload})
+    } catch (error) {
+      dispatch({type: SEND_MESSAGE_FAILED, error, message, roomId})
     }
   }
 }
@@ -380,12 +403,11 @@ export default function messages(state = initialState, action) {
     const rowIds = [].concat(state.listView[roomId].rowIds)
     const data = [].concat(state.listView[roomId].data)
 
-    const index = _.indexOf(data, message)
+    const index = _.findIndex(data, message)
 
     data[index] = payload
 
     return {...state,
-      isLoadingMore: false,
       byRoom: {...state.byRoom,
         [roomId]: byRoom.concat(ids)
       },
@@ -405,11 +427,14 @@ export default function messages(state = initialState, action) {
 
     const rowIds = [].concat(state.listView[roomId].rowIds)
     const data = [].concat(state.listView[roomId].data)
-
-    const index = _.indexOf(data, message)
-    data[index].sending = false
-    data[index].failed = true
-
+    const newMessage = _.merge({}, message)
+    const index = _.findIndex(data, message)
+    debugger
+    newMessage.failed = true
+    newMessage.sending = false
+    newMessage.sent = 'failed'
+    data[index] = newMessage
+    debugger
     return {...state,
       listView: {...state.listView,
         [roomId]: {
@@ -420,6 +445,26 @@ export default function messages(state = initialState, action) {
       },
       error: true,
       errors: error
+    }
+  }
+
+  case RESEND_MESSAGE: {
+    const {message, roomId, rowId} = action
+    const rowIds = [].concat(state.listView[roomId].rowIds)
+    const data = [].concat(state.listView[roomId].data)
+    const newMessage = _.merge({}, message)
+    debugger
+
+    data[rowId] = newMessage
+    debugger
+    return {...state,
+      listView: {...state.listView,
+        [roomId]: {
+          dataSource: state.listView[roomId].dataSource.cloneWithRows(data, rowIds),
+          data,
+          rowIds
+        }
+      }
     }
   }
 
