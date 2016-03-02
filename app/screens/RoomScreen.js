@@ -3,10 +3,8 @@ import React, {
   PropTypes,
   InteractionManager,
   ToolbarAndroid,
-  StatusBar,
   ListView,
-  View,
-  Text
+  View
 } from 'react-native'
 import {connect} from 'react-redux'
 import _ from 'lodash'
@@ -124,6 +122,12 @@ class Room extends Component {
     )
   }
 
+  renderLoading() {
+    return (
+      <Loading color={colors.raspberry}/>
+    )
+  }
+
   renderListView() {
     const {listViewData, dispatch, route: {roomId}} = this.props
     return (
@@ -138,14 +142,14 @@ class Room extends Component {
   render() {
     const {rooms, route, isLoadingMessages, isLoadingMoreMessages} = this.props
     if (!rooms[route.roomId]) {
-      return <Loading color={colors.raspberry}/>
+      return this.renderLoading()
     }
 
     return (
       <View style={s.container}>
         {this.renderToolbar()}
         {isLoadingMoreMessages ? this.renderLoadingMore() : null}
-        {isLoadingMessages ? <View style={{flex: 1}} /> : this.renderListView()}
+        {isLoadingMessages ? this.renderLoading() : this.renderListView()}
         {this.renderSendMessageFiled()}
       </View>
     )

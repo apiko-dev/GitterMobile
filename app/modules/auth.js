@@ -1,7 +1,5 @@
-import {INITIALIZED} from './app'
+import {INITIALIZED, init} from './app'
 import {setItem, removeItem} from '../utils/storage'
-import {getCurrentUser} from './viewer'
-import {getRooms, getSuggestedRooms} from './rooms'
 
 /**
  * Constants
@@ -26,11 +24,7 @@ export function loginByToken(token) {
       await setItem('token', token)
       dispatch({type: LOGIN_USER_BY_TOKEN, token})
 
-      await dispatch(getCurrentUser())
-      await Promise.all([
-        dispatch(getRooms()),
-        dispatch(getSuggestedRooms())
-      ])
+      await dispatch(init())
 
       dispatch({LOGINED_IN_SUCCESS})
     } catch (err) {

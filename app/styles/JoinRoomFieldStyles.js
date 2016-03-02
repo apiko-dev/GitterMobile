@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     alignItems: 'center',
     justifyContent: 'center',
-    elevation: 8,
+    elevation: 10,
     backgroundColor: colors.raspberry
   },
   text: {

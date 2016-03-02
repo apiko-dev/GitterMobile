@@ -16,6 +16,7 @@ export default class MessagesList extends Component {
   }
 
   renderRow(rowData, rowId) {
+    debugger
     if (!!rowData.hasNoMore) {
       return (
         <Text>It's a verry beginning of this room messages.</Text>
@@ -32,6 +33,7 @@ export default class MessagesList extends Component {
 
   render() {
     const {listViewData} = this.props
+    debugger
 
     if (!listViewData) {
       return <View style={{flex: 1}} />

@@ -2,7 +2,6 @@ import React, {
   Component,
   PropTypes,
   DrawerLayoutAndroid,
-  InteractionManager,
   BackAndroid,
   Navigator
 } from 'react-native'
@@ -135,8 +134,8 @@ class MainNavigator extends Component {
   }
 
   render() {
-    // const initialRoute = {name: 'home'}
-    const initialRoute = {name: 'room', roomId: '56a41e0fe610378809bde160'}
+    const initialRoute = {name: 'home'}
+    // const initialRoute = {name: 'room', roomId: '555092a215522ed4b3e0369e'}
 
     return (
       <DrawerLayoutAndroid

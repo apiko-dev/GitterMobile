@@ -153,7 +153,7 @@ export function prepareListView(roomId, ds) {
  */
 
 export function subscribeToChatMessages(roomId) {
-  return (dispatch, getState) => {
+  return dispatch => {
     FayeGitter.subscribe(`/api/v1/rooms/${roomId}/chatMessages`)
     dispatch({type: SUBSCRIBE_TO_CHAT_MESSAGES, roomId})
   }
@@ -323,6 +323,7 @@ export default function messages(state = initialState, action) {
     rowIds.push(data.length - 1)
 
     return {...state,
+      isLoading: false,
       isLoadingMore: false,
       hasNoMore: {...state.hasNoMore, [action.roomId]: true},
       listView: {...state.listView,
@@ -429,12 +430,11 @@ export default function messages(state = initialState, action) {
     const data = [].concat(state.listView[roomId].data)
     const newMessage = _.merge({}, message)
     const index = _.findIndex(data, message)
-    debugger
     newMessage.failed = true
     newMessage.sending = false
     newMessage.sent = 'failed'
     data[index] = newMessage
-    debugger
+
     return {...state,
       listView: {...state.listView,
         [roomId]: {
@@ -453,10 +453,9 @@ export default function messages(state = initialState, action) {
     const rowIds = [].concat(state.listView[roomId].rowIds)
     const data = [].concat(state.listView[roomId].data)
     const newMessage = _.merge({}, message)
-    debugger
 
     data[rowId] = newMessage
-    debugger
+
     return {...state,
       listView: {...state.listView,
         [roomId]: {
