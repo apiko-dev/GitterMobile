@@ -22,6 +22,9 @@ export const UPDATE_ROOM_STATE = 'rooms/UPDATE_ROOM_STATE'
 export const ROOM = 'rooms/ROOM'
 export const ROOM_RECEIVED = 'rooms/ROOM_RECEIVED'
 export const ROOM_FAILED = 'rooms/ROOM_FAILED'
+export const JOIN_ROOM = 'rooms/JOIN_ROOM'
+export const JOIN_ROOM_OK = 'rooms/JOIN_ROOM_OK'
+export const JOIN_ROOM_FAILED = 'rooms/JOIN_ROOM_FAILED'
 
 
 /**
@@ -110,6 +113,26 @@ export function updateRoomState(json) {
 }
 
 /**
+ * Join room
+ */
+
+export function joinRoom(roomId) {
+  return async (dispatch, getState) => {
+    const {token} = getState().auth
+    const room = getState().rooms.rooms[roomId]
+
+    dispatch({type: JOIN_ROOM, roomId})
+
+    try {
+      const payload = await Api.joinRoom(token, room.uri)
+      dispatch({type: JOIN_ROOM_OK, payload})
+    } catch (error) {
+      dispatch({type: JOIN_ROOM_FAILED, error})
+    }
+  }
+}
+
+/**
  * Reducer
  */
 
@@ -172,6 +195,16 @@ export default function rooms(state = initialState, action) {
     return {...state,
       rooms: {...state.rooms,
         [id]: _.merge(room, action.payload.model)
+      }
+    }
+  }
+
+  case JOIN_ROOM_OK: {
+    const {id} = action.payload
+    const room = state.rooms[id]
+    return {...state,
+      rooms: {...state.rooms,
+        [id]: _.merge(room, action.payload)
       }
     }
   }
