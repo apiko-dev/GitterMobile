@@ -9,6 +9,9 @@ import Avatar from './Avatar'
 
 const Message = ({text, fromUser, ...props}) => {
   const opacity = props.hasOwnProperty('sending') && props.sending === true ? 0.4 : 1
+
+  // TODO: When sending failed we need to display danger background,
+  // instead it displays opacity 0.4, coz it does not updates
   const backgroundColor = props.hasOwnProperty('failed') && props.failed === true ? 'red' : 'transparent'
 
   return (

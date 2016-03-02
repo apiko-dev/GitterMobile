@@ -92,14 +92,14 @@ export function getRoomMessagesIfNeeded(roomId) {
     const {limit} = getState().settings
     const {data} = listView[roomId]
 
-    dispatch({type: ROOM_MESSAGES_RETURN_FROM_CACHE, roomId})
+    dispatch({type: ROOM_MESSAGES_RETURN_FROM_CACHE, roomId, limit})
 
     try {
       const payload = await Api.roomMessages(token, roomId, limit)
 
       if (_.findIndex(data, payload[0]) !== -1
           && _.findIndex(data, _.last(payload)) !== -1) {
-        dispatch({type: ROOM_MESSAGES_RETURN_FROM_CACHE, roomId})
+        dispatch({type: ROOM_MESSAGES_RETURN_FROM_CACHE, roomId, limit})
       } else if (_.findIndex(data, payload[0]) === -1
         && _.findIndex(data, _.last(payload)) !== -1) {
         const newMessages = payload.map(item => {
@@ -171,7 +171,7 @@ export function sendMessage(roomId, text) {
       const payload = await Api.sendMessage(token, roomId, text)
       dispatch({type: SEND_MESSAGE_RECEIVED, message, roomId, payload})
     } catch (error) {
-      dispatch({type: SEND_MESSAGE_FAILED, error, message, roomId, text})
+      setTimeout(() => dispatch({type: SEND_MESSAGE_FAILED, error, message, roomId, text}), 1000)
     }
   }
 }
@@ -312,10 +312,36 @@ export default function messages(state = initialState, action) {
     }
   }
 
-  case ROOM_MESSAGES_RETURN_FROM_CACHE:
-    return {...state,
-      isLoading: false
+  case ROOM_MESSAGES_RETURN_FROM_CACHE: {
+    const {roomId, limit} = action
+    const {byRoom, entities} = state
+    const rowIds = []
+    const data = []
+    let hasNoMore = _.merge({}, state.hasNoMore)
+    // we need to reverse our messages array to display it inverted
+    const reversedIds = [].concat(byRoom[roomId]).reverse()
+    for (let i = 0; i < reversedIds.length && i < 30; i++) {
+      data.push(entities[reversedIds[i]])
+      rowIds.push(data.length - 1)
     }
+    if (reversedIds.length < limit) {
+      data.push({hasNoMore: true})
+      rowIds.push(data.length - 1)
+      hasNoMore = {...state.hasNoMore, [roomId]: true}
+    }
+    return {...state,
+      hasNoMore,
+      isLoading: false,
+      listView: {...state.listView,
+        [roomId]: {
+          dataSource: state.listView[roomId].dataSource.cloneWithRows(data, rowIds),
+          data,
+          rowIds
+        }
+      }
+    }
+  }
+
 
   case PREPARE_LIST_VIEW:
     return {...state,
