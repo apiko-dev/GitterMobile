@@ -28,7 +28,9 @@ export const JOIN_ROOM_FAILED = 'rooms/JOIN_ROOM_FAILED'
 export const LEAVE_ROOM = 'rooms/LEAVE_ROOM'
 export const LEAVE_ROOM_OK = 'rooms/LEAVE_ROOM_OK'
 export const LEAVE_ROOM_FAILED = 'rooms/LEAVE_ROOM_FAILED'
-
+export const MARK_ALL_AS_READ = 'rooms/MARK_ALL_AS_READ'
+export const MARK_ALL_AS_READ_OK = 'rooms/MARK_ALL_AS_READ_OK'
+export const MARK_ALL_AS_READ_FAILED = 'rooms/MARK_ALL_AS_READ_FAILED'
 
 /**
  * Action Creators
@@ -161,6 +163,31 @@ export function leaveRoom(roomId, userId) {
 }
 
 /**
+ * Mark all messages in room as readed
+ */
+
+export function markAllAsRead(roomId) {
+  return async (dispatch, getState) => {
+    const {token} = getState().auth
+    const {id} = getState().viewer.user
+
+    dispatch({type: MARK_ALL_AS_READ, roomId})
+
+    try {
+      const payload = await Api.markAllAsRead(token, roomId, id)
+
+      if (!!payload.success && payload.success === true) {
+        dispatch({type: MARK_ALL_AS_READ_OK, roomId})
+      } else {
+        dispatch({type: MARK_ALL_AS_READ_FAILED, error: `Can't mark all room ${roomId} messages as read`})
+      }
+    } catch (error) {
+      dispatch({type: MARK_ALL_AS_READ_FAILED, error})
+    }
+  }
+}
+
+/**
  * Reducer
  */
 
@@ -248,10 +275,22 @@ export default function rooms(state = initialState, action) {
     }
   }
 
+  case MARK_ALL_AS_READ_OK: {
+    const {roomId} = action
+    const room = state.rooms[roomId]
+    const newRoom = _.merge({}, room, {unreadItems: 0, mentions: 0})
+    return {...state,
+      rooms: {...state.rooms,
+        [roomId]: newRoom
+      }
+    }
+  }
+
   case LOGOUT: {
     return initialState
   }
 
+  case MARK_ALL_AS_READ_FAILED:
   case LEAVE_ROOM_FAILED:
   case JOIN_ROOM_FAILED:
   case ROOM_FAILED:

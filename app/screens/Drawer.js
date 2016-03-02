@@ -6,7 +6,7 @@ import React, {
 } from 'react-native'
 import {connect} from 'react-redux'
 import {onLogOut} from '../modules/auth'
-import {selectRoom, leaveRoom} from '../modules/rooms'
+import {selectRoom, leaveRoom, markAllAsRead} from '../modules/rooms'
 import s from '../styles/DrawerStyles'
 import DrawerUserInfo from '../components/DrawerUserInfo'
 import ChannelList from '../components/ChannelList'
@@ -34,7 +34,7 @@ class Drawer extends Component {
       rooms[id].name,
       'What do you want to do?',
       [
-        {text: 'Mark as read', onPress: () => console.log('Cancel Pressed!')},
+        {text: 'Mark as read', onPress: () => dispatch(markAllAsRead(id))},
         {text: 'Leave room', onPress: () => dispatch(leaveRoom(id))},
         {text: 'Close', onPress: () => console.log('Cancel Pressed!')}
       ]

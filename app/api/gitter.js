@@ -49,6 +49,12 @@ export function leaveRoom(token, roomId, userId) {
   })
 }
 
+export function markAllAsRead(token, roomId, userId) {
+  return callApi(`/user/${userId}/rooms/${roomId}/unreadItems/all`, token, {
+    method: 'DELETE'
+  })
+}
+
 /**
  * Private functions
  */
