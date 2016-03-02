@@ -34,6 +34,21 @@ export function sendMessage(token, roomId, text) {
   })
 }
 
+export function joinRoom(token, uri) {
+  return callApi(`/rooms`, token, {
+    method: 'POST',
+    body: JSON.stringify({
+      uri
+    })
+  })
+}
+
+export function leaveRoom(token, roomId, userId) {
+  return callApi(`/rooms/${roomId}/users/${userId}`, token, {
+    method: 'DELETE'
+  })
+}
+
 /**
  * Private functions
  */
@@ -52,3 +67,6 @@ function callApi(endpoint, token, options = {method: 'get'}) {
 // GET https://gitter.im/api/v1/user/555e610f15522ed4b3e0c169/suggestedRooms
 // GET https://gitter.im/api/v1/repo-info?repo=dev-ua%2Freactjs
 // DELETE https://gitter.im/api/v1/user/555e610f15522ed4b3e0c169/rooms/54774579db8155e6700d8cc6/unreadItems/all
+// 56c37486e610378809c1c05a
+// 56d730e2e610378809c4aab8
+// DELETE https://gitter.im/api/v1/rooms/56d730e2e610378809c4aab8/users/555e610f15522ed4b3e0c169

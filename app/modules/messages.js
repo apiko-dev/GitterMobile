@@ -99,26 +99,29 @@ export function getRoomMessagesIfNeeded(roomId) {
 
     try {
       const payload = await Api.roomMessages(token, roomId, limit)
-
-      if (_.findIndex(data, payload[0]) !== -1
-          && _.findIndex(data, _.last(payload)) !== -1) {
+      if (payload.length === 0) {
         dispatch({type: ROOM_MESSAGES_RETURN_FROM_CACHE, roomId, limit})
-      } else if (_.findIndex(data, payload[0]) === -1
-        && _.findIndex(data, _.last(payload)) !== -1) {
-        const newMessages = payload.map(item => {
-          if (_.findIndex(data, item) === -1) {
-            return item
-          }
-        })
-
-        dispatch({type: ROOM_MESSAGES_APPEND, roomId, payload: newMessages})
       } else {
-        if (payload.length === 0) {
-          dispatch({type: ROOM_HAS_NO_MORE_MESSAGES, roomId})
+        if (_.findIndex(data, payload[0]) !== -1
+            && _.findIndex(data, _.last(payload)) !== -1) {
+          dispatch({type: ROOM_MESSAGES_RETURN_FROM_CACHE, roomId, limit})
+        } else if (_.findIndex(data, payload[0]) === -1
+          && _.findIndex(data, _.last(payload)) !== -1) {
+          const newMessages = payload.map(item => {
+            if (_.findIndex(data, item) === -1) {
+              return item
+            }
+          })
+
+          dispatch({type: ROOM_MESSAGES_APPEND, roomId, payload: newMessages})
         } else {
-          dispatch({type: ROOM_MESSAGES_RECEIVED, roomId, payload})
-          if (payload.length < limit) {
-            dispatch({type: ROOM_HAS_NO_MORE_MESSAGES, roomId})
+          if (payload.length === 0) {
+            dispatch({type: ROOM_MESSAGES_RETURN_FROM_CACHE, roomId, limit})
+          } else {
+            dispatch({type: ROOM_MESSAGES_RECEIVED, roomId, payload})
+            if (payload.length < limit) {
+              dispatch({type: ROOM_HAS_NO_MORE_MESSAGES, roomId})
+            }
           }
         }
       }
@@ -342,6 +345,10 @@ export default function messages(state = initialState, action) {
     const rowIds = []
     const data = []
     let hasNoMore = _.merge({}, state.hasNoMore)
+
+    if (byRoom[roomId].length === 0) {
+      return state
+    }
     // we need to reverse our messages array to display it inverted
     const reversedIds = [].concat(byRoom[roomId]).reverse()
     for (let i = 0; i < reversedIds.length && i < 30; i++) {
@@ -353,6 +360,7 @@ export default function messages(state = initialState, action) {
       rowIds.push(data.length - 1)
       hasNoMore = {...state.hasNoMore, [roomId]: true}
     }
+
     return {...state,
       hasNoMore,
       isLoading: false,

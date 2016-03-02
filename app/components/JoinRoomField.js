@@ -6,11 +6,11 @@ import React, {
 } from 'react-native'
 import s from '../styles/JoinRoomFieldStyles'
 
-const JoinRoomField = () => {
+const JoinRoomField = ({onPress}) => {
   return (
     <TouchableNativeFeedback
       background={TouchableNativeFeedback.SelectableBackground()}
-      onPress={() => console.log("JOIN")}>
+      onPress={() => onPress()}>
       <View style={s.container}>
         <Text style={s.text}>
           Join room!
@@ -21,7 +21,7 @@ const JoinRoomField = () => {
 }
 
 JoinRoomField.propTypes = {
-
+  onPress: PropTypes.func
 }
 
 export default JoinRoomField

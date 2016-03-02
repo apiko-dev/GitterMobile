@@ -11,7 +11,10 @@ import {createGhAvatarLink} from '../utils/links'
 import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault
 
-const ChannelListItem = ({id, name, oneToOne, user, activeRoom, onRoomPress, unreadItems, mentions, lurk}) => {
+const ChannelListItem = ({
+  id, name, oneToOne, user, activeRoom, onRoomPress,
+  unreadItems, mentions, lurk, onLongRoomPress
+}) => {
   const src = oneToOne
     ? createGhAvatarLink(user.username, 200)
     : createGhAvatarLink(name.split('/')[0], 200)
@@ -22,7 +25,8 @@ const ChannelListItem = ({id, name, oneToOne, user, activeRoom, onRoomPress, unr
 
   return (
     <TouchableHighlight
-      onPress={onRoomPress.bind(this, id)}>
+      onPress={onRoomPress.bind(this, id)}
+      onLongPress={onLongRoomPress.bind(this, id)}>
       <View style={[s.container,
         { backgroundColor: itemStyles.backgroundColor,
           elevation: itemStyles.elevation}]}
@@ -48,6 +52,7 @@ const ChannelListItem = ({id, name, oneToOne, user, activeRoom, onRoomPress, unr
 
 ChannelListItem.propTypes = {
   // id: PropTypes.stings,
+  onLongRoomPress: PropTypes.func,
   name: PropTypes.string,
   oneToOne: PropTypes.bool,
   user: PropTypes.object,

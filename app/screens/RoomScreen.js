@@ -3,6 +3,7 @@ import React, {
   PropTypes,
   InteractionManager,
   ToolbarAndroid,
+  Alert,
   ListView,
   View
 } from 'react-native'
@@ -12,7 +13,7 @@ import s from '../styles/RoomStyles'
 import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault
 
-import {getRoom, selectRoom} from '../modules/rooms'
+import {getRoom, selectRoom, joinRoom} from '../modules/rooms'
 import {
   getRoomMessages,
   prepareListView,
@@ -38,6 +39,7 @@ class Room extends Component {
     this.onEndReached = this.onEndReached.bind(this)
     this.onSending = this.onSending.bind(this)
     this.onResendingMessage = this.onResendingMessage.bind(this)
+    this.onJoinRoom = this.onJoinRoom.bind(this)
   }
 
   componentDidMount() {
@@ -78,6 +80,18 @@ class Room extends Component {
     dispatch(resendMessage(roomId, rowId, text))
   }
 
+  onJoinRoom() {
+    const {dispatch, route: {roomId}} = this.props
+    Alert.alert(
+      'Join room',
+      'Are you sure?',
+      [
+        {text: 'Cancel', onPress: () => console.log('Cancel Pressed!')}, // eslint-disable-line no-console
+        {text: 'OK', onPress: () => dispatch(joinRoom(roomId))}
+      ]
+    )
+  }
+
 
   prepareDataSources() {
     const {listViewData, route: {roomId}, dispatch} = this.props
@@ -107,7 +121,8 @@ class Room extends Component {
     const {rooms, route: {roomId}} = this.props
     if (!rooms[roomId].roomMember) {
       return (
-        <JoinRoomField />
+        <JoinRoomField
+          onPress={this.onJoinRoom.bind(this)} />
       )
     }
     return (
