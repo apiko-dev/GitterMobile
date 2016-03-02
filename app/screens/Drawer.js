@@ -20,6 +20,7 @@ class Drawer extends Component {
     super(props)
     this.onRoomPress = this.onRoomPress.bind(this)
     this.onLongRoomPress = this.onLongRoomPress.bind(this)
+    this.onLeave = this.onLeave.bind(this)
   }
 
   onRoomPress(id) {
@@ -35,8 +36,20 @@ class Drawer extends Component {
       'What do you want to do?',
       [
         {text: 'Mark as read', onPress: () => dispatch(markAllAsRead(id))},
-        {text: 'Leave room', onPress: () => dispatch(leaveRoom(id))},
+        {text: 'Leave room', onPress: () => this.onLeave(id)},
         {text: 'Close', onPress: () => console.log('Cancel Pressed!')}
+      ]
+    )
+  }
+
+  onLeave(id) {
+    const {dispatch} = this.props
+    Alert.alert(
+      'Leave room',
+      'Are you sure?',
+      [
+        {text: 'Cancel', onPress: () => console.log('Cancel Pressed!')},
+        {text: 'OK', onPress: () => dispatch(leaveRoom(id))}
       ]
     )
   }
