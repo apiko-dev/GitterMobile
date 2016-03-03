@@ -8,6 +8,7 @@ import React, {
   View
 } from 'react-native'
 import {connect} from 'react-redux'
+import moment from 'moment'
 import _ from 'lodash'
 import s from '../styles/RoomStyles'
 import {THEMES} from '../constants'
@@ -21,7 +22,8 @@ import {
   getRoomMessagesIfNeeded,
   subscribeToChatMessages,
   sendMessage,
-  resendMessage
+  resendMessage,
+  updateMessage
 } from '../modules/messages'
 
 import Loading from '../components/Loading'
@@ -40,6 +42,7 @@ class Room extends Component {
     this.onSending = this.onSending.bind(this)
     this.onResendingMessage = this.onResendingMessage.bind(this)
     this.onJoinRoom = this.onJoinRoom.bind(this)
+    this.onMessageLongPress = this.onMessageLongPress.bind(this)
   }
 
   componentDidMount() {
@@ -90,6 +93,47 @@ class Room extends Component {
         {text: 'OK', onPress: () => dispatch(joinRoom(roomId))}
       ]
     )
+  }
+
+  onMessageLongPress(rowId, id) {
+    const {dispatch, currentUser, entities} = this.props
+    const message = entities[id]
+    const experied = moment(message.sent).add(10, 'm')
+    let countDown = ''
+
+
+    const actions = [
+        {text: 'Copy text', onPress: () => console.log(text)}
+    ]
+
+    if (currentUser.username === message.fromUser.username &&
+        moment().isBefore(experied) && !!message.text) {
+      // timef which's show editing experied time
+      setTimeout(() => {
+        if (moment().isBefore(experied)) {
+          const time = experied.subtract(moment()).format('mm:ss')
+          countDown = `${time} to edit or delete`
+        } else {
+          countDown = `Can't edit or delete`
+        }
+      }, 1000)
+      actions.push(
+        {text: 'Delete', onPress: () => this.onDelete(rowId, id)},
+        {text: 'Edit', onPress: () => this.onEdit(rowId, id)}
+      )
+    }
+    // TODO: Use BottomSheet/ActionSheet instead of Alert
+    Alert.alert('Actions', countDown, actions)
+  }
+
+  onDelete(rowId, id) {
+    const {dispatch, route: {roomId}} = this.props
+    const text = ''
+    dispatch(updateMessage(roomId, id, text, rowId))
+  }
+
+  onEdit(rowId, id) {
+
   }
 
 
@@ -148,7 +192,8 @@ class Room extends Component {
     return (
       <MessagesList
         listViewData={listViewData[roomId]}
-        onResendingMessage={this.onResendingMessage}
+        onResendingMessage={this.onResendingMessage.bind(this)}
+        onLongPress={this.onMessageLongPress.bind(this)}
         dispatch={dispatch}
         onEndReached={this.onEndReached.bind(this)} />
     )
@@ -181,18 +226,24 @@ Room.propTypes = {
   isLoadingMoreMessages: PropTypes.bool,
   listViewData: PropTypes.object,
   byRoom: PropTypes.object,
-  hasNoMore: PropTypes.object
+  entities: PropTypes.object,
+  hasNoMore: PropTypes.object,
+  currentUser: PropTypes.object
 }
 
 function mapStateToProps(state) {
+  const {listView, isLoading, isLoadingMore, byRoom, hasNoMore, entities} = state.messages
+  const {activeRoom, rooms} = state.rooms
   return {
-    activeRoom: state.rooms.activeRoom,
-    rooms: state.rooms.rooms,
-    listViewData: state.messages.listView,
-    isLoadingMessages: state.messages.isLoading,
-    isLoadingMoreMessages: state.messages.isLoadingMore,
-    byRoom: state.messages.byRoom,
-    hasNoMore: state.messages.hasNoMore
+    activeRoom,
+    rooms,
+    entities,
+    listViewData: listView,
+    isLoadingMessages: isLoading,
+    isLoadingMoreMessages: isLoadingMore,
+    byRoom,
+    hasNoMore,
+    currentUser: state.viewer.user,
   }
 }
 

@@ -23,8 +23,10 @@ export const SEND_MESSAGE = 'messages/SEND_MESSAGE'
 export const SEND_MESSAGE_RECEIVED = 'messages/SEND_MESSAGE_RECEIVED'
 export const SEND_MESSAGE_FAILED = 'messages/SEND_MESSAGE_FAILED'
 export const RESEND_MESSAGE = 'messages/RESEND_MESSAGE'
-// export const RESEND_MESSAGE_RECEIVED = 'messages/RESEND_MESSAGE_RECEIVED'
-// export const RESEND_MESSAGE_FAILED = 'messages/RESEND_MESSAGE_FAILED'
+export const UPDATE_MESSAGE = 'messages/UPDATE_MESSAGE'
+export const UPDATE_MESSAGE_OK = 'messages/UPDATE_MESSAGE_OK'
+export const UPDATE_MESSAGE_FAILED = 'messages/UPDATE_MESSAGE_FAILED'
+
 
 
 /**
@@ -184,6 +186,24 @@ export function sendMessage(roomId, text) {
 
 /**
  * Resend messages
+ */
+
+export function updateMessage(roomId, messageId, text, rowId) {
+  return async (dispatch, getState) => {
+    const {token} = getState().auth
+    dispatch({type: UPDATE_MESSAGE, roomId, messageId, rowId, text})
+
+    try {
+      const payload = await Api.updateMessage(token, roomId, messageId, text)
+      dispatch({type: UPDATE_MESSAGE_OK, payload, roomId, messageId, rowId})
+    } catch (error) {
+      dispatch({type: UPDATE_MESSAGE_OK, error, roomId, messageId, rowId})
+    }
+  }
+}
+
+/**
+ * Update message
  */
 
 export function resendMessage(roomId, rowId, text) {
@@ -465,6 +485,28 @@ export default function messages(state = initialState, action) {
     data[rowId] = newMessage
 
     return {...state,
+      listView: {...state.listView,
+        [roomId]: {
+          dataSource: state.listView[roomId].dataSource.cloneWithRows(data, rowIds),
+          data,
+          rowIds
+        }
+      }
+    }
+  }
+
+  case UPDATE_MESSAGE_OK: {
+    const {messageId, roomId, payload, rowId} = action
+
+    const rowIds = [].concat(state.listView[roomId].rowIds)
+    const data = [].concat(state.listView[roomId].data)
+
+    data[rowId] = payload
+
+    return {...state,
+      entities: {...state.entities,
+        [messageId]: payload
+      },
       listView: {...state.listView,
         [roomId]: {
           dataSource: state.listView[roomId].dataSource.cloneWithRows(data, rowIds),

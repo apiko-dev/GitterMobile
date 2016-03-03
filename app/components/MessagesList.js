@@ -16,7 +16,7 @@ export default class MessagesList extends Component {
   }
 
   renderRow(rowData, rowId) {
-    debugger
+    const {onResendingMessage, onLongPress} = this.props
     if (!!rowData.hasNoMore) {
       return (
         <Text>It's a verry beginning of this room messages.</Text>
@@ -25,15 +25,15 @@ export default class MessagesList extends Component {
 
     return (
       <Message
-        onResendingMessage={this.props.onResendingMessage}
+        onResendingMessage={onResendingMessage}
         rowId={rowId}
+        onLongPress={onLongPress}
         {...rowData} />
     )
   }
 
   render() {
     const {listViewData} = this.props
-    debugger
 
     if (!listViewData) {
       return <View style={{flex: 1}} />
@@ -58,5 +58,6 @@ MessagesList.propTypes = {
   onResendingMessage: PropTypes.func,
   listViewData: PropTypes.object,
   dispatch: PropTypes.func,
-  onEndReached: PropTypes.func
+  onEndReached: PropTypes.func,
+  onLongPress: PropTypes.func
 }
