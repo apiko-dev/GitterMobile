@@ -14,6 +14,7 @@ class Message extends Component {
   constructor(props) {
     super(props)
     this.onMessagePress = this.onMessagePress.bind(this)
+    this.renderMessage = this.renderMessage.bind(this)
   }
 
   shouldComponentUpdate(nextProps) {
@@ -29,6 +30,23 @@ class Message extends Component {
     if (!!this.props.failed && this.props.failed === true) {
       onResendingMessage(rowId, text)
     }
+  }
+
+  renderMessage() {
+    const {text} = this.props
+
+    if (this.props.hasOwnProperty('editedAt') && !text) {
+      return (
+        <Text style={[s.text, s.deleted]}>
+          This message was deleted
+        </Text>
+      )
+    }
+    return (
+      <Text style={s.text}>
+        {text}
+      </Text>
+    )
   }
 
   render() {
@@ -48,7 +66,7 @@ class Message extends Component {
               <Text>{sended}</Text>
             </View>
             <View style={s.bottom}>
-              <Text style={s.text}>{text}</Text>
+              {this.renderMessage()}
             </View>
           </View>
         </View>
