@@ -29,6 +29,13 @@ const style = StyleSheet.create({
   },
   text: {
     fontSize: 14
+  },
+  deleted: {
+    fontStyle: 'italic',
+    opacity: 0.8
+  },
+  date: {
+    fontSize: 14
   }
 })
 

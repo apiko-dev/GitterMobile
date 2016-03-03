@@ -1,5 +1,8 @@
 const apiUrl = 'https://api.gitter.im/v1'
 
+/**
+ * Authed user stuff
+ */
 export function currentUser(token) {
   return callApi('user', token)
 }
@@ -12,6 +15,10 @@ export function currentUserSuggested(token, id) {
   const endpoint = `user/${id}/suggestedRooms`
   return callApi(endpoint, token)
 }
+
+/**
+ * Rooms resource
+ */
 
 export function room(token, id) {
   return callApi('rooms/' + id, token)
@@ -52,6 +59,15 @@ export function leaveRoom(token, roomId, userId) {
 export function markAllAsRead(token, roomId, userId) {
   return callApi(`/user/${userId}/rooms/${roomId}/unreadItems/all`, token, {
     method: 'DELETE'
+  })
+}
+
+export function updateMessage(token, roomId, messageId, text) {
+  return callApi(`/rooms/${roomId}/chatMessages/${messageId}`, token, {
+    method: 'PUT',
+    body: JSON.stringify({
+      text
+    })
   })
 }
 

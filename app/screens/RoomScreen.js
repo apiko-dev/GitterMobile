@@ -3,11 +3,13 @@ import React, {
   PropTypes,
   InteractionManager,
   ToolbarAndroid,
+  ToastAndroid,
   Alert,
   ListView,
   View
 } from 'react-native'
 import {connect} from 'react-redux'
+import moment from 'moment'
 import _ from 'lodash'
 import s from '../styles/RoomStyles'
 import {THEMES} from '../constants'
@@ -21,7 +23,8 @@ import {
   getRoomMessagesIfNeeded,
   subscribeToChatMessages,
   sendMessage,
-  resendMessage
+  resendMessage,
+  updateMessage
 } from '../modules/messages'
 
 import Loading from '../components/Loading'
@@ -40,6 +43,14 @@ class Room extends Component {
     this.onSending = this.onSending.bind(this)
     this.onResendingMessage = this.onResendingMessage.bind(this)
     this.onJoinRoom = this.onJoinRoom.bind(this)
+    this.onMessageLongPress = this.onMessageLongPress.bind(this)
+    this.onTextFieldChange = this.onTextFieldChange.bind(this)
+
+    this.state = {
+      textInputValue: '',
+      editing: false,
+      editMessage: {}
+    }
   }
 
   componentDidMount() {
@@ -70,9 +81,14 @@ class Room extends Component {
     }
   }
 
-  onSending(text) {
+  onSending() {
     const {dispatch, route: {roomId}} = this.props
-    dispatch(sendMessage(roomId, text))
+    if (this.state.editing) {
+      this.onEndEdit()
+    } else {
+      dispatch(sendMessage(roomId, this.state.textInputValue))
+      this.setState({textInputValue: ''})
+    }
   }
 
   onResendingMessage(rowId, text) {
@@ -92,6 +108,99 @@ class Room extends Component {
     )
   }
 
+  onMessageLongPress(rowId, id) {
+    const {currentUser, entities} = this.props
+    const message = entities[id]
+    const experied = moment(message.sent).add(10, 'm')
+    let countDown = ''
+
+    const actions = [
+        {text: 'Copy text', onPress: () => console.log(text)}
+    ]
+
+    if (currentUser.username === message.fromUser.username &&
+        moment().isBefore(experied) && !!message.text) {
+      // timef which's show editing experied time
+      setTimeout(() => {
+        if (moment().isBefore(experied)) {
+          const time = experied.subtract(moment()).format('mm:ss')
+          countDown = `${time} to edit or delete`
+        } else {
+          countDown = `Can't edit or delete`
+        }
+      }, 1000)
+      actions.push(
+        {text: 'Delete', onPress: () => this.onDelete(rowId, id)},
+        {text: 'Edit', onPress: () => this.onEdit(rowId, id)}
+      )
+    }
+    // TODO: Use BottomSheet/ActionSheet instead of Alert
+    Alert.alert('Actions', countDown, actions)
+  }
+
+  onDelete(rowId, id) {
+    const {dispatch, route: {roomId}, entities} = this.props
+    const message = entities[id]
+    const experied = moment(message.sent).add(10, 'm')
+
+    if (moment().isAfter(experied)) {
+      ToastAndroid.show("Can't delete message.", ToastAndroid.SHORT)
+      return false
+    }
+
+    const text = ''
+    dispatch(updateMessage(roomId, id, text, rowId))
+  }
+
+  onEdit(rowId, id) {
+    const {entities} = this.props
+    const message = entities[id]
+    const experied = moment(message.sent).add(10, 'm')
+
+    if (moment().isAfter(experied)) {
+      this.setState({editing: false})
+      return false
+    }
+
+    this.refs.sendMessageField.focus()
+    this.setState({
+      textInputValue: message.text,
+      editing: true,
+      editMessage: {
+        rowId, id
+      }
+    })
+  }
+
+  onEndEdit() {
+    const {dispatch, route: {roomId}, entities} = this.props
+    const {textInputValue, editMessage: {id, rowId}} = this.state
+    const message = entities[id]
+    const experied = moment(message.sent).add(5, 'm')
+
+    if (moment().isAfter(experied)) {
+      this.setState({
+        editing: false,
+        textInputValue: '',
+        editMessage: {}
+      })
+      this.refs.sendMessageField.blur()
+      ToastAndroid.show("Can't edit message.", ToastAndroid.SHORT)
+      return false
+    }
+
+    dispatch(updateMessage(roomId, id, textInputValue, rowId))
+    this.refs.sendMessageField.blur()
+    this.setState({
+      editing: false,
+      editMessage: {},
+      textInputValue: ''
+    })
+  }
+
+  onTextFieldChange(text) {
+    this.setState({textInputValue: text})
+  }
 
   prepareDataSources() {
     const {listViewData, route: {roomId}, dispatch} = this.props
@@ -127,7 +236,10 @@ class Room extends Component {
     }
     return (
       <SendMessageField
-        onSending={this.onSending.bind(this)}/>
+        ref="sendMessageField"
+        onSending={this.onSending.bind(this)}
+        onChange={this.onTextFieldChange.bind(this)}
+        value={this.state.textInputValue} />
     )
   }
 
@@ -148,7 +260,8 @@ class Room extends Component {
     return (
       <MessagesList
         listViewData={listViewData[roomId]}
-        onResendingMessage={this.onResendingMessage}
+        onResendingMessage={this.onResendingMessage.bind(this)}
+        onLongPress={this.onMessageLongPress.bind(this)}
         dispatch={dispatch}
         onEndReached={this.onEndReached.bind(this)} />
     )
@@ -181,18 +294,24 @@ Room.propTypes = {
   isLoadingMoreMessages: PropTypes.bool,
   listViewData: PropTypes.object,
   byRoom: PropTypes.object,
-  hasNoMore: PropTypes.object
+  entities: PropTypes.object,
+  hasNoMore: PropTypes.object,
+  currentUser: PropTypes.object
 }
 
 function mapStateToProps(state) {
+  const {listView, isLoading, isLoadingMore, byRoom, hasNoMore, entities} = state.messages
+  const {activeRoom, rooms} = state.rooms
   return {
-    activeRoom: state.rooms.activeRoom,
-    rooms: state.rooms.rooms,
-    listViewData: state.messages.listView,
-    isLoadingMessages: state.messages.isLoading,
-    isLoadingMoreMessages: state.messages.isLoadingMore,
-    byRoom: state.messages.byRoom,
-    hasNoMore: state.messages.hasNoMore
+    activeRoom,
+    rooms,
+    entities,
+    listViewData: listView,
+    isLoadingMessages: isLoading,
+    isLoadingMoreMessages: isLoadingMore,
+    byRoom,
+    hasNoMore,
+    currentUser: state.viewer.user,
   }
 }
 
