@@ -37,7 +37,7 @@ export default class SendMessageField extends Component {
   }
 
   render() {
-    const {value, onChange} = this.props
+    const {value, onChange, onFocus, onBlur} = this.props
     return (
       <View style={s.container}>
         <TextInput
@@ -45,6 +45,8 @@ export default class SendMessageField extends Component {
           multiline
           style={[s.textInput, {height: this.state.height > 90 ? 90 : Math.max(56, this.state.height)}]}
           value={value}
+          onFocus={() => onFocus()}
+          onBlur={() => onBlur()}
           underlineColorAndroid={colors.androidGray}
           onChange={(event) => {
             this.setState({
@@ -72,5 +74,7 @@ SendMessageField.propTypes = {
   onSending: PropTypes.func,
   value: PropTypes.func,
   onChange: PropTypes.func,
-  focus: PropTypes.bool
+  focus: PropTypes.bool,
+  onFocus: PropTypes.func,
+  onBlur: PropTypes.func
 }

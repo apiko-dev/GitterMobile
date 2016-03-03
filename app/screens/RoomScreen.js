@@ -43,11 +43,13 @@ class Room extends Component {
     this.onResendingMessage = this.onResendingMessage.bind(this)
     this.onJoinRoom = this.onJoinRoom.bind(this)
     this.onMessageLongPress = this.onMessageLongPress.bind(this)
-    this.bindTextInputRef = this.bindTextInputRef.bind(this)
+    this.onTextInputBlur = this.onTextInputBlur.bind(this)
+    this.onTextInputFocus = this.onTextInputFocus.bind(this)
+    this.onTextFieldChange = this.onTextFieldChange.bind(this)
 
     this.state = {
-      textFieldValue: '',
-      focusTextField: false
+      textInputValue: '',
+      textInputFocus: false
     }
   }
 
@@ -84,8 +86,8 @@ class Room extends Component {
     if (this.state.editing) {
       this.onEndEdit()
     } else {
-      dispatch(sendMessage(roomId, this.state.textFieldValue))
-      this.setState({textFieldValue: ''})
+      dispatch(sendMessage(roomId, this.state.textInputValue))
+      this.setState({textInputValue: ''})
     }
   }
 
@@ -162,43 +164,46 @@ class Room extends Component {
 
     this.setState({
       editing: true,
-      focusTextField: true,
+      textInputFocus: true,
       editMessage: {
         rowId, id
       },
-      textFieldValue: message.text
+      textInputValue: message.text
     })
   }
 
   onEndEdit() {
     const {dispatch, route: {roomId}, entities} = this.props
-    const {textFieldValue, editMessage: {id, rowId}} = this.state
+    const {textInputValue, editMessage: {id, rowId}} = this.state
     const message = entities[id]
-    const experied = moment(message.sent).add(10, 'm')
+    const experied = moment(message.sent).add(5, 'm')
 
     if (moment().isAfter(experied)) {
       this.setState({editing: false})
       return false
     }
 
-    dispatch(updateMessage(roomId, id, textFieldValue, rowId))
+    dispatch(updateMessage(roomId, id, textInputValue, rowId))
 
     this.setState({
       editing: false,
-      focusTextField: false,
+      textInputFocus: false,
       editMessage: null,
-      textFieldValue: ''
+      textInputValue: ''
     })
   }
 
-  onTextFieldChage(text) {
-    this.setState({textFieldValue: text})
+  onTextFieldChange(text) {
+    this.setState({textInputValue: text})
   }
 
-  bindTextInputRef(component) {
-    this.textInputRef = component
+  onTextInputBlur() {
+    this.setState({textInputFocus: false})
   }
 
+  onTextInputFocus() {
+    this.setState({textInputFocus: true})
+  }
 
   prepareDataSources() {
     const {listViewData, route: {roomId}, dispatch} = this.props
@@ -235,9 +240,11 @@ class Room extends Component {
     return (
       <SendMessageField
         onSending={this.onSending.bind(this)}
-        onChange={this.onTextFieldChage.bind(this)}
-        value={this.state.textFieldValue}
-        focus={this.state.focusTextField} />
+        onChange={this.onTextFieldChange.bind(this)}
+        value={this.state.textInputValue}
+        focus={this.state.textInputFocus}
+        onFocus={this.onTextInputFocus.bind(this)}
+        onBlur={this.onTextInputBlur.bind(this)} />
     )
   }
 
