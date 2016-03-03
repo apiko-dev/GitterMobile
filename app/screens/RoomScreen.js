@@ -43,6 +43,12 @@ class Room extends Component {
     this.onResendingMessage = this.onResendingMessage.bind(this)
     this.onJoinRoom = this.onJoinRoom.bind(this)
     this.onMessageLongPress = this.onMessageLongPress.bind(this)
+    this.bindTextInputRef = this.bindTextInputRef.bind(this)
+
+    this.state = {
+      textFieldValue: '',
+      focusTextField: false
+    }
   }
 
   componentDidMount() {
@@ -73,9 +79,14 @@ class Room extends Component {
     }
   }
 
-  onSending(text) {
+  onSending() {
     const {dispatch, route: {roomId}} = this.props
-    dispatch(sendMessage(roomId, text))
+    if (this.state.editing) {
+      this.onEndEdit()
+    } else {
+      dispatch(sendMessage(roomId, this.state.textFieldValue))
+      this.setState({textFieldValue: ''})
+    }
   }
 
   onResendingMessage(rowId, text) {
@@ -127,13 +138,65 @@ class Room extends Component {
   }
 
   onDelete(rowId, id) {
-    const {dispatch, route: {roomId}} = this.props
+    const {dispatch, route: {roomId}, entities} = this.props
+    const message = entities[id]
+    const experied = moment(message.sent).add(10, 'm')
+
+    if (moment().isAfter(experied)) {
+      return false
+    }
+
     const text = ''
     dispatch(updateMessage(roomId, id, text, rowId))
   }
 
   onEdit(rowId, id) {
+    const {entities} = this.props
+    const message = entities[id]
+    const experied = moment(message.sent).add(10, 'm')
 
+    if (moment().isAfter(experied)) {
+      this.setState({editing: false})
+      return false
+    }
+
+    this.setState({
+      editing: true,
+      focusTextField: true,
+      editMessage: {
+        rowId, id
+      },
+      textFieldValue: message.text
+    })
+  }
+
+  onEndEdit() {
+    const {dispatch, route: {roomId}, entities} = this.props
+    const {textFieldValue, editMessage: {id, rowId}} = this.state
+    const message = entities[id]
+    const experied = moment(message.sent).add(10, 'm')
+
+    if (moment().isAfter(experied)) {
+      this.setState({editing: false})
+      return false
+    }
+
+    dispatch(updateMessage(roomId, id, textFieldValue, rowId))
+
+    this.setState({
+      editing: false,
+      focusTextField: false,
+      editMessage: null,
+      textFieldValue: ''
+    })
+  }
+
+  onTextFieldChage(text) {
+    this.setState({textFieldValue: text})
+  }
+
+  bindTextInputRef(component) {
+    this.textInputRef = component
   }
 
 
@@ -171,7 +234,10 @@ class Room extends Component {
     }
     return (
       <SendMessageField
-        onSending={this.onSending.bind(this)}/>
+        onSending={this.onSending.bind(this)}
+        onChange={this.onTextFieldChage.bind(this)}
+        value={this.state.textFieldValue}
+        focus={this.state.focusTextField} />
     )
   }
 

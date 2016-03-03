@@ -18,39 +18,48 @@ export default class SendMessageField extends Component {
     this.sendMessage = this.sendMessage.bind(this)
 
     this.state = {
-      height: 56,
-      text: ''
+      height: 56
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const {focus} = nextProps
+    if (focus) {
+      this.refs.textInput.focus()
+    } else {
+      this.refs.textInput.blur()
     }
   }
 
   sendMessage() {
-    this.props.onSending(this.state.text)
-    this.setState({text: '', height: 56})
+    this.props.onSending()
+    this.setState({ height: 56})
   }
 
   render() {
+    const {value, onChange} = this.props
     return (
       <View style={s.container}>
         <TextInput
+          ref="textInput"
           multiline
           style={[s.textInput, {height: this.state.height > 90 ? 90 : Math.max(56, this.state.height)}]}
-          value={this.state.text}
+          value={value}
           underlineColorAndroid={colors.androidGray}
           onChange={(event) => {
             this.setState({
-              text: event.nativeEvent.text,
               height: event.nativeEvent.contentSize.height
             })
+            onChange(event.nativeEvent.text)
           }}
           placeholder="Type your message here..." />
         <TouchableNativeFeedback
           background={TouchableNativeFeedback.SelectableBackgroundBorderless()}
-          accessible={!this.state.text.trim() ? false : true}
           onPress={() => this.sendMessage()}>
           <View style={s.button}>
             <Image
               source={require('image!ic_send_black_24dp')}
-              style={[s.sendIcon, {opacity: !this.state.text.trim() ? 0.2 : 0.6}]}/>
+              style={[s.sendIcon, {opacity: !value.trim() ? 0.2 : 0.6}]}/>
           </View>
         </TouchableNativeFeedback>
       </View>
@@ -60,5 +69,8 @@ export default class SendMessageField extends Component {
 }
 
 SendMessageField.propTypes = {
-  onSending: PropTypes.func
+  onSending: PropTypes.func,
+  value: PropTypes.func,
+  onChange: PropTypes.func,
+  focus: PropTypes.bool
 }
