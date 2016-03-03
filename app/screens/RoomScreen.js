@@ -3,6 +3,7 @@ import React, {
   PropTypes,
   InteractionManager,
   ToolbarAndroid,
+  ToastAndroid,
   Alert,
   ListView,
   View
@@ -43,13 +44,12 @@ class Room extends Component {
     this.onResendingMessage = this.onResendingMessage.bind(this)
     this.onJoinRoom = this.onJoinRoom.bind(this)
     this.onMessageLongPress = this.onMessageLongPress.bind(this)
-    this.onTextInputBlur = this.onTextInputBlur.bind(this)
-    this.onTextInputFocus = this.onTextInputFocus.bind(this)
     this.onTextFieldChange = this.onTextFieldChange.bind(this)
 
     this.state = {
       textInputValue: '',
-      textInputFocus: false
+      editing: false,
+      editMessage: {}
     }
   }
 
@@ -109,11 +109,10 @@ class Room extends Component {
   }
 
   onMessageLongPress(rowId, id) {
-    const {dispatch, currentUser, entities} = this.props
+    const {currentUser, entities} = this.props
     const message = entities[id]
     const experied = moment(message.sent).add(10, 'm')
     let countDown = ''
-
 
     const actions = [
         {text: 'Copy text', onPress: () => console.log(text)}
@@ -145,6 +144,7 @@ class Room extends Component {
     const experied = moment(message.sent).add(10, 'm')
 
     if (moment().isAfter(experied)) {
+      ToastAndroid.show("Can't delete message.", ToastAndroid.SHORT)
       return false
     }
 
@@ -162,13 +162,13 @@ class Room extends Component {
       return false
     }
 
+    this.refs.sendMessageField.focus()
     this.setState({
+      textInputValue: message.text,
       editing: true,
-      textInputFocus: true,
       editMessage: {
         rowId, id
-      },
-      textInputValue: message.text
+      }
     })
   }
 
@@ -179,30 +179,27 @@ class Room extends Component {
     const experied = moment(message.sent).add(5, 'm')
 
     if (moment().isAfter(experied)) {
-      this.setState({editing: false})
+      this.setState({
+        editing: false,
+        textInputValue: '',
+        editMessage: {}
+      })
+      this.refs.sendMessageField.blur()
+      ToastAndroid.show("Can't edit message.", ToastAndroid.SHORT)
       return false
     }
 
     dispatch(updateMessage(roomId, id, textInputValue, rowId))
-
+    this.refs.sendMessageField.blur()
     this.setState({
       editing: false,
-      textInputFocus: false,
-      editMessage: null,
+      editMessage: {},
       textInputValue: ''
     })
   }
 
   onTextFieldChange(text) {
     this.setState({textInputValue: text})
-  }
-
-  onTextInputBlur() {
-    this.setState({textInputFocus: false})
-  }
-
-  onTextInputFocus() {
-    this.setState({textInputFocus: true})
   }
 
   prepareDataSources() {
@@ -239,12 +236,10 @@ class Room extends Component {
     }
     return (
       <SendMessageField
+        ref="sendMessageField"
         onSending={this.onSending.bind(this)}
         onChange={this.onTextFieldChange.bind(this)}
-        value={this.state.textInputValue}
-        focus={this.state.textInputFocus}
-        onFocus={this.onTextInputFocus.bind(this)}
-        onBlur={this.onTextInputBlur.bind(this)} />
+        value={this.state.textInputValue} />
     )
   }
 

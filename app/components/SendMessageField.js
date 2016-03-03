@@ -16,19 +16,20 @@ export default class SendMessageField extends Component {
     super(props)
 
     this.sendMessage = this.sendMessage.bind(this)
+    this.focus = this.focus.bind(this)
+    this.blur = this.blur.bind(this)
 
     this.state = {
       height: 56
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    const {focus} = nextProps
-    if (focus) {
-      this.refs.textInput.focus()
-    } else {
-      this.refs.textInput.blur()
-    }
+  focus() {
+    this.refs.textInput.focus()
+  }
+
+  blur() {
+    this.refs.textInput.blur()
   }
 
   sendMessage() {
@@ -37,7 +38,7 @@ export default class SendMessageField extends Component {
   }
 
   render() {
-    const {value, onChange, onFocus, onBlur} = this.props
+    const {value, onChange} = this.props
     return (
       <View style={s.container}>
         <TextInput
@@ -45,8 +46,6 @@ export default class SendMessageField extends Component {
           multiline
           style={[s.textInput, {height: this.state.height > 90 ? 90 : Math.max(56, this.state.height)}]}
           value={value}
-          onFocus={() => onFocus()}
-          onBlur={() => onBlur()}
           underlineColorAndroid={colors.androidGray}
           onChange={(event) => {
             this.setState({
@@ -73,8 +72,5 @@ export default class SendMessageField extends Component {
 SendMessageField.propTypes = {
   onSending: PropTypes.func,
   value: PropTypes.func,
-  onChange: PropTypes.func,
-  focus: PropTypes.bool,
-  onFocus: PropTypes.func,
-  onBlur: PropTypes.func
+  onChange: PropTypes.func
 }
