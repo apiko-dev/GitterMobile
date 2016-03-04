@@ -1,8 +1,8 @@
 import * as Api from '../api/gitter'
 import _ from 'lodash'
-import FayeGitter from '../../libs/react-native-gitter-faye'
 import normalize from '../utils/normalize'
 import {LOGOUT} from './auth'
+import {subscribeToChatMessages, unsubscribeToChatMessages} from './realtime'
 
 
 /**
@@ -16,8 +16,6 @@ export const SUGGESTED_ROOMS = 'rooms/SUGGESTED_ROOMS'
 export const SUGGESTED_ROOMS_RECEIVED = 'rooms/SUGGESTED_ROOMS_RECEIVED'
 export const SUGGESTED_ROOMS_FAILED = 'rooms/SUGGESTED_ROOMS_FAILED'
 export const SELECT_ROOM = 'rooms/SELECT_ROOM'
-export const ROOMS_SUBSCRIBED = 'rooms/ROOMS_SUBSCRIBED'
-export const ROOMS_UNSUBSCRIBED = 'rooms/ROOMS_UNSUBSCRIBED'
 export const UPDATE_ROOM_STATE = 'rooms/UPDATE_ROOM_STATE'
 export const ROOM = 'rooms/ROOM'
 export const ROOM_RECEIVED = 'rooms/ROOM_RECEIVED'
@@ -92,20 +90,16 @@ export function getSuggestedRooms() {
  * Set active room
  */
 export function selectRoom(roomId) {
-  return {type: SELECT_ROOM, payload: roomId}
-}
-
-/**
- * Subscribe current user rooms changes (Drawer)
- */
-
-export function subscribeToRooms() {
   return (dispatch, getState) => {
-    const {id} = getState().viewer.user
-    FayeGitter.subscribe(`/api/v1/user/${id}/rooms`)
-    dispatch({type: ROOMS_SUBSCRIBED})
+    const {activeRoom} = getState().rooms
+    dispatch({type: SELECT_ROOM, payload: roomId})
+    if (!!activeRoom) {
+      dispatch(unsubscribeToChatMessages(activeRoom))
+    }
+    dispatch(subscribeToChatMessages(roomId))
   }
 }
+
 
 /**
  * Update unread count by faye action

@@ -21,7 +21,6 @@ import {
   prepareListView,
   getRoomMessagesBefore,
   getRoomMessagesIfNeeded,
-  subscribeToChatMessages,
   sendMessage,
   resendMessage,
   updateMessage

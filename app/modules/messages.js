@@ -18,7 +18,6 @@ export const ROOM_HAS_NO_MORE_MESSAGES = 'messages/ROOM_HAS_NO_MORE_MESSAGES'
 export const ROOM_MESSAGES_RETURN_FROM_CACHE = 'messages/ROOM_MESSAGES_RETURN_FROM_CACHE'
 export const ROOM_MESSAGES_APPEND = 'messages/ROOM_MESSAGES_APPEND'
 export const PREPARE_LIST_VIEW = 'messages/PREPARE_LIST_VIEW'
-export const SUBSCRIBE_TO_CHAT_MESSAGES = 'messages/SUBSCRIBE_TO_CHAT_MESSAGES'
 export const SEND_MESSAGE = 'messages/SEND_MESSAGE'
 export const SEND_MESSAGE_RECEIVED = 'messages/SEND_MESSAGE_RECEIVED'
 export const SEND_MESSAGE_FAILED = 'messages/SEND_MESSAGE_FAILED'
@@ -153,16 +152,6 @@ export function prepareListView(roomId, ds) {
   }
 }
 
-/**
- * Subscribe for new room's messages => faye chat messages endpoint
- */
-
-export function subscribeToChatMessages(roomId) {
-  return dispatch => {
-    FayeGitter.subscribe(`/api/v1/rooms/${roomId}/chatMessages`)
-    dispatch({type: SUBSCRIBE_TO_CHAT_MESSAGES, roomId})
-  }
-}
 
 /**
  * Send messages
