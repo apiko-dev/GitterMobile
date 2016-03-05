@@ -1,7 +1,7 @@
 import FayeGitter from '../../libs/react-native-gitter-faye'
 import {DeviceEventEmitter} from 'react-native'
 import {updateRoomState} from './rooms'
-import {appendMessages} from './messages'
+import {appendMessages, updateMessageRealtime} from './messages'
 
 /**
  * Constants
@@ -75,7 +75,7 @@ export function setupFayeEvents() {
     DeviceEventEmitter
       .addListener('FayeGitter:SubscribtionFailed', log => console.warn(log)) // eslint-disable-line no-console
     DeviceEventEmitter
-      .addListener('FayeGitter:Subscribed', log => console.log(log)) // eslint-disable-line no-console
+      .addListener('FayeGitter:Subscribed', log => console.log('SUBSCRIBED', log)) // eslint-disable-line no-console
     DeviceEventEmitter
       .addListener('FayeGitter:Unsubscribed', log => console.log(log)) // eslint-disable-line no-console
     DeviceEventEmitter
@@ -90,6 +90,7 @@ export function setupFayeEvents() {
 function parseEvent(event) {
   return (dispatch, getState) => {
     const message = JSON.parse(event.json)
+    console.log('MESSAGE!!!', message)
     const {id} = getState().viewer.user
     const {activeRoom} = getState().rooms
     const roomsChannel = `/api/v1/user/${id}/rooms`
@@ -102,6 +103,10 @@ function parseEvent(event) {
     if (event.channel.match(chatMessages)) {
       if (!!message.model.fromUser && message.model.fromUser.id !== id && message.operation === 'create') {
         dispatch(appendMessages(activeRoom, [message.model]))
+      }
+
+      if (message.operation === 'update') {
+        dispatch(updateMessageRealtime(activeRoom, message.model))
       }
     }
   }
