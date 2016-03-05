@@ -7,6 +7,7 @@ import React, {
 } from 'react-native'
 import InvertibleScrollView from 'react-native-invertible-scroll-view'
 import Message from './Message'
+import HistoryBegin from './HistoryBegin'
 
 export default class MessagesList extends Component {
   constructor(props) {
@@ -19,7 +20,7 @@ export default class MessagesList extends Component {
     const {onResendingMessage, onLongPress} = this.props
     if (!!rowData.hasNoMore) {
       return (
-        <Text>It's a verry beginning of this room messages.</Text>
+        <HistoryBegin />
       )
     }
 
