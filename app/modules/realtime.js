@@ -105,7 +105,7 @@ function parseEvent(event) {
         dispatch(appendMessages(activeRoom, [message.model]))
       }
 
-      if (message.operation === 'update') {
+      if (message.operation === 'update' || message.operation === 'patch') {
         dispatch(updateMessageRealtime(activeRoom, message.model))
       }
     }
