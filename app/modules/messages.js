@@ -25,6 +25,9 @@ export const RESEND_MESSAGE = 'messages/RESEND_MESSAGE'
 export const UPDATE_MESSAGE = 'messages/UPDATE_MESSAGE'
 export const UPDATE_MESSAGE_OK = 'messages/UPDATE_MESSAGE_OK'
 export const UPDATE_MESSAGE_FAILED = 'messages/UPDATE_MESSAGE_FAILED'
+export const CLEAR_ERROR = 'messages/CLEAR_ERROR'
+export const GETTING_MORE_MESSAGES = 'messages/GETTING_MORE_MESSAGES'
+export const GETTING_MORE_MESSAGES_OK = 'messages/GETTING_MORE_MESSAGES_OK'
 
 
 
@@ -67,6 +70,7 @@ export function getRoomMessagesBefore(roomId) {
     const {byRoom} = getState().messages
     const {limit} = getState().settings
     const lastMessageId = byRoom[roomId][0]
+    dispatch({type: GETTING_MORE_MESSAGES})
     dispatch({type: ROOM_MESSAGES_BEFORE, payload: roomId})
     try {
       const payload = await Api.roomMessagesBefore(token, roomId, limit, lastMessageId)
@@ -79,6 +83,7 @@ export function getRoomMessagesBefore(roomId) {
           dispatch({type: ROOM_HAS_NO_MORE_MESSAGES, roomId})
         }
       }
+      dispatch({type: GETTING_MORE_MESSAGES_OK})
     } catch (error) {
       dispatch({type: ROOM_MESSAGES_BEFORE_FAILED, error})
     }
@@ -95,6 +100,7 @@ export function getRoomMessagesIfNeeded(roomId) {
     const {listView} = getState().messages
     const {limit} = getState().settings
     const {data} = listView[roomId]
+    dispatch({type: GETTING_MORE_MESSAGES})
 
     dispatch({type: ROOM_MESSAGES_RETURN_FROM_CACHE, roomId, limit})
 
@@ -126,6 +132,7 @@ export function getRoomMessagesIfNeeded(roomId) {
           }
         }
       }
+      dispatch({type: GETTING_MORE_MESSAGES_OK})
     } catch (error) {
       dispatch({type: ROOM_MESSAGES_FAILED, error})
     }
@@ -225,8 +232,20 @@ export function updateMessageRealtime(roomId, message) {
 }
 
 /**
+ * An actionc creator for clear all the errors
+ */
+
+export function clearError() {
+  return {
+    type: CLEAR_ERROR
+  }
+}
+
+
+/**
  * Reducer
  */
+
 
 const initialState = {
   isLoading: false,
@@ -255,6 +274,16 @@ export default function messages(state = initialState, action) {
   case ROOM_MESSAGES_BEFORE:
     return {...state,
       isLoadingMore: true
+    }
+
+  case GETTING_MORE_MESSAGES:
+    return {...state,
+      isLoadingMore: true
+    }
+
+  case GETTING_MORE_MESSAGES_OK:
+    return {...state,
+      isLoadingMore: false
     }
 
   case ROOM_MESSAGES_RECEIVED: {
@@ -519,6 +548,13 @@ export default function messages(state = initialState, action) {
           rowIds
         }
       }
+    }
+  }
+
+  case CLEAR_ERROR: {
+    return {...state,
+      error: false,
+      errors: []
     }
   }
 

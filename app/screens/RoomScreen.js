@@ -23,7 +23,8 @@ import {
   getRoomMessagesIfNeeded,
   sendMessage,
   resendMessage,
-  updateMessage
+  updateMessage,
+  clearError as clearMessagesError,
 } from '../modules/messages'
 
 import Loading from '../components/Loading'
@@ -31,6 +32,7 @@ import MessagesList from '../components/MessagesList'
 import LoadginMoreSnack from '../components/LoadingMoreSnack'
 import SendMessageField from '../components/SendMessageField'
 import JoinRoomField from '../components/JoinRoomField'
+import FailedToLoadMessages from '../components/FailedToLoadMessages'
 
 class Room extends Component {
   constructor(props) {
@@ -44,6 +46,7 @@ class Room extends Component {
     this.onJoinRoom = this.onJoinRoom.bind(this)
     this.onMessageLongPress = this.onMessageLongPress.bind(this)
     this.onTextFieldChange = this.onTextFieldChange.bind(this)
+    this.onRetryFetchingMessages = this.onRetryFetchingMessages.bind(this)
 
     this.state = {
       textInputValue: '',
@@ -204,6 +207,12 @@ class Room extends Component {
     this.setState({textInputValue: text})
   }
 
+  onRetryFetchingMessages() {
+    const {dispatch, route: {roomId}} = this.props
+    dispatch(clearMessagesError())
+    dispatch(getRoomMessages(roomId))
+  }
+
   prepareDataSources() {
     const {listViewData, route: {roomId}, dispatch} = this.props
     if (!listViewData[roomId]) {
@@ -228,7 +237,7 @@ class Room extends Component {
     )
   }
 
-  renderSendMessageFiled() {
+  renderBottom() {
     const {rooms, route: {roomId}} = this.props
     if (!rooms[roomId].roomMember) {
       return (
@@ -247,7 +256,7 @@ class Room extends Component {
 
   renderLoadingMore() {
     return (
-    <LoadginMoreSnack />
+      <LoadginMoreSnack loading/>
     )
   }
 
@@ -258,7 +267,13 @@ class Room extends Component {
   }
 
   renderListView() {
-    const {listViewData, dispatch, route: {roomId}} = this.props
+    const {listViewData, dispatch, route: {roomId}, getMessagesError} = this.props
+    if (getMessagesError) {
+      return (
+        <FailedToLoadMessages
+          onPress={this.onRetryFetchingMessages.bind(this)} />
+      )
+    }
     return (
       <MessagesList
         listViewData={listViewData[roomId]}
@@ -270,7 +285,8 @@ class Room extends Component {
   }
 
   render() {
-    const {rooms, route, isLoadingMessages, isLoadingMoreMessages} = this.props
+    const {rooms, listViewData, route, isLoadingMessages, isLoadingMoreMessages} = this.props
+    const listView = listViewData[route.roomId]
     if (!rooms[route.roomId]) {
       return this.renderLoading()
     }
@@ -280,7 +296,7 @@ class Room extends Component {
         {this.renderToolbar()}
         {isLoadingMoreMessages ? this.renderLoadingMore() : null}
         {isLoadingMessages ? this.renderLoading() : this.renderListView()}
-        {this.renderSendMessageFiled()}
+        {isLoadingMessages || _.has(listView, 'data') && listView.data.length === 0 ? null : this.renderBottom()}
       </View>
     )
   }
@@ -298,7 +314,8 @@ Room.propTypes = {
   byRoom: PropTypes.object,
   entities: PropTypes.object,
   hasNoMore: PropTypes.object,
-  currentUser: PropTypes.object
+  currentUser: PropTypes.object,
+  getMessagesError: PropTypes.bool
 }
 
 function mapStateToProps(state) {
@@ -308,6 +325,7 @@ function mapStateToProps(state) {
     activeRoom,
     rooms,
     entities,
+    getMessagesError: state.messages.error,
     listViewData: listView,
     isLoadingMessages: isLoading,
     isLoadingMoreMessages: isLoadingMore,

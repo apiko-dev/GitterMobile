@@ -24,6 +24,13 @@ const style = StyleSheet.create({
   },
   info: {
     backgroundColor: colors.androidGray
+  },
+  progressBar: {
+    position: 'absolute',
+    top: -6,
+    right: 0,
+    left: 0,
+    elevation: 4
   }
 })
 
