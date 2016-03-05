@@ -76,8 +76,8 @@ class Room extends Component {
   }
 
   onEndReached() {
-    const {dispatch, route: {roomId}, hasNoMore, isLoadingMoreMessages, isLoadingMessages, listViewData} = this.props
-    if (hasNoMore[roomId] !== true && isLoadingMoreMessages === false
+    const {dispatch, route: {roomId}, hasNoMore, isLoadingMore, isLoadingMessages, listViewData} = this.props
+    if (hasNoMore[roomId] !== true && isLoadingMore === false
         && isLoadingMessages === false && listViewData[roomId].data.length !== 0) {
       dispatch(getRoomMessagesBefore(roomId))
     }
@@ -285,7 +285,7 @@ class Room extends Component {
   }
 
   render() {
-    const {rooms, listViewData, route, isLoadingMessages, isLoadingMoreMessages} = this.props
+    const {rooms, listViewData, route, isLoadingMessages, isLoadingMore} = this.props
     const listView = listViewData[route.roomId]
     if (!rooms[route.roomId]) {
       return this.renderLoading()
@@ -294,7 +294,7 @@ class Room extends Component {
     return (
       <View style={s.container}>
         {this.renderToolbar()}
-        {isLoadingMoreMessages ? this.renderLoadingMore() : null}
+        {isLoadingMore ? this.renderLoadingMore() : null}
         {isLoadingMessages ? this.renderLoading() : this.renderListView()}
         {isLoadingMessages || _.has(listView, 'data') && listView.data.length === 0 ? null : this.renderBottom()}
       </View>
@@ -309,7 +309,7 @@ Room.propTypes = {
   route: PropTypes.object,
   dispatch: PropTypes.func,
   isLoadingMessages: PropTypes.bool,
-  isLoadingMoreMessages: PropTypes.bool,
+  isLoadingMore: PropTypes.bool,
   listViewData: PropTypes.object,
   byRoom: PropTypes.object,
   entities: PropTypes.object,
@@ -328,7 +328,7 @@ function mapStateToProps(state) {
     getMessagesError: state.messages.error,
     listViewData: listView,
     isLoadingMessages: isLoading,
-    isLoadingMoreMessages: isLoadingMore,
+    isLoadingMore,
     byRoom,
     hasNoMore,
     currentUser: state.viewer.user

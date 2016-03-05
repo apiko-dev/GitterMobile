@@ -2,7 +2,6 @@ import * as Api from '../api/gitter'
 import normalize from '../utils/normalize'
 import createMessage from '../utils/createMessage'
 import _ from 'lodash'
-import FayeGitter from '../../libs/react-native-gitter-faye'
 
 /**
  * Constants
@@ -28,7 +27,6 @@ export const UPDATE_MESSAGE_FAILED = 'messages/UPDATE_MESSAGE_FAILED'
 export const CLEAR_ERROR = 'messages/CLEAR_ERROR'
 export const GETTING_MORE_MESSAGES = 'messages/GETTING_MORE_MESSAGES'
 export const GETTING_MORE_MESSAGES_OK = 'messages/GETTING_MORE_MESSAGES_OK'
-
 
 
 /**
@@ -132,9 +130,10 @@ export function getRoomMessagesIfNeeded(roomId) {
           }
         }
       }
-      dispatch({type: GETTING_MORE_MESSAGES_OK})
     } catch (error) {
       dispatch({type: ROOM_MESSAGES_FAILED, error})
+    } finally {
+      dispatch({type: GETTING_MORE_MESSAGES_OK})
     }
   }
 }
@@ -397,7 +396,7 @@ export default function messages(state = initialState, action) {
     const data = []
     let hasNoMore = _.merge({}, state.hasNoMore)
 
-    if (byRoom[roomId].length === 0) {
+    if (!byRoom[roomId]) {
       return state
     }
     // we need to reverse our messages array to display it inverted
@@ -415,6 +414,7 @@ export default function messages(state = initialState, action) {
     return {...state,
       hasNoMore,
       isLoading: false,
+      isLoadingMore: false,
       listView: {...state.listView,
         [roomId]: {
           dataSource: state.listView[roomId].dataSource.cloneWithRows(data, rowIds),
@@ -562,6 +562,7 @@ export default function messages(state = initialState, action) {
   case ROOM_MESSAGES_FAILED:
     return {...state,
       isLoading: false,
+      isLoadingMore: false,
       error: true,
       errors: action.error
     }
