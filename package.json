@@ -20,16 +20,17 @@
   },
   "dependencies": {
     "lodash": "^4.2.1",
-    "react-native": "^0.20.0",
-    "react-native-android-statusbar": "^0.1.2",
+    "moment": "^2.11.2",
+    "react-native": "^0.21.0",
     "react-native-extra-dimensions-android": "^0.17.0",
-    "react-native-material-kit": "^0.3.0",
+    "react-native-invertible-scroll-view": "^0.2.0",
     "react-native-parallax-scroll-view": "^0.17.4",
     "react-redux": "^4.3.0",
     "redux": "^3.2.1",
     "redux-logger": "^2.5.0",
     "redux-thunk": "^1.0.3",
-    "remote-redux-devtools": "^0.1.1"
+    "remote-redux-devtools": "^0.1.1",
+    "uuid": "^2.0.1"
   },
   "devDependencies": {
     "eslint": "~1.10.3",

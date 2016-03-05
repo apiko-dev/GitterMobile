@@ -11,8 +11,8 @@ export default function configureStore(initialState) {
    */
   if (__DEV__) {
     const createLogger = require('redux-logger')
-    const devTools = require('remote-redux-devtools')
     const logger = createLogger()
+    const devTools = require('remote-redux-devtools')
 
     const finalCreateStore = compose(
       applyMiddleware(thunkMiddleware, logger),

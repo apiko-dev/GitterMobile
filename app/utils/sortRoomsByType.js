@@ -51,6 +51,10 @@ export const categorize = (ids, entities) => {
 
   for (const id of ids) {
     const entity = entities[id]
+    if (entity.roomMember === false) {
+      continue
+    }
+
     if (entity.hasOwnProperty('favourite')) {
       favoriteIds.push(entity.id)
     }

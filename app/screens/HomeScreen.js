@@ -2,6 +2,7 @@ import React, {
   Component,
   PropTypes,
   ToolbarAndroid,
+  StatusBar,
   Dimensions,
   Image,
   Text,
@@ -9,7 +10,9 @@ import React, {
 } from 'react-native'
 import {connect} from 'react-redux'
 import ExtraDimensions from 'react-native-extra-dimensions-android'
+import {selectRoom} from '../modules/rooms'
 import s from '../styles/HomeStyles'
+
 import ParallaxScrollView from '../components/ParallaxScrollView'
 import HomeRoomItem from '../components/HomeRoomItem'
 import Loading from '../components/Loading'
@@ -26,9 +29,11 @@ class HomeScreen extends Component {
     super(props)
     this.renderBottom = this.renderBottom.bind(this)
     this.renderStickyHeader = this.renderStickyHeader.bind(this)
+    this.onRoomPress = this.onRoomPress.bind(this)
   }
 
-  componentDidMount() {
+  onRoomPress(id) {
+    this.props.navigateTo({name: 'room', roomId: id})
   }
 
   renderOrgs(orgs) {
@@ -38,7 +43,12 @@ class HomeScreen extends Component {
     return (
       <View style={s.roomItem}>
         <Text style={s.bottomSectionHeading}>Organizations</Text>
-        {orgs.map(org => <HomeRoomItem key={org.id} {...org} />)}
+        {orgs.map(org => (
+          <HomeRoomItem
+            onPress={this.onRoomPress.bind(this)}
+            key={org.id}
+            {...org} />
+        ))}
       </View>
     )
   }
@@ -50,7 +60,11 @@ class HomeScreen extends Component {
     return (
       <View style={s.roomItem}>
         <Text style={s.bottomSectionHeading}>Favorites</Text>
-        {favorites.map(favorite => <HomeRoomItem key={favorite.id}{...favorite} />)}
+        {favorites.map(favorite => (
+          <HomeRoomItem
+            onPress={this.onRoomPress.bind(this)}
+            key={favorite.id}{...favorite} />
+        ))}
       </View>
     )
   }
@@ -62,7 +76,15 @@ class HomeScreen extends Component {
     return (
       <View style={s.roomItem}>
         <Text style={s.bottomSectionHeading}>Suggested rooms</Text>
-        {suggested.map(room => <HomeRoomItem key={room.id} id={room.id} name={room.uri} oneToOne={false} {...room}/>)}
+        {suggested.map(room => (
+          <HomeRoomItem
+            onPress={this.onRoomPress.bind(this)}
+            key={room.id}
+            id={room.id}
+            name={room.uri}
+            oneToOne={false}
+            {...room} />
+        ))}
       </View>
     )
   }
@@ -119,14 +141,16 @@ class HomeScreen extends Component {
   render() {
     return (
       <View style={s.container}>
-          <ParallaxScrollView
-             backgroundColor={colors.brand}
-             contentBackgroundColor="white"
-             parallaxHeaderHeight={PARALLAX_HEADER_HEIGHT}
-             pivotOffset={56}
-             renderStickyHeader={() => this.renderStickyHeader()}
-             renderBackground={() => <Image source={require('../images/gitter-background.jpg')}/>}
-             renderForeground={() => this.renderForeground()} >
+        <StatusBar
+          backgroundColor={colors.darkRed} />
+        <ParallaxScrollView
+           backgroundColor={colors.brand}
+           contentBackgroundColor="white"
+           parallaxHeaderHeight={PARALLAX_HEADER_HEIGHT}
+           pivotOffset={56}
+           renderStickyHeader={() => this.renderStickyHeader()}
+           renderBackground={() => <Image source={require('../images/gitter-background.jpg')}/>}
+           renderForeground={() => this.renderForeground()} >
 
           {this.renderBottom()}
         </ParallaxScrollView>
@@ -143,7 +167,9 @@ HomeScreen.propTypes = {
   rooms: PropTypes.object,
   roomsIds: PropTypes.array,
   suggested: PropTypes.array,
-  dispatch: PropTypes.func
+  dispatch: PropTypes.func,
+  navigateTo: PropTypes.func,
+  route: PropTypes.object
 }
 
 HomeScreen.defaultProps = {

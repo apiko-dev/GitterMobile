@@ -11,13 +11,13 @@ import Avatar from './Avatar'
 import {createGhAvatarLink} from '../utils/links'
 
 
-const HomeRoomItem = ({id, name, userCount, oneToOne, ...props}) => {
+const HomeRoomItem = ({id, name, userCount, oneToOne, onPress, ...props}) => {
   const src = oneToOne
     ? createGhAvatarLink(props.user.username, 200)
     : createGhAvatarLink(name.split('/')[0], 200)
   return (
     <TouchableNativeFeedback
-      onPress={this._onPressButton}
+      onPress={() => onPress(id)}
       background={TouchableNativeFeedback.Ripple('#ECECEC', false)}>
       <View style={s.container}>
         <Avatar
@@ -38,7 +38,8 @@ HomeRoomItem.propTypes = {
   name: PropTypes.string.isRequired,
   userCount: PropTypes.number.isRequired,
   id: PropTypes.string.isRequired,
-  user: PropTypes.object
+  user: PropTypes.object,
+  onPress: PropTypes.func
 }
 
 export default HomeRoomItem

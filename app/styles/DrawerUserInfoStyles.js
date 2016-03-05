@@ -3,10 +3,10 @@ import ExtraDimensions from 'react-native-extra-dimensions-android'
 const STATUS_BAR_HEIGHT = ExtraDimensions.get('STATUS_BAR_HEIGHT')
 const styles = StyleSheet.create({
   container: {
-    height: 56 * 2 + STATUS_BAR_HEIGHT,
-    paddingTop: 10 + STATUS_BAR_HEIGHT,
+    height: 56 + STATUS_BAR_HEIGHT,
+    paddingTop: 10,
     paddingBottom: 10,
-    width: 300,
+    alignSelf: 'stretch',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
