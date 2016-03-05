@@ -43,11 +43,22 @@ class Message extends Component {
 
   renderDate() {
     const {sent} = this.props
-    if (!Date.parse(sent)) {
+
+    if (moment.isDate(sent)) {
       return sent
-    } else {
-      return moment(sent).format('HH:mm')
     }
+
+    const now = moment()
+    const date = moment(sent)
+    if (now.year() > date.year()) {
+      return date.format('YYYY MMM D HH:mm')
+    }
+
+    if (now.diff(date, 'hours') > 24) {
+      return date.format('MMM D HH:mm')
+    }
+
+    return date.format('HH:mm')
   }
 
   renderMessage() {
