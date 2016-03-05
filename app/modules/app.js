@@ -31,12 +31,12 @@ export function init() {
       await dispatch(getCurrentUser())
       await Promise.all([
         dispatch(getRooms()),
-        dispatch(getSuggestedRooms())
+        dispatch(getSuggestedRooms()),
+        dispatch(setupFaye()),
+        dispatch(setupNetStatusListener())
       ])
 
       // setup faye
-      await dispatch(setupFaye())
-      await dispatch(setupNetStatusListener())
     } catch (error) {
       dispatch({ type: INITIALIZED, error })
     }
