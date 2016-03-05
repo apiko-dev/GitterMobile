@@ -21,7 +21,6 @@ import {
   prepareListView,
   getRoomMessagesBefore,
   getRoomMessagesIfNeeded,
-  subscribeToChatMessages,
   sendMessage,
   resendMessage,
   updateMessage
@@ -115,7 +114,8 @@ class Room extends Component {
     let countDown = ''
 
     const actions = [
-        {text: 'Copy text', onPress: () => console.log(text)}
+        // TODO: Use clipboard module to allow copy message
+        {text: 'Copy text', onPress: () => console.log(message.text)} // eslint-disable-line no-console
     ]
 
     if (currentUser.username === message.fromUser.username &&
@@ -149,7 +149,7 @@ class Room extends Component {
     }
 
     const text = ''
-    dispatch(updateMessage(roomId, id, text, rowId))
+    dispatch(updateMessage(roomId, id, text))
   }
 
   onEdit(rowId, id) {
@@ -162,7 +162,6 @@ class Room extends Component {
       return false
     }
 
-    this.refs.sendMessageField.focus()
     this.setState({
       textInputValue: message.text,
       editing: true,
@@ -170,6 +169,9 @@ class Room extends Component {
         rowId, id
       }
     })
+    // triggers two times because sometimes it won't focus
+    this.refs.sendMessageField.focus()
+    this.refs.sendMessageField.focus()
   }
 
   onEndEdit() {
@@ -311,7 +313,7 @@ function mapStateToProps(state) {
     isLoadingMoreMessages: isLoadingMore,
     byRoom,
     hasNoMore,
-    currentUser: state.viewer.user,
+    currentUser: state.viewer.user
   }
 }
 

@@ -68,10 +68,17 @@ class Message extends Component {
   }
 
   render() {
-    const {fromUser, sending, failed} = this.props
+    const {fromUser, sending, failed, readBy} = this.props
     const opacity = sending === true ? 0.4 : 1
-    const backgroundColor = failed === true ? 'rgba(255, 0, 0, 0.2)' : 'transparent'
 
+    let backgroundColor
+    if (failed === true) {
+      backgroundColor = 'rgba(255, 0, 0, 0.2)'
+    } else if (readBy === 0) {
+      backgroundColor = 'rgba(200, 200, 200, 0.2)'
+    } else {
+      backgroundColor = 'transparent'
+    }
 
     return (
       <TouchableNativeFeedback
@@ -105,6 +112,7 @@ Message.propTypes = {
   text: PropTypes.string,
   sent: PropTypes.string,
   fromUser: PropTypes.object,
+  readBy: PropTypes.number,
   sending: PropTypes.bool,
   failed: PropTypes.bool,
   dispatch: PropTypes.func,

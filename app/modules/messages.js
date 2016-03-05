@@ -18,7 +18,6 @@ export const ROOM_HAS_NO_MORE_MESSAGES = 'messages/ROOM_HAS_NO_MORE_MESSAGES'
 export const ROOM_MESSAGES_RETURN_FROM_CACHE = 'messages/ROOM_MESSAGES_RETURN_FROM_CACHE'
 export const ROOM_MESSAGES_APPEND = 'messages/ROOM_MESSAGES_APPEND'
 export const PREPARE_LIST_VIEW = 'messages/PREPARE_LIST_VIEW'
-export const SUBSCRIBE_TO_CHAT_MESSAGES = 'messages/SUBSCRIBE_TO_CHAT_MESSAGES'
 export const SEND_MESSAGE = 'messages/SEND_MESSAGE'
 export const SEND_MESSAGE_RECEIVED = 'messages/SEND_MESSAGE_RECEIVED'
 export const SEND_MESSAGE_FAILED = 'messages/SEND_MESSAGE_FAILED'
@@ -153,16 +152,6 @@ export function prepareListView(roomId, ds) {
   }
 }
 
-/**
- * Subscribe for new room's messages => faye chat messages endpoint
- */
-
-export function subscribeToChatMessages(roomId) {
-  return dispatch => {
-    FayeGitter.subscribe(`/api/v1/rooms/${roomId}/chatMessages`)
-    dispatch({type: SUBSCRIBE_TO_CHAT_MESSAGES, roomId})
-  }
-}
 
 /**
  * Send messages
@@ -188,16 +177,16 @@ export function sendMessage(roomId, text) {
  * Resend messages
  */
 
-export function updateMessage(roomId, messageId, text, rowId) {
+export function updateMessage(roomId, messageId, text) {
   return async (dispatch, getState) => {
     const {token} = getState().auth
-    dispatch({type: UPDATE_MESSAGE, roomId, messageId, rowId, text})
+    dispatch({type: UPDATE_MESSAGE, roomId, messageId, text})
 
     try {
       const payload = await Api.updateMessage(token, roomId, messageId, text)
-      dispatch({type: UPDATE_MESSAGE_OK, payload, roomId, messageId, rowId})
+      dispatch({type: UPDATE_MESSAGE_OK, payload, roomId, messageId})
     } catch (error) {
-      dispatch({type: UPDATE_MESSAGE_OK, error, roomId, messageId, rowId})
+      dispatch({type: UPDATE_MESSAGE_OK, error, roomId, messageId})
     }
   }
 }
@@ -219,6 +208,19 @@ export function resendMessage(roomId, rowId, text) {
     } catch (error) {
       dispatch({type: SEND_MESSAGE_FAILED, error, message, roomId})
     }
+  }
+}
+
+/**
+ * Update message by faye event
+ */
+
+export function updateMessageRealtime(roomId, message) {
+  return dispatch => {
+    const {id} = message
+    dispatch({type: UPDATE_MESSAGE, roomId, messageId: id})
+    const payload = message
+    dispatch({type: UPDATE_MESSAGE_OK, payload, roomId, messageId: id})
   }
 }
 
@@ -496,16 +498,19 @@ export default function messages(state = initialState, action) {
   }
 
   case UPDATE_MESSAGE_OK: {
-    const {messageId, roomId, payload, rowId} = action
+    const {messageId, roomId, payload} = action
 
     const rowIds = [].concat(state.listView[roomId].rowIds)
     const data = [].concat(state.listView[roomId].data)
+    const rowId = _.findIndex(data, ['id', messageId])
 
-    data[rowId] = payload
+    const message = data[rowId]
+    const newMessage = _.merge({}, message, payload)
+    data[rowId] = newMessage
 
     return {...state,
       entities: {...state.entities,
-        [messageId]: payload
+        [messageId]: newMessage
       },
       listView: {...state.listView,
         [roomId]: {
