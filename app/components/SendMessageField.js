@@ -40,8 +40,12 @@ export default class SendMessageField extends Component {
   }
 
   sendMessage() {
-    this.props.onSending()
-    this.setState({ height: 56})
+    const {value, onSending} = this.props
+    if (!value.trim()) {
+      return
+    }
+    onSending()
+    this.setState({height: 56})
   }
 
   render() {

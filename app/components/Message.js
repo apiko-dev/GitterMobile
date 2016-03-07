@@ -44,7 +44,7 @@ class Message extends Component {
   renderDate() {
     const {sent} = this.props
 
-    if (!moment.isDate(sent)) {
+    if (sent === 'sending...' || sent === 'failed') {
       return sent
     }
 
