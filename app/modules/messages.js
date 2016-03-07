@@ -414,7 +414,6 @@ export default function messages(state = initialState, action) {
     return {...state,
       hasNoMore,
       isLoading: false,
-      isLoadingMore: false,
       listView: {...state.listView,
         [roomId]: {
           dataSource: state.listView[roomId].dataSource.cloneWithRows(data, rowIds),
