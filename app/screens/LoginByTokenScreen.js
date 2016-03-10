@@ -7,19 +7,33 @@ import React, {
   Text,
   Image
 } from 'react-native'
-import s from '../styles/LoginByTokenStyles'
+import s from '../styles/LoginByTokenScreenStyles'
+import {connect} from 'react-redux'
+import {loginByToken} from '../modules/auth'
 
-import Link from './Link'
+import Link from '../components/Link'
 import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault
 
-export default class LoginByToken extends Component {
+export default class LoginByTokenScreen extends Component {
   constructor(props) {
     super(props)
+    this.handleLogin = this.handleLogin.bind(this)
+
     this.state = {
-      token: null
+      token: ''
     }
   }
+
+  handleLogin() {
+    const {dispatch} = this.props
+    const {token} = this.state
+    if (!token.trim()) {
+      return
+    }
+    dispatch(loginByToken(token))
+  }
+
   render() {
     return (
       <Image style={s.container}
@@ -37,10 +51,10 @@ export default class LoginByToken extends Component {
             placeholder="Paste token here..."
             style={s.textfield}
             placeholderTextColor="white"
-            onChangeText={(e) => this.setState({token: e})} />
+            onChange={(e) => this.setState({token: e.nativeEvent.text})} />
           <TouchableNativeFeedback
             background={TouchableNativeFeedback.Ripple(colors.raspberry, false)}
-            onPress={() => this.props.onSubmit(this.state.token)}>
+            onPress={() => this.handleLogin()}>
             <View style={[s.buttonStyle, {backgroundColor: colors.darkRed}]}>
               <Text pointerEvents="none"
                 style={s.buttonText}>
@@ -54,6 +68,8 @@ export default class LoginByToken extends Component {
   }
 }
 
-LoginByToken.propTypes = {
-  onSubmit: PropTypes.func.isRequired
+LoginByTokenScreen.propTypes = {
+  dispatch: PropTypes.func
 }
+
+export default connect()(LoginByTokenScreen)

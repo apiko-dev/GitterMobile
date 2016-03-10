@@ -1,86 +1,56 @@
 import React, {
   Component,
   PropTypes,
-  Navigator,
-  BackAndroid
+  TouchableNativeFeedback,
+  Text,
+  Image,
+  View
 } from 'react-native'
-import s from '../styles/LoginStyles'
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux'
-import {loginByToken} from '../modules/auth'
-import LoginWelcome from '../components/LoginWelcome'
-import LoginByToken from '../components/LoginByToken'
+import s from '../styles/LoginScreenStyles'
+import {THEMES} from '../constants'
+const {colors} = THEMES.gitterDefault
 
-const NAV_REF = 'navigator'
 
-class LoginScreen extends Component {
-  constructor(props) {
-    super(props)
-
-    this.renderScene = this.renderScene.bind(this)
-    this.handleByToken = this.handleByToken.bind(this)
-  }
-
-  componentWillMount() {
-    BackAndroid.addEventListener('hardwareBackPress', () => {
-      const navigator = this.refs[NAV_REF]
-      if (navigator && navigator.getCurrentRoutes().length > 1) {
-        navigator.pop()
-        return true
-      }
-      return false
-    })
-  }
-
-  componentWillUnmount() {
-    BackAndroid.removeEventListener('hardwareBackPress')
-  }
-
-  configureScene() {
-    return Navigator.SceneConfigs.FadeAndroid
-  }
-
-  handleByToken() {
-    this.refs[NAV_REF].push({name: 'byToken'})
-  }
-
-  renderScene(route, navigator) {
-    switch (route.name) {
-    case 'welcome':
-      return (
-        <LoginWelcome onToken={this.handleByToken.bind(this)} />
-      )
-    case 'byToken':
-      return (
-        <LoginByToken onSubmit={this.props.loginByToken} />
-      )
-    default:
-      return (
-        <LoginWelcome onToken={this.handleByToken.bind(this)} />
-      )
-    }
-  }
-
+export default class LoginScreen extends Component {
   render() {
     return (
-      <Navigator
-        style={s.container}
-        ref={NAV_REF}
-        initialRoute={{name: 'welcome'}}
-        configureScene={this.configureScene}
-        renderScene={this.renderScene} />
+      <Image style={s.container}
+        source={require('../images/gitter-background.jpg')}>
+        <Text style={s.logo}>
+          GitterMobile
+        </Text>
+        <Text style={s.hero}>
+          To start using Gitter mobile you should login first.
+          You can login by oauth2 through WebView or just
+          copy/paste authentication token.
+        </Text>
+        <View style={s.buttonGroup}>
+          <TouchableNativeFeedback
+            background={TouchableNativeFeedback.Ripple(colors.raspberry, false)}
+            onPress={() => {}}>
+            <View style={[s.buttonStyle, {backgroundColor: colors.darkRed}]}>
+              <Text pointerEvents="none"
+                style={s.buttonText}>
+                Login by WebView
+              </Text>
+          </View>
+          </TouchableNativeFeedback>
+          <TouchableNativeFeedback
+            background={TouchableNativeFeedback.Ripple(colors.raspberry, false)}
+            onPress={() => {}}>
+            <View style={[s.buttonStyle, {backgroundColor: colors.darkRed}]}>
+              <Text pointerEvents="none"
+                style={s.buttonText}>
+                Login by Token
+              </Text>
+            </View>
+          </TouchableNativeFeedback>
+        </View>
+      </Image>
     )
   }
 }
 
 LoginScreen.propTypes = {
-  loginByToken: PropTypes.func.isRequired
+  onToken: PropTypes.func.isRequired
 }
-
-function mapDispatchToProps(dispatch) {
-  return {
-    loginByToken: bindActionCreators(loginByToken, dispatch)
-  }
-}
-
-export default connect(state => state, mapDispatchToProps)(LoginScreen)

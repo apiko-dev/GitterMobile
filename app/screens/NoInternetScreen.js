@@ -7,7 +7,6 @@ import React, {
   Image
 } from 'react-native'
 import {connect} from 'react-redux'
-import {Actions} from 'react-native-router-flux'
 import s from '../styles/NoInternetScreenStyles'
 import {THEMES} from '../constants'
 import {init} from '../modules/app'
@@ -22,7 +21,6 @@ class NoInternetScreen extends Component {
 
   handleRetry() {
     const {dispatch} = this.props
-    Actions.launch()
     dispatch(init())
   }
 
