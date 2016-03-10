@@ -158,10 +158,14 @@ class App extends Component {
     const {navigation} = this.props
     // const initialRoute = {name: 'launch'}
     // const initialRoute = {name: 'room', roomId: '56a41e0fe610378809bde160'}
+    const drawerLockMode = ['launch', 'login', 'loginByToken'].indexOf(navigation.current.name) === -1
+      ? 'unlocked'
+      : 'locked-closed'
 
     return (
       <DrawerLayoutAndroid
         ref="drawer"
+        drawerLockMode={drawerLockMode}
         style={{backgroundColor: 'white'}}
         drawerWidth={300}
         drawerPosition={DrawerLayoutAndroid.positions.Left}
