@@ -24,7 +24,7 @@ import {
   sendMessage,
   resendMessage,
   updateMessage,
-  clearError as clearMessagesError,
+  clearError as clearMessagesError
 } from '../modules/messages'
 
 import Loading from '../components/Loading'
@@ -57,6 +57,7 @@ class Room extends Component {
 
   componentDidMount() {
     this.prepareDataSources()
+    debugger
     const {activeRoom, rooms, route: { roomId }, dispatch, listViewData} = this.props
     // dispatch(subscribeToChatMessages(roomId))
 
@@ -286,10 +287,17 @@ class Room extends Component {
 
   render() {
     const {rooms, listViewData, route, isLoadingMessages, isLoadingMore} = this.props
-    const listView = listViewData[route.roomId]
+    if (!route.roomId) {
+      return (
+        <View style={{flex: 1}} />
+      )
+    }
+
     if (!rooms[route.roomId]) {
       return this.renderLoading()
     }
+
+    const listView = listViewData[route.roomId]
 
     return (
       <View style={s.container}>
@@ -331,7 +339,8 @@ function mapStateToProps(state) {
     isLoadingMore,
     byRoom,
     hasNoMore,
-    currentUser: state.viewer.user
+    currentUser: state.viewer.user,
+    route: state.navigation.current
   }
 }
 

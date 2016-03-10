@@ -43,20 +43,21 @@ class App extends Component {
     dispatch(init())
 
     BackAndroid.addEventListener('hardwareBackPress', () => {
-      const routes = nav.getCurrentRoutes()
-
       if (this.state.isDrawerOpen === true) {
         this.refs.drawer.closeDrawer()
         return true
       }
-      if (nav && routes.length > 1) {
+      const {prevision, history} = this.props.navigation
+
+      if (history.length > 1) {
+        debugger
         // set active room previous room
-        if (routes[routes.length - 2].name === 'room') {
-          this.props.dispatch(selectRoom(routes[routes.length - 2].roomId))
-        } else {
-          this.props.dispatch(selectRoom(''))
-        }
-        nav.pop()
+        // if (prevision.name === 'room') {
+        //   dispatch(selectRoom(prevision.roomId))
+        // } else {
+        dispatch(selectRoom(''))
+        // }
+        dispatch(Navigation.goBack())
         return true
       }
       return false
@@ -72,14 +73,17 @@ class App extends Component {
   }
 
   navigateTo(route) {
-    const routes = nav.getCurrentRoutes()
-    if (_.isEqual(route, routes[routes.length - 1])) return false
-    nav.push(route)
+    const {dispatch, navigation: {current}} = this.props
+    if (_.isEqual(route, current)) {
+      return false
+    }
+    dispatch(Navigation.goTo(route))
   }
 
   navigateToFromDrawer(route) {
-    const routes = nav.getCurrentRoutes()
-    if (_.isEqual(route, routes[routes.length - 1])) {
+    const {dispatch, navigation: {current}} = this.props
+
+    if (_.isEqual(route, current)) {
       return false
     }
 
@@ -87,10 +91,10 @@ class App extends Component {
 
     // delay is needed for smoothly drawer closing
     setTimeout(() => {
-      if (routes[routes.length - 1].name === 'room' && route.name === 'room') {
-        nav.replace(route)
+      if (current.name === 'room' && route.name === 'room') {
+        dispatch(Navigation.goAndReplace(route))
       } else {
-        nav.push(route)
+        dispatch(Navigation.goTo(route))
       }
     }, 500)
   }
@@ -129,14 +133,12 @@ class App extends Component {
       return (
         <HomeScreen
           navigateTo={this.navigateTo}
-          route={route}
           onMenuTap={this.onMenuTap.bind(this)} />
       )
     case 'room':
       return (
         <RoomScreen
           navigateTo={this.navigateTo}
-          route={route}
           onMenuTap={this.onMenuTap.bind(this)} />
       )
     default:
@@ -148,7 +150,7 @@ class App extends Component {
   renderDrawer() {
     return (
       <Drawer
-        navigator={this.navigateToFromDrawer.bind(this)} />
+        navigateTo={this.navigateToFromDrawer.bind(this)} />
     )
   }
 

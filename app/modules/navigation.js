@@ -4,34 +4,36 @@ const NAVIGATE_TO = 'navigation/NAVIGATE_TO'
 const NAVIGATE_BACK = 'navigation/NAVIGATE_BACK'
 const NAVIGATE_REPLACE = 'navigation/NAVIGATE_REPLACE'
 const NAVIGATE_RESET = 'navigation/NAVIGATE_RESET'
+const UPDATE_HISTORY = 'navigation/UPDATE_HISTORY'
 
 export function goTo(route) {
-  return (dispatch, getState) => {
-    const {current} = getState().navigation
+  return dispatch => {
+    dispatch({type: NAVIGATE_TO, route})
     nav.push(route)
-    dispatch({type: NAVIGATE_TO, prevision: current, current: route})
+    dispatch({type: UPDATE_HISTORY})
   }
 }
 
 export function goBack() {
-  return (dispatch, getState) => {
-    const {prevision} = getState().navigation
+  return dispatch => {
     nav.pop()
-    dispatch({type: NAVIGATE_BACK, route: prevision})
+    dispatch({type: NAVIGATE_BACK})
   }
 }
 
-export function goAndReplce(route) {
+export function goAndReplace(route) {
   return dispatch => {
-    nav.replace(route)
     dispatch({type: NAVIGATE_REPLACE, route})
+    nav.replace(route)
+    dispatch({type: UPDATE_HISTORY})
   }
 }
 
 export function resetTo(route) {
   return dispatch => {
-    nav.resetTo(route)
     dispatch({type: NAVIGATE_RESET, route})
+    nav.resetTo(route)
+    dispatch({type: UPDATE_HISTORY})
   }
 }
 
@@ -51,12 +53,14 @@ export default function navigation(state = initialState, action) {
       history: nav.getCurrentRoutes()
     }
 
-  case NAVIGATE_BACK:
+  case NAVIGATE_BACK: {
+    const {history} = state
     return {...state,
-      current: action.current,
-      prevision: action.prevision,
+      current: state.prevision,
+      prevision: history.length >= 2 ? history[history.length - 2] : {},
       history: nav.getCurrentRoutes()
     }
+  }
 
   case NAVIGATE_RESET:
     return {...state,
@@ -68,6 +72,11 @@ export default function navigation(state = initialState, action) {
   case NAVIGATE_REPLACE:
     return {...state,
       current: action.route,
+      history: nav.getCurrentRoutes()
+    }
+
+  case UPDATE_HISTORY:
+    return {...state,
       history: nav.getCurrentRoutes()
     }
   default:

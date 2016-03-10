@@ -51,7 +51,7 @@ export function init() {
       // setup faye
     } catch (error) {
       dispatch({ type: INITIALIZED, error })
-      dispatch(Navigation.goAndReplce({name: 'login'}))
+      dispatch(Navigation.goAndReplace({name: 'login'}))
     }
   }
 }
