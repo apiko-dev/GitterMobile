@@ -14,7 +14,7 @@ import RoomScreen from './RoomScreen'
 import Drawer from './Drawer'
 
 // this need for handling android back hardware button press
-let _navigator
+export let navigation
 
 class MainNavigator extends Component {
   constructor(props) {
@@ -33,20 +33,20 @@ class MainNavigator extends Component {
 
   componentDidMount() {
     BackAndroid.addEventListener('hardwareBackPress', () => {
-      const routes = _navigator.getCurrentRoutes()
+      const routes = navigation.getCurrentRoutes()
 
       if (this.state.isDrawerOpen === true) {
         this.refs.drawer.closeDrawer()
         return true
       }
-      if (_navigator && routes.length > 1) {
+      if (navigation && routes.length > 1) {
         // set active room previous room
         if (routes[routes.length - 2].name === 'room') {
           this.props.dispatch(selectRoom(routes[routes.length - 2].roomId))
         } else {
           this.props.dispatch(selectRoom(''))
         }
-        _navigator.pop()
+        navigation.pop()
         return true
       }
       return false
@@ -62,13 +62,13 @@ class MainNavigator extends Component {
   }
 
   navigateTo(route) {
-    const routes = _navigator.getCurrentRoutes()
+    const routes = navigation.getCurrentRoutes()
     if (_.isEqual(route, routes[routes.length - 1])) return false
-    _navigator.push(route)
+    navigation.push(route)
   }
 
   navigateToFromDrawer(route) {
-    const routes = _navigator.getCurrentRoutes()
+    const routes = navigation.getCurrentRoutes()
     if (_.isEqual(route, routes[routes.length - 1])) {
       return false
     }
@@ -78,9 +78,9 @@ class MainNavigator extends Component {
     // delay is needed for smoothly drawer closing
     setTimeout(() => {
       if (routes[routes.length - 1].name === 'room' && route.name === 'room') {
-        _navigator.replace(route)
+        navigation.replace(route)
       } else {
-        _navigator.push(route)
+        navigation.push(route)
       }
     }, 500)
   }
@@ -100,7 +100,7 @@ class MainNavigator extends Component {
     // this need to back button work
     // also to pass navigator to Drawer component
     // TODO: fix it
-    _navigator = navigator
+    navigation = navigator
 
     // map routes by name
     switch (route.name) {

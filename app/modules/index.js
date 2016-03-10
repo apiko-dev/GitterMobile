@@ -6,6 +6,7 @@ import viewer from './viewer'
 import messages from './messages'
 import settings from './settings'
 import realtime from './realtime'
+import navigation from './navigation'
 
 
 const rootReducer = combineReducers({
@@ -15,7 +16,8 @@ const rootReducer = combineReducers({
   viewer,
   messages,
   settings,
-  realtime
+  realtime,
+  navigation
 })
 
 export default rootReducer
