@@ -1,4 +1,4 @@
-import {navigation as nav} from '../screens/MainNavigator'
+import {nav} from '../screens'
 
 const NAVIGATE_TO = 'navigation/NAVIGATE_TO'
 const NAVIGATE_BACK = 'navigation/NAVIGATE_BACK'
@@ -7,7 +7,7 @@ const NAVIGATE_RESET = 'navigation/NAVIGATE_RESET'
 
 export function goTo(route) {
   return (dispatch, getState) => {
-    const {current} = getState().navigator
+    const {current} = getState().navigation
     nav.push(route)
     dispatch({type: NAVIGATE_TO, prevision: current, current: route})
   }
@@ -15,7 +15,7 @@ export function goTo(route) {
 
 export function goBack() {
   return (dispatch, getState) => {
-    const {prevision} = getState().navigator
+    const {prevision} = getState().navigation
     nav.pop()
     dispatch({type: NAVIGATE_BACK, route: prevision})
   }
@@ -23,7 +23,7 @@ export function goBack() {
 
 export function goAndReplce(route) {
   return dispatch => {
-    nav.replce(route)
+    nav.replace(route)
     dispatch({type: NAVIGATE_REPLACE, route})
   }
 }
@@ -36,7 +36,7 @@ export function resetTo(route) {
 }
 
 const initialState = {
-  init: {},
+  init: {name: 'launch'},
   current: {},
   prevision: {},
   history: []

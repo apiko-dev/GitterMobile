@@ -5,12 +5,12 @@ import {THEMES} from './constants'
 const {colors} = THEMES.gitterDefault
 
 import App from './screens'
-import {init} from './modules/app'
+// import {init} from './modules/app'
 
 const store = configureStore()
 
 // initialize application
-store.dispatch(init())
+// store.dispatch(init())
 
 class Root extends Component {
   render() {

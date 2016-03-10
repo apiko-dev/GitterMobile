@@ -7,12 +7,15 @@ import React, {
   View
 } from 'react-native'
 import s from '../styles/LoginScreenStyles'
+import {connect} from 'react-redux'
+import * as Navigation from '../modules/navigation'
 import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault
 
 
-export default class LoginScreen extends Component {
+class LoginScreen extends Component {
   render() {
+    const {dispatch} = this.props
     return (
       <Image style={s.container}
         source={require('../images/gitter-background.jpg')}>
@@ -37,7 +40,7 @@ export default class LoginScreen extends Component {
           </TouchableNativeFeedback>
           <TouchableNativeFeedback
             background={TouchableNativeFeedback.Ripple(colors.raspberry, false)}
-            onPress={() => {}}>
+            onPress={() => dispatch(Navigation.goTo({name: 'loginByToken'}))}>
             <View style={[s.buttonStyle, {backgroundColor: colors.darkRed}]}>
               <Text pointerEvents="none"
                 style={s.buttonText}>
@@ -52,5 +55,7 @@ export default class LoginScreen extends Component {
 }
 
 LoginScreen.propTypes = {
-  onToken: PropTypes.func.isRequired
+  dispatch: PropTypes.func
 }
+
+export default connect()(LoginScreen)
