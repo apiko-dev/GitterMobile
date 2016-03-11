@@ -9,6 +9,7 @@ import React, {
 import s from '../styles/MessageStyles'
 import _ from 'lodash'
 import moment from 'moment'
+import GitterMarkdown from '../../libs/gitter-md-react-native'
 
 import Avatar from './Avatar'
 
@@ -71,10 +72,14 @@ class Message extends Component {
         </Text>
       )
     }
+    // return (
+    //   <Text style={s.text}>
+    //     {text}
+    //   </Text>
+    // )
     return (
-      <Text style={s.text}>
-        {text}
-      </Text>
+      <GitterMarkdown
+        text={text} />
     )
   }
 
