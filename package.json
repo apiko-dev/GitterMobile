@@ -21,7 +21,8 @@
   "dependencies": {
     "lodash": "^4.2.1",
     "moment": "^2.11.2",
-    "react-native": "^0.21.0",
+    "react": "^0.14.7",
+    "react-native": "^0.22.0-rc",
     "react-native-extra-dimensions-android": "^0.17.0",
     "react-native-invertible-scroll-view": "^0.2.0",
     "react-redux": "^4.3.0",

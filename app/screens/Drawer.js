@@ -5,7 +5,8 @@ import React, {
   View
 } from 'react-native'
 import {connect} from 'react-redux'
-import {onLogOut} from '../modules/auth'
+import {logOut} from '../modules/auth'
+import * as Navigation from '../modules/navigation'
 import {selectRoom, leaveRoom, markAllAsRead} from '../modules/rooms'
 import s from '../styles/DrawerStyles'
 import DrawerUserInfo from '../components/DrawerUserInfo'
@@ -21,11 +22,12 @@ class Drawer extends Component {
     this.onRoomPress = this.onRoomPress.bind(this)
     this.onLongRoomPress = this.onLongRoomPress.bind(this)
     this.onLeave = this.onLeave.bind(this)
+    this.logOut = this.logOut.bind(this)
   }
 
   onRoomPress(id) {
-    const {navigator, dispatch} = this.props
-    navigator({name: 'room', roomId: id})
+    const {dispatch, navigateTo} = this.props
+    navigateTo({name: 'room', roomId: id})
     dispatch(selectRoom(id))
   }
 
@@ -60,9 +62,14 @@ class Drawer extends Component {
       'Are you sure?',
       [
         {text: 'Cancel', onPress: () => console.log('Cancel Pressed!')},
-        {text: 'OK', onPress: () => this.props.dispatch(onLogOut())}
+        {text: 'OK', onPress: () => this.logOut()}
       ]
     )
+  }
+
+  logOut() {
+    const {dispatch} = this.props
+    dispatch(logOut())
   }
 
   render() {
@@ -87,7 +94,7 @@ Drawer.propTypes = {
   dispatch: PropTypes.func.isRequired,
   isLoadingUser: PropTypes.bool,
   isLoadingRooms: PropTypes.bool,
-  navigator: PropTypes.func.isRequired,
+  navigateTo: PropTypes.func.isRequired,
   user: PropTypes.object,
   ids: PropTypes.array,
   rooms: PropTypes.object,

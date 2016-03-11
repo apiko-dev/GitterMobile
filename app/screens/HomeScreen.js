@@ -10,7 +10,6 @@ import React, {
 } from 'react-native'
 import {connect} from 'react-redux'
 import ExtraDimensions from 'react-native-extra-dimensions-android'
-import {selectRoom} from '../modules/rooms'
 import s from '../styles/HomeStyles'
 
 import ParallaxScrollView from '../components/ParallaxScrollView'
@@ -168,8 +167,7 @@ HomeScreen.propTypes = {
   roomsIds: PropTypes.array,
   suggested: PropTypes.array,
   dispatch: PropTypes.func,
-  navigateTo: PropTypes.func,
-  route: PropTypes.object
+  navigateTo: PropTypes.func
 }
 
 HomeScreen.defaultProps = {

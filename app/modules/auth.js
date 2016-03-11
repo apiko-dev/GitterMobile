@@ -1,4 +1,5 @@
 import {INITIALIZED, init} from './app'
+import * as Navigation from './navigation'
 import {setItem, removeItem} from '../utils/storage'
 
 /**
@@ -24,6 +25,7 @@ export function loginByToken(token) {
       await setItem('token', token)
       dispatch({type: LOGIN_USER_BY_TOKEN, token})
 
+      dispatch(Navigation.resetTo({name: 'launch'}))
       await dispatch(init())
 
       dispatch({LOGINED_IN_SUCCESS})
@@ -33,11 +35,12 @@ export function loginByToken(token) {
   }
 }
 
-export function onLogOut() {
+export function logOut() {
   return async dispatch => {
     try {
       await removeItem('token')
       dispatch({type: LOGOUT})
+      dispatch(Navigation.resetTo({name: 'login'}))
     } catch (error) {
       console.warn("Can't logout. Error: ", error) // eslint-disable-line no-console
     }
