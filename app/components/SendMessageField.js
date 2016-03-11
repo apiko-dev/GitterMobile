@@ -52,20 +52,22 @@ export default class SendMessageField extends Component {
     const {value, onChange} = this.props
     return (
       <View style={s.container}>
-        <TextInput
-          ref="textInput"
-          multiline
-          style={[s.textInput, {height: this.state.height > 90 ? 90 : Math.max(56, this.state.height)}]}
-          value={value}
-          onBlur={this.onBlur}
-          underlineColorAndroid={colors.androidGray}
-          onChange={(event) => {
-            this.setState({
-              height: event.nativeEvent.contentSize.height
-            })
-            onChange(event.nativeEvent.text)
-          }}
-          placeholder="Type your message here..." />
+        <View style={s.innerContainer}>
+          <TextInput
+            ref="textInput"
+            multiline
+            style={[s.textInput, {height: this.state.height > 90 ? 90 : Math.max(56, this.state.height)}]}
+            value={value}
+            onBlur={this.onBlur}
+            underlineColorAndroid={colors.androidGray}
+            onChange={(event) => {
+              this.setState({
+                height: event.nativeEvent.contentSize.height
+              })
+              onChange(event.nativeEvent.text)
+            }}
+            placeholder="Type your message here..." />
+        </View>
         <TouchableNativeFeedback
           background={TouchableNativeFeedback.SelectableBackgroundBorderless()}
           onPress={() => this.sendMessage()}>

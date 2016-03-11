@@ -1,7 +1,6 @@
 import {StyleSheet, Dimensions} from 'react-native'
 import {THEMES} from '../constants'
-const {width} = Dimensions.get('window')
-const padding = 16
+const padding = 12
 const button = 35
 const buttonMargin = 8
 
@@ -11,20 +10,17 @@ const style = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    // height: 60,
-    paddingLeft: padding,
+    paddingHorizontal: padding,
     backgroundColor: colors.androidGray,
-    // alignSelf: 'stretch',
     elevation: 8
   },
+  innerContainer: {
+    flex: 1
+  },
   textInput: {
-    width: width - padding * 2 - button - buttonMargin,
     backgroundColor: colors.androidGray
-    // height: 60,
-    // paddingDown: 2
   },
   button: {
-    width: button,
     height: button,
     margin: buttonMargin,
     alignItems: 'center',
