@@ -8,6 +8,7 @@ import React, {
 } from 'react-native'
 import {connect} from 'react-redux'
 import s from '../styles/NoInternetScreenStyles'
+import * as Navigation from '../modules/navigation'
 import {THEMES} from '../constants'
 import {init} from '../modules/app'
 const {colors} = THEMES.gitterDefault
@@ -21,6 +22,7 @@ class NoInternetScreen extends Component {
 
   handleRetry() {
     const {dispatch} = this.props
+    dispatch(Navigation.resetTo({name: 'launch'}))
     dispatch(init())
   }
 
