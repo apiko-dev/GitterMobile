@@ -13,7 +13,7 @@
   "homepage": "https://github.com/terrysahaidak/gittermobile#readme",
   "private": true,
   "scripts": {
-    "start": "sh node_modules/react-native/packager/packager.sh",
+    "start": "node node_modules/react-native/local-cli/cli.js start",
     "android:check": "adb devices && adb reverse tcp:8081 tcp:8081",
     "android": "npm run android:check && react-native run-android",
     "lint": "node node_modules/eslint/bin/eslint -c .eslintrc ./"
