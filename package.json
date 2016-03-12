@@ -19,6 +19,8 @@
     "lint": "node node_modules/eslint/bin/eslint -c .eslintrc ./"
   },
   "dependencies": {
+    "gitter-marked": "^0.9.1",
+    "katex": "~0.5.1",
     "lodash": "^4.2.1",
     "moment": "^2.11.2",
     "react": "^0.14.7",
@@ -30,8 +32,7 @@
     "redux-logger": "^2.5.0",
     "redux-thunk": "^1.0.3",
     "remote-redux-devtools": "^0.1.1",
-    "gitter-marked": "^0.9.1",
-    "katex": "~0.5.1"
+    "simple-markdown": "0.0.9"
   },
   "devDependencies": {
     "eslint": "~1.10.3",
