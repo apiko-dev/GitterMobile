@@ -48,6 +48,7 @@ export function init() {
       ])
 
       dispatch(Navigation.resetTo({name: 'home'}))
+      // dispatch(Navigation.resetTo({name: 'room', roomId: '56a41e0fe610378809bde160'}))
       // setup faye
     } catch (error) {
       dispatch({ type: INITIALIZED, error })

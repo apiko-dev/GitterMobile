@@ -2,13 +2,15 @@ import React, {
   Component,
   PropTypes,
   TouchableNativeFeedback,
-  Alert,
+  Linking,
   View,
   Text
 } from 'react-native'
 import s from '../styles/MessageStyles'
+import {connect} from 'react-redux'
 import _ from 'lodash'
 import moment from 'moment'
+import ParsedText from './ParsedText'
 
 import Avatar from './Avatar'
 
@@ -41,6 +43,10 @@ class Message extends Component {
     onLongPress(rowId, id)
   }
 
+  handleUrlPress(url) {
+    Linking.openURL(url)
+  }
+
   renderDate() {
     const {sent} = this.props
 
@@ -62,7 +68,7 @@ class Message extends Component {
   }
 
   renderMessage() {
-    const {text} = this.props
+    const {text, username} = this.props
 
     if (this.props.hasOwnProperty('editedAt') && !text) {
       return (
@@ -72,9 +78,10 @@ class Message extends Component {
       )
     }
     return (
-      <Text style={s.text}>
-        {text}
-      </Text>
+      <ParsedText
+        text={text}
+        username={username}
+        handleUrlPress={this.handleUrlPress} />
     )
   }
 
@@ -128,7 +135,15 @@ Message.propTypes = {
   failed: PropTypes.bool,
   dispatch: PropTypes.func,
   onResendingMessage: PropTypes.func,
-  onLongPress: PropTypes.func
+  onLongPress: PropTypes.func,
+  username: PropTypes.string
 }
 
-export default Message
+function mapStateToProps(state) {
+  const {username} = state.viewer.user
+  return {
+    username
+  }
+}
+
+export default connect(mapStateToProps)(Message)

@@ -57,7 +57,6 @@ class Room extends Component {
 
   componentDidMount() {
     this.prepareDataSources()
-    debugger
     const {activeRoom, rooms, route: { roomId }, dispatch, listViewData} = this.props
     // dispatch(subscribeToChatMessages(roomId))
 

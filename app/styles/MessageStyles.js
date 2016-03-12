@@ -36,6 +36,9 @@ const style = StyleSheet.create({
   },
   date: {
     fontSize: 14
+  },
+  url: {
+    color: 'blue'
   }
 })
 

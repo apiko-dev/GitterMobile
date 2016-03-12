@@ -48,8 +48,8 @@ export default class MessagesList extends Component {
         onEndReached={this.props.onEndReached}
         scrollRenderAheadDistance={1000}
         onEndReachedThreshold={500}
-        pageSize={30}
-        initialListSize={30}
+        pageSize={20}
+        initialListSize={20}
         renderRow={(rowData, _, rowId) => this.renderRow(rowData, rowId)} />
     )
   }
