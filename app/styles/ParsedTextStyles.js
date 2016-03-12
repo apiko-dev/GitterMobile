@@ -14,6 +14,9 @@ const styles = StyleSheet.create({
   },
   url: {
     color: colors.link
+  },
+  emoji: {
+    fontSize: 14
   }
 })
 
