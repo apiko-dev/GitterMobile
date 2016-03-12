@@ -9,6 +9,7 @@ import React, {
 import s from '../styles/MessageStyles'
 import _ from 'lodash'
 import moment from 'moment'
+import ParsedText from './ParsedText'
 
 import Avatar from './Avatar'
 
@@ -39,6 +40,10 @@ class Message extends Component {
   onLongPress() {
     const {id, rowId, onLongPress} = this.props
     onLongPress(rowId, id)
+  }
+
+  handleUrlPress(url) {
+    Alert.alert('Url', url)
   }
 
   renderDate() {
@@ -72,9 +77,9 @@ class Message extends Component {
       )
     }
     return (
-      <Text style={s.text}>
-        {text}
-      </Text>
+      <ParsedText
+        text={text}
+        handleUrlPress={this.handleUrlPress} />
     )
   }
 
