@@ -6,6 +6,12 @@ const styles = StyleSheet.create({
   mention: {
     fontWeight: 'bold'
   },
+  groupMention: {
+    color: '#e67e22'
+  },
+  selfMention: {
+    color: '#e67e22'
+  },
   url: {
     color: colors.link
   }

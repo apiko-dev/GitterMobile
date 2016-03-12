@@ -2,13 +2,15 @@ import React, {PropTypes} from 'react-native'
 import Parser from 'react-native-parsed-text'
 import s from '../styles/ParsedTextStyles'
 
-const MENTION_REGEX = /(@([a-zA-Z0-9_\-]+))/g
+const MENTION_REGEX = /(([^`]|^)@([a-zA-Z0-9_\-]+))/g
+const GROUP_MENTION_REGEX = /^(@\/([a-zA-Z0-9_\-]+))/
 
-
-const ParsedText = ({text, handleUrlPress}) => {
+const ParsedText = ({text, username, handleUrlPress}) => {
   const patterns = [
     {type: 'url', style: s.url, onPress: handleUrlPress},
-    {pattern: MENTION_REGEX, style: s.mention}
+    {pattern: new RegExp(`@${username}`), style: s.selfMention},
+    {pattern: MENTION_REGEX, style: s.mention},
+    {pattern: GROUP_MENTION_REGEX, style: s.groupMention}
   ]
 
   return (
