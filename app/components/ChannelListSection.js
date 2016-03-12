@@ -28,7 +28,7 @@ ChannelListSection.propTypes = {
   items: PropTypes.array,
   onRoomPress: PropTypes.func,
   activeRoom: PropTypes.string,
-  onLongRoomPress: PropTypes.funct
+  onLongRoomPress: PropTypes.func
 }
 
 export default ChannelListSection

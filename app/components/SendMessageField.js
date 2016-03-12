@@ -85,6 +85,6 @@ export default class SendMessageField extends Component {
 
 SendMessageField.propTypes = {
   onSending: PropTypes.func,
-  value: PropTypes.func,
+  value: PropTypes.string,
   onChange: PropTypes.func
 }

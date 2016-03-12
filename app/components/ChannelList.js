@@ -43,9 +43,9 @@ const ChannelList = ({ids, rooms, activeRoom, onRoomPress, onLongRoomPress}) => 
 
 ChannelList.propTypes = {
   ids: PropTypes.array,
+  onLongRoomPress: PropTypes.func,
   rooms: PropTypes.object,
-  onRoomPress: PropTypes.func,
-  onLongRoomPress: PropTypes.func
+  onRoomPress: PropTypes.func
 }
 
 export default ChannelList
