@@ -103,7 +103,7 @@ class Message extends Component {
         <TouchableNativeFeedback
           onPress={() => this.onMessagePress()}
           onLongPress={() => this.onLongPress()}>
-          <View style={[s.containerCollapsed, {opacity, backgroundColor}]}>
+          <View style={[s.container, {opacity, backgroundColor}]}>
             <View style={{
               width: 30
             }} />

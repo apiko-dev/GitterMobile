@@ -7,15 +7,8 @@ const style = StyleSheet.create({
     flexWrap: 'wrap',
     paddingLeft: 15,
     paddingRight: 15,
-    paddingTop: 10,
-    paddingBottom: 10
-  },
-  containerCollapsed: {
-    flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    paddingLeft: 15,
-    paddingRight: 15
+    paddingTop: 5,
+    paddingBottom: 5
   },
   content: {
     flex: 1,
