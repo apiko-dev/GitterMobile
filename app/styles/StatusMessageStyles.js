@@ -1,4 +1,6 @@
 import {StyleSheet} from 'react-native'
+import {THEMES} from '../constants'
+const {colors} = THEMES.gitterDefault
 
 const style = StyleSheet.create({
   container: {
@@ -16,29 +18,12 @@ const style = StyleSheet.create({
     flexWrap: 'wrap',
     marginLeft: 15
   },
-  top: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  username: {
-    fontWeight: 'bold'
-  },
-  bottom: {
-
-  },
   text: {
-    fontSize: 14
-  },
-  deleted: {
-    fontStyle: 'italic',
-    opacity: 0.8
-  },
-  date: {
-    fontSize: 14
+    fontSize: 14,
+    color: 'purple'
   },
   url: {
-    color: 'blue'
+    color: colors.link
   }
 })
 

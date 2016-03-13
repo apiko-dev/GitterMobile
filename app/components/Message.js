@@ -13,13 +13,14 @@ import moment from 'moment'
 import ParsedText from './ParsedText'
 
 import Avatar from './Avatar'
+import StatusMessage from './StatusMessage'
 
 class Message extends Component {
   constructor(props) {
     super(props)
 
     this.onMessagePress = this.onMessagePress.bind(this)
-    this.renderMessage = this.renderMessage.bind(this)
+    this.renderMessageText = this.renderMessageText.bind(this)
     this.renderDate = this.renderDate.bind(this)
   }
 
@@ -67,7 +68,7 @@ class Message extends Component {
     return date.format('HH:mm')
   }
 
-  renderMessage() {
+  renderMessageText() {
     const {text, username} = this.props
 
     if (this.props.hasOwnProperty('editedAt') && !text) {
@@ -86,7 +87,7 @@ class Message extends Component {
   }
 
   render() {
-    const {fromUser, sending, failed, readBy} = this.props
+    const {fromUser, sending, failed, readBy, isCollapsed, text, status} = this.props
     const opacity = sending === true ? 0.4 : 1
 
     let backgroundColor
@@ -96,6 +97,36 @@ class Message extends Component {
       backgroundColor = 'rgba(200, 200, 200, 0.2)'
     } else {
       backgroundColor = 'transparent'
+    }
+
+    if (!!status) {
+      return (
+        <StatusMessage
+          text={text}
+          onLongPress={this.onLongPress.bind(this)}
+          onPress={this.onMessagePress.bind(this)}
+          handleUrlPress={this.handleUrlPress.bind(this)}
+          backgroundColor={backgroundColor} />
+      )
+    }
+
+    if (isCollapsed) {
+      return (
+        <TouchableNativeFeedback
+          onPress={() => this.onMessagePress()}
+          onLongPress={() => this.onLongPress()}>
+          <View style={[s.container, {opacity, backgroundColor}]}>
+            <View style={{
+              width: 30
+            }} />
+            <View style={s.content}>
+              <View style={s.bottom}>
+                {this.renderMessageText()}
+              </View>
+            </View>
+          </View>
+        </TouchableNativeFeedback>
+      )
     }
 
     return (
@@ -110,7 +141,7 @@ class Message extends Component {
               <Text style={s.date}>{this.renderDate()}</Text>
             </View>
             <View style={s.bottom}>
-              {this.renderMessage()}
+              {this.renderMessageText()}
             </View>
           </View>
         </View>
@@ -136,7 +167,9 @@ Message.propTypes = {
   dispatch: PropTypes.func,
   onResendingMessage: PropTypes.func,
   onLongPress: PropTypes.func,
-  username: PropTypes.string
+  username: PropTypes.string,
+  isCollapsed: PropTypes.bool,
+  status: PropTypes.bool
 }
 
 function mapStateToProps(state) {
