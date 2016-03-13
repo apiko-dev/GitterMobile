@@ -19,7 +19,7 @@ class Message extends Component {
     super(props)
 
     this.onMessagePress = this.onMessagePress.bind(this)
-    this.renderMessage = this.renderMessage.bind(this)
+    this.renderMessageText = this.renderMessageText.bind(this)
     this.renderDate = this.renderDate.bind(this)
   }
 
@@ -67,7 +67,7 @@ class Message extends Component {
     return date.format('HH:mm')
   }
 
-  renderMessage() {
+  renderMessageText() {
     const {text, username} = this.props
 
     if (this.props.hasOwnProperty('editedAt') && !text) {
@@ -86,7 +86,7 @@ class Message extends Component {
   }
 
   render() {
-    const {fromUser, sending, failed, readBy} = this.props
+    const {fromUser, sending, failed, readBy, isCollapsed} = this.props
     const opacity = sending === true ? 0.4 : 1
 
     let backgroundColor
@@ -96,6 +96,25 @@ class Message extends Component {
       backgroundColor = 'rgba(200, 200, 200, 0.2)'
     } else {
       backgroundColor = 'transparent'
+    }
+
+    if (isCollapsed) {
+      return (
+        <TouchableNativeFeedback
+          onPress={() => this.onMessagePress()}
+          onLongPress={() => this.onLongPress()}>
+          <View style={[s.containerCollapsed, {opacity, backgroundColor}]}>
+            <View style={{
+              width: 30
+            }} />
+            <View style={s.content}>
+              <View style={s.bottom}>
+                {this.renderMessageText()}
+              </View>
+            </View>
+          </View>
+        </TouchableNativeFeedback>
+      )
     }
 
     return (
@@ -110,7 +129,7 @@ class Message extends Component {
               <Text style={s.date}>{this.renderDate()}</Text>
             </View>
             <View style={s.bottom}>
-              {this.renderMessage()}
+              {this.renderMessageText()}
             </View>
           </View>
         </View>
@@ -136,7 +155,8 @@ Message.propTypes = {
   dispatch: PropTypes.func,
   onResendingMessage: PropTypes.func,
   onLongPress: PropTypes.func,
-  username: PropTypes.string
+  username: PropTypes.string,
+  isCollapsed: PropTypes.bool
 }
 
 function mapStateToProps(state) {

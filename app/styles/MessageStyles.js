@@ -10,6 +10,13 @@ const style = StyleSheet.create({
     paddingTop: 10,
     paddingBottom: 10
   },
+  containerCollapsed: {
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingLeft: 15,
+    paddingRight: 15
+  },
   content: {
     flex: 1,
     flexDirection: 'column',
