@@ -10,12 +10,12 @@ export default function configureStore(initialState) {
    * in development to reduce performance issues.
    */
   if (__DEV__) {
-    const createLogger = require('redux-logger')
-    const logger = createLogger()
+    // const createLogger = require('redux-logger')
+    // const logger = createLogger()
     const devTools = require('remote-redux-devtools')
 
     const finalCreateStore = compose(
-      applyMiddleware(thunkMiddleware, logger),
+      applyMiddleware(thunkMiddleware),
       devTools()
     )(createStore)
 

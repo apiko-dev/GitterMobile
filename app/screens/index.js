@@ -17,6 +17,7 @@ import LoginByTokenScreen from './LoginByTokenScreen'
 import NoInternetScreen from './NoInternetScreen'
 import HomeScreen from './HomeScreen'
 import RoomScreen from './RoomScreen'
+import SearchScreen from './SearchScreen'
 import Drawer from './Drawer'
 
 // this need for passing navigator instance to navigation module
@@ -50,7 +51,6 @@ class App extends Component {
       const {prevision, history} = this.props.navigation
 
       if (history.length > 1) {
-        debugger
         // set active room previous room
         // if (prevision.name === 'room') {
         //   dispatch(selectRoom(prevision.roomId))
@@ -140,6 +140,11 @@ class App extends Component {
         <RoomScreen
           navigateTo={this.navigateTo}
           onMenuTap={this.onMenuTap.bind(this)} />
+      )
+
+    case 'search':
+      return (
+        <SearchScreen />
       )
     default:
       return null

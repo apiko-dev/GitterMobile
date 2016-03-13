@@ -22,10 +22,18 @@ class HomeScreen extends Component {
     this.renderBottom = this.renderBottom.bind(this)
     this.renderToolbar = this.renderToolbar.bind(this)
     this.onRoomPress = this.onRoomPress.bind(this)
+    this.handleActionPress = this.handleActionPress.bind(this)
   }
 
   onRoomPress(id) {
     this.props.navigateTo({name: 'room', roomId: id})
+  }
+
+  handleActionPress(index) {
+    const {navigateTo} = this.props
+    if (index === 0) {
+      navigateTo({name: 'search'})
+    }
   }
 
   renderOrgs(orgs) {
@@ -112,6 +120,7 @@ class HomeScreen extends Component {
         actions={actions}
         navIcon={require('image!ic_menu_white_24dp')}
         onIconClicked={this.props.onMenuTap}
+        onActionSelected={this.handleActionPress}
         title="Home"
         titleColor="white"
         style={s.toolbar} />
