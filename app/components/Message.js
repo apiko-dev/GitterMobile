@@ -13,6 +13,7 @@ import moment from 'moment'
 import ParsedText from './ParsedText'
 
 import Avatar from './Avatar'
+import StatusMessage from './StatusMessage'
 
 class Message extends Component {
   constructor(props) {
@@ -86,7 +87,7 @@ class Message extends Component {
   }
 
   render() {
-    const {fromUser, sending, failed, readBy, isCollapsed} = this.props
+    const {fromUser, sending, failed, readBy, isCollapsed, text, status} = this.props
     const opacity = sending === true ? 0.4 : 1
 
     let backgroundColor
@@ -96,6 +97,17 @@ class Message extends Component {
       backgroundColor = 'rgba(200, 200, 200, 0.2)'
     } else {
       backgroundColor = 'transparent'
+    }
+
+    if (!!status) {
+      return (
+        <StatusMessage
+          text={text}
+          onLongPress={this.onLongPress.bind(this)}
+          onPress={this.onMessagePress.bind(this)}
+          handleUrlPress={this.handleUrlPress.bind(this)}
+          backgroundColor={backgroundColor} />
+      )
     }
 
     if (isCollapsed) {
@@ -156,7 +168,8 @@ Message.propTypes = {
   onResendingMessage: PropTypes.func,
   onLongPress: PropTypes.func,
   username: PropTypes.string,
-  isCollapsed: PropTypes.bool
+  isCollapsed: PropTypes.bool,
+  status: PropTypes.bool
 }
 
 function mapStateToProps(state) {

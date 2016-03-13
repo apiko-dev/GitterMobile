@@ -36,8 +36,6 @@ export function init() {
 
       dispatch({ type: INITIALIZED, token })
 
-      // TODO: do things belowe only if the internet is awailible (netStatus)
-
       // getting base current user's information
       await dispatch(getCurrentUser())
       await Promise.all([
@@ -49,9 +47,8 @@ export function init() {
 
       // if you need debug room screen, just comment nevigation to 'hone'
       // and uncomment navigation to 'room'
-      // dispatch(Navigation.resetTo({name: 'home'}))
-      dispatch(Navigation.resetTo({name: 'room', roomId: '56a41e0fe610378809bde160'}))
-      // setup faye
+      dispatch(Navigation.resetTo({name: 'home'}))
+      // dispatch(Navigation.resetTo({name: 'room', roomId: '56a41e0fe610378809bde160'}))
     } catch (error) {
       dispatch({ type: INITIALIZED, error })
       dispatch(Navigation.goAndReplace({name: 'login'}))
