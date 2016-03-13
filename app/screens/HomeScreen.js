@@ -2,32 +2,25 @@ import React, {
   Component,
   PropTypes,
   ToolbarAndroid,
-  StatusBar,
-  Dimensions,
-  Image,
+  ScrollView,
   Text,
   View
 } from 'react-native'
 import {connect} from 'react-redux'
-import ExtraDimensions from 'react-native-extra-dimensions-android'
-import s from '../styles/HomeStyles'
+import s from '../styles/HomeScreenStyles'
 
-import ParallaxScrollView from '../components/ParallaxScrollView'
 import HomeRoomItem from '../components/HomeRoomItem'
 import Loading from '../components/Loading'
 
 import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault
 
-const STATUS_BAR_HEIGHT = ExtraDimensions.get('STATUS_BAR_HEIGHT')
-const PARALLAX_HEADER_HEIGHT = 400
-const LOADING_HEIGHT = Dimensions.get('window').height - PARALLAX_HEADER_HEIGHT
 
 class HomeScreen extends Component {
   constructor(props) {
     super(props)
     this.renderBottom = this.renderBottom.bind(this)
-    this.renderStickyHeader = this.renderStickyHeader.bind(this)
+    this.renderToolbar = this.renderToolbar.bind(this)
     this.onRoomPress = this.onRoomPress.bind(this)
   }
 
@@ -94,7 +87,6 @@ class HomeScreen extends Component {
     if (isLoadingRooms || isLoadingViewer || !suggested) {
       return (
         <Loading
-          height={LOADING_HEIGHT}
           color={colors.brand}/>
       )
     }
@@ -111,7 +103,7 @@ class HomeScreen extends Component {
     )
   }
 
-  renderStickyHeader() {
+  renderToolbar() {
     const actions = [
       {title: 'Search', icon: require('image!ic_search_white_24dp'), show: 'always'}
     ]
@@ -122,17 +114,7 @@ class HomeScreen extends Component {
         onIconClicked={this.props.onMenuTap}
         title="Home"
         titleColor="white"
-        style={[s.toolbar, {paddingTop: STATUS_BAR_HEIGHT}]} />
-    )
-  }
-
-  renderForeground() {
-    return (
-      <View style={[s.foreground, { height: PARALLAX_HEADER_HEIGHT}]}>
-         <Text style={s.welcome}>
-           Welcome to Gitter mobile!
-         </Text>
-       </View>
+        style={s.toolbar} />
     )
   }
 
@@ -140,19 +122,10 @@ class HomeScreen extends Component {
   render() {
     return (
       <View style={s.container}>
-        <StatusBar
-          backgroundColor={colors.darkRed} />
-        <ParallaxScrollView
-           backgroundColor={colors.brand}
-           contentBackgroundColor="white"
-           parallaxHeaderHeight={PARALLAX_HEADER_HEIGHT}
-           pivotOffset={56}
-           renderStickyHeader={() => this.renderStickyHeader()}
-           renderBackground={() => <Image source={require('../images/gitter-background.jpg')}/>}
-           renderForeground={() => this.renderForeground()} >
-
+        {this.renderToolbar()}
+        <ScrollView>
           {this.renderBottom()}
-        </ParallaxScrollView>
+        </ScrollView>
       </View>
     )
   }

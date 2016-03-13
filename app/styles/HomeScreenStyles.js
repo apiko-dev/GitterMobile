@@ -1,6 +1,6 @@
 import {StyleSheet} from 'react-native'
-import ExtraDimensions from 'react-native-extra-dimensions-android'
-const STATUS_BAR_HEIGHT = ExtraDimensions.get('STATUS_BAR_HEIGHT')
+import {THEMES} from '../constants'
+const {colors} = THEMES.gitterDefault
 
 const styles = StyleSheet.create({
   container: {
@@ -15,7 +15,8 @@ const styles = StyleSheet.create({
   },
   toolbar: {
     height: 56,
-    elevation: 8
+    backgroundColor: colors.raspberry,
+    elevation: 4
   },
   welcome: {
 
