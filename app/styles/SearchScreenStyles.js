@@ -5,7 +5,6 @@ const {colors} = THEMES.gitterDefault
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: colors.androidGray
   },
   toolbar: {
@@ -14,13 +13,14 @@ const styles = StyleSheet.create({
     elevation: 4
   },
   toolbarContainer: {
-    flex: 1,
-    justifyContent: 'center'
+    justifyContent: 'center',
+    alignSelf: 'stretch'
   },
   textInput: {
     color: 'white',
     height: 24,
-    fontSize: 18
+    fontSize: 18,
+    alignSelf: 'stretch'
   }
 })
 
