@@ -8,6 +8,7 @@ import React, {
 } from 'react-native'
 import {connect} from 'react-redux'
 import s from '../styles/HomeScreenStyles'
+import * as Navigation from '../modules/navigation'
 
 import HomeRoomItem from '../components/HomeRoomItem'
 import Loading from '../components/Loading'
@@ -22,10 +23,18 @@ class HomeScreen extends Component {
     this.renderBottom = this.renderBottom.bind(this)
     this.renderToolbar = this.renderToolbar.bind(this)
     this.onRoomPress = this.onRoomPress.bind(this)
+    this.handleActionPress = this.handleActionPress.bind(this)
   }
 
   onRoomPress(id) {
     this.props.navigateTo({name: 'room', roomId: id})
+  }
+
+  handleActionPress(index) {
+    const {dispatch} = this.props
+    if (index === 0) {
+      dispatch(Navigation.goTo({name: 'search'}))
+    }
   }
 
   renderOrgs(orgs) {
@@ -112,6 +121,7 @@ class HomeScreen extends Component {
         actions={actions}
         navIcon={require('image!ic_menu_white_24dp')}
         onIconClicked={this.props.onMenuTap}
+        onActionSelected={this.handleActionPress}
         title="Home"
         titleColor="white"
         style={s.toolbar} />

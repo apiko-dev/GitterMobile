@@ -7,7 +7,7 @@ import messages from './messages'
 import settings from './settings'
 import realtime from './realtime'
 import navigation from './navigation'
-
+import search from './search'
 
 const rootReducer = combineReducers({
   app,
@@ -17,7 +17,8 @@ const rootReducer = combineReducers({
   messages,
   settings,
   realtime,
-  navigation
+  navigation,
+  search
 })
 
 export default rootReducer
