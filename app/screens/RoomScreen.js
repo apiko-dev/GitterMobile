@@ -15,7 +15,7 @@ import s from '../styles/RoomStyles'
 import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault
 
-import {getRoom, selectRoom, joinRoom} from '../modules/rooms'
+import {getRoom, selectRoom, joinRoom, changeFavoriteStatus} from '../modules/rooms'
 import {
   getRoomMessages,
   prepareListView,
@@ -47,6 +47,7 @@ class Room extends Component {
     this.onMessageLongPress = this.onMessageLongPress.bind(this)
     this.onTextFieldChange = this.onTextFieldChange.bind(this)
     this.onRetryFetchingMessages = this.onRetryFetchingMessages.bind(this)
+    this.handleToolbarActionSelected = this.handleToolbarActionSelected.bind(this)
 
     this.state = {
       textInputValue: '',
@@ -213,6 +214,13 @@ class Room extends Component {
     dispatch(getRoomMessages(roomId))
   }
 
+  handleToolbarActionSelected(index) {
+    const {dispatch, route: {roomId}} = this.props
+    if (index === 0) {
+      dispatch(changeFavoriteStatus(roomId))
+    }
+  }
+
   prepareDataSources() {
     const {listViewData, route: {roomId}, dispatch} = this.props
     if (!listViewData[roomId]) {
@@ -223,14 +231,31 @@ class Room extends Component {
 
   renderToolbar() {
     const {rooms, route} = this.props
-    // const actions = [
-    //   {title: 'Search', icon: require('image!ic_search_white_24dp'), show: 'always'}
-    // ]
     const room = rooms[route.roomId]
+    let actions = []
+
+    // TODO: Update one action instead
+    if (room.roomMember) {
+      if (room.hasOwnProperty('favourite')) {
+        actions = [{
+          title: 'Unfavorite',
+          show: 'never'
+        }]
+      } else {
+        actions = [{
+          title: 'Favorite',
+          show: 'never'
+        }]
+      }
+    }
+
     return (
       <ToolbarAndroid
         navIcon={require('image!ic_menu_white_24dp')}
         onIconClicked={this.props.onMenuTap}
+        actions={actions}
+        onActionSelected={this.handleToolbarActionSelected}
+        overflowIcon={require('image!ic_more_vert_white_24dp')}
         title={room.name}
         titleColor="white"
         style={s.toolbar} />

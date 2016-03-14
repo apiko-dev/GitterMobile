@@ -1,8 +1,7 @@
 import React, {
   PropTypes,
   TouchableNativeFeedback,
-  View,
-  Text
+  View
 } from 'react-native'
 import s from '../styles/StatusMessageStyles'
 import Parser from 'react-native-parsed-text'
@@ -54,7 +53,7 @@ StatusMessage.propTypes = {
   onLongPress: PropTypes.func,
   text: PropTypes.string,
   handleUrlPress: PropTypes.func,
-  backgroundColor: PropTypes.object
+  backgroundColor: PropTypes.string
 }
 
 export default StatusMessage

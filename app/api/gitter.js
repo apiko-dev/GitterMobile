@@ -50,6 +50,15 @@ export function joinRoom(token, uri) {
   })
 }
 
+export function changeFavoriteStatus(token, userId, roomId, status) {
+  return callApi(`/user/${userId}/rooms/${roomId}`, token, {
+    method: 'PUT',
+    body: JSON.stringify({
+      favourite: status
+    })
+  })
+}
+
 export function leaveRoom(token, roomId, userId) {
   return callApi(`/rooms/${roomId}/users/${userId}`, token, {
     method: 'DELETE'

@@ -29,6 +29,8 @@ export const LEAVE_ROOM_FAILED = 'rooms/LEAVE_ROOM_FAILED'
 export const MARK_ALL_AS_READ = 'rooms/MARK_ALL_AS_READ'
 export const MARK_ALL_AS_READ_OK = 'rooms/MARK_ALL_AS_READ_OK'
 export const MARK_ALL_AS_READ_FAILED = 'rooms/MARK_ALL_AS_READ_FAILED'
+export const CHANGE_FAVORITE_STATUS_OK = 'rooms/CHANGE_FAVORITE_STATUS_OK'
+export const CHANGE_FAVORITE_STATUS_FAILED = 'rooms/CHANGE_FAVORITE_STATUS_FAILED'
 
 /**
  * Action Creators
@@ -182,6 +184,25 @@ export function markAllAsRead(roomId) {
 }
 
 /**
+ * Favorite/unfavorite room
+ */
+
+export function changeFavoriteStatus(roomId) {
+  return async (dispatch, getState) => {
+    const {token} = getState().auth
+    const {id} = getState().viewer.user
+    const room = getState().rooms.rooms[roomId]
+    const status = room.hasOwnProperty('favourite') ? false : true
+    try {
+      const payload = await Api.changeFavoriteStatus(token, id, roomId, status)
+      dispatch({type: CHANGE_FAVORITE_STATUS_OK, roomId, payload})
+    } catch (error) {
+      dispatch({type: CHANGE_FAVORITE_STATUS_FAILED, roomId, error})
+    }
+  }
+}
+
+/**
  * Reducer
  */
 
@@ -280,10 +301,20 @@ export default function rooms(state = initialState, action) {
     }
   }
 
+  case CHANGE_FAVORITE_STATUS_OK: {
+    const {roomId, payload} = action
+    return {...state,
+      rooms: {...state.rooms,
+        [roomId]: payload
+      }
+    }
+  }
+
   case LOGOUT: {
     return initialState
   }
 
+  case CHANGE_FAVORITE_STATUS_FAILED:
   case MARK_ALL_AS_READ_FAILED:
   case LEAVE_ROOM_FAILED:
   case JOIN_ROOM_FAILED:
