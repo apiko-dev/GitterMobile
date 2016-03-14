@@ -8,6 +8,7 @@ import React, {
 } from 'react-native'
 import {connect} from 'react-redux'
 import s from '../styles/HomeScreenStyles'
+import * as Navigation from '../modules/navigation'
 
 import HomeRoomItem from '../components/HomeRoomItem'
 import Loading from '../components/Loading'
@@ -30,9 +31,9 @@ class HomeScreen extends Component {
   }
 
   handleActionPress(index) {
-    const {navigateTo} = this.props
+    const {dispatch} = this.props
     if (index === 0) {
-      navigateTo({name: 'search'})
+      dispatch(Navigation.goTo({name: 'search'}))
     }
   }
 

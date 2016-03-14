@@ -72,15 +72,15 @@ export function updateMessage(token, roomId, messageId, text) {
 }
 
 export function searchUsers(token, query) {
-  return callApi(`user?q=${query}&limit=3&type=gitter`, token)
+  return callApi(`user?q=${query}&limit=10&type=gitter`, token)
 }
 
 export function searchRooms(token, query) {
-  return callApi(`rooms?q=${query}&limit=3`, token)
+  return callApi(`rooms?q=${query}&limit=10`, token)
 }
 
 export function searchUserRooms(token, id, query) {
-  return callApi(`user/${id}/repos?q=${query}&limit=3`, token)
+  return callApi(`user/${id}/repos?q=${query}&limit=10`, token)
 }
 
 

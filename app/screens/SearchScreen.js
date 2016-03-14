@@ -29,7 +29,9 @@ class SearchScreen extends Component {
     this.handleInputChange = this.handleInputChange.bind(this)
     this.searchRequest = _.debounce(this.searchRequest.bind(this), 250)
     this.renderUsersTab = this.renderUsersTab.bind(this)
-    this.handleItemPress = this.handleItemPress.bind(this)
+    this.handleRoomItemPress = this.handleRoomItemPress.bind(this)
+    this.handleUserItemPress = this.handleUserItemPress.bind(this)
+    this.handleTabChange = this.handleTabChange.bind(this)
 
     this.state = {
       value: '',
@@ -64,9 +66,24 @@ class SearchScreen extends Component {
     this.searchRequest(text)
   }
 
-  handleItemPress(id) {
+  handleRoomItemPress(id) {
     const {dispatch} = this.props
     dispatch(Navigation.goTo({name: 'room', roomId: id}))
+  }
+
+  handleUserItemPress() {
+    // noop
+  }
+
+  handleTabChange({i}) {
+    this.setState({activeTab: i})
+    const {value} = this.state
+    if (!!value) {
+      this.searchRequest(value)
+    } else {
+      // dirty hack again
+      setTimeout(() => this.refs.textInput.focus(), 500)
+    }
   }
 
   searchRequest(text) {
@@ -80,9 +97,9 @@ class SearchScreen extends Component {
     }
 
     if (activeTab === 0) {
-      dispatch(searchUsers(text))
-    } else {
       dispatch(searchRooms(text))
+    } else {
+      dispatch(searchUsers(text))
     }
   }
 
@@ -104,11 +121,10 @@ class SearchScreen extends Component {
             ref="textInput"
             style={s.textInput}
             value={value}
-            onSubmitEditing={() => this.searchRequest(this.state.value)}
             underlineColorAndroid={colors.raspberry}
-            placeholderTextColor="white"
+            placeholderTextColor={colors.androidGray}
             onChange={this.handleInputChange}
-            placeholder="Search" />
+            placeholder="Type your search query..." />
         </View>
       </ToolbarAndroid>
     )
@@ -123,13 +139,13 @@ class SearchScreen extends Component {
           tabBarUnderlineColor="white"
           tabBarActiveTextColor="white"
           tabBarInactiveTextColor={colors.androidGray}
-          onChangeTab={index => this.setState({activeTab: index})}
+          onChangeTab={this.handleTabChange}
           style={s.tabs}>
-          <View tabLabel="Users" style={s.container}>
-            {this.renderUsersTab()}
-          </View>
           <View tabLabel="Rooms" style={s.container}>
             {this.renderRoomsTab()}
+          </View>
+          <View tabLabel="Users" style={s.container}>
+            {this.renderUsersTab()}
           </View>
         </ScrollableTabView>
     </View>
@@ -144,7 +160,7 @@ class SearchScreen extends Component {
         isLoadingUsers={isLoadingUsers}
         usersResult={usersResult}
         value={value}
-        onPress={this.handleItemPress.bind(this)} />
+        onPress={this.handleUserItemPress.bind(this)} />
     )
   }
 
@@ -156,7 +172,7 @@ class SearchScreen extends Component {
         isLoadingRooms={isLoadingRooms}
         roomsResult={roomsResult}
         value={value}
-        onPress={this.handleItemPress.bind(this)} />
+        onPress={this.handleRoomItemPress.bind(this)} />
     )
   }
 

@@ -20,11 +20,7 @@ const SearchRoomsTab = ({isLoadingRooms, roomsResult, value, onPress}) => {
 
   if (!value.trim()) {
     return (
-      <View style={s.container}>
-        <Text style={s.tabText}>
-          Enter your query.
-        </Text>
-      </View>
+      <View style={s.container} />
     )
   }
 
