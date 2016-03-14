@@ -47,7 +47,7 @@ export function init() {
 
       // if you need debug room screen, just comment nevigation to 'hone'
       // and uncomment navigation to 'room'
-      dispatch(Navigation.resetTo({name: 'home'}))
+      dispatch(Navigation.resetTo({name: 'search'}))
       // dispatch(Navigation.resetTo({name: 'room', roomId: '56a41e0fe610378809bde160'}))
     } catch (error) {
       dispatch({ type: INITIALIZED, error })

@@ -4,14 +4,18 @@ import React, {
   ToolbarAndroid,
   TextInput,
   View,
-  ScrollView,
   Text
 } from 'react-native'
 import {connect} from 'react-redux'
+import _ from 'lodash'
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import * as Navigation from '../modules/navigation'
+import {setInputValue, searchUsers, searchRooms, clearSearch} from '../modules/search'
 import s from '../styles/SearchScreenStyles.js'
 import {THEMES} from '../constants'
+import SearchUsersTab from '../components/SearchUsersTab'
+import SearchRoomsTab from '../components/SearchRoomsTab'
+
 const {colors} = THEMES.gitterDefault
 
 class SearchScreen extends Component {
@@ -22,10 +26,14 @@ class SearchScreen extends Component {
     this.navigateBack = this.navigateBack.bind(this)
     this.handleActionPress = this.handleActionPress.bind(this)
     this.renderTabs = this.renderTabs.bind(this)
+    this.handleInputChange = this.handleInputChange.bind(this)
+    this.searchRequest = _.debounce(this.searchRequest.bind(this), 250)
+    this.renderUsersTab = this.renderUsersTab.bind(this)
+    this.handleItemPress = this.handleItemPress.bind(this)
 
     this.state = {
       value: '',
-      focused: false
+      activeTab: 0
     }
   }
 
@@ -39,11 +47,42 @@ class SearchScreen extends Component {
   navigateBack() {
     const {dispatch} = this.props
     dispatch(Navigation.goBack())
+    dispatch(clearSearch())
   }
 
   handleActionPress(index) {
+    const {dispatch} = this.props
     if (index === 0) {
       this.setState({value: ''})
+      dispatch(clearSearch())
+    }
+  }
+
+  handleInputChange(event) {
+    const {text} = event.nativeEvent
+    this.setState({value: text})
+    this.searchRequest(text)
+  }
+
+  handleItemPress(id) {
+    const {dispatch} = this.props
+    dispatch(Navigation.goTo({name: 'room', roomId: id}))
+  }
+
+  searchRequest(text) {
+    const {dispatch} = this.props
+    const {activeTab} = this.state
+
+    dispatch(setInputValue(text))
+
+    if (!text.trim()) {
+      return
+    }
+
+    if (activeTab === 0) {
+      dispatch(searchUsers(text))
+    } else {
+      dispatch(searchRooms(text))
     }
   }
 
@@ -65,10 +104,10 @@ class SearchScreen extends Component {
             ref="textInput"
             style={s.textInput}
             value={value}
-            onFocus={() => this.setState({facused: true})}
+            onSubmitEditing={() => this.searchRequest(this.state.value)}
             underlineColorAndroid={colors.raspberry}
             placeholderTextColor="white"
-            onChange={(event) => this.setState({value: event.nativeEvent.text})}
+            onChange={this.handleInputChange}
             placeholder="Search" />
         </View>
       </ToolbarAndroid>
@@ -79,16 +118,45 @@ class SearchScreen extends Component {
     return (
       <View style={s.tabsContainer}>
         <ScrollableTabView
-          initialPage={0}
+          initialPage={this.state.activeTab}
           tabBarBackgroundColor={colors.raspberry}
           tabBarUnderlineColor="white"
           tabBarActiveTextColor="white"
           tabBarInactiveTextColor={colors.androidGray}
+          onChangeTab={index => this.setState({activeTab: index})}
           style={s.tabs}>
-          <Text tabLabel="Users">Users</Text>
-          <Text tabLabel="Rooms">Rooms</Text>
+          <View tabLabel="Users" style={s.container}>
+            {this.renderUsersTab()}
+          </View>
+          <View tabLabel="Rooms" style={s.container}>
+            {this.renderRoomsTab()}
+          </View>
         </ScrollableTabView>
     </View>
+    )
+  }
+
+  renderUsersTab() {
+    const {isLoadingUsers, usersResult} = this.props
+    const {value} = this.state
+    return (
+      <SearchUsersTab
+        isLoadingUsers={isLoadingUsers}
+        usersResult={usersResult}
+        value={value}
+        onPress={this.handleItemPress.bind(this)} />
+    )
+  }
+
+  renderRoomsTab() {
+    const {isLoadingRooms, roomsResult} = this.props
+    const {value} = this.state
+    return (
+      <SearchRoomsTab
+        isLoadingRooms={isLoadingRooms}
+        roomsResult={roomsResult}
+        value={value}
+        onPress={this.handleItemPress.bind(this)} />
     )
   }
 
@@ -103,7 +171,29 @@ class SearchScreen extends Component {
 }
 
 SearchScreen.propTypes = {
-  dispatch: PropTypes.func
+  dispatch: PropTypes.func,
+  isLoadingUsers: PropTypes.bool,
+  isLoadingRooms: PropTypes.bool,
+  inputValue: PropTypes.string,
+  usersResult: PropTypes.array,
+  roomsResult: PropTypes.array
 }
 
-export default connect()(SearchScreen)
+function mapStateToProps(state) {
+  const {
+    isLoadingUsers,
+    isLoadingRooms,
+    inputValue,
+    usersResult,
+    roomsResult
+  } = state.search
+  return {
+    isLoadingUsers,
+    isLoadingRooms,
+    inputValue,
+    usersResult,
+    roomsResult
+  }
+}
+
+export default connect(mapStateToProps)(SearchScreen)

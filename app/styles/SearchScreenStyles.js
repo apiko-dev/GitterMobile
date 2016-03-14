@@ -20,8 +20,7 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch'
   },
   tabs: {
-    elevation: 4,
-    fontSize: 18
+    elevation: 4
   },
   textInput: {
     color: 'white',
