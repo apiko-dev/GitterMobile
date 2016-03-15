@@ -4,13 +4,13 @@ import React, {
   View,
   Text
 } from 'react-native'
-import s from '../styles/FailedToLoadMessagesStyles'
+import s from '../styles/FailedToLoadStyles'
 
-const FailedToLoadMessages = ({onPress}) => {
+const FailedToLoad = ({onPress, message}) => {
   return (
     <View style={s.container}>
       <Text style={s.heading}>
-        Failed to load messages.
+        {message}
       </Text>
       <TouchableNativeFeedback
         onPress={() => onPress()}>
@@ -22,8 +22,9 @@ const FailedToLoadMessages = ({onPress}) => {
   )
 }
 
-FailedToLoadMessages.propTypes = {
-  onRetry: PropTypes.func
+FailedToLoad.propTypes = {
+  onRetry: PropTypes.func,
+  message: PropTypes.string
 }
 
-export default FailedToLoadMessages
+export default FailedToLoad

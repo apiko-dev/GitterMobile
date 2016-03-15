@@ -33,7 +33,7 @@ import MessagesList from '../components/MessagesList'
 import LoadginMoreSnack from '../components/LoadingMoreSnack'
 import SendMessageField from '../components/SendMessageField'
 import JoinRoomField from '../components/JoinRoomField'
-import FailedToLoadMessages from '../components/FailedToLoadMessages'
+import FailedToLoad from '../components/FailedToLoad'
 
 class Room extends Component {
   constructor(props) {
@@ -64,6 +64,7 @@ class Room extends Component {
     // dispatch(subscribeToChatMessages(roomId))
 
     InteractionManager.runAfterInteractions(() => {
+      dispatch(clearMessagesError())
       if (activeRoom !== roomId) {
         dispatch(selectRoom(roomId))
       }
@@ -301,7 +302,8 @@ class Room extends Component {
     const {listViewData, dispatch, route: {roomId}, getMessagesError} = this.props
     if (getMessagesError) {
       return (
-        <FailedToLoadMessages
+        <FailedToLoad
+          message="Failed to load messages."
           onPress={this.onRetryFetchingMessages.bind(this)} />
       )
     }
@@ -316,10 +318,18 @@ class Room extends Component {
   }
 
   render() {
-    const {rooms, listViewData, route, isLoadingMessages, isLoadingMore} = this.props
+    const {rooms, listViewData, route, isLoadingMessages, isLoadingMore, getMessagesError} = this.props
     if (!route.roomId) {
       return (
         <View style={{flex: 1}} />
+      )
+    }
+
+    if (getMessagesError && !rooms[route.roomId]) {
+      return (
+        <FailedToLoad
+          message="Failed to load room."
+          onPress={this.componentDidMount.bind(this)} />
       )
     }
 
@@ -334,7 +344,7 @@ class Room extends Component {
         {this.renderToolbar()}
         {isLoadingMore ? this.renderLoadingMore() : null}
         {isLoadingMessages ? this.renderLoading() : this.renderListView()}
-        {isLoadingMessages || _.has(listView, 'data') && listView.data.length === 0 ? null : this.renderBottom()}
+        {getMessagesError || isLoadingMessages || _.has(listView, 'data') && listView.data.length === 0 ? null : this.renderBottom()}
       </View>
     )
   }
