@@ -7,9 +7,6 @@ import React, {
   View
 } from 'react-native'
 import s from '../styles/SendMessageFieldStyles'
-import {THEMES} from '../constants'
-
-const {colors} = THEMES.gitterDefault
 
 export default class SendMessageField extends Component {
   constructor(props) {
@@ -52,7 +49,7 @@ export default class SendMessageField extends Component {
             style={[s.textInput, {height: this.state.height > 90 ? 90 : Math.max(56, this.state.height)}]}
             value={value}
             keyboardShouldPersistTaps={false}
-            underlineColorAndroid={colors.androidGray}
+            underlineColorAndroid="white"
             onChange={(event) => {
               this.setState({
                 height: event.nativeEvent.contentSize.height
@@ -67,7 +64,7 @@ export default class SendMessageField extends Component {
           <View style={s.button}>
             <Image
               source={require('image!ic_send_black_24dp')}
-              style={[s.sendIcon, {opacity: !value.trim() ? 0.2 : 0.6}]}/>
+              style={[s.sendIcon, {opacity: !value.trim() ? 0.2 : 1}]}/>
           </View>
         </TouchableNativeFeedback>
       </View>

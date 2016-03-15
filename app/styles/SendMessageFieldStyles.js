@@ -1,24 +1,22 @@
-import {StyleSheet, Dimensions} from 'react-native'
-import {THEMES} from '../constants'
+import {StyleSheet} from 'react-native'
+
 const padding = 12
 const button = 35
 const buttonMargin = 8
-
-const {colors} = THEMES.gitterDefault
 
 const style = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: padding,
-    backgroundColor: colors.androidGray,
+    backgroundColor: 'white',
     elevation: 8
   },
   innerContainer: {
     flex: 1
   },
   textInput: {
-    backgroundColor: colors.androidGray
+    backgroundColor: 'white'
   },
   button: {
     height: button,

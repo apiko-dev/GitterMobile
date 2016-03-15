@@ -6,7 +6,8 @@ const STATUS_BAR_HEIGHT = ExtraDimensions.get('STATUS_BAR_HEIGHT')
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    backgroundColor: 'white'
   },
   toolbar: {
     backgroundColor: colors.raspberry,
