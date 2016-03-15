@@ -2,9 +2,9 @@ import React, {
   Component,
   PropTypes,
   ToolbarAndroid,
+  ToastAndroid,
   TextInput,
-  View,
-  Text
+  View
 } from 'react-native'
 import {connect} from 'react-redux'
 import _ from 'lodash'
@@ -66,7 +66,12 @@ class SearchScreen extends Component {
     this.searchRequest(text)
   }
 
-  handleRoomItemPress(id) {
+  handleRoomItemPress(id, exists) {
+    if (!exists) {
+      // TODO: Navigate to 'create room' screen instead
+      ToastAndroid.show('Room not exist yet', ToastAndroid.SHORT)
+      return
+    }
     const {dispatch} = this.props
     dispatch(Navigation.goTo({name: 'room', roomId: id}))
   }

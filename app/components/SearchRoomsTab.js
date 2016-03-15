@@ -7,7 +7,7 @@ import React, {
 import s from '../styles/SearchTabStyles.js'
 import {THEMES} from '../constants'
 import Loading from './Loading'
-import HomeRoomItem from './HomeRoomItem'
+import SearchRoomItem from './SearchRoomItem'
 const {colors} = THEMES.gitterDefault
 
 const SearchRoomsTab = ({isLoadingRooms, roomsResult, value, onPress}) => {
@@ -35,7 +35,7 @@ const SearchRoomsTab = ({isLoadingRooms, roomsResult, value, onPress}) => {
   }
 
   const content = roomsResult.map(item => (
-    <HomeRoomItem
+    <SearchRoomItem
       {...item}
       onPress={onPress} />
   ))
