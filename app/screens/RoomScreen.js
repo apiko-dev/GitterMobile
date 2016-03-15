@@ -4,6 +4,7 @@ import React, {
   InteractionManager,
   ToolbarAndroid,
   ToastAndroid,
+  Clipboard,
   Alert,
   ListView,
   View
@@ -48,6 +49,7 @@ class Room extends Component {
     this.onTextFieldChange = this.onTextFieldChange.bind(this)
     this.onRetryFetchingMessages = this.onRetryFetchingMessages.bind(this)
     this.handleToolbarActionSelected = this.handleToolbarActionSelected.bind(this)
+    this.handleCopyToClipboard = this.handleCopyToClipboard.bind(this)
 
     this.state = {
       textInputValue: '',
@@ -118,8 +120,7 @@ class Room extends Component {
     const countDown = ''
 
     const actions = [
-        // TODO: Use clipboard module to allow copy message
-        {text: 'Copy text', onPress: () => console.log(message.text)} // eslint-disable-line no-console
+      {text: 'Copy text', onPress: () => this.handleCopyToClipboard(message.text)}
     ]
 
     if (currentUser.username === message.fromUser.username &&
@@ -219,6 +220,11 @@ class Room extends Component {
     if (index === 0) {
       dispatch(changeFavoriteStatus(roomId))
     }
+  }
+
+  handleCopyToClipboard(text) {
+    Clipboard.setString(text)
+    ToastAndroid.show('Copied', ToastAndroid.SHORT)
   }
 
   prepareDataSources() {
