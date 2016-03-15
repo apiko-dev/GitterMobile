@@ -2,6 +2,9 @@
 
 > [Gitter](https://gitter.im) client for mobile devices (currently only for android).
 
+## Download
+Go to the [releases page](https://github.com/terrysahaidak/GitterMobile/releases) to download the latest available apk.
+
 ## App preview
 ![Home screen](screenshots/home.png "Home screen")
 ![Search screen](screenshots/search.png "Search screen")
