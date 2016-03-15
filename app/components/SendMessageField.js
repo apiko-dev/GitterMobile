@@ -18,17 +18,10 @@ export default class SendMessageField extends Component {
     this.sendMessage = this.sendMessage.bind(this)
     this.focus = this.focus.bind(this)
     this.blur = this.blur.bind(this)
-    this.onBlur = this.onBlur.bind(this)
 
     this.state = {
       height: 56
     }
-  }
-
-  // triggers when text input is blured
-  // because the first one just will hide keyboard
-  onBlur() {
-    this.refs.textInput.blur()
   }
 
   focus() {
@@ -58,7 +51,7 @@ export default class SendMessageField extends Component {
             multiline
             style={[s.textInput, {height: this.state.height > 90 ? 90 : Math.max(56, this.state.height)}]}
             value={value}
-            onBlur={this.onBlur}
+            keyboardShouldPersistTaps={false}
             underlineColorAndroid={colors.androidGray}
             onChange={(event) => {
               this.setState({

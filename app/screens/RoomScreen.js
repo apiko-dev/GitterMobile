@@ -114,8 +114,8 @@ class Room extends Component {
   onMessageLongPress(rowId, id) {
     const {currentUser, entities} = this.props
     const message = entities[id]
-    const experied = moment(message.sent).add(10, 'm')
-    let countDown = ''
+    const experied = moment(message.sent).add(5, 'm')
+    const countDown = ''
 
     const actions = [
         // TODO: Use clipboard module to allow copy message
@@ -124,15 +124,15 @@ class Room extends Component {
 
     if (currentUser.username === message.fromUser.username &&
         moment().isBefore(experied) && !!message.text) {
-      // timef which's show editing experied time
-      setTimeout(() => {
-        if (moment().isBefore(experied)) {
-          const time = experied.subtract(moment()).format('mm:ss')
-          countDown = `${time} to edit or delete`
-        } else {
-          countDown = `Can't edit or delete`
-        }
-      }, 1000)
+      // time which's show editing experied time
+      // setTimeout(() => {
+      //   if (moment().isBefore(experied)) {
+      //     const time = experied.subtract(moment()).format('mm:ss')
+      //     countDown = `${time} to edit or delete`
+      //   } else {
+      //     countDown = `Can't edit or delete`
+      //   }
+      // }, 1000)
       actions.push(
         {text: 'Delete', onPress: () => this.onDelete(rowId, id)},
         {text: 'Edit', onPress: () => this.onEdit(rowId, id)}
@@ -145,7 +145,7 @@ class Room extends Component {
   onDelete(rowId, id) {
     const {dispatch, route: {roomId}, entities} = this.props
     const message = entities[id]
-    const experied = moment(message.sent).add(10, 'm')
+    const experied = moment(message.sent).add(5, 'm')
 
     if (moment().isAfter(experied)) {
       ToastAndroid.show("Can't delete message.", ToastAndroid.SHORT)
@@ -159,7 +159,7 @@ class Room extends Component {
   onEdit(rowId, id) {
     const {entities} = this.props
     const message = entities[id]
-    const experied = moment(message.sent).add(10, 'm')
+    const experied = moment(message.sent).add(5, 'm')
 
     if (moment().isAfter(experied)) {
       this.setState({editing: false})
@@ -173,9 +173,9 @@ class Room extends Component {
         rowId, id
       }
     })
+
     // triggers two times because sometimes it won't focus
-    this.refs.sendMessageField.focus()
-    this.refs.sendMessageField.focus()
+    setTimeout(() => this.refs.sendMessageField.focus(), 500)
   }
 
   onEndEdit() {

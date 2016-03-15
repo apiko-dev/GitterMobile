@@ -121,6 +121,7 @@ class SearchScreen extends Component {
             ref="textInput"
             style={s.textInput}
             value={value}
+            keyboardShouldPersistTaps={false}
             underlineColorAndroid={colors.raspberry}
             placeholderTextColor={colors.androidGray}
             onChange={this.handleInputChange}
