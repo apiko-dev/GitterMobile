@@ -94,6 +94,11 @@ export function getSuggestedRooms() {
 export function selectRoom(roomId) {
   return (dispatch, getState) => {
     const {activeRoom} = getState().rooms
+
+    if (roomId === '') {
+      return
+    }
+
     dispatch({type: SELECT_ROOM, payload: roomId})
     if (!!activeRoom) {
       dispatch(unsubscribeToChatMessages(activeRoom))

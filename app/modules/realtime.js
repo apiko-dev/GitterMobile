@@ -90,7 +90,7 @@ export function setupFayeEvents() {
 function parseEvent(event) {
   return (dispatch, getState) => {
     const message = JSON.parse(event.json)
-    console.log('MESSAGE!!!', message)
+
     const {id} = getState().viewer.user
     const {activeRoom} = getState().rooms
     const roomsChannel = `/api/v1/user/${id}/rooms`

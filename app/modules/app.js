@@ -19,7 +19,6 @@ export const CHANGE_APP_STATE = 'app/CHANGE_APP_STATE'
 export function init() {
   return async (dispatch, getState) => {
     dispatch(setupAppStatusListener())
-    dispatch(setupFayeEvents())
     try {
       // checking internet connection
       const netStatus = await NetInfo.fetch()
@@ -34,6 +33,7 @@ export function init() {
         return
       }
 
+      dispatch(setupFayeEvents())
       dispatch({ type: INITIALIZED, token })
 
       // getting base current user's information
