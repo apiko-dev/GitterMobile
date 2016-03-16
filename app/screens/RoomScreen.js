@@ -50,6 +50,7 @@ class Room extends Component {
     this.onRetryFetchingMessages = this.onRetryFetchingMessages.bind(this)
     this.handleToolbarActionSelected = this.handleToolbarActionSelected.bind(this)
     this.handleCopyToClipboard = this.handleCopyToClipboard.bind(this)
+    this.handleUsernamePress = this.handleUsernamePress.bind(this)
 
     this.state = {
       textInputValue: '',
@@ -177,7 +178,7 @@ class Room extends Component {
     })
 
     // triggers two times because sometimes it won't focus
-    setTimeout(() => this.refs.sendMessageField.focus(), 500)
+    setTimeout(() => this.refs.sendMessageField.focus(), 200)
   }
 
   onEndEdit() {
@@ -226,6 +227,14 @@ class Room extends Component {
   handleCopyToClipboard(text) {
     Clipboard.setString(text)
     ToastAndroid.show('Copied', ToastAndroid.SHORT)
+  }
+
+  handleUsernamePress(username) {
+    const {textInputValue} = this.state
+    this.setState({
+      textInputValue: !!textInputValue ? `${textInputValue} @${username} ` : `@${username} `
+    })
+    this.refs.sendMessageField.focus()
   }
 
   prepareDataSources() {
@@ -312,6 +321,7 @@ class Room extends Component {
         listViewData={listViewData[roomId]}
         onResendingMessage={this.onResendingMessage.bind(this)}
         onLongPress={this.onMessageLongPress.bind(this)}
+        onUsernamePress={this.handleUsernamePress.bind(this)}
         dispatch={dispatch}
         onEndReached={this.onEndReached.bind(this)} />
     )

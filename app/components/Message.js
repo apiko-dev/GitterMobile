@@ -87,7 +87,7 @@ class Message extends Component {
   }
 
   render() {
-    const {fromUser, sending, failed, readBy, isCollapsed, text, status} = this.props
+    const {fromUser, sending, failed, readBy, isCollapsed, text, status, onUsernamePress} = this.props
     const opacity = sending === true ? 0.4 : 1
 
     let backgroundColor
@@ -137,7 +137,9 @@ class Message extends Component {
           <Avatar src={fromUser.avatarUrlSmall} size={30} />
           <View style={s.content}>
             <View style={s.top}>
-              <Text style={s.username}>{fromUser.username}</Text>
+              <Text
+                style={s.username}
+                onPress={() => onUsernamePress(fromUser.username)}>{fromUser.username}</Text>
               <Text style={s.date}>{this.renderDate()}</Text>
             </View>
             <View style={s.bottom}>
@@ -167,6 +169,7 @@ Message.propTypes = {
   dispatch: PropTypes.func,
   onResendingMessage: PropTypes.func,
   onLongPress: PropTypes.func,
+  onUsernamePress: PropTypes.func,
   username: PropTypes.string,
   isCollapsed: PropTypes.bool,
   status: PropTypes.bool

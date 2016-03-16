@@ -45,7 +45,7 @@ export default class MessagesList extends Component {
   }
 
   renderRow(rowData, rowId) {
-    const {onResendingMessage, onLongPress} = this.props
+    const {onResendingMessage, onLongPress, onUsernamePress} = this.props
     if (!!rowData.hasNoMore) {
       return (
         <HistoryBegin />
@@ -60,6 +60,7 @@ export default class MessagesList extends Component {
         rowId={rowId}
         isCollapsed={isCollapsed}
         onLongPress={onLongPress}
+        onUsernamePress={onUsernamePress}
         {...rowData} />
     )
   }
@@ -91,5 +92,6 @@ MessagesList.propTypes = {
   listViewData: PropTypes.object,
   dispatch: PropTypes.func,
   onEndReached: PropTypes.func,
-  onLongPress: PropTypes.func
+  onLongPress: PropTypes.func,
+  onUsernamePress: PropTypes.func
 }
