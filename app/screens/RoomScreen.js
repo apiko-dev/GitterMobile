@@ -27,6 +27,7 @@ import {
   updateMessage,
   clearError as clearMessagesError
 } from '../modules/messages'
+import * as Navigation from '../modules/navigation'
 
 import Loading from '../components/Loading'
 import MessagesList from '../components/MessagesList'
@@ -51,6 +52,7 @@ class Room extends Component {
     this.handleToolbarActionSelected = this.handleToolbarActionSelected.bind(this)
     this.handleCopyToClipboard = this.handleCopyToClipboard.bind(this)
     this.handleUsernamePress = this.handleUsernamePress.bind(this)
+    this.handleUserAvatarPress = this.handleUserAvatarPress.bind(this)
 
     this.state = {
       textInputValue: '',
@@ -237,6 +239,11 @@ class Room extends Component {
     this.refs.sendMessageField.focus()
   }
 
+  handleUserAvatarPress(id) {
+    const {dispatch} = this.props
+    dispatch(Navigation.goTo({name: 'user', userId: id}))
+  }
+
   prepareDataSources() {
     const {listViewData, route: {roomId}, dispatch} = this.props
     if (!listViewData[roomId]) {
@@ -322,6 +329,7 @@ class Room extends Component {
         onResendingMessage={this.onResendingMessage.bind(this)}
         onLongPress={this.onMessageLongPress.bind(this)}
         onUsernamePress={this.handleUsernamePress.bind(this)}
+        onUserAvatarPress={this.handleUserAvatarPress.bind(this)}
         dispatch={dispatch}
         onEndReached={this.onEndReached.bind(this)} />
     )
