@@ -1,24 +1,27 @@
 import {combineReducers} from 'redux'
+
 import app from './app'
 import auth from './auth'
 import rooms from './rooms'
+import users from './users'
 import viewer from './viewer'
+import search from './search'
 import messages from './messages'
 import settings from './settings'
 import realtime from './realtime'
 import navigation from './navigation'
-import search from './search'
 
 const rootReducer = combineReducers({
   app,
   auth,
   rooms,
+  users,
   viewer,
+  search,
   messages,
   settings,
   realtime,
-  navigation,
-  search
+  navigation
 })
 
 export default rootReducer

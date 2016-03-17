@@ -137,7 +137,7 @@ class Message extends Component {
         onLongPress={() => this.onLongPress()}>
         <View style={[s.container, {opacity, backgroundColor}]}>
           <TouchableOpacity
-            onPress={() => onUserAvatarPress(fromUser.id)}>
+            onPress={() => onUserAvatarPress(fromUser.id, fromUser.username)}>
               <Avatar src={fromUser.avatarUrlSmall} size={30} />
           </TouchableOpacity>
           <View style={s.content}>

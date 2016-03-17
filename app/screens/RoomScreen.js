@@ -239,9 +239,9 @@ class Room extends Component {
     this.refs.sendMessageField.focus()
   }
 
-  handleUserAvatarPress(id) {
+  handleUserAvatarPress(id, username) {
     const {dispatch} = this.props
-    dispatch(Navigation.goTo({name: 'user', userId: id}))
+    dispatch(Navigation.goTo({name: 'user', userId: id, username}))
   }
 
   prepareDataSources() {

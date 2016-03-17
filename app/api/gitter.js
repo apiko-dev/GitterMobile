@@ -92,6 +92,10 @@ export function searchUserRooms(token, id, query) {
   return callApi(`user/${id}/repos?q=${query}&limit=10`, token)
 }
 
+export function getUser(token, username) {
+  return callApi(`users/${username}`, token)
+}
+
 
 /**
  * Private functions
