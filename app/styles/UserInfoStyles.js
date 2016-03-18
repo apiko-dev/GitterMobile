@@ -7,15 +7,17 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white'
   },
-  toolbar: {
-    height: 56,
-    backgroundColor: colors.raspberry
+  item: {
+    height: 50,
+    marginLeft: 16,
+    flexDirection: 'row',
+    alignItem: 'center',
+    borderTopColor: colors.androidGray,
+    borderBottomColor: colors.androidGray
   },
-  tabsContainer: {
-    flex: 1
-  },
-  tabs: {
-    elevation: 4
+  icon: {
+    height: 28,
+    width: 28
   }
 })
 

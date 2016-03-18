@@ -7,23 +7,41 @@ import React, {
   View
 } from 'react-native'
 import {connect} from 'react-redux'
+import ScrollableTabView from 'react-native-scrollable-tab-view'
 import s from '../styles/UserScreenStyles'
 import * as Navigation from '../modules/navigation'
 import {getUser} from '../modules/users'
 
+import {THEMES} from '../constants'
+const {colors} = THEMES.gitterDefault
+
 import Loading from '../components/Loading'
+import UserTop from '../components/User/UserTop'
+import UserInfo from '../components/User/UserInfo'
 
 class UserScreen extends Component {
   constructor(props) {
     super(props)
     this.renderToolbar = this.renderToolbar.bind(this)
     this.navigateBack = this.navigateBack.bind(this)
-    this.renderTopInfo = this.renderTopInfo.bind(this)
+    this.renderTabs = this.renderTabs.bind(this)
+    this.renderUserInfoTab = this.renderUserInfoTab.bind(this)
+    this.handleTabChange = this.handleTabChange.bind(this)
+
+    this.state = {
+      activeTab: 0
+    }
   }
 
   componentDidMount() {
     const {dispatch, route} = this.props
     dispatch(getUser(route.username))
+  }
+
+  handleTabChange({i}) {
+    this.setState({
+      activeTab: i
+    })
   }
 
   navigateBack() {
@@ -37,39 +55,56 @@ class UserScreen extends Component {
       <ToolbarAndroid
         navIcon={require('image!ic_arrow_back_white_24dp')}
         onIconClicked={this.navigateBack}
-        title={route.username}
+        title="User"
         titleColor="white"
         style={s.toolbar} />
     )
   }
 
-  renderTopInfo() {
-    const {users, route} = this.props
-    const user = users[route.userId]
+  renderTabs() {
     return (
-      <View style={s.avatarContainer}>
-        <Image
-          source={{uri: user.avatarUrlMedium}} />
-        <Text>{user.displayName}</Text>
+      <View style={s.tabsContainer}>
+        <ScrollableTabView
+          initialPage={this.state.activeTab}
+          tabBarBackgroundColor={colors.raspberry}
+          tabBarUnderlineColor="white"
+          tabBarActiveTextColor="white"
+          tabBarInactiveTextColor={colors.androidGray}
+          onChangeTab={this.handleTabChange}
+          style={s.tabs}>
+          <View tabLabel="INFO" style={s.container}>
+            {this.renderUserInfoTab()}
+          </View>
+          <View tabLabel="REPOS" style={s.container}>
+
+          </View>
+        </ScrollableTabView>
+    </View>
+    )
+  }
+
+  renderUserInfoTab() {
+    const {isLoadingUsers, users, route} = this.props
+    const user = users[route.userId]
+    if (isLoadingUsers || !user) {
+      return (
+        <Loading />
+      )
+    }
+    return (
+      <View style={s.container}>
+        <UserTop {...user} />
+        <UserInfo {...user} />
       </View>
     )
   }
 
 
   render() {
-    const {isLoadingUsers, route, users} = this.props
-    if (isLoadingUsers || !users[route.userId]) {
-      return (
-        <View style={s.container}>
-          {this.renderToolbar()}
-          <Loading />
-        </View>
-      )
-    }
     return (
       <View style={s.container}>
         {this.renderToolbar()}
-        {this.renderTopInfo()}
+        {this.renderTabs()}
       </View>
     )
   }
