@@ -9,7 +9,8 @@ const styles = StyleSheet.create({
   },
   toolbar: {
     height: 56,
-    backgroundColor: colors.raspberry
+    backgroundColor: colors.raspberry,
+    elevation: 4
   },
   tabsContainer: {
     flex: 1

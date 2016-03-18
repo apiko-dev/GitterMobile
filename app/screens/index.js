@@ -97,7 +97,7 @@ class App extends Component {
       } else {
         dispatch(Navigation.goTo(route))
       }
-    }, 500)
+    }, 300)
   }
 
 

@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
   },
   item: {
     height: 50,
-    marginLeft: 16,
+    marginLeft: 20,
     flexDirection: 'row',
     alignItems: 'center',
     borderTopColor: colors.androidGray,
@@ -18,7 +18,23 @@ const styles = StyleSheet.create({
   icon: {
     height: 28,
     width: 28,
-    marginRight: 16
+    marginRight: 8
+  },
+  button: {
+    marginHorizontal: 20,
+    marginVertical: 10,
+    backgroundColor: colors.secondaryButton,
+    elevation: 2
+  },
+  chatPrivately: {
+    backgroundColor: colors.primaryButton
+  },
+  center: {
+    // justifyContent: 'center',
+    // alignItems: 'center'
+  },
+  text: {
+    fontSize: 18
   }
 })
 

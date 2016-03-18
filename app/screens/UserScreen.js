@@ -2,15 +2,15 @@ import React, {
   Component,
   PropTypes,
   ToolbarAndroid,
-  Image,
-  Text,
+  Linking,
+  ScrollView,
   View
 } from 'react-native'
 import {connect} from 'react-redux'
 import ScrollableTabView from 'react-native-scrollable-tab-view'
 import s from '../styles/UserScreenStyles'
 import * as Navigation from '../modules/navigation'
-import {getUser} from '../modules/users'
+import {getUser, chatPrivately} from '../modules/users'
 
 import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault
@@ -27,6 +27,9 @@ class UserScreen extends Component {
     this.renderTabs = this.renderTabs.bind(this)
     this.renderUserInfoTab = this.renderUserInfoTab.bind(this)
     this.handleTabChange = this.handleTabChange.bind(this)
+    this.handleGithubPress = this.handleGithubPress.bind(this)
+    this.handleEmailPress = this.handleEmailPress.bind(this)
+    this.handleChatPrivatelyPress = this.handleChatPrivatelyPress.bind(this)
 
     this.state = {
       activeTab: 0
@@ -42,6 +45,19 @@ class UserScreen extends Component {
     this.setState({
       activeTab: i
     })
+  }
+
+  handleGithubPress(url) {
+    Linking.openURL(url)
+  }
+
+  handleEmailPress(email) {
+    Linking.openURL(`mailto:${email}`)
+  }
+
+  handleChatPrivatelyPress(userId) {
+    const {dispatch} = this.props
+    dispatch(chatPrivately(userId))
   }
 
   navigateBack() {
@@ -84,7 +100,7 @@ class UserScreen extends Component {
   }
 
   renderUserInfoTab() {
-    const {isLoadingUsers, users, route} = this.props
+    const {isLoadingUsers, users, route, currentUserId} = this.props
     const user = users[route.userId]
     if (isLoadingUsers || !user) {
       return (
@@ -92,10 +108,14 @@ class UserScreen extends Component {
       )
     }
     return (
-      <View style={s.container}>
+      <ScrollView style={s.container}>
         <UserTop {...user} />
-        <UserInfo {...user} />
-      </View>
+        <UserInfo {...user}
+          onEmailPress={this.handleEmailPress.bind(this)}
+          onGithubPress={this.handleGithubPress.bind(this)}
+          onChatPrivatelyPress={this.handleChatPrivatelyPress.bind(this)}
+          currentUserId={currentUserId} />
+      </ScrollView>
     )
   }
 
@@ -104,7 +124,7 @@ class UserScreen extends Component {
     return (
       <View style={s.container}>
         {this.renderToolbar()}
-        {this.renderTabs()}
+        {this.renderUserInfoTab()}
       </View>
     )
   }
@@ -114,15 +134,18 @@ UserScreen.propTypes = {
   dispatch: PropTypes.func,
   isLoadingUsers: PropTypes.bool,
   users: PropTypes.object,
-  route: PropTypes.object
+  route: PropTypes.object,
+  currentUserId: PropTypes.string
 }
 
 
 function mapStateToProps(state) {
   const {current} = state.navigation
   const {isLoadingUsers} = state.users
+  const {id} = state.viewer.user
   return {
     isLoadingUsers,
+    currentUserId: id,
     route: current,
     users: state.users.entities
   }

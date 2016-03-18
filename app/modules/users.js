@@ -1,4 +1,6 @@
 import * as Api from '../api/gitter'
+import {joinRoom} from './rooms'
+import * as Navigation from './navigation'
 
 /**
  * Constants
@@ -7,6 +9,9 @@ import * as Api from '../api/gitter'
 export const USER = 'users/USER'
 export const USER_OK = 'users/USER_OK'
 export const USER_FAILED = 'users/USER_FAILED'
+export const CHAT_PRIVATELY = 'users/CHAT_PRIVATELY'
+export const CHAT_PRIVATELY_OK = 'users/CHAT_PRIVATELY_OK'
+export const CHAT_PRIVATELY_FAILED = 'users/CHAT_PRIVATELY_FAILED'
 
 /**
  * Actions
@@ -22,6 +27,22 @@ export function getUser(username) {
       dispatch({type: USER_OK, payload})
     } catch (error) {
       dispatch({type: USER_FAILED, error})
+    }
+  }
+}
+
+export function chatPrivately(userId) {
+  return async (dispatch, getState) => {
+    dispatch({type: CHAT_PRIVATELY, userId})
+
+    try {
+      if (!getState().rooms.rooms[userId]) {
+        await dispatch(joinRoom(userId))
+      }
+      dispatch(Navigation.goTo({name: 'room', roomId: userId}))
+      dispatch({type: CHAT_PRIVATELY_OK, userId})
+    } catch (error) {
+      dispatch({type: CHAT_PRIVATELY_FAILED, error})
     }
   }
 }

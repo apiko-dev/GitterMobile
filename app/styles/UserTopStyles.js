@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   avatarWrapper: {
-    marginVertical: 20,
+    marginVertical: 30,
     justifyContent: 'center',
     alignItems: 'center'
   },
