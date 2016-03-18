@@ -1,6 +1,7 @@
 import * as Api from '../api/gitter'
 import {joinRoom} from './rooms'
 import * as Navigation from './navigation'
+import _ from 'lodash'
 
 /**
  * Constants
@@ -34,12 +35,15 @@ export function getUser(username) {
 export function chatPrivately(userId) {
   return async (dispatch, getState) => {
     dispatch({type: CHAT_PRIVATELY, userId})
+    const room = _.find(getState().rooms.rooms, {user: {id: userId}})
 
     try {
-      if (!getState().rooms.rooms[userId]) {
-        await dispatch(joinRoom(userId))
+      if (typeof room !== 'undefined') {
+        dispatch(Navigation.goTo({name: 'room', roomId: room.id}))
+      } else {
+        // await dispatch(joinRoom(userId))
+        return
       }
-      dispatch(Navigation.goTo({name: 'room', roomId: userId}))
       dispatch({type: CHAT_PRIVATELY_OK, userId})
     } catch (error) {
       dispatch({type: CHAT_PRIVATELY_FAILED, error})
