@@ -11,13 +11,15 @@ import Avatar from './Avatar'
 import {createGhAvatarLink} from '../utils/links'
 
 
-const SearchRoomItem = ({id, name, userCount, oneToOne, onPress, exists, ...props}) => {
+const SearchRoomItem = ({id, name, userCount, oneToOne, onPress, exists, room, ...props}) => {
   const src = oneToOne
     ? createGhAvatarLink(props.user.username, 200)
     : createGhAvatarLink(name.split('/')[0], 200)
+
+  const roomId = !!exists && exists === true && !!room ? room.id : id
   return (
     <TouchableNativeFeedback
-      onPress={() => onPress(id, exists)}
+      onPress={() => onPress(roomId, exists)}
       background={TouchableNativeFeedback.Ripple('#ECECEC', false)}>
       <View style={s.container}>
         <Avatar
@@ -44,7 +46,8 @@ SearchRoomItem.propTypes = {
   id: PropTypes.string.isRequired,
   user: PropTypes.object,
   onPress: PropTypes.func,
-  exists: PropTypes.bool
+  exists: PropTypes.bool,
+  room: PropTypes.object
 }
 
 export default SearchRoomItem

@@ -17,7 +17,8 @@ const styles = StyleSheet.create({
   },
   icon: {
     height: 28,
-    width: 28
+    width: 28,
+    marginRight: 16
   }
 })
 
