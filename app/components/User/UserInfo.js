@@ -14,7 +14,7 @@ const UserInfo = ({company, location, email, profile}) => {
       {!!location && (
         <View style={s.item}>
           <Image
-            source={require('image!ic_arrow_back_black_24dp')}
+            source={require('image!ic_location_on_black_24dp')}
             style={s.icon} />
           <Text style={s.text}>{location}</Text>
         </View>
@@ -22,7 +22,7 @@ const UserInfo = ({company, location, email, profile}) => {
       {!!company && (
         <View style={s.item}>
           <Image
-            source={require('image!ic_arrow_back_black_24dp')}
+            source={require('image!ic_business_black_24dp')}
             style={s.icon} />
           <Text style={s.text}>{company}</Text>
         </View>
@@ -30,7 +30,7 @@ const UserInfo = ({company, location, email, profile}) => {
       {!!email && (
         <View style={s.item}>
           <Image
-            source={require('image!ic_arrow_back_black_24dp')}
+            source={require('image!ic_email_black_24dp')}
             style={s.icon} />
           <Link to={email}>{email}</Link>
         </View>
@@ -38,7 +38,7 @@ const UserInfo = ({company, location, email, profile}) => {
       {!!profile && (
         <View style={s.item}>
           <Image
-            source={require('image!ic_arrow_back_black_24dp')}
+            source={require('image!ic_github_24dp')}
             style={s.icon} />
           <Link to={profile}>{profile}</Link>
         </View>

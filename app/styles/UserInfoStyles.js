@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     height: 50,
     marginLeft: 16,
     flexDirection: 'row',
-    alignItem: 'center',
+    alignItems: 'center',
     borderTopColor: colors.androidGray,
     borderBottomColor: colors.androidGray
   },
