@@ -1,5 +1,5 @@
 import * as Api from '../api/gitter'
-import {joinRoom} from './rooms'
+import {joinUserRoom} from './rooms'
 import * as Navigation from './navigation'
 import _ from 'lodash'
 
@@ -41,8 +41,10 @@ export function chatPrivately(userId) {
       if (typeof room !== 'undefined') {
         dispatch(Navigation.goTo({name: 'room', roomId: room.id}))
       } else {
-        // await dispatch(joinRoom(userId))
-        return
+        const {username} = getState().users.entities[userId]
+        await dispatch(joinUserRoom(username))
+        const newRoom = _.find(getState().rooms.rooms, {user: {id: userId}})
+        dispatch(Navigation.goTo({name: 'room', roomId: newRoom.id}))
       }
       dispatch({type: CHAT_PRIVATELY_OK, userId})
     } catch (error) {
