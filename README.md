@@ -9,15 +9,21 @@ Go to the [releases page](https://github.com/terrysahaidak/GitterMobile/releases
 
 ## App preview
 ![Home screen](screenshots/home.png "Home screen")
-![Search screen](screenshots/search.png "Search screen")
+![Search rooms screen](screenshots/search_rooms.png "Search rooms screen")
+![Search users screen](screenshots/search_users.png "Search users screen")
+![User screen](screenshots/user_screen.png "User screen")
 ![Room screen](screenshots/room.png "Room screen")
 ![Drawer](screenshots/drawer.png "Drawer")
 
 ## Features
 See [Roadmap](https://github.com/terrysahaidak/project/issues/5).
 
+## Technical stack
+- [React Native](https://facebook.github.io/react-native/)
+- [Redux](http://redux.js.org/)
+
 ## Installation
-Once you have downloaded or cloned this repository, run `npm install` inside the directory.
+Once you have downloaded or cloned this repository, run `npm install` inside the directory, then read usage.
 
 ## Usage
 - [Setting up React Native for Android](https://facebook.github.io/react-native/docs/android-setup.html#content)
@@ -26,6 +32,7 @@ Once you have downloaded or cloned this repository, run `npm install` inside the
 ## Need help
 - Mark visible messages as read once you have navigated to room. See [#17](https://github.com/terrysahaidak/project/issues/17)
 - Use Faye client as an android service. See [#6](https://github.com/terrysahaidak/project/issues/6)
+- Better design
 
 ## License
-All the code available under the MIT + Apache 2.0. See [LICENSE](LICENSE).
+All the code available under the MIT + Apache 2.0. licenses. See [LICENSE](LICENSE).
