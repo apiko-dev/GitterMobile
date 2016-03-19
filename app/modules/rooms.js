@@ -23,7 +23,10 @@ export const ROOM_FAILED = 'rooms/ROOM_FAILED'
 export const JOIN_ROOM = 'rooms/JOIN_ROOM'
 export const JOIN_ROOM_OK = 'rooms/JOIN_ROOM_OK'
 export const JOIN_ROOM_FAILED = 'rooms/JOIN_ROOM_FAILED'
-export const LEAVE_ROOM = 'rooms/LEAVE_ROOM'
+export const JOIN_USER_ROOM = 'rooms/JOIN_USER_ROOM'
+export const JOIN_USER_ROOM_OK = 'rooms/JOIN_USER_ROOM_OK'
+export const JOIN_USER_ROOM_FAILED = 'rooms/JOIN_USER_ROOM_FAILED'
+const LEAVE_ROOM = 'rooms/LEAVE_ROOM'
 export const LEAVE_ROOM_OK = 'rooms/LEAVE_ROOM_OK'
 export const LEAVE_ROOM_FAILED = 'rooms/LEAVE_ROOM_FAILED'
 export const MARK_ALL_AS_READ = 'rooms/MARK_ALL_AS_READ'
@@ -134,6 +137,21 @@ export function joinRoom(roomId) {
       dispatch({type: JOIN_ROOM_OK, payload})
     } catch (error) {
       dispatch({type: JOIN_ROOM_FAILED, error})
+    }
+  }
+}
+
+export function joinUserRoom(username) {
+  return async (dispatch, getState) => {
+    const {token} = getState().auth
+
+    dispatch({type: JOIN_USER_ROOM, username})
+
+    try {
+      const payload = await Api.joinRoom(token, username)
+      dispatch({type: JOIN_USER_ROOM_OK, payload})
+    } catch (error) {
+      dispatch({type: JOIN_USER_ROOM_FAILED, error})
     }
   }
 }
@@ -284,6 +302,16 @@ export default function rooms(state = initialState, action) {
     }
   }
 
+  case JOIN_USER_ROOM_OK: {
+    const {payload} = action
+    return {...state,
+      ids: state.ids.concat(payload.id),
+      rooms: {...state.rooms,
+        [payload.id]: action.payload
+      }
+    }
+  }
+
   case LEAVE_ROOM_OK: {
     const {roomId} = action
     const room = state.rooms[roomId]
@@ -319,6 +347,7 @@ export default function rooms(state = initialState, action) {
     return initialState
   }
 
+  case JOIN_USER_ROOM_FAILED:
   case CHANGE_FAVORITE_STATUS_FAILED:
   case MARK_ALL_AS_READ_FAILED:
   case LEAVE_ROOM_FAILED:

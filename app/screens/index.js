@@ -18,6 +18,7 @@ import NoInternetScreen from './NoInternetScreen'
 import HomeScreen from './HomeScreen'
 import RoomScreen from './RoomScreen'
 import SearchScreen from './SearchScreen'
+import UserScreen from './UserScreen'
 import Drawer from './Drawer'
 
 // this need for passing navigator instance to navigation module
@@ -96,7 +97,7 @@ class App extends Component {
       } else {
         dispatch(Navigation.goTo(route))
       }
-    }, 500)
+    }, 300)
   }
 
 
@@ -140,6 +141,10 @@ class App extends Component {
         <RoomScreen
           navigateTo={this.navigateTo}
           onMenuTap={this.onMenuTap.bind(this)} />
+      )
+    case 'user':
+      return (
+        <UserScreen />
       )
 
     case 'search':

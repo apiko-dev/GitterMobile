@@ -10,7 +10,7 @@ import Avatar from './Avatar'
 const SearchUserItem = ({id, username, displayName, avatarUrlMedium, onPress}) => {
   return (
     <TouchableNativeFeedback
-      onPress={() => onPress(id)}
+      onPress={() => onPress(id, username)}
       background={TouchableNativeFeedback.Ripple('#ECECEC', false)}>
       <View style={s.container}>
         <Avatar

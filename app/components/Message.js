@@ -2,6 +2,7 @@ import React, {
   Component,
   PropTypes,
   TouchableNativeFeedback,
+  TouchableOpacity,
   Linking,
   View,
   Text
@@ -87,7 +88,8 @@ class Message extends Component {
   }
 
   render() {
-    const {fromUser, sending, failed, readBy, isCollapsed, text, status, onUsernamePress} = this.props
+    const {fromUser, sending, failed, readBy, isCollapsed,
+      text, status, onUsernamePress, onUserAvatarPress} = this.props
     const opacity = sending === true ? 0.4 : 1
 
     let backgroundColor
@@ -134,7 +136,10 @@ class Message extends Component {
         onPress={() => this.onMessagePress()}
         onLongPress={() => this.onLongPress()}>
         <View style={[s.container, {opacity, backgroundColor}]}>
-          <Avatar src={fromUser.avatarUrlSmall} size={30} />
+          <TouchableOpacity
+            onPress={() => onUserAvatarPress(fromUser.id, fromUser.username)}>
+              <Avatar src={fromUser.avatarUrlSmall} size={30} />
+          </TouchableOpacity>
           <View style={s.content}>
             <View style={s.top}>
               <Text
@@ -170,6 +175,7 @@ Message.propTypes = {
   onResendingMessage: PropTypes.func,
   onLongPress: PropTypes.func,
   onUsernamePress: PropTypes.func,
+  onUserAvatarPress: PropTypes.func,
   username: PropTypes.string,
   isCollapsed: PropTypes.bool,
   status: PropTypes.bool

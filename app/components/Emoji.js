@@ -3,7 +3,7 @@ import React, {
   Image,
   Text
 } from 'react-native'
-import {emoji} from '../images/emoji/emoji'
+import {emoji} from '../images/emoji'
 
 const Emoji = ({name, styles}) => {
   let newName = null

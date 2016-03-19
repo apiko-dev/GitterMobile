@@ -76,8 +76,13 @@ class SearchScreen extends Component {
     dispatch(Navigation.goTo({name: 'room', roomId: id}))
   }
 
-  handleUserItemPress() {
-    // noop
+  handleUserItemPress(id, username) {
+    if (!id) {
+      ToastAndroid.show("User don't have gitter profile", ToastAndroid.SHORT)
+      return
+    }
+    const {dispatch} = this.props
+    dispatch(Navigation.goTo({name: 'user', userId: id, username}))
   }
 
   handleTabChange({i}) {
