@@ -4,7 +4,7 @@ import React, {
   Text
 } from 'react-native'
 import Avatar from '../Avatar'
-import s from '../../styles/UserTopStyles'
+import s from '../../styles/screens/User/UserTopStyles'
 import {createGhAvatarLink} from '../../utils/links'
 
 const UserTop = ({displayName, username, github}) => {

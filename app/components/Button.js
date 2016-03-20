@@ -3,7 +3,7 @@ import React, {
   TouchableNativeFeedback,
   View
 } from 'react-native'
-import s from '../styles/ButtonStyles'
+import s from '../styles/components/ButtonStyles'
 
 const Button = ({onPress, children, styles}) => {
   return (

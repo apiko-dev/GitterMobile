@@ -7,7 +7,7 @@ import React, {
   Text,
   Image
 } from 'react-native'
-import s from '../styles/LoginByTokenScreenStyles'
+import s from '../styles/screens/Login/LoginByTokenScreenStyles'
 import {connect} from 'react-redux'
 import {loginByToken} from '../modules/auth'
 

@@ -6,7 +6,7 @@ import React, {
   Image,
   View
 } from 'react-native'
-import s from '../styles/LoginScreenStyles'
+import s from '../styles/screens/Login/LoginScreenStyles'
 import {connect} from 'react-redux'
 import * as Navigation from '../modules/navigation'
 import {THEMES} from '../constants'

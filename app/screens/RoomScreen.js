@@ -12,7 +12,7 @@ import React, {
 import {connect} from 'react-redux'
 import moment from 'moment'
 import _ from 'lodash'
-import s from '../styles/RoomStyles'
+import s from '../styles/screens/Room/RoomStyles'
 import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault
 
@@ -30,10 +30,10 @@ import {
 import * as Navigation from '../modules/navigation'
 
 import Loading from '../components/Loading'
-import MessagesList from '../components/MessagesList'
+import MessagesList from '../components/Room/MessagesList'
+import SendMessageField from '../components/Room/SendMessageField'
+import JoinRoomField from '../components/Room/JoinRoomField'
 import LoadginMoreSnack from '../components/LoadingMoreSnack'
-import SendMessageField from '../components/SendMessageField'
-import JoinRoomField from '../components/JoinRoomField'
 import FailedToLoad from '../components/FailedToLoad'
 
 class Room extends Component {

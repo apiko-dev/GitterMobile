@@ -7,7 +7,7 @@ import React, {
   Image
 } from 'react-native'
 import {connect} from 'react-redux'
-import s from '../styles/NoInternetScreenStyles'
+import s from '../styles/screens/NoInternetScreenStyles'
 import * as Navigation from '../modules/navigation'
 import {THEMES} from '../constants'
 import {init} from '../modules/app'

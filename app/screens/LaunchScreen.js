@@ -3,7 +3,7 @@ import React, {
   Text,
   Image
 } from 'react-native'
-import s from '../styles/LaunchScreenStyles'
+import s from '../styles/screens/LaunchScreenStyles'
 
 
 export default class LaunchScreen extends Component {

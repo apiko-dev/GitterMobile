@@ -4,7 +4,7 @@ import React, {
   Text,
   Linking
 } from 'react-native'
-import s from '../styles/LinkStyles'
+import s from '../styles/components/LinkStyles'
 import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault
 

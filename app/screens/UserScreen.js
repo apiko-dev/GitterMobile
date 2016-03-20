@@ -8,7 +8,7 @@ import React, {
 } from 'react-native'
 import {connect} from 'react-redux'
 import ScrollableTabView from 'react-native-scrollable-tab-view'
-import s from '../styles/UserScreenStyles'
+import s from '../styles/screens/User/UserScreenStyles'
 import * as Navigation from '../modules/navigation'
 import {getUser, chatPrivately} from '../modules/users'
 

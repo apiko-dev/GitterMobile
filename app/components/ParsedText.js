@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react-native'
 import Parser from 'react-native-parsed-text'
 import Emoji from './Emoji'
-import s from '../styles/ParsedTextStyles'
+import s from '../styles/components/ParsedTextStyles'
 
 const MENTION_REGEX = /(([^`]|^)@([a-zA-Z0-9_\-]+))/g
 const GROUP_MENTION_REGEX = /^(@\/([a-zA-Z0-9_\-]+))/

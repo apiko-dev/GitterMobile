@@ -4,7 +4,7 @@ import React, {
   View,
   Text
 } from 'react-native'
-import s from '../styles/RoomSnackStyles'
+import s from '../styles/components/RoomSnackStyles'
 import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault
 

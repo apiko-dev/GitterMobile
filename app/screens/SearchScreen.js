@@ -11,10 +11,10 @@ import _ from 'lodash'
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import * as Navigation from '../modules/navigation'
 import {setInputValue, searchUsers, searchRooms, clearSearch} from '../modules/search'
-import s from '../styles/SearchScreenStyles.js'
+import s from '../styles/screens/Search/SearchScreenStyles'
 import {THEMES} from '../constants'
-import SearchUsersTab from '../components/SearchUsersTab'
-import SearchRoomsTab from '../components/SearchRoomsTab'
+import SearchUsersTab from '../components/Search/SearchUsersTab'
+import SearchRoomsTab from '../components/Search/SearchRoomsTab'
 
 const {colors} = THEMES.gitterDefault
 

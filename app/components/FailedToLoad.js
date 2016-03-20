@@ -4,7 +4,7 @@ import React, {
   View,
   Text
 } from 'react-native'
-import s from '../styles/FailedToLoadStyles'
+import s from '../styles/components/FailedToLoadStyles'
 
 const FailedToLoad = ({onPress, message}) => {
   return (

@@ -3,7 +3,7 @@ import React, {
   View,
   Text
 } from 'react-native'
-import s from '../styles/UnreadBadgeStyles'
+import s from '../styles/components/UnreadBadgeStyles'
 
 const UnreadBadge = ({mentions, unreadItems, lurk}) => {
   if (!!mentions) {
