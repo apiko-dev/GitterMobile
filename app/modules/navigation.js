@@ -4,7 +4,6 @@ const NAVIGATE_TO = 'navigation/NAVIGATE_TO'
 const NAVIGATE_BACK = 'navigation/NAVIGATE_BACK'
 const NAVIGATE_REPLACE = 'navigation/NAVIGATE_REPLACE'
 const NAVIGATE_RESET = 'navigation/NAVIGATE_RESET'
-const UPDATE_HISTORY = 'navigation/UPDATE_HISTORY'
 const NAVIGATE_RESET_WITH_STACK = 'navigation/NAVIGATE_RESET_WITH_STACK'
 
 export function goTo(route) {

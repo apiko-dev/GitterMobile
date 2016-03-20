@@ -39,12 +39,12 @@ export function chatPrivately(userId) {
 
     try {
       if (typeof room !== 'undefined') {
-        dispatch(Navigation.goTo({name: 'room', roomId: room.id}))
+        dispatch(Navigation.resetWithStack([{name: 'home'}, {name: 'room', roomId: room.id}]))
       } else {
         const {username} = getState().users.entities[userId]
         await dispatch(joinUserRoom(username))
         const newRoom = _.find(getState().rooms.rooms, {user: {id: userId}})
-        dispatch(Navigation.goTo({name: 'room', roomId: newRoom.id}))
+        dispatch(Navigation.resetWithStack([{name: 'home'}, {name: 'room', roomId: newRoom.id}]))
       }
       dispatch({type: CHAT_PRIVATELY_OK, userId})
     } catch (error) {
