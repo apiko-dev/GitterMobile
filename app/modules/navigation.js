@@ -5,19 +5,19 @@ const NAVIGATE_BACK = 'navigation/NAVIGATE_BACK'
 const NAVIGATE_REPLACE = 'navigation/NAVIGATE_REPLACE'
 const NAVIGATE_RESET = 'navigation/NAVIGATE_RESET'
 const UPDATE_HISTORY = 'navigation/UPDATE_HISTORY'
+const NAVIGATE_RESET_WITH_STACK = 'navigation/NAVIGATE_RESET_WITH_STACK'
 
 export function goTo(route) {
   return dispatch => {
     dispatch({type: NAVIGATE_TO, route})
     nav.push(route)
-    dispatch({type: UPDATE_HISTORY})
   }
 }
 
 export function goBack() {
   return dispatch => {
-    nav.pop()
     dispatch({type: NAVIGATE_BACK})
+    nav.pop()
   }
 }
 
@@ -25,7 +25,6 @@ export function goAndReplace(route) {
   return dispatch => {
     dispatch({type: NAVIGATE_REPLACE, route})
     nav.replace(route)
-    dispatch({type: UPDATE_HISTORY})
   }
 }
 
@@ -33,7 +32,13 @@ export function resetTo(route) {
   return dispatch => {
     dispatch({type: NAVIGATE_RESET, route})
     nav.resetTo(route)
-    dispatch({type: UPDATE_HISTORY})
+  }
+}
+
+export function resetWithStack(stack) {
+  return dispatch => {
+    dispatch({type: NAVIGATE_RESET_WITH_STACK, stack})
+    nav.immediatelyResetRouteStack(stack)
   }
 }
 
@@ -50,15 +55,17 @@ export default function navigation(state = initialState, action) {
     return {...state,
       current: action.route,
       prevision: state.current,
-      history: nav.getCurrentRoutes()
+      history: state.history.concat(action.route)
     }
 
   case NAVIGATE_BACK: {
     const {history} = state
+    const newHistory = [].concat(history)
+    newHistory.pop()
     return {...state,
       current: state.prevision,
-      prevision: history.length >= 2 ? history[history.length - 2] : {},
-      history: nav.getCurrentRoutes()
+      prevision: newHistory.length >= 2 ? newHistory[newHistory.length - 2] : {},
+      history: newHistory
     }
   }
 
@@ -66,19 +73,25 @@ export default function navigation(state = initialState, action) {
     return {...state,
       current: action.route,
       prevision: {},
-      history: nav.getCurrentRoutes()
+      history: [].concat(action.route)
     }
 
-  case NAVIGATE_REPLACE:
+  case NAVIGATE_REPLACE: {
+    const newHistory = [].concat(state.history)
+    newHistory[state.history.length - 1] = action.route
     return {...state,
       current: action.route,
-      history: nav.getCurrentRoutes()
+      history: newHistory
+    }
+  }
+
+  case NAVIGATE_RESET_WITH_STACK:
+    return {...state,
+      current: action.stack[action.stack.length - 1],
+      prevision: action.stack.length === 1 ? {} : action.stack[action.stack.length - 2],
+      history: action.stack
     }
 
-  case UPDATE_HISTORY:
-    return {...state,
-      history: nav.getCurrentRoutes()
-    }
   default:
     return state
   }

@@ -53,11 +53,11 @@ class App extends Component {
 
       if (history.length > 1) {
         // set active room previous room
-        // if (prevision.name === 'room') {
-        //   dispatch(selectRoom(prevision.roomId))
-        // } else {
-        dispatch(selectRoom(''))
-        // }
+        if (prevision.name === 'room') {
+          dispatch(selectRoom(prevision.roomId))
+        } else {
+          dispatch(selectRoom(''))
+        }
         dispatch(Navigation.goBack())
         return true
       }
@@ -139,12 +139,14 @@ class App extends Component {
     case 'room':
       return (
         <RoomScreen
+          route={route}
           navigateTo={this.navigateTo}
           onMenuTap={this.onMenuTap.bind(this)} />
       )
     case 'user':
       return (
-        <UserScreen />
+        <UserScreen
+          route={route} />
       )
 
     case 'search':
@@ -168,7 +170,7 @@ class App extends Component {
     const {navigation} = this.props
     // const initialRoute = {name: 'launch'}
     // const initialRoute = {name: 'room', roomId: '56a41e0fe610378809bde160'}
-    const drawerLockMode = ['launch', 'login', 'loginByToken'].indexOf(navigation.current.name) === -1
+    const drawerLockMode = ['launch', 'login', 'loginByToken', 'user'].indexOf(navigation.current.name) === -1
       ? 'unlocked'
       : 'locked-closed'
 

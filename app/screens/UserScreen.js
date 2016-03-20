@@ -1,6 +1,7 @@
 import React, {
   Component,
   PropTypes,
+  InteractionManager,
   ToolbarAndroid,
   Linking,
   ScrollView,
@@ -38,7 +39,9 @@ class UserScreen extends Component {
 
   componentDidMount() {
     const {dispatch, route} = this.props
-    dispatch(getUser(route.username))
+    InteractionManager.runAfterInteractions(() => {
+      dispatch(getUser(route.username))
+    })
   }
 
   handleTabChange({i}) {
@@ -146,7 +149,7 @@ function mapStateToProps(state) {
   return {
     isLoadingUsers,
     currentUserId: id,
-    route: current,
+    // route: current,
     users: state.users.entities
   }
 }

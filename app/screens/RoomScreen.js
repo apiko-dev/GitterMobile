@@ -337,11 +337,6 @@ class Room extends Component {
 
   render() {
     const {rooms, listViewData, route, isLoadingMessages, isLoadingMore, getMessagesError} = this.props
-    if (!route.roomId) {
-      return (
-        <View style={{flex: 1}} />
-      )
-    }
 
     if (getMessagesError && !rooms[route.roomId]) {
       return (
@@ -403,7 +398,7 @@ function mapStateToProps(state) {
     byRoom,
     hasNoMore,
     currentUser: state.viewer.user,
-    route: state.navigation.current
+    // route: state.navigation.current
   }
 }
 
