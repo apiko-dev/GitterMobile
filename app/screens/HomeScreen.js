@@ -27,13 +27,13 @@ class HomeScreen extends Component {
   }
 
   onRoomPress(id) {
-    this.props.navigateTo({name: 'room', roomId: id})
+    this.props.navigateTo({key: 'room', roomId: id})
   }
 
   handleActionPress(index) {
     const {dispatch} = this.props
     if (index === 0) {
-      dispatch(Navigation.goTo({name: 'search'}))
+      dispatch(Navigation.goTo({key: 'search'}))
     }
   }
 

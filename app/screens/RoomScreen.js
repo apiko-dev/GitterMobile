@@ -68,9 +68,7 @@ class Room extends Component {
 
     InteractionManager.runAfterInteractions(() => {
       dispatch(clearMessagesError())
-      if (activeRoom !== roomId) {
-        dispatch(selectRoom(roomId))
-      }
+      dispatch(selectRoom(roomId))
       if (!rooms[roomId]) {
         dispatch(getRoom(roomId))
       }
@@ -80,6 +78,13 @@ class Room extends Component {
         dispatch(getRoomMessagesIfNeeded(roomId))
       }
     })
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.route.roomId !== this.props.route.roomId ||
+      nextProps.activeRoom !== this.props.activeRoom) {
+      this.componentDidMount()
+    }
   }
 
   onEndReached() {
@@ -241,7 +246,7 @@ class Room extends Component {
 
   handleUserAvatarPress(id, username) {
     const {dispatch} = this.props
-    dispatch(Navigation.goTo({name: 'user', userId: id, username}))
+    dispatch(Navigation.goTo({key: 'user', userId: id, username}))
   }
 
   prepareDataSources() {
@@ -337,11 +342,11 @@ class Room extends Component {
 
   render() {
     const {rooms, listViewData, route, isLoadingMessages, isLoadingMore, getMessagesError} = this.props
-    if (!route.roomId) {
-      return (
-        <View style={{flex: 1}} />
-      )
-    }
+    // if (!route.roomId) {
+    //   return (
+    //     <View style={{flex: 1}} />
+    //   )
+    // }
 
     if (getMessagesError && !rooms[route.roomId]) {
       return (
@@ -392,6 +397,7 @@ Room.propTypes = {
 function mapStateToProps(state) {
   const {listView, isLoading, isLoadingMore, byRoom, hasNoMore, entities} = state.messages
   const {activeRoom, rooms} = state.rooms
+  // const currentRoute = state.navigation.children[state.navigation.index]
   return {
     activeRoom,
     rooms,
@@ -402,8 +408,8 @@ function mapStateToProps(state) {
     isLoadingMore,
     byRoom,
     hasNoMore,
-    currentUser: state.viewer.user,
-    route: state.navigation.current
+    currentUser: state.viewer.user
+    // route: currentRoute
   }
 }
 

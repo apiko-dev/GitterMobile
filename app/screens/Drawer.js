@@ -27,7 +27,7 @@ class Drawer extends Component {
 
   onRoomPress(id) {
     const {dispatch, navigateTo} = this.props
-    navigateTo({name: 'room', roomId: id})
+    navigateTo({key: 'room', roomId: id})
     dispatch(selectRoom(id))
   }
 

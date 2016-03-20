@@ -22,7 +22,7 @@ class NoInternetScreen extends Component {
 
   handleRetry() {
     const {dispatch} = this.props
-    dispatch(Navigation.resetTo({name: 'launch'}))
+    dispatch(Navigation.resetTo({key: 'launch'}))
     dispatch(init())
   }
 

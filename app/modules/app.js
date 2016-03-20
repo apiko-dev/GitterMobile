@@ -23,13 +23,13 @@ export function init() {
       // checking internet connection
       const netStatus = await NetInfo.fetch()
       if (netStatus === 'none' || netStatus === 'NONE') {
-        dispatch(Navigation.resetTo({name: 'noInternet'}))
+        dispatch(Navigation.resetTo([{key: 'noInternet'}]))
         return
       }
 
       const token = await getItem('token')
       if (!token) {
-        dispatch(Navigation.resetTo({name: 'login'}))
+        dispatch(Navigation.resetTo([{key: 'login'}]))
         return
       }
 
@@ -47,12 +47,12 @@ export function init() {
 
       // if you need debug room screen, just comment nevigation to 'hone'
       // and uncomment navigation to 'room'
-      dispatch(Navigation.resetTo({name: 'home'}))
-      // dispatch(Navigation.resetTo({name: 'user', userId: '52ce7f4eed5ab0b3bf053782', username: 'blia'}))
-      // dispatch(Navigation.resetTo({name: 'room', roomId: '56a41e0fe610378809bde160'}))
+      dispatch(Navigation.resetTo([{key: 'home'}]))
+      // dispatch(Navigation.resetTo({key: 'user', userId: '52ce7f4eed5ab0b3bf053782', username: 'blia'}))
+      // dispatch(Navigation.resetTo({key: 'room', roomId: '56a41e0fe610378809bde160'}))
     } catch (error) {
       dispatch({ type: INITIALIZED, error })
-      dispatch(Navigation.goAndReplace({name: 'login'}))
+      dispatch(Navigation.goAndReplace([{key: 'login'}]))
     }
   }
 }

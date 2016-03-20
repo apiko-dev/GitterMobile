@@ -40,7 +40,7 @@ class LoginScreen extends Component {
           </TouchableNativeFeedback>
           <TouchableNativeFeedback
             background={TouchableNativeFeedback.Ripple(colors.raspberry, false)}
-            onPress={() => dispatch(Navigation.goTo({name: 'loginByToken'}))}>
+            onPress={() => dispatch(Navigation.goTo({key: 'loginByToken'}))}>
             <View style={[s.buttonStyle, {backgroundColor: colors.darkRed}]}>
               <Text pointerEvents="none"
                 style={s.buttonText}>

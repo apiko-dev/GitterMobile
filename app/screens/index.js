@@ -2,14 +2,20 @@ import React, {
   Component,
   PropTypes,
   DrawerLayoutAndroid,
+  NavigationExperimental,
   BackAndroid,
-  Navigator
+  View
 } from 'react-native'
 import _ from 'lodash'
 import {init} from '../modules/app'
 import {connect} from 'react-redux'
 import * as Navigation from '../modules/navigation'
 import {selectRoom} from '../modules/rooms'
+
+const {
+	AnimatedView: NavigationAnimatedView,
+	Card: NavigationCard
+} = NavigationExperimental
 
 import LaunchScreen from './LaunchScreen'
 import LoginScreen from './LoginScreen'
@@ -33,6 +39,7 @@ class App extends Component {
     this.navigateToFromDrawer = this.navigateToFromDrawer.bind(this)
     this.onMenuTap = this.onMenuTap.bind(this)
     this.renderScene = this.renderScene.bind(this)
+    this.handleNavigate = this.handleNavigate.bind(this)
 
     this.state = {
       isDrawerOpen: false
@@ -43,25 +50,26 @@ class App extends Component {
     const {dispatch} = this.props
     // init application
     dispatch(init())
-
     BackAndroid.addEventListener('hardwareBackPress', () => {
+      const {navigation} = this.props
       if (this.state.isDrawerOpen === true) {
         this.refs.drawer.closeDrawer()
         return true
       }
-      const {prevision, history} = this.props.navigation
 
-      if (history.length > 1) {
-        // set active room previous room
-        // if (prevision.name === 'room') {
-        //   dispatch(selectRoom(prevision.roomId))
-        // } else {
-        dispatch(selectRoom(''))
-        // }
-        dispatch(Navigation.goBack())
-        return true
+      if (navigation.index === 0) {
+        return false
       }
-      return false
+
+      if (
+        (navigation.index > 0) &&
+        (navigation.children[navigation.index - 1].key !== 'room')
+      ) {
+        dispatch(selectRoom(''))
+      }
+
+      dispatch(Navigation.goBack())
+      return true
     })
   }
 
@@ -73,27 +81,47 @@ class App extends Component {
     this.refs.drawer.openDrawer()
   }
 
+  handleNavigate(action) {
+    const {dispatch, navigation} = this.props
+
+    if (action.type === Navigation.NAVIGATE_BACK) {
+      if (this.state.isDrawerOpen === true) {
+        this.refs.drawer.closeDrawer()
+        return
+      }
+
+      if (
+        (navigation.index > 0) &&
+        (navigation.children[navigation.index - 1].key !== 'room')
+      ) {
+        dispatch(selectRoom(''))
+      }
+
+      dispatch(Navigation.goBack())
+    }
+  }
+
   navigateTo(route) {
-    const {dispatch, navigation: {current}} = this.props
-    if (_.isEqual(route, current)) {
+    const {dispatch, navigation} = this.props
+    if (_.isEqual(route, navigation.children[navigation.index])) {
       return false
     }
     dispatch(Navigation.goTo(route))
   }
 
   navigateToFromDrawer(route) {
-    const {dispatch, navigation: {current}} = this.props
+    const {dispatch, navigation} = this.props
+    const current = navigation.children[navigation.index]
 
     if (_.isEqual(route, current)) {
       return false
     }
 
     this.refs.drawer.closeDrawer()
-
     // delay is needed for smoothly drawer closing
     setTimeout(() => {
-      if (current.name === 'room' && route.name === 'room') {
-        dispatch(Navigation.goAndReplace(route))
+      if (current.key === 'room' && route.key === 'room') {
+        dispatch(Navigation.goAndReplace('room', route))
       } else {
         dispatch(Navigation.goTo(route))
       }
@@ -101,19 +129,19 @@ class App extends Component {
   }
 
 
-  configureScene(route) {
-    if (route.name === 'search') {
-      return Navigator.SceneConfigs.FloatFromBottomAndroid
-    } else if (!!route.sceneConfig && route.name !== 'search') {
-      return Navigator.SceneConfigs[route.sceneConfig]
-    } else {
-      return Navigator.SceneConfigs.FadeAndroid
-    }
-  }
+  // configureScene(route) {
+  //   if (route.name === 'search') {
+  //     return Navigator.SceneConfigs.FloatFromBottomAndroid
+  //   } else if (!!route.sceneConfig && route.name !== 'search') {
+  //     return Navigator.SceneConfigs[route.sceneConfig]
+  //   } else {
+  //     return Navigator.SceneConfigs.FadeAndroid
+  //   }
+  // }
 
-  renderScene(route, navigator) {
-    // map routes by name
-    switch (route.name) {
+  renderScene({scene}) {
+    // map routes by key
+    switch (scene.navigationState.key) {
     case 'launch':
       return (
         <LaunchScreen />
@@ -139,12 +167,14 @@ class App extends Component {
     case 'room':
       return (
         <RoomScreen
+          route={scene.navigationState}
           navigateTo={this.navigateTo}
           onMenuTap={this.onMenuTap.bind(this)} />
       )
     case 'user':
       return (
-        <UserScreen />
+        <UserScreen
+          route={scene.navigationState} />
       )
 
     case 'search':
@@ -168,10 +198,10 @@ class App extends Component {
     const {navigation} = this.props
     // const initialRoute = {name: 'launch'}
     // const initialRoute = {name: 'room', roomId: '56a41e0fe610378809bde160'}
-    const drawerLockMode = ['launch', 'login', 'loginByToken'].indexOf(navigation.current.name) === -1
+    const drawerLockMode = ['launch', 'login', 'loginByToken', 'user'].indexOf(
+      navigation.children[navigation.index].key) === -1
       ? 'unlocked'
       : 'locked-closed'
-
     return (
       <DrawerLayoutAndroid
         ref="drawer"
@@ -183,12 +213,15 @@ class App extends Component {
         onDrawerOpen={() => this.setState({isDrawerOpen: true})}
         onDrawerClose={() => this.setState({isDrawerOpen: false})}
         keyboardDismissMode="on-drag">
-        <Navigator
+        <NavigationAnimatedView
+          navigationState={navigation}
+          onNavigate={this.handleNavigate}
           style={{flex: 1}}
-          ref={ref => nav = ref}
-          initialRoute={navigation.init}
-          configureScene={this.configureScene}
-          renderScene={this.renderScene}/>
+          renderScene={props => (
+            <View style={{flex: 1, top: 0, bottom: 0, right: 0, left: 0, position: 'absolute'}}>
+              {this.renderScene(props)}
+            </View>
+          )} />
       </DrawerLayoutAndroid>
     )
   }

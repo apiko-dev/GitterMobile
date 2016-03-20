@@ -73,7 +73,7 @@ class SearchScreen extends Component {
       return
     }
     const {dispatch} = this.props
-    dispatch(Navigation.goTo({name: 'room', roomId: id}))
+    dispatch(Navigation.goTo({key: 'room', roomId: id}))
   }
 
   handleUserItemPress(id, username) {
@@ -82,7 +82,7 @@ class SearchScreen extends Component {
       return
     }
     const {dispatch} = this.props
-    dispatch(Navigation.goTo({name: 'user', userId: id, username}))
+    dispatch(Navigation.goTo({key: 'user', userId: id, username}))
   }
 
   handleTabChange({i}) {

@@ -140,13 +140,13 @@ UserScreen.propTypes = {
 
 
 function mapStateToProps(state) {
-  const {current} = state.navigation
+  // const route = state.navigation.children[state.navigation.index]
   const {isLoadingUsers} = state.users
   const {id} = state.viewer.user
   return {
     isLoadingUsers,
     currentUserId: id,
-    route: current,
+    // route,
     users: state.users.entities
   }
 }

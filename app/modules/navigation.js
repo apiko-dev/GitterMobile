@@ -1,9 +1,9 @@
-import {NavigationStateUtils} from 'react-native'
+import * as NavigationStateUtils from 'react-native/Libraries/NavigationExperimental/NavigationStateUtils'
 
-const NAVIGATE_TO = 'navigation/NAVIGATE_TO'
-const NAVIGATE_BACK = 'navigation/NAVIGATE_BACK'
-const NAVIGATE_REPLACE = 'navigation/NAVIGATE_REPLACE'
-const NAVIGATE_RESET = 'navigation/NAVIGATE_RESET'
+export const NAVIGATE_TO = 'navigation/NAVIGATE_TO'
+export const NAVIGATE_BACK = 'navigation/NAVIGATE_BACK'
+export const NAVIGATE_REPLACE = 'navigation/NAVIGATE_REPLACE'
+export const NAVIGATE_RESET = 'navigation/NAVIGATE_RESET'
 
 export function goTo(state) {
   return {
@@ -37,7 +37,7 @@ const initialState = {
   key: 'Root',
   index: 0,
   children: [
-		{ key: 'home' }
+		{ key: 'launch' }
   ]
 }
 
