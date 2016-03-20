@@ -258,7 +258,7 @@ class Room extends Component {
     let actions = []
 
     // TODO: Update one action instead
-    if (room.roomMember) {
+    if (!!room && room.roomMember) {
       if (room.hasOwnProperty('favourite')) {
         actions = [{
           title: 'Unfavorite',
@@ -279,7 +279,7 @@ class Room extends Component {
         actions={actions}
         onActionSelected={this.handleToolbarActionSelected}
         overflowIcon={require('image!ic_more_vert_white_24dp')}
-        title={room.name}
+        title={!!room ? room.name : ''}
         titleColor="white"
         style={s.toolbar} />
     )
@@ -352,7 +352,12 @@ class Room extends Component {
     }
 
     if (!rooms[route.roomId]) {
-      return this.renderLoading()
+      return (
+        <View style={s.container}>
+          {this.renderToolbar()}
+          {this.renderLoading()}
+        </View>
+      )
     }
 
     const listView = listViewData[route.roomId]
