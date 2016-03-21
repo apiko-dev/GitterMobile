@@ -7,9 +7,9 @@ import React, {
   View
 } from 'react-native'
 const {
-	AnimatedView: NavigationAnimatedView,
-	Card: NavigationCard
+	AnimatedView: NavigationAnimatedView
 } = NavigationExperimental
+import NavigationOpacityView from '../components/NavigationOpacityView'
 import _ from 'lodash'
 import {init} from '../modules/app'
 import {connect} from 'react-redux'
@@ -175,7 +175,6 @@ class App extends Component {
     const {navigation} = this.props
     // const initialRoute = {name: 'launch'}
     // const initialRoute = {name: 'room', roomId: '56a41e0fe610378809bde160'}
-    debugger
     const drawerLockMode = [
       'launch', 'login', 'loginByToken', 'user'
     ].indexOf(navigation.children[navigation.index].name) === -1
@@ -197,11 +196,10 @@ class App extends Component {
           navigationState={navigation}
           style={{flex: 1}}
           renderScene={props => (
-            <View
+            <NavigationOpacityView
               key={props.scene.navigationState.key}
-              style={{top: 0, bottom: 0, right: 0, left: 0, position: 'absolute'}}>
-              {this.renderScene(props)}
-            </View>
+              {...props}
+              renderScene={this.renderScene} />
           )} />
       </DrawerLayoutAndroid>
     )
