@@ -3,8 +3,13 @@ import React, {
   PropTypes,
   DrawerLayoutAndroid,
   BackAndroid,
-  Navigator
+  NavigationExperimental,
+  View
 } from 'react-native'
+const {
+	AnimatedView: NavigationAnimatedView,
+	Card: NavigationCard
+} = NavigationExperimental
 import _ from 'lodash'
 import {init} from '../modules/app'
 import {connect} from 'react-redux'
@@ -49,12 +54,12 @@ class App extends Component {
         this.refs.drawer.closeDrawer()
         return true
       }
-      const {prevision, history} = this.props.navigation
+      const {children, index} = this.props.navigation
 
-      if (history.length > 1) {
+      if (children.length > 1) {
         // set active room previous room
-        if (prevision.name === 'room') {
-          dispatch(selectRoom(prevision.roomId))
+        if (children[index - 1].name === 'room') {
+          dispatch(selectRoom(children[index - 1].roomId))
         } else {
           dispatch(selectRoom(''))
         }
@@ -74,17 +79,17 @@ class App extends Component {
   }
 
   navigateTo(route) {
-    const {dispatch, navigation: {current}} = this.props
-    if (_.isEqual(route, current)) {
+    const {dispatch, navigation: {children, index}} = this.props
+    if (_.isEqual(route, children[index])) {
       return false
     }
     dispatch(Navigation.goTo(route))
   }
 
   navigateToFromDrawer(route) {
-    const {dispatch, navigation: {current}} = this.props
+    const {dispatch, navigation: {children, index}} = this.props
 
-    if (_.isEqual(route, current)) {
+    if (_.isEqual(route, children[index])) {
       return false
     }
 
@@ -92,8 +97,8 @@ class App extends Component {
 
     // delay is needed for smoothly drawer closing
     setTimeout(() => {
-      if (current.name === 'room' && route.name === 'room') {
-        dispatch(Navigation.goAndReplace(route))
+      if (children[index].name === 'room' && route.name === 'room') {
+        dispatch(Navigation.replaceLast(route))
       } else {
         dispatch(Navigation.goTo(route))
       }
@@ -111,9 +116,9 @@ class App extends Component {
     }
   }
 
-  renderScene(route, navigator) {
+  renderScene({scene}) {
     // map routes by name
-    switch (route.name) {
+    switch (scene.navigationState.name) {
     case 'launch':
       return (
         <LaunchScreen />
@@ -139,14 +144,14 @@ class App extends Component {
     case 'room':
       return (
         <RoomScreen
-          route={route}
+          route={scene.navigationState}
           navigateTo={this.navigateTo}
           onMenuTap={this.onMenuTap.bind(this)} />
       )
     case 'user':
       return (
         <UserScreen
-          route={route} />
+          route={scene.navigationState} />
       )
 
     case 'search':
@@ -170,7 +175,10 @@ class App extends Component {
     const {navigation} = this.props
     // const initialRoute = {name: 'launch'}
     // const initialRoute = {name: 'room', roomId: '56a41e0fe610378809bde160'}
-    const drawerLockMode = ['launch', 'login', 'loginByToken', 'user'].indexOf(navigation.current.name) === -1
+    debugger
+    const drawerLockMode = [
+      'launch', 'login', 'loginByToken', 'user'
+    ].indexOf(navigation.children[navigation.index].name) === -1
       ? 'unlocked'
       : 'locked-closed'
 
@@ -185,12 +193,16 @@ class App extends Component {
         onDrawerOpen={() => this.setState({isDrawerOpen: true})}
         onDrawerClose={() => this.setState({isDrawerOpen: false})}
         keyboardDismissMode="on-drag">
-        <Navigator
+        <NavigationAnimatedView
+          navigationState={navigation}
           style={{flex: 1}}
-          ref={ref => nav = ref}
-          initialRoute={navigation.init}
-          configureScene={this.configureScene}
-          renderScene={this.renderScene}/>
+          renderScene={props => (
+            <View
+              key={props.scene.navigationState.key}
+              style={{top: 0, bottom: 0, right: 0, left: 0, position: 'absolute'}}>
+              {this.renderScene(props)}
+            </View>
+          )} />
       </DrawerLayoutAndroid>
     )
   }

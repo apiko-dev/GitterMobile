@@ -1,95 +1,82 @@
-import {nav} from '../screens'
+import * as NavigationStateUtils from 'react-native/Libraries/NavigationExperimental/NavigationStateUtils'
+import randomId from '../utils/randomId'
 
-const NAVIGATE_TO = 'navigation/NAVIGATE_TO'
-const NAVIGATE_BACK = 'navigation/NAVIGATE_BACK'
-const NAVIGATE_REPLACE = 'navigation/NAVIGATE_REPLACE'
-const NAVIGATE_RESET = 'navigation/NAVIGATE_RESET'
-const NAVIGATE_RESET_WITH_STACK = 'navigation/NAVIGATE_RESET_WITH_STACK'
+export const NAVIGATE_TO = 'navigation/NAVIGATE_TO'
+export const NAVIGATE_BACK = 'navigation/NAVIGATE_BACK'
+export const NAVIGATE_REPLACE_LAST = 'navigation/NAVIGATE_REPLACE_LAST'
+export const NAVIGATE_RESET = 'navigation/NAVIGATE_RESET'
+export const NAVIGATE_RESET_STACK_WITH = 'navigation/NAVIGATE_RESET_STACK_WITH'
 
 export function goTo(route) {
-  return dispatch => {
-    dispatch({type: NAVIGATE_TO, route})
-    nav.push(route)
+  return {
+    type: NAVIGATE_TO,
+    route
   }
 }
 
 export function goBack() {
-  return dispatch => {
-    dispatch({type: NAVIGATE_BACK})
-    nav.pop()
+  return {
+    type: NAVIGATE_BACK
   }
 }
 
-export function goAndReplace(route) {
-  return dispatch => {
-    dispatch({type: NAVIGATE_REPLACE, route})
-    nav.replace(route)
+export function replaceLast(route) {
+  return {
+    type: NAVIGATE_REPLACE_LAST,
+    route
   }
 }
 
 export function resetTo(route) {
-  return dispatch => {
-    dispatch({type: NAVIGATE_RESET, route})
-    nav.resetTo(route)
+  return {
+    type: NAVIGATE_RESET,
+    route
   }
 }
 
-export function resetWithStack(stack) {
-  return dispatch => {
-    dispatch({type: NAVIGATE_RESET_WITH_STACK, stack})
-    nav.immediatelyResetRouteStack(stack)
+export function resetStackWith(stack, index) {
+  return {
+    type: NAVIGATE_RESET_STACK_WITH,
+    stack,
+    index
   }
 }
 
 const initialState = {
-  init: {name: 'launch'},
-  current: {},
-  prevision: {},
-  history: []
+  key: 'Root',
+  index: 0,
+  children: [
+		{ key: randomId(), name: 'launch' }
+  ]
 }
 
 export default function navigation(state = initialState, action) {
   switch (action.type) {
-  case NAVIGATE_TO:
-    return {...state,
-      current: action.route,
-      prevision: state.current,
-      history: state.history.concat(action.route)
-    }
-
-  case NAVIGATE_BACK: {
-    const {history} = state
-    const newHistory = [].concat(history)
-    newHistory.pop()
-    return {...state,
-      current: state.prevision,
-      prevision: newHistory.length >= 2 ? newHistory[newHistory.length - 2] : {},
-      history: newHistory
-    }
+  case NAVIGATE_TO: {
+    const route = Object.assign({key: randomId()}, action.route)
+    return NavigationStateUtils.push(state, route)
   }
 
-  case NAVIGATE_RESET:
-    return {...state,
-      current: action.route,
-      prevision: {},
-      history: [].concat(action.route)
+  case NAVIGATE_BACK:
+    if (state.index === 0 || state.children.length === 1) {
+      return state
     }
+    return NavigationStateUtils.pop(state)
 
-  case NAVIGATE_REPLACE: {
-    const newHistory = [].concat(state.history)
-    newHistory[state.history.length - 1] = action.route
-    return {...state,
-      current: action.route,
-      history: newHistory
-    }
+  case NAVIGATE_RESET: {
+    const route = Object.assign({key: randomId()}, action.route)
+    return NavigationStateUtils.reset(state, [route])
   }
 
-  case NAVIGATE_RESET_WITH_STACK:
-    return {...state,
-      current: action.stack[action.stack.length - 1],
-      prevision: action.stack.length === 1 ? {} : action.stack[action.stack.length - 2],
-      history: action.stack
-    }
+  case NAVIGATE_REPLACE_LAST: {
+    const route = Object.assign({key: randomId()}, action.route)
+    return NavigationStateUtils.replaceAtIndex(state, state.index, route)
+  }
+
+  case NAVIGATE_RESET_STACK_WITH: {
+    const routes = action.stack.map(route => Object.assign({key: randomId()}, route))
+    return NavigationStateUtils.reset(state, routes, action.index)
+  }
 
   default:
     return state

@@ -52,7 +52,7 @@ export function init() {
       // dispatch(Navigation.resetTo({name: 'room', roomId: '56a41e0fe610378809bde160'}))
     } catch (error) {
       dispatch({ type: INITIALIZED, error })
-      dispatch(Navigation.goAndReplace({name: 'login'}))
+      dispatch(Navigation.resetTo({name: 'login'}))
     }
   }
 }
