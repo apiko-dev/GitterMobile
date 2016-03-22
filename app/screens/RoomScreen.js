@@ -385,7 +385,8 @@ class Room extends Component {
         {this.renderToolbar()}
         {isLoadingMore ? this.renderLoadingMore() : null}
         {isLoadingMessages ? this.renderLoading() : this.renderListView()}
-        {getMessagesError || isLoadingMessages || _.has(listView, 'data') && listView.data.length === 0 ? null : this.renderBottom()}
+        {getMessagesError || isLoadingMessages || _.has(listView, 'data') &&
+          listView.data.length === 0 ? null : this.renderBottom()}
       </View>
     )
   }

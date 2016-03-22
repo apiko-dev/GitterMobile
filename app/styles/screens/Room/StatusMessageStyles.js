@@ -24,6 +24,14 @@ const style = StyleSheet.create({
   },
   url: {
     color: colors.link
+  },
+  readStatus: {
+    width: 15,
+    marginTop: 3
+  },
+  readStatusIcon: {
+    width: 15,
+    height: 15
   }
 })
 

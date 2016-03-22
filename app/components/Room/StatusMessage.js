@@ -1,6 +1,7 @@
 import React, {
   PropTypes,
   TouchableNativeFeedback,
+  Image,
   View
 } from 'react-native'
 import s from '../../styles/screens/Room/StatusMessageStyles'
@@ -18,7 +19,7 @@ const renderEmoji = (matchingString, matches) => {
   )
 }
 
-const StatusMessage = ({onPress, onLongPress, text, handleUrlPress, backgroundColor}) => {
+const StatusMessage = ({onPress, onLongPress, text, handleUrlPress, backgroundColor, opacity}) => {
   const patterns = [
     {type: 'url', style: s.url, onPress: handleUrlPress},
     {pattern: EMOJI_REGEX, style: s.emoji, renderText: renderEmoji},
@@ -43,6 +44,11 @@ const StatusMessage = ({onPress, onLongPress, text, handleUrlPress, backgroundCo
             </Parser>
           </View>
         </View>
+        <View style={s.readStatus}>
+          <Image
+            style={[s.readStatusIcon, {opacity}]}
+            source={require('image!ic_done_black_24dp')} />
+        </View>
       </View>
     </TouchableNativeFeedback>
   )
@@ -53,7 +59,8 @@ StatusMessage.propTypes = {
   onLongPress: PropTypes.func,
   text: PropTypes.string,
   handleUrlPress: PropTypes.func,
-  backgroundColor: PropTypes.string
+  backgroundColor: PropTypes.string,
+  opacity: PropTypes.number
 }
 
 export default StatusMessage

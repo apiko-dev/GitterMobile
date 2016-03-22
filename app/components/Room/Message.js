@@ -4,6 +4,7 @@ import React, {
   TouchableNativeFeedback,
   TouchableOpacity,
   Linking,
+  Image,
   View,
   Text
 } from 'react-native'
@@ -92,14 +93,8 @@ class Message extends Component {
       text, status, onUsernamePress, onUserAvatarPress} = this.props
     const opacity = sending === true ? 0.4 : 1
 
-    let backgroundColor
-    if (failed === true) {
-      backgroundColor = 'rgba(255, 0, 0, 0.2)'
-    } else if (readBy === 0) {
-      backgroundColor = 'rgba(200, 200, 200, 0.2)'
-    } else {
-      backgroundColor = 'transparent'
-    }
+    const backgroundColor = failed === true ? 'rgba(255, 0, 0, 0.2)' : 'transparent'
+    const readStatusOpacity = readBy === 0 ? 0 : 0.6
 
     if (!!status) {
       return (
@@ -108,7 +103,8 @@ class Message extends Component {
           onLongPress={this.onLongPress.bind(this)}
           onPress={this.onMessagePress.bind(this)}
           handleUrlPress={this.handleUrlPress.bind(this)}
-          backgroundColor={backgroundColor} />
+          backgroundColor={backgroundColor}
+          opacity={readStatusOpacity} />
       )
     }
 
@@ -125,6 +121,11 @@ class Message extends Component {
               <View style={s.bottom}>
                 {this.renderMessageText()}
               </View>
+            </View>
+            <View style={s.readStatus}>
+              <Image
+                style={[s.readStatusIcon, {opacity: readStatusOpacity}]}
+                source={require('image!ic_done_black_24dp')} />
             </View>
           </View>
         </TouchableNativeFeedback>
@@ -145,11 +146,18 @@ class Message extends Component {
               <Text
                 style={s.username}
                 onPress={() => onUsernamePress(fromUser.username)}>{fromUser.username}</Text>
-              <Text style={s.date}>{this.renderDate()}</Text>
+              <Text style={s.date}>
+                {this.renderDate()}
+              </Text>
             </View>
             <View style={s.bottom}>
               {this.renderMessageText()}
             </View>
+          </View>
+          <View style={s.readStatus}>
+            <Image
+              style={[s.readStatusIcon, {opacity: readStatusOpacity}]}
+              source={require('image!ic_done_black_24dp')} />
           </View>
         </View>
       </TouchableNativeFeedback>
