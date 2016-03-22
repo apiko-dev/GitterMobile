@@ -16,7 +16,7 @@ import s from '../styles/screens/Room/RoomStyles'
 import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault
 
-import {getRoom, selectRoom, joinRoom, changeFavoriteStatus} from '../modules/rooms'
+import {getRoom, selectRoom, joinRoom, changeFavoriteStatus, leaveRoom} from '../modules/rooms'
 import {
   getRoomMessages,
   prepareListView,
@@ -224,6 +224,9 @@ class Room extends Component {
     if (index === 0) {
       dispatch(changeFavoriteStatus(roomId))
     }
+    if (index === 1) {
+      this.leaveRoom()
+    }
   }
 
   handleCopyToClipboard(text) {
@@ -244,6 +247,18 @@ class Room extends Component {
     dispatch(Navigation.goTo({name: 'user', userId: id, username}))
   }
 
+  leaveRoom() {
+    const {dispatch, route: {roomId}} = this.props
+    Alert.alert(
+      'Leave room',
+      'Are you sure?',
+      [
+        {text: 'Cancel', onPress: () => {}},
+        {text: 'OK', onPress: () => dispatch(leaveRoom(roomId))}
+      ]
+    )
+  }
+
   prepareDataSources() {
     const {listViewData, route: {roomId}, dispatch} = this.props
     if (!listViewData[roomId]) {
@@ -261,12 +276,20 @@ class Room extends Component {
     if (!!room && room.roomMember) {
       if (room.hasOwnProperty('favourite')) {
         actions = [{
-          title: 'Unfavorite',
+          title: 'Remove from favorite',
+          show: 'never'
+        },
+        {
+          title: 'Leave room',
           show: 'never'
         }]
       } else {
         actions = [{
-          title: 'Favorite',
+          title: 'Add to favorite',
+          show: 'never'
+        },
+        {
+          title: 'Leave room',
           show: 'never'
         }]
       }
@@ -397,8 +420,7 @@ function mapStateToProps(state) {
     isLoadingMore,
     byRoom,
     hasNoMore,
-    currentUser: state.viewer.user,
-    // route: state.navigation.current
+    currentUser: state.viewer.user
   }
 }
 
