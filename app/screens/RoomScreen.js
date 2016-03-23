@@ -2,6 +2,7 @@ import React, {
   Component,
   PropTypes,
   InteractionManager,
+  DrawerLayoutAndroid,
   ToolbarAndroid,
   ToastAndroid,
   Clipboard,
@@ -29,6 +30,8 @@ import {
 } from '../modules/messages'
 import * as Navigation from '../modules/navigation'
 
+import RoomInfoScreen from './RoomInfoScreen'
+
 import Loading from '../components/Loading'
 import MessagesList from '../components/Room/MessagesList'
 import SendMessageField from '../components/Room/SendMessageField'
@@ -39,6 +42,8 @@ import FailedToLoad from '../components/FailedToLoad'
 class Room extends Component {
   constructor(props) {
     super(props)
+    this.roomInfoDrawer = null
+
     this.renderToolbar = this.renderToolbar.bind(this)
     this.renderListView = this.renderListView.bind(this)
     this.prepareDataSources = this.prepareDataSources.bind(this)
@@ -53,6 +58,7 @@ class Room extends Component {
     this.handleCopyToClipboard = this.handleCopyToClipboard.bind(this)
     this.handleUsernamePress = this.handleUsernamePress.bind(this)
     this.handleUserAvatarPress = this.handleUserAvatarPress.bind(this)
+    this.renderRoomInfo = this.renderRoomInfo.bind(this)
 
     this.state = {
       textInputValue: '',
@@ -358,6 +364,15 @@ class Room extends Component {
     )
   }
 
+  renderRoomInfo() {
+    const {route} = this.props
+    return (
+      <RoomInfoScreen
+        route={route}
+        drawer={this.roomInfoDrawer} />
+    )
+  }
+
   render() {
     const {rooms, listViewData, route, isLoadingMessages, isLoadingMore, getMessagesError} = this.props
 
@@ -382,11 +397,19 @@ class Room extends Component {
 
     return (
       <View style={s.container}>
-        {this.renderToolbar()}
-        {isLoadingMore ? this.renderLoadingMore() : null}
-        {isLoadingMessages ? this.renderLoading() : this.renderListView()}
-        {getMessagesError || isLoadingMessages || _.has(listView, 'data') &&
-          listView.data.length === 0 ? null : this.renderBottom()}
+        <DrawerLayoutAndroid
+          ref={component => this.roomInfoDrawer = component}
+          style={{backgroundColor: 'white'}}
+          drawerWidth={300}
+          drawerPosition={DrawerLayoutAndroid.positions.Right}
+          renderNavigationView={this.renderRoomInfo}
+          keyboardDismissMode="on-drag">
+            {this.renderToolbar()}
+            {isLoadingMore ? this.renderLoadingMore() : null}
+            {isLoadingMessages ? this.renderLoading() : this.renderListView()}
+            {getMessagesError || isLoadingMessages || _.has(listView, 'data') &&
+              listView.data.length === 0 ? null : this.renderBottom()}
+          </DrawerLayoutAndroid>
       </View>
     )
   }
