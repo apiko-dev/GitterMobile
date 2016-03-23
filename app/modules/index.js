@@ -1,5 +1,6 @@
 import {combineReducers} from 'redux'
 
+import ui from './ui'
 import app from './app'
 import auth from './auth'
 import rooms from './rooms'
@@ -12,6 +13,7 @@ import realtime from './realtime'
 import navigation from './navigation'
 
 const rootReducer = combineReducers({
+  ui,
   app,
   auth,
   rooms,

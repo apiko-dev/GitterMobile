@@ -10,6 +10,7 @@ import {init} from '../modules/app'
 import {connect} from 'react-redux'
 import * as Navigation from '../modules/navigation'
 import {selectRoom} from '../modules/rooms'
+import {changeRoomInfoDrawerState} from '../modules/ui'
 
 import LaunchScreen from './LaunchScreen'
 import LoginScreen from './LoginScreen'
@@ -50,6 +51,12 @@ class App extends Component {
         return true
       }
       const {prevision, history} = this.props.navigation
+      const {roomInfoDrawerState} = this.props
+
+      if (roomInfoDrawerState === 'open') {
+        dispatch(changeRoomInfoDrawerState('close'))
+        return true
+      }
 
       if (history.length > 1) {
         // set active room previous room
@@ -198,12 +205,15 @@ class App extends Component {
 
 App.propTypes = {
   dispatch: PropTypes.func,
-  navigation: PropTypes.object
+  navigation: PropTypes.object,
+  roomInfoDrawerState: PropTypes.string
 }
 
 function mapStateToProps(state) {
+  const {roomInfoDrawerState} = state.ui
   return {
-    navigation: state.navigation
+    navigation: state.navigation,
+    roomInfoDrawerState
   }
 }
 

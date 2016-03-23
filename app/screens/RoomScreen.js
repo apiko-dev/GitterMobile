@@ -28,6 +28,7 @@ import {
   updateMessage,
   clearError as clearMessagesError
 } from '../modules/messages'
+import {changeRoomInfoDrawerState} from '../modules/ui'
 import * as Navigation from '../modules/navigation'
 
 import RoomInfoScreen from './RoomInfoScreen'
@@ -86,6 +87,17 @@ class Room extends Component {
         dispatch(getRoomMessagesIfNeeded(roomId))
       }
     })
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.roomInfoDrawerState !== this.props.roomInfoDrawerState &&
+    nextProps.roomInfoDrawerState === 'open') {
+      this.roomInfoDrawer.openDrawer()
+    }
+    if (nextProps.roomInfoDrawerState !== this.props.roomInfoDrawerState &&
+    nextProps.roomInfoDrawerState === 'close') {
+      this.roomInfoDrawer.closeDrawer()
+    }
   }
 
   onEndReached() {
@@ -228,7 +240,7 @@ class Room extends Component {
   handleToolbarActionSelected(index) {
     const {dispatch, route: {roomId}} = this.props
     if (index === 0) {
-      this.roomInfoDrawer.open()
+      this.roomInfoDrawer.openDrawer()
     }
     if (index === 1) {
       dispatch(changeFavoriteStatus(roomId))
@@ -286,7 +298,7 @@ class Room extends Component {
       if (room.hasOwnProperty('favourite')) {
         actions = [{
           title: 'Open room info',
-          icon: require('image!ic_info_outline_black_48dp'),
+          icon: require('image!ic_info_outline_white_24dp'),
           show: 'always'
         },
         {
@@ -300,7 +312,7 @@ class Room extends Component {
       } else {
         actions = [{
           title: 'Open room info',
-          icon: require('image!ic_info_outline_black_48dp'),
+          icon: require('image!ic_info_outline_white_24dp'),
           show: 'always'
         },
         {
@@ -387,7 +399,8 @@ class Room extends Component {
   }
 
   render() {
-    const {rooms, listViewData, route, isLoadingMessages, isLoadingMore, getMessagesError} = this.props
+    const {rooms, listViewData, route, isLoadingMessages,
+      isLoadingMore, getMessagesError, roomInfoActiveTab, roomInfoDrawerState, dispatch} = this.props
 
     if (getMessagesError && !rooms[route.roomId]) {
       return (
@@ -407,13 +420,17 @@ class Room extends Component {
     }
 
     const listView = listViewData[route.roomId]
+    const drawerLockMode = roomInfoActiveTab === 0 || roomInfoDrawerState === 'close' ? 'unlocked' : 'locked-open'
 
     return (
       <View style={s.container}>
         <DrawerLayoutAndroid
           ref={component => this.roomInfoDrawer = component}
+          drawerLockMode={drawerLockMode}
           style={{backgroundColor: 'white'}}
           drawerWidth={300}
+          onDrawerOpen={() => dispatch(changeRoomInfoDrawerState('open'))}
+          onDrawerClose={() => dispatch(changeRoomInfoDrawerState('close'))}
           drawerPosition={DrawerLayoutAndroid.positions.Right}
           renderNavigationView={this.renderRoomInfo}
           keyboardDismissMode="on-drag">
@@ -441,12 +458,15 @@ Room.propTypes = {
   entities: PropTypes.object,
   hasNoMore: PropTypes.object,
   currentUser: PropTypes.object,
-  getMessagesError: PropTypes.bool
+  getMessagesError: PropTypes.bool,
+  roomInfoActiveTab: PropTypes.number,
+  roomInfoDrawerState: PropTypes.string
 }
 
 function mapStateToProps(state) {
   const {listView, isLoading, isLoadingMore, byRoom, hasNoMore, entities} = state.messages
   const {activeRoom, rooms} = state.rooms
+  const {roomInfoActiveTab, roomInfoDrawerState} = state.ui
   return {
     activeRoom,
     rooms,
@@ -457,7 +477,9 @@ function mapStateToProps(state) {
     isLoadingMore,
     byRoom,
     hasNoMore,
-    currentUser: state.viewer.user
+    currentUser: state.viewer.user,
+    roomInfoActiveTab,
+    roomInfoDrawerState
   }
 }
 
