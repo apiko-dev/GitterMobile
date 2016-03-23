@@ -228,9 +228,12 @@ class Room extends Component {
   handleToolbarActionSelected(index) {
     const {dispatch, route: {roomId}} = this.props
     if (index === 0) {
-      dispatch(changeFavoriteStatus(roomId))
+      this.roomInfoDrawer.open()
     }
     if (index === 1) {
+      dispatch(changeFavoriteStatus(roomId))
+    }
+    if (index === 2) {
       this.leaveRoom()
     }
   }
@@ -282,6 +285,11 @@ class Room extends Component {
     if (!!room && room.roomMember) {
       if (room.hasOwnProperty('favourite')) {
         actions = [{
+          title: 'Open room info',
+          icon: require('image!ic_info_outline_black_48dp'),
+          show: 'always'
+        },
+        {
           title: 'Remove from favorite',
           show: 'never'
         },
@@ -291,6 +299,11 @@ class Room extends Component {
         }]
       } else {
         actions = [{
+          title: 'Open room info',
+          icon: require('image!ic_info_outline_black_48dp'),
+          show: 'always'
+        },
+        {
           title: 'Add to favorite',
           show: 'never'
         },

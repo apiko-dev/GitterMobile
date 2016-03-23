@@ -12,7 +12,7 @@ import * as Navigation from '../modules/navigation'
 import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault
 
-class NoInternetScreen extends Component {
+class RoomInfoScreen extends Component {
   constructor(props) {
     super(props)
 
@@ -42,10 +42,10 @@ class NoInternetScreen extends Component {
   }
 }
 
-NoInternetScreen.propTypes = {
+RoomInfoScreen.propTypes = {
   dispatch: PropTypes.func,
   drawer: PropTypes.element,
   route: PropTypes.object
 }
 
-export default connect()(NoInternetScreen)
+export default connect()(RoomInfoScreen)
