@@ -89,17 +89,6 @@ class Room extends Component {
     })
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.roomInfoDrawerState !== this.props.roomInfoDrawerState &&
-    nextProps.roomInfoDrawerState === 'open') {
-      this.roomInfoDrawer.openDrawer()
-    }
-    if (nextProps.roomInfoDrawerState !== this.props.roomInfoDrawerState &&
-    nextProps.roomInfoDrawerState === 'close') {
-      this.roomInfoDrawer.closeDrawer()
-    }
-  }
-
   onEndReached() {
     const {dispatch, route: {roomId}, hasNoMore, isLoadingMore, isLoadingMessages, listViewData} = this.props
     if (hasNoMore[roomId] !== true && isLoadingMore === false
@@ -374,7 +363,7 @@ class Room extends Component {
       return (
         <FailedToLoad
           message="Failed to load messages."
-          onPress={this.onRetryFetchingMessages.bind(this)} />
+          onRetry={this.onRetryFetchingMessages.bind(this)} />
       )
     }
     return (

@@ -15,6 +15,9 @@ import {clearRoomInfoError, getRoomInfo} from '../modules/roomInfo'
 import Loading from '../components/Loading'
 import FailedToLoad from '../components/FailedToLoad'
 import RoomInfo from '../components/RoomInfo/RoomInfo'
+import RepoInfo from '../components/RoomInfo/RepoInfo'
+import UserInfo from '../components/RoomInfo/UserInfo'
+
 
 class RoomInfoScreen extends Component {
   constructor(props) {
@@ -53,11 +56,21 @@ class RoomInfoScreen extends Component {
 
     if (rooms[roomId].githubType === 'REPO') {
       return (
-        <RoomInfo
+        <RepoInfo
           {...roomInfo[rooms[roomId].name]} />
       )
     }
-    return <View style={s.container}/>
+
+    if (rooms[roomId].githubType === 'ONETOONE') {
+      return (
+        <UserInfo
+          {...roomInfo[rooms[roomId].name]} />
+      )
+    }
+    return (
+      <RoomInfo
+        {...roomInfo[rooms[roomId].name]} />
+    )
   }
 
   renderUsers() {
@@ -85,6 +98,7 @@ class RoomInfoScreen extends Component {
         </View>
       )
     }
+
     return (
       <View style={s.container}>
         <ScrollView>

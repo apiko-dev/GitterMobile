@@ -14,6 +14,21 @@ const styles = StyleSheet.create({
     flexDirection: 'column'
   },
   name: {
+  },
+  itemContainer: {
+    paddingHorizontal: 16,
+    paddingVertical: 8
+  },
+  description: {
+
+  },
+  statContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around'
+  },
+  statItemContainer: {
+    alignItems: 'center',
+    width: 75
   }
 })
 
