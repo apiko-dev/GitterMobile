@@ -96,6 +96,10 @@ export function getUser(token, username) {
   return callApi(`users/${username}`, token)
 }
 
+export function getUserInfo(token, repoName) {
+  return callApi(`repo-info?repo=${repoName}`)
+}
+
 
 /**
  * Private functions

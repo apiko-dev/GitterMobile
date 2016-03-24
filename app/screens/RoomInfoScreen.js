@@ -1,76 +1,81 @@
 import React, {
   PropTypes,
   Component,
+  ScrollView,
   View
 } from 'react-native'
 import {connect} from 'react-redux'
 import s from '../styles/screens/RoomInfo/RoomInfoScreenStyles'
-import * as Navigation from '../modules/navigation'
 import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault
 
-import {changeRoomInfoTab} from '../modules/ui'
+import * as Navigation from '../modules/navigation'
+import {getUserInfo, clearUserInfoError} from '../modules/roomInfo'
 
-import ScrollableTabView from 'react-native-scrollable-tab-view'
 import Loading from '../components/Loading'
+import FailedToLoad from '../components/FailedToLoad'
 
 class RoomInfoScreen extends Component {
   constructor(props) {
     super(props)
-    this.renderTabs = this.renderTabs.bind(this)
-    this.renderRoomInfoTab = this.renderRoomInfoTab.bind(this)
-    this.renderPeopleTab = this.renderPeopleTab.bind(this)
-    this.handleTabChange = this.handleTabChange.bind(this)
+    this.renderInfo = this.renderInfo.bind(this)
+    this.renderUsers = this.renderUsers.bind(this)
+    this.refetchData = this.refetchData.bind(this)
   }
 
-  handleTabChange({i}) {
-    const {dispatch} = this.props
-    dispatch(changeRoomInfoTab(i))
+  componentWillReceiveProps(nextProps) {
+    const {rooms, roomInfo, route: {roomId}, dispatch, roomInfoDrawerState} = nextProps
+    const room = rooms[roomId]
+    if (!!room && roomInfoDrawerState === 'open' && !roomInfo[room.name]) {
+      dispatch(getUserInfo(room.name))
+    }
   }
 
-  renderTabs() {
-    return (
-      <View style={s.tabsContainer}>
-        <ScrollableTabView
-          initialPage={this.props.roomInfoActiveTab}
-          tabBarBackgroundColor="white"
-          tabBarUnderlineColor={colors.raspberry}
-          tabBarActiveTextColor={colors.raspberry}
-          tabBarInactiveTextColor={colors.darkRed}
-          onChangeTab={this.handleTabChange}
-          style={s.tabs}>
-          <View tabLabel="INFO" style={s.container}>
-            {this.renderRoomInfoTab()}
-          </View>
-          <View tabLabel="PEOPLE" style={s.container}>
-            {this.renderPeopleTab()}
-          </View>
-        </ScrollableTabView>
-    </View>
-    )
+  refetchData() {
+    const {rooms, route: {roomId}, dispatch} = this.props
+    const room = rooms[roomId]
+    dispatch(clearUserInfoError())
+    dispatch(getUserInfo(room.name))
   }
 
-  renderRoomInfoTab() {
+  renderInfo() {
     return (
       <View style={{flex: 1}}>
-        <Loading />
+
       </View>
     )
   }
 
-  renderPeopleTab() {
-    return (
-      <View style={{flex: 1}}>
-        <Loading />
-      </View>
-    )
+  renderUsers() {
+
   }
 
 
   render() {
+    const {rooms, roomInfo, route: {roomId}, isError} = this.props
+    const room = rooms[roomId]
+    if (isError) {
+      return (
+        <View style={s.container}>
+          <FailedToLoad
+            message="Failed to load room info."
+            onRetry={this.refetchData.bind(this)} />
+        </View>
+      )
+    }
+
+    if (!room || !roomInfo[room.name]) {
+      return (
+        <View style={s.container}>
+          <Loading />
+        </View>
+      )
+    }
     return (
       <View style={s.container}>
-        {this.renderTabs()}
+        <ScrollView>
+          {this.renderInfo()}
+        </ScrollView>
       </View>
     )
   }
@@ -79,15 +84,19 @@ class RoomInfoScreen extends Component {
 RoomInfoScreen.propTypes = {
   dispatch: PropTypes.func,
   drawer: PropTypes.element,
-  route: PropTypes.objectб,
-  roomInfoActiveTab: PropTypes.number
+  route: PropTypes.object,
+  roomInfo: PropTypes.object,
+  rooms: PropTypes.object,
+  roomInfoDrawerState: PropTypes.string,
+  isError: PropTypes.bool
 }
 
 function mapStateToProps(state) {
-  const {roomInfoActiveTab} = state.ui
-
   return {
-    roomInfoActiveTab
+    roomInfo: state.roomInfo.entities,
+    rooms: state.rooms.rooms,
+    roomInfoDrawerState: state.ui.roomInfoDrawerState,
+    isError: state.roomInfo.isError
   }
 }
 

@@ -72,7 +72,7 @@ class Room extends Component {
     this.prepareDataSources()
     const {activeRoom, rooms, route: { roomId }, dispatch, listViewData} = this.props
     // dispatch(subscribeToChatMessages(roomId))
-
+    dispatch(changeRoomInfoDrawerState('close'))
     InteractionManager.runAfterInteractions(() => {
       dispatch(clearMessagesError())
       if (activeRoom !== roomId) {
@@ -400,7 +400,7 @@ class Room extends Component {
 
   render() {
     const {rooms, listViewData, route, isLoadingMessages,
-      isLoadingMore, getMessagesError, roomInfoActiveTab, roomInfoDrawerState, dispatch} = this.props
+      isLoadingMore, getMessagesError, dispatch} = this.props
 
     if (getMessagesError && !rooms[route.roomId]) {
       return (
@@ -420,13 +420,11 @@ class Room extends Component {
     }
 
     const listView = listViewData[route.roomId]
-    const drawerLockMode = roomInfoActiveTab === 0 || roomInfoDrawerState === 'close' ? 'unlocked' : 'locked-open'
 
     return (
       <View style={s.container}>
         <DrawerLayoutAndroid
           ref={component => this.roomInfoDrawer = component}
-          drawerLockMode={drawerLockMode}
           style={{backgroundColor: 'white'}}
           drawerWidth={300}
           onDrawerOpen={() => dispatch(changeRoomInfoDrawerState('open'))}
@@ -459,14 +457,13 @@ Room.propTypes = {
   hasNoMore: PropTypes.object,
   currentUser: PropTypes.object,
   getMessagesError: PropTypes.bool,
-  roomInfoActiveTab: PropTypes.number,
   roomInfoDrawerState: PropTypes.string
 }
 
 function mapStateToProps(state) {
   const {listView, isLoading, isLoadingMore, byRoom, hasNoMore, entities} = state.messages
   const {activeRoom, rooms} = state.rooms
-  const {roomInfoActiveTab, roomInfoDrawerState} = state.ui
+  const {roomInfoDrawerState} = state.ui
   return {
     activeRoom,
     rooms,
@@ -478,7 +475,6 @@ function mapStateToProps(state) {
     byRoom,
     hasNoMore,
     currentUser: state.viewer.user,
-    roomInfoActiveTab,
     roomInfoDrawerState
   }
 }
