@@ -1,25 +1,37 @@
 import * as Api from '../api/gitter'
 
-export const USER_INFO = 'roomInfo/USER_INFO'
-export const USER_INFO_OK = 'roomInfo/USER_INFO_OK'
-export const USER_INFO_ERROR = 'roomInfo/USER_INFO_ERROR'
+export const REPO_INFO = 'roomInfo/REPO_INFO'
+export const REPO_INFO_OK = 'roomInfo/REPO_INFO_OK'
+export const REPO_INFO_ERROR = 'roomInfo/REPO_INFO_ERROR'
+export const ROOM_INFO = 'roomInfo/ROOM_INFO'
 export const CLEAR_ERROR = 'roomInfo/CLEAR_ERROR'
 
-export function getUserInfo(repoName) {
+export function getRoomInfo(repoName, roomId) {
   return async (dispatch, getState) => {
     const {token} = getState().auth
-    dispatch({type: USER_INFO})
+    const room = getState().rooms.rooms[roomId]
 
-    try {
-      const payload = await Api.getUserInfo(token, repoName)
-      dispatch({type: USER_INFO_OK, payload, repoName})
-    } catch (error) {
-      dispatch({type: USER_INFO_ERROR, error})
+    if (room.githubType !== 'REPO') {
+      dispatch({type: ROOM_INFO, payload: room})
+    } else {
+      dispatch({type: REPO_INFO, repoName})
+
+      try {
+        const res = await Api.getRepoInfo(token, repoName)
+        const resText = await res.text()
+
+        if (resText.length > 0) {
+          const payload = JSON.parse(resText)
+          dispatch({type: REPO_INFO_OK, payload, repoName})
+        }
+      } catch (error) {
+        dispatch({type: REPO_INFO_ERROR, error})
+      }
     }
   }
 }
 
-export function clearUserInfoError() {
+export function clearRoomInfoError() {
   return {
     type: CLEAR_ERROR
   }
@@ -35,12 +47,12 @@ const initialState = {
 
 export default function roomInfo(state = initialState, action) {
   switch (action.type) {
-  case USER_INFO:
+  case REPO_INFO:
     return {...state,
       isFetching: true
     }
 
-  case USER_INFO_OK: {
+  case REPO_INFO_OK: {
     const {payload, repoName} = action
     return {...state,
       isFetching: false,
@@ -51,6 +63,15 @@ export default function roomInfo(state = initialState, action) {
     }
   }
 
+  case ROOM_INFO:
+    return {...state,
+      isFetching: false,
+      ids: state.ids.concat(action.payload.name),
+      entities: {...state.entities,
+        [action.payload.name]: action.payload
+      }
+    }
+
   case CLEAR_ERROR:
     return {...state,
       isFetching: false,
@@ -58,7 +79,7 @@ export default function roomInfo(state = initialState, action) {
       error: {}
     }
 
-  case USER_INFO_ERROR:
+  case REPO_INFO_ERROR:
     return {...state,
       isFetching: false,
       isError: true,

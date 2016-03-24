@@ -8,12 +8,13 @@ import {connect} from 'react-redux'
 import s from '../styles/screens/RoomInfo/RoomInfoScreenStyles'
 import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault
+import _ from 'lodash'
 
-import * as Navigation from '../modules/navigation'
-import {getUserInfo, clearUserInfoError} from '../modules/roomInfo'
+import {clearRoomInfoError, getRoomInfo} from '../modules/roomInfo'
 
 import Loading from '../components/Loading'
 import FailedToLoad from '../components/FailedToLoad'
+import RoomInfo from '../components/RoomInfo/RoomInfo'
 
 class RoomInfoScreen extends Component {
   constructor(props) {
@@ -23,27 +24,40 @@ class RoomInfoScreen extends Component {
     this.refetchData = this.refetchData.bind(this)
   }
 
+  componentDidMount() {
+    const {dispatch} = this.props
+    dispatch(clearRoomInfoError())
+  }
+
   componentWillReceiveProps(nextProps) {
+    if (_.isEqual(this.props, nextProps)) {
+      return
+    }
+
     const {rooms, roomInfo, route: {roomId}, dispatch, roomInfoDrawerState} = nextProps
     const room = rooms[roomId]
     if (!!room && roomInfoDrawerState === 'open' && !roomInfo[room.name]) {
-      dispatch(getUserInfo(room.name))
+      dispatch(getRoomInfo(room.name, roomId))
     }
   }
 
   refetchData() {
     const {rooms, route: {roomId}, dispatch} = this.props
     const room = rooms[roomId]
-    dispatch(clearUserInfoError())
-    dispatch(getUserInfo(room.name))
+    dispatch(clearRoomInfoError())
+    dispatch(getRoomInfo(room.name, roomId))
   }
 
   renderInfo() {
-    return (
-      <View style={{flex: 1}}>
+    const {rooms, roomInfo, route: {roomId}} = this.props
 
-      </View>
-    )
+    if (rooms[roomId].githubType === 'REPO') {
+      return (
+        <RoomInfo
+          {...roomInfo[rooms[roomId].name]} />
+      )
+    }
+    return <View style={s.container}/>
   }
 
   renderUsers() {

@@ -33,7 +33,7 @@ export function roomMessagesBefore(token, id, limit, beforeId) {
 }
 
 export function sendMessage(token, roomId, text) {
-  return callApi(`/rooms/${roomId}/chatMessages`, token, {
+  return callApi(`rooms/${roomId}/chatMessages`, token, {
     method: 'POST',
     body: JSON.stringify({
       text
@@ -42,7 +42,7 @@ export function sendMessage(token, roomId, text) {
 }
 
 export function joinRoom(token, uri) {
-  return callApi(`/rooms`, token, {
+  return callApi(`rooms`, token, {
     method: 'POST',
     body: JSON.stringify({
       uri
@@ -51,7 +51,7 @@ export function joinRoom(token, uri) {
 }
 
 export function changeFavoriteStatus(token, userId, roomId, status) {
-  return callApi(`/user/${userId}/rooms/${roomId}`, token, {
+  return callApi(`user/${userId}/rooms/${roomId}`, token, {
     method: 'PUT',
     body: JSON.stringify({
       favourite: status
@@ -60,19 +60,19 @@ export function changeFavoriteStatus(token, userId, roomId, status) {
 }
 
 export function leaveRoom(token, roomId, userId) {
-  return callApi(`/rooms/${roomId}/users/${userId}`, token, {
+  return callApi(`rooms/${roomId}/users/${userId}`, token, {
     method: 'DELETE'
   })
 }
 
 export function markAllAsRead(token, roomId, userId) {
-  return callApi(`/user/${userId}/rooms/${roomId}/unreadItems/all`, token, {
+  return callApi(`user/${userId}/rooms/${roomId}/unreadItems/all`, token, {
     method: 'DELETE'
   })
 }
 
 export function updateMessage(token, roomId, messageId, text) {
-  return callApi(`/rooms/${roomId}/chatMessages/${messageId}`, token, {
+  return callApi(`rooms/${roomId}/chatMessages/${messageId}`, token, {
     method: 'PUT',
     body: JSON.stringify({
       text
@@ -96,8 +96,15 @@ export function getUser(token, username) {
   return callApi(`users/${username}`, token)
 }
 
-export function getUserInfo(token, repoName) {
-  return callApi(`repo-info?repo=${repoName}`)
+export function getRepoInfo(token, repoName) {
+  const url = `repo-info?repo=${repoName}`
+  return fetch(`${apiUrl}/${url}`, {
+    method: 'get',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  })
 }
 
 
@@ -114,7 +121,7 @@ function callApi(endpoint, token, options = {method: 'get'}) {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     }
-  }).then(res => res.json())
+  }).then(res => {console.log(res); return res.text()}).then(res => JSON.parse(res))
 }
 // GET https://gitter.im/api/v1/user/555e610f15522ed4b3e0c169/suggestedRooms
 // GET https://gitter.im/api/v1/repo-info?repo=dev-ua%2Freactjs
