@@ -20,7 +20,7 @@ const ChannelListItem = ({
     : createGhAvatarLink(name.split('/')[0], 200)
 
   const itemStyles = activeRoom === id
-    ? {backgroundColor: colors.raspberry, color: colors.white, elevation: 2}
+    ? {backgroundColor: colors.androidGray, color: colors.raspberry, elevation: 2}
     : {backgroundColor: colors.white, elevation: 0}
 
   return (
