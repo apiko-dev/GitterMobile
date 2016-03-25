@@ -10,13 +10,16 @@ import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault
 import _ from 'lodash'
 
+import * as Navigation from '../modules/navigation'
 import {clearRoomInfoError, getRoomInfo} from '../modules/roomInfo'
+import {roomUsers} from '../modules/users'
 
 import Loading from '../components/Loading'
 import FailedToLoad from '../components/FailedToLoad'
 import RoomInfo from '../components/RoomInfo/RoomInfo'
 import RepoInfo from '../components/RoomInfo/RepoInfo'
 import UserInfo from '../components/RoomInfo/UserInfo'
+import RoomUsers from '../components/RoomInfo/RoomUsers'
 
 
 class RoomInfoScreen extends Component {
@@ -25,6 +28,7 @@ class RoomInfoScreen extends Component {
     this.renderInfo = this.renderInfo.bind(this)
     this.renderUsers = this.renderUsers.bind(this)
     this.refetchData = this.refetchData.bind(this)
+    this.handleUserPress = this.handleUserPress.bind(this)
   }
 
   componentDidMount() {
@@ -37,13 +41,20 @@ class RoomInfoScreen extends Component {
       return
     }
 
-    const {rooms, roomInfo, route: {roomId}, dispatch, roomInfoDrawerState} = nextProps
+    const {rooms, roomInfo, route: {roomId}, dispatch, roomInfoDrawerState, users} = nextProps
     const room = rooms[roomId]
     if (!!room && roomInfoDrawerState === 'open' && !roomInfo[room.name]) {
       dispatch(getRoomInfo(room.name, roomId))
     }
+    if (!!room && roomInfoDrawerState === 'open' && !users[roomId]) {
+      dispatch(roomUsers(roomId))
+    }
   }
 
+  handleUserPress(userId, username) {
+    const {dispatch} = this.props
+    dispatch(Navigation.goTo({name: 'user', userId, username}))
+  }
   refetchData() {
     const {rooms, route: {roomId}, dispatch} = this.props
     const room = rooms[roomId]
@@ -74,12 +85,18 @@ class RoomInfoScreen extends Component {
   }
 
   renderUsers() {
-
+    const {users, route: {roomId}} = this.props
+    return (
+      <RoomUsers
+        ids={users[roomId].ids}
+        entities={users[roomId].entities}
+        onPress={this.handleUserPress.bind(this)} />
+    )
   }
 
 
   render() {
-    const {rooms, roomInfo, route: {roomId}, isError} = this.props
+    const {users, rooms, roomInfo, route: {roomId}, isError} = this.props
     const room = rooms[roomId]
     if (isError) {
       return (
@@ -91,7 +108,7 @@ class RoomInfoScreen extends Component {
       )
     }
 
-    if (!room || !roomInfo[room.name]) {
+    if (!room || !roomInfo[room.name] || !users[roomId]) {
       return (
         <View style={s.container}>
           <Loading />
@@ -103,6 +120,7 @@ class RoomInfoScreen extends Component {
       <View style={s.container}>
         <ScrollView>
           {this.renderInfo()}
+          {this.renderUsers()}
         </ScrollView>
       </View>
     )
@@ -116,7 +134,8 @@ RoomInfoScreen.propTypes = {
   roomInfo: PropTypes.object,
   rooms: PropTypes.object,
   roomInfoDrawerState: PropTypes.string,
-  isError: PropTypes.bool
+  isError: PropTypes.bool,
+  users: PropTypes.object
 }
 
 function mapStateToProps(state) {
@@ -124,7 +143,8 @@ function mapStateToProps(state) {
     roomInfo: state.roomInfo.entities,
     rooms: state.rooms.rooms,
     roomInfoDrawerState: state.ui.roomInfoDrawerState,
-    isError: state.roomInfo.isError
+    isError: state.roomInfo.isError,
+    users: state.users.byRoom
   }
 }
 

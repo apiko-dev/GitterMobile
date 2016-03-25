@@ -76,7 +76,7 @@ class Drawer extends Component {
     const {user, ids} = this.props
 
     return (
-      <View style={[s.container, {backgroundColor: colors.gray}]}>
+      <View style={s.container}>
         <DrawerUserInfo {...user} onLogOut={this.onLogOut.bind(this)}/>
         {ids.length === 0
           ? <Loading color={colors.brand} />

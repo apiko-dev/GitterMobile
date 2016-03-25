@@ -107,6 +107,9 @@ export function getRepoInfo(token, repoName) {
   })
 }
 
+export function getRoomUsers(token, roomId) {
+  return callApi(`rooms/${roomId}/users`, token)
+}
 
 /**
  * Private functions

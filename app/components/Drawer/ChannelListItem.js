@@ -1,6 +1,6 @@
 import React, {
   PropTypes,
-  TouchableHighlight,
+  TouchableNativeFeedback,
   View,
   Text
 } from 'react-native'
@@ -20,16 +20,16 @@ const ChannelListItem = ({
     : createGhAvatarLink(name.split('/')[0], 200)
 
   const itemStyles = activeRoom === id
-    ? {backgroundColor: colors.androidGray, color: colors.raspberry, elevation: 2}
-    : {backgroundColor: colors.white, elevation: 0}
+    ? {backgroundColor: colors.androidGray, color: colors.raspberry}
+    : {backgroundColor: colors.white}
 
   return (
-    <TouchableHighlight
+    <TouchableNativeFeedback
       onPress={onRoomPress.bind(this, id)}
       onLongPress={onLongRoomPress.bind(this, id)}>
       <View style={[s.container,
-        { backgroundColor: itemStyles.backgroundColor,
-          elevation: itemStyles.elevation}]}
+        {backgroundColor: itemStyles.backgroundColor}
+      ]}
         key={id}>
 
         <Avatar
@@ -46,7 +46,7 @@ const ChannelListItem = ({
             mentions={mentions}
             lurk={lurk} />}
       </View>
-    </TouchableHighlight>
+    </TouchableNativeFeedback>
   )
 }
 

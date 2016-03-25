@@ -1,4 +1,5 @@
 import * as Api from '../api/gitter'
+import normalize from '../utils/normalize'
 import {joinUserRoom} from './rooms'
 import * as Navigation from './navigation'
 import _ from 'lodash'
@@ -13,6 +14,9 @@ export const USER_FAILED = 'users/USER_FAILED'
 export const CHAT_PRIVATELY = 'users/CHAT_PRIVATELY'
 export const CHAT_PRIVATELY_OK = 'users/CHAT_PRIVATELY_OK'
 export const CHAT_PRIVATELY_FAILED = 'users/CHAT_PRIVATELY_FAILED'
+export const ROOM_USERS = 'users/ROOM_USERS'
+export const ROOM_USERS_OK = 'users/ROOM_USERS_OK'
+export const ROOM_USERS_FAILED = 'users/ROOM_USERS_FAILED'
 
 /**
  * Actions
@@ -53,6 +57,20 @@ export function chatPrivately(userId) {
   }
 }
 
+export function roomUsers(roomId) {
+  return async (dispatch, getState) => {
+    const {token} = getState().auth
+    dispatch({type: ROOM_USERS, roomId})
+
+    try {
+      const payload = await Api.getRoomUsers(token, roomId)
+      dispatch({type: ROOM_USERS_OK, payload, roomId})
+    } catch (error) {
+      dispatch({type: ROOM_USERS_FAILED, error, roomId})
+    }
+  }
+}
+
 
 /**
  * Reducer
@@ -60,8 +78,15 @@ export function chatPrivately(userId) {
 
 const initialState = {
   isLoadingUser: false,
+  isLoadingUsers: false,
   ids: [],
   entities: {},
+  byRoom: {
+    // [roomId]: {
+    //   ids: [],
+    //   entities: {}
+    // }
+  },
   error: false,
   errors: {}
 }
@@ -71,6 +96,11 @@ export default function users(state = initialState, action) {
   case USER:
     return {...state,
       isLoadingUser: true
+    }
+
+  case ROOM_USERS:
+    return {...state,
+      isLoadingUsers: true
     }
 
   case USER_OK: {
@@ -84,9 +114,25 @@ export default function users(state = initialState, action) {
     }
   }
 
+  case ROOM_USERS_OK: {
+    const {payload, roomId} = action
+    const {ids, entities} = normalize(payload)
+    return {...state,
+      isLoadingUsers: false,
+      byRoom: {...state.byRoom,
+        [roomId]: {
+          ids,
+          entities
+        }
+      }
+    }
+  }
+
+  case ROOM_USERS_FAILED:
   case USER_FAILED:
     return {...state,
       isLoadingUser: false,
+      isLoadingUsers: false,
       error: true,
       errors: action.error
     }

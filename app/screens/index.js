@@ -51,12 +51,6 @@ class App extends Component {
         return true
       }
       const {prevision, history} = this.props.navigation
-      const {roomInfoDrawerState} = this.props
-
-      if (roomInfoDrawerState === 'open') {
-        dispatch(changeRoomInfoDrawerState('close'))
-        return true
-      }
 
       if (history.length > 1) {
         // set active room previous room

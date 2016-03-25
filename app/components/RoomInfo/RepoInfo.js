@@ -7,6 +7,7 @@ import s from '../../styles/screens/RoomInfo/RepoInfoStyles'
 
 import Avatar from '../Avatar'
 import Divider from '../Divider'
+import Heading from '../Heading'
 
 const RepoInfo = ({name, owner, description, open_issues_count, stargazers_count, watchers_count}) => {
   return (
@@ -21,10 +22,14 @@ const RepoInfo = ({name, owner, description, open_issues_count, stargazers_count
         </View>
     </View>
     <Divider />
+    <Heading
+      text="Description" />
     <View style={s.itemContainer}>
       <Text style={s.description}>{description}</Text>
     </View>
     <Divider />
+    <Heading
+      text="Statistic" />
     <View style={s.itemContainer}>
       <View style={s.statContainer}>
         <View style={s.statItemContainer}>
