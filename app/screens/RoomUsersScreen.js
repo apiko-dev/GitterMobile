@@ -5,10 +5,13 @@ import React, {
 } from 'react-native'
 import s from '../styles/screens/RoomUsers/RoomUsersScreenStyles'
 import {connect} from 'react-redux'
+import _ from 'lodash'
 
 import * as Navigation from '../modules/navigation'
+import {searchRoomUsers} from '../modules/search'
 
 import CustomSearch from '../components/CustomSearch'
+import RoomUsersSearchResult from '../components/RoomUsers/RoomUsersSearchResult'
 
 class RoomUsersScreen extends Component {
   constructor(props) {
@@ -18,6 +21,8 @@ class RoomUsersScreen extends Component {
     this.handleBackPress = this.handleBackPress.bind(this)
     this.handleClearPress = this.handleClearPress.bind(this)
     this.renderSearch = this.renderSearch.bind(this)
+    this.searchRequest = _.debounce(this.searchRequest.bind(this), 250)
+    this.renderSearchResult = this.renderSearchResult.bind(this)
 
     this.state = {
       value: ''
@@ -26,6 +31,7 @@ class RoomUsersScreen extends Component {
 
   handleChange(event) {
     this.setState({value: event.nativeEvent.text})
+    this.searchRequest(event.nativeEvent.text)
   }
 
   handleClearPress() {
@@ -35,6 +41,16 @@ class RoomUsersScreen extends Component {
   handleBackPress() {
     const {dispatch} = this.props
     dispatch(Navigation.goBack())
+  }
+
+  searchRequest(query) {
+    const {dispatch, route: {roomId}} = this.props
+
+    if (!query.trim()) {
+      return
+    }
+
+    dispatch(searchRoomUsers(roomId, query))
   }
 
   renderSearch() {
@@ -48,22 +64,40 @@ class RoomUsersScreen extends Component {
     )
   }
 
+  renderSearchResult() {
+    const {roomUsersResult, isLoading} = this.props
+    return (
+      <View style={s.bottomContainer}>
+        <RoomUsersSearchResult
+          isLoading={isLoading}
+          resultItems={roomUsersResult} />
+      </View>
+    )
+  }
+
   render() {
     return (
       <View style={s.container}>
         {this.renderSearch()}
-
+        {!!this.state.value && this.renderSearchResult()}
       </View>
     )
   }
 }
 
 RoomUsersScreen.propTypes = {
-  dispatch: PropTypes.func
+  dispatch: PropTypes.func,
+  roomUsersResult: PropTypes.array,
+  route: PropTypes.object,
+  isLoading: PropTypes.bool
 }
 
 function mapStateToProps(state) {
-  return state
+  const {roomUsersResult, isLoadingRoomUser} = state.search
+  return {
+    roomUsersResult,
+    isLoading: isLoadingRoomUser
+  }
 }
 
 export default connect(mapStateToProps)(RoomUsersScreen)

@@ -111,6 +111,10 @@ export function getRoomUsers(token, roomId) {
   return callApi(`rooms/${roomId}/users`, token)
 }
 
+export function searchRoomUsers(token, roomId, query) {
+  return callApi(`rooms/${roomId}/users?q=${query}`, token)
+}
+
 /**
  * Private functions
  */
