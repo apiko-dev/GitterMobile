@@ -29,6 +29,10 @@ const styles = StyleSheet.create({
   statItemContainer: {
     alignItems: 'center',
     width: 75
+  },
+  button: {
+    height: 48,
+    elevation: 0
   }
 })
 

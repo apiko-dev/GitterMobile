@@ -8,8 +8,11 @@ import s from '../../styles/screens/RoomInfo/RepoInfoStyles'
 import Avatar from '../Avatar'
 import Divider from '../Divider'
 import Heading from '../Heading'
+import Button from '../Button'
+import ParsedText from '../ParsedText'
 
-const RepoInfo = ({name, owner, description, open_issues_count, stargazers_count, watchers_count}) => {
+const RepoInfo = ({name, owner, description, open_issues_count,
+  stargazers_count, watchers_count, html_url, handleUrlPress, onStatItemPress}) => {
   return (
     <View style={s.container}>
       <View style={s.header}>
@@ -22,28 +25,46 @@ const RepoInfo = ({name, owner, description, open_issues_count, stargazers_count
         </View>
     </View>
     <Divider />
+    {!!description && (
+      <View style={s.descriptionBlock}>
+        <Heading
+          text="Description" />
+        <View style={s.itemContainer}>
+          <ParsedText
+            text={description}
+            handleUrlPress={handleUrlPress} />
+        </View>
+        <Divider />
+      </View>
+    )}
     <Heading
-      text="Description" />
-    <View style={s.itemContainer}>
-      <Text style={s.description}>{description}</Text>
-    </View>
-    <Divider />
-    <Heading
-      text="Statistic" />
+      text="Statistics" />
     <View style={s.itemContainer}>
       <View style={s.statContainer}>
-        <View style={s.statItemContainer}>
-          <Text style={s.statTop}>{open_issues_count}</Text>
-          <Text style={s.statBotoom}>issues</Text>
-        </View>
-        <View style={s.statItemContainer}>
-          <Text style={s.statTop}>{stargazers_count}</Text>
-          <Text style={s.statBotoom}>watchers</Text>
-        </View>
-        <View style={s.statItemContainer}>
-          <Text style={s.statTop}>{watchers_count}</Text>
-          <Text style={s.statBotoom}>star</Text>
-        </View>
+        <Button
+          styles={s.button}
+          onPress={() => onStatItemPress(html_url, 'issues')}>
+          <View style={s.statItemContainer}>
+            <Text style={s.statTop}>{open_issues_count}</Text>
+            <Text style={s.statBotoom}>issues</Text>
+          </View>
+        </Button>
+        <Button
+          styles={s.button}
+          onPress={() => onStatItemPress(html_url, 'watchers')}>
+          <View style={s.statItemContainer}>
+            <Text style={s.statTop}>{watchers_count}</Text>
+            <Text style={s.statBotoom}>watchers</Text>
+          </View>
+        </Button>
+        <Button
+          styles={s.button}
+          onPress={() => onStatItemPress(html_url, 'stargazers')}>
+          <View style={s.statItemContainer}>
+            <Text style={s.statTop}>{stargazers_count}</Text>
+            <Text style={s.statBotoom}>star</Text>
+          </View>
+        </Button>
       </View>
     </View>
     <Divider />
@@ -57,7 +78,10 @@ RepoInfo.propTypes = {
   description: PropTypes.string,
   open_issues_count: PropTypes.number,
   stargazers_count: PropTypes.number,
-  watchers_count: PropTypes.number
+  watchers_count: PropTypes.number,
+  html_url: PropTypes.string,
+  handleUrlPress: PropTypes.func,
+  onStatItemPress: PropTypes.func
 }
 
 export default RepoInfo

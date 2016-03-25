@@ -2,6 +2,7 @@ import React, {
   PropTypes,
   Component,
   ScrollView,
+  Linking,
   View
 } from 'react-native'
 import {connect} from 'react-redux'
@@ -29,6 +30,8 @@ class RoomInfoScreen extends Component {
     this.renderUsers = this.renderUsers.bind(this)
     this.refetchData = this.refetchData.bind(this)
     this.handleUserPress = this.handleUserPress.bind(this)
+    this.handleUrlPress = this.handleUrlPress.bind(this)
+    this.handleStatItemPress = this.handleStatItemPress.bind(this)
   }
 
   componentDidMount() {
@@ -55,6 +58,15 @@ class RoomInfoScreen extends Component {
     const {dispatch} = this.props
     dispatch(Navigation.goTo({name: 'user', userId, username}))
   }
+
+  handleUrlPress(url) {
+    Linking.openURL(url)
+  }
+
+  handleStatItemPress(url, type) {
+    Linking.openURL(`${url}/${type}`)
+  }
+
   refetchData() {
     const {rooms, route: {roomId}, dispatch} = this.props
     const room = rooms[roomId]
@@ -68,6 +80,8 @@ class RoomInfoScreen extends Component {
     if (rooms[roomId].githubType === 'REPO') {
       return (
         <RepoInfo
+          onStatItemPress={this.handleStatItemPress.bind(this)}
+          handleUrlPress={this.handleUrlPress.bind(this)}
           {...roomInfo[rooms[roomId].name]} />
       )
     }
@@ -85,9 +99,10 @@ class RoomInfoScreen extends Component {
   }
 
   renderUsers() {
-    const {users, route: {roomId}} = this.props
+    const {users, rooms, route: {roomId}} = this.props
     return (
       <RoomUsers
+        userCount={rooms[roomId].userCount}
         ids={users[roomId].ids}
         entities={users[roomId].entities}
         onPress={this.handleUserPress.bind(this)} />
