@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     elevation: 6
   },
   info: {
-    marginLeft: 20,
+    marginLeft: 16,
     width: 165
   },
   displayName: {

@@ -250,7 +250,8 @@ export default function rooms(state = initialState, action) {
   }
 
   case CURRENT_USER_ROOMS_RECEIVED: {
-    const normalized = normalize(action.payload)
+    const sorted = action.payload.sort((item1, item2) => Date.parse(item2.lastAccessTime) - Date.parse(item1.lastAccessTime))
+    const normalized = normalize(sorted)
     return {...state,
       isLoading: false,
       ids: state.ids.concat(normalized.ids),
