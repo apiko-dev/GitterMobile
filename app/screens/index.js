@@ -21,6 +21,7 @@ import RoomScreen from './RoomScreen'
 import SearchScreen from './SearchScreen'
 import UserScreen from './UserScreen'
 import Drawer from './Drawer'
+import RoomUsersScreen from './RoomUsersScreen'
 
 // this need for passing navigator instance to navigation module
 export let nav
@@ -154,6 +155,13 @@ class App extends Component {
       return (
         <SearchScreen />
       )
+
+    case 'roomUsers':
+      return (
+        <RoomUsersScreen
+          route={route} />
+      )
+
     default:
       return null
     }

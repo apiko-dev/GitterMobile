@@ -67,6 +67,11 @@ class RoomInfoScreen extends Component {
     Linking.openURL(`${url}/${type}`)
   }
 
+  handleAllUsersPress() {
+    const {dispatch, route: {roomId}} = this.props
+    dispatch(Navigation.goTo({name: 'roomUsers', roomId}))
+  }
+
   refetchData() {
     const {rooms, route: {roomId}, dispatch} = this.props
     const room = rooms[roomId]
@@ -105,7 +110,8 @@ class RoomInfoScreen extends Component {
         userCount={rooms[roomId].userCount}
         ids={users[roomId].ids}
         entities={users[roomId].entities}
-        onPress={this.handleUserPress.bind(this)} />
+        onPress={this.handleUserPress.bind(this)}
+        onAllUsersPress={this.handleAllUsersPress.bind(this)} />
     )
   }
 
