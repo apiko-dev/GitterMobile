@@ -90,11 +90,11 @@ class Message extends Component {
 
   render() {
     const {fromUser, sending, failed, readBy, isCollapsed,
-      text, status, onUsernamePress, onUserAvatarPress} = this.props
+      text, status, onUsernamePress, onUserAvatarPress, sent} = this.props
     const opacity = sending === true ? 0.4 : 1
 
     const backgroundColor = failed === true ? 'rgba(255, 0, 0, 0.2)' : 'transparent'
-    const readStatusOpacity = readBy === 0 ? 0 : 0.6
+    const readStatusOpacity = readBy === 0 || ['sending...', 'failed'].indexOf(sent) !== -1 ? 0 : 0.6
 
     if (!!status) {
       return (

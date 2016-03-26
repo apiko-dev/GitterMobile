@@ -17,6 +17,9 @@ const styles = StyleSheet.create({
   },
   emoji: {
     fontSize: 14
+  },
+  text: {
+    fontSize: 14
   }
 })
 
