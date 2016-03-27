@@ -2,9 +2,7 @@ import {StyleSheet} from 'react-native'
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: 'white',
-    elevation: 4
+    flex: 1
   },
   loading: {
     height: 150

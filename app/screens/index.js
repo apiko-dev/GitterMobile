@@ -96,6 +96,8 @@ class App extends Component {
     setTimeout(() => {
       if (current.name === 'room' && route.name === 'room') {
         dispatch(Navigation.goAndReplace(route))
+      } else if (route.name === 'room') {
+        dispatch(Navigation.resetWithStack([{name: 'home'}, route]))
       } else {
         dispatch(Navigation.goTo(route))
       }
@@ -179,7 +181,7 @@ class App extends Component {
     const {navigation} = this.props
     // const initialRoute = {name: 'launch'}
     // const initialRoute = {name: 'room', roomId: '56a41e0fe610378809bde160'}
-    const drawerLockMode = ['launch', 'login', 'loginByToken', 'user'].indexOf(navigation.current.name) === -1
+    const drawerLockMode = ['launch', 'login', 'loginByToken'].indexOf(navigation.current.name) === -1
       ? 'unlocked'
       : 'locked-closed'
 

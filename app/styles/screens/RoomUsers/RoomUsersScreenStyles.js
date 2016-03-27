@@ -7,7 +7,9 @@ const styles = StyleSheet.create({
   bottomContainer: {
     flex: 1,
     borderRadius: 2,
-    elevation: 4
+    elevation: 2,
+    backgroundColor: 'white',
+    margin: 8
   }
 })
 

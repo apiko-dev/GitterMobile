@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     margin: 8,
     backgroundColor: 'white',
-    elevation: 4,
+    elevation: 2,
     borderRadius: 2
   },
   button: {

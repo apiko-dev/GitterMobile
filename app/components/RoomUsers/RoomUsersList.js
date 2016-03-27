@@ -4,7 +4,6 @@ import React, {
   ListView,
   View
 } from 'react-native'
-import
 
 import RoomUserItem from './RoomUserItem'
 
@@ -16,11 +15,12 @@ export default class RoomUsersList extends Component {
   }
 
   renderRow(rowData, rowId) {
-    const {onItemPress} = this.props
+    const {onItemPress, onUserItemPress} = this.props
 
     return (
       <RoomUserItem
         onItemPress={onItemPress}
+        onUserItemPress={onUserItemPress}
         {...rowData} />
     )
   }
@@ -35,6 +35,7 @@ export default class RoomUsersList extends Component {
     return (
       <ListView
         ref="listView"
+        style={{flex: 1}}
         dataSource={listViewData.dataSource}
         onEndReached={this.props.onEndReached}
         scrollRenderAheadDistance={1000}
@@ -49,5 +50,6 @@ export default class RoomUsersList extends Component {
 RoomUsersList.propTypes = {
   listViewData: PropTypes.object,
   onItemPress: PropTypes.func,
-  onEndReached: PropTypes.func
+  onEndReached: PropTypes.func,
+  onUserItemPress: PropTypes.func
 }
