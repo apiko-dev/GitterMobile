@@ -10,10 +10,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    elevation: 6
+    elevation: 4
   },
   info: {
-    marginLeft: 20,
+    marginLeft: 16,
     width: 165
   },
   displayName: {

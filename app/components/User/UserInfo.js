@@ -58,7 +58,7 @@ const UserInfo = ({id, company, location, email, profile, has_gitter_login,
             styles={[s.button, s.chatPrivately]}
             onPress={() => onChatPrivatelyPress(id)}>
             <Image
-              source={require('image!ic_email_black_24dp')}
+              source={require('image!ic_textsms_black_24dp')}
               style={s.icon} />
             <Text style={s.text}>Chat privately</Text>
           </Button>

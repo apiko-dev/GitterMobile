@@ -50,6 +50,7 @@ export function init() {
       dispatch(Navigation.resetTo({name: 'home'}))
       // dispatch(Navigation.resetTo({name: 'user', userId: '52ce7f4eed5ab0b3bf053782', username: 'blia'}))
       // dispatch(Navigation.resetTo({name: 'room', roomId: '56a41e0fe610378809bde160'}))
+      // dispatch(Navigation.resetTo({name: 'roomUsers', roomId: '56a41e0fe610378809bde160'}))
     } catch (error) {
       dispatch({ type: INITIALIZED, error })
       dispatch(Navigation.goAndReplace({name: 'login'}))

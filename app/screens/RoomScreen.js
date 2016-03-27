@@ -2,6 +2,7 @@ import React, {
   Component,
   PropTypes,
   InteractionManager,
+  DrawerLayoutAndroid,
   ToolbarAndroid,
   ToastAndroid,
   Clipboard,
@@ -27,7 +28,10 @@ import {
   updateMessage,
   clearError as clearMessagesError
 } from '../modules/messages'
+import {changeRoomInfoDrawerState} from '../modules/ui'
 import * as Navigation from '../modules/navigation'
+
+import RoomInfoScreen from './RoomInfoScreen'
 
 import Loading from '../components/Loading'
 import MessagesList from '../components/Room/MessagesList'
@@ -39,6 +43,8 @@ import FailedToLoad from '../components/FailedToLoad'
 class Room extends Component {
   constructor(props) {
     super(props)
+    this.roomInfoDrawer = null
+
     this.renderToolbar = this.renderToolbar.bind(this)
     this.renderListView = this.renderListView.bind(this)
     this.prepareDataSources = this.prepareDataSources.bind(this)
@@ -53,6 +59,7 @@ class Room extends Component {
     this.handleCopyToClipboard = this.handleCopyToClipboard.bind(this)
     this.handleUsernamePress = this.handleUsernamePress.bind(this)
     this.handleUserAvatarPress = this.handleUserAvatarPress.bind(this)
+    this.renderRoomInfo = this.renderRoomInfo.bind(this)
 
     this.state = {
       textInputValue: '',
@@ -65,7 +72,7 @@ class Room extends Component {
     this.prepareDataSources()
     const {activeRoom, rooms, route: { roomId }, dispatch, listViewData} = this.props
     // dispatch(subscribeToChatMessages(roomId))
-
+    dispatch(changeRoomInfoDrawerState('close'))
     InteractionManager.runAfterInteractions(() => {
       dispatch(clearMessagesError())
       if (activeRoom !== roomId) {
@@ -222,9 +229,12 @@ class Room extends Component {
   handleToolbarActionSelected(index) {
     const {dispatch, route: {roomId}} = this.props
     if (index === 0) {
-      dispatch(changeFavoriteStatus(roomId))
+      this.roomInfoDrawer.openDrawer()
     }
     if (index === 1) {
+      dispatch(changeFavoriteStatus(roomId))
+    }
+    if (index === 2) {
       this.leaveRoom()
     }
   }
@@ -276,6 +286,11 @@ class Room extends Component {
     if (!!room && room.roomMember) {
       if (room.hasOwnProperty('favourite')) {
         actions = [{
+          title: 'Open room info',
+          icon: require('image!ic_info_outline_white_24dp'),
+          show: 'always'
+        },
+        {
           title: 'Remove from favorite',
           show: 'never'
         },
@@ -285,6 +300,11 @@ class Room extends Component {
         }]
       } else {
         actions = [{
+          title: 'Open room info',
+          icon: require('image!ic_info_outline_white_24dp'),
+          show: 'always'
+        },
+        {
           title: 'Add to favorite',
           show: 'never'
         },
@@ -343,7 +363,7 @@ class Room extends Component {
       return (
         <FailedToLoad
           message="Failed to load messages."
-          onPress={this.onRetryFetchingMessages.bind(this)} />
+          onRetry={this.onRetryFetchingMessages.bind(this)} />
       )
     }
     return (
@@ -358,8 +378,18 @@ class Room extends Component {
     )
   }
 
+  renderRoomInfo() {
+    const {route} = this.props
+    return (
+      <RoomInfoScreen
+        route={route}
+        drawer={this.roomInfoDrawer} />
+    )
+  }
+
   render() {
-    const {rooms, listViewData, route, isLoadingMessages, isLoadingMore, getMessagesError} = this.props
+    const {rooms, listViewData, route, isLoadingMessages,
+      isLoadingMore, getMessagesError, dispatch} = this.props
 
     if (getMessagesError && !rooms[route.roomId]) {
       return (
@@ -382,11 +412,21 @@ class Room extends Component {
 
     return (
       <View style={s.container}>
-        {this.renderToolbar()}
-        {isLoadingMore ? this.renderLoadingMore() : null}
-        {isLoadingMessages ? this.renderLoading() : this.renderListView()}
-        {getMessagesError || isLoadingMessages || _.has(listView, 'data') &&
-          listView.data.length === 0 ? null : this.renderBottom()}
+        <DrawerLayoutAndroid
+          ref={component => this.roomInfoDrawer = component}
+          style={{backgroundColor: 'white'}}
+          drawerWidth={300}
+          onDrawerOpen={() => dispatch(changeRoomInfoDrawerState('open'))}
+          onDrawerClose={() => dispatch(changeRoomInfoDrawerState('close'))}
+          drawerPosition={DrawerLayoutAndroid.positions.Right}
+          renderNavigationView={this.renderRoomInfo}
+          keyboardDismissMode="on-drag">
+            {this.renderToolbar()}
+            {isLoadingMore ? this.renderLoadingMore() : null}
+            {isLoadingMessages ? this.renderLoading() : this.renderListView()}
+            {getMessagesError || isLoadingMessages || _.has(listView, 'data') &&
+              listView.data.length === 0 ? null : this.renderBottom()}
+          </DrawerLayoutAndroid>
       </View>
     )
   }
@@ -405,12 +445,14 @@ Room.propTypes = {
   entities: PropTypes.object,
   hasNoMore: PropTypes.object,
   currentUser: PropTypes.object,
-  getMessagesError: PropTypes.bool
+  getMessagesError: PropTypes.bool,
+  roomInfoDrawerState: PropTypes.string
 }
 
 function mapStateToProps(state) {
   const {listView, isLoading, isLoadingMore, byRoom, hasNoMore, entities} = state.messages
   const {activeRoom, rooms} = state.rooms
+  const {roomInfoDrawerState} = state.ui
   return {
     activeRoom,
     rooms,
@@ -421,7 +463,8 @@ function mapStateToProps(state) {
     isLoadingMore,
     byRoom,
     hasNoMore,
-    currentUser: state.viewer.user
+    currentUser: state.viewer.user,
+    roomInfoDrawerState
   }
 }
 

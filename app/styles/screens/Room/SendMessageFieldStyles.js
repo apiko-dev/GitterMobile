@@ -16,7 +16,8 @@ const style = StyleSheet.create({
     flex: 1
   },
   textInput: {
-    backgroundColor: 'white'
+    backgroundColor: 'white',
+    fontSize: 14
   },
   button: {
     height: button,

@@ -10,6 +10,7 @@ import {init} from '../modules/app'
 import {connect} from 'react-redux'
 import * as Navigation from '../modules/navigation'
 import {selectRoom} from '../modules/rooms'
+import {changeRoomInfoDrawerState} from '../modules/ui'
 
 import LaunchScreen from './LaunchScreen'
 import LoginScreen from './LoginScreen'
@@ -20,6 +21,7 @@ import RoomScreen from './RoomScreen'
 import SearchScreen from './SearchScreen'
 import UserScreen from './UserScreen'
 import Drawer from './Drawer'
+import RoomUsersScreen from './RoomUsersScreen'
 
 // this need for passing navigator instance to navigation module
 export let nav
@@ -94,6 +96,8 @@ class App extends Component {
     setTimeout(() => {
       if (current.name === 'room' && route.name === 'room') {
         dispatch(Navigation.goAndReplace(route))
+      } else if (route.name === 'room') {
+        dispatch(Navigation.resetWithStack([{name: 'home'}, route]))
       } else {
         dispatch(Navigation.goTo(route))
       }
@@ -153,6 +157,13 @@ class App extends Component {
       return (
         <SearchScreen />
       )
+
+    case 'roomUsers':
+      return (
+        <RoomUsersScreen
+          route={route} />
+      )
+
     default:
       return null
     }
@@ -170,7 +181,7 @@ class App extends Component {
     const {navigation} = this.props
     // const initialRoute = {name: 'launch'}
     // const initialRoute = {name: 'room', roomId: '56a41e0fe610378809bde160'}
-    const drawerLockMode = ['launch', 'login', 'loginByToken', 'user'].indexOf(navigation.current.name) === -1
+    const drawerLockMode = ['launch', 'login', 'loginByToken'].indexOf(navigation.current.name) === -1
       ? 'unlocked'
       : 'locked-closed'
 
@@ -198,12 +209,15 @@ class App extends Component {
 
 App.propTypes = {
   dispatch: PropTypes.func,
-  navigation: PropTypes.object
+  navigation: PropTypes.object,
+  roomInfoDrawerState: PropTypes.string
 }
 
 function mapStateToProps(state) {
+  const {roomInfoDrawerState} = state.ui
   return {
-    navigation: state.navigation
+    navigation: state.navigation,
+    roomInfoDrawerState
   }
 }
 
