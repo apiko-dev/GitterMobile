@@ -4,6 +4,7 @@ import React, {
   ListView,
   View
 } from 'react-native'
+import s from '../../styles/screens/RoomUsers/RoomUsersListStyle'
 
 import RoomUserItem from './RoomUserItem'
 
@@ -33,16 +34,18 @@ export default class RoomUsersList extends Component {
     }
 
     return (
-      <ListView
-        ref="listView"
-        style={{flex: 1}}
-        dataSource={listViewData.dataSource}
-        onEndReached={this.props.onEndReached}
-        scrollRenderAheadDistance={1000}
-        onEndReachedThreshold={500}s
-        pageSize={30}
-        initialListSize={30}
-        renderRow={(rowData, _, rowId) => this.renderRow(rowData, rowId)} />
+      <View style={s.container}>
+        <ListView
+          ref="listView"
+          style={{flex: 1}}
+          dataSource={listViewData.dataSource}
+          onEndReached={this.props.onEndReached}
+          scrollRenderAheadDistance={1000}
+          onEndReachedThreshold={500}s
+          pageSize={30}
+          initialListSize={30}
+          renderRow={(rowData, _, rowId) => this.renderRow(rowData, rowId)} />
+      </View>
     )
   }
 }

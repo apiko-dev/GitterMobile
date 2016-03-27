@@ -119,6 +119,15 @@ export function searchRoomUsers(token, roomId, query) {
   return callApi(`rooms/${roomId}/users?q=${query}`, token)
 }
 
+export function addUserToRoom(token, roomId, username) {
+  return callApi(`rooms/${roomId}/users`, token, {
+    method: 'post',
+    body: JSON.stringify({
+      username
+    })
+  })
+}
+
 
 /**
  * Private functions

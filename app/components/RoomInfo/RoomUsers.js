@@ -10,7 +10,7 @@ import Avatar from '../Avatar'
 import Heading from '../Heading'
 import Button from '../Button'
 
-const RoomUsers = ({ids, entities, onPress, userCount, onAllUsersPress, oneToOne}) => {
+const RoomUsers = ({ids, entities, onPress, userCount, onAllUsersPress, onAddPress, oneToOne}) => {
   const displayUserHeader = oneToOne === true ? 'People' : `People (${userCount})`
   let content = []
 
@@ -56,7 +56,7 @@ const RoomUsers = ({ids, entities, onPress, userCount, onAllUsersPress, oneToOne
       {!oneToOne && (
         <View style={s.buttonsGroup}>
           <Button
-            onPress={() => {}}
+            onPress={() => onAddPress()}
             styles={[s.button, s.primaryButton]}>
             <Text>Add</Text>
           </Button>
@@ -77,7 +77,8 @@ RoomUsers.propTypes = {
   onPress: PropTypes.func,
   userCount: PropTypes.number,
   onAllUsersPress: PropTypes.func,
-  oneToOne: PropTypes.bool
+  oneToOne: PropTypes.bool,
+  onAddPress: PropTypes.func
 }
 
 export default RoomUsers
