@@ -10,7 +10,8 @@ import Avatar from '../Avatar'
 import Heading from '../Heading'
 import Button from '../Button'
 
-const RoomUsers = ({ids, entities, onPress, userCount, onAllUsersPress}) => {
+const RoomUsers = ({ids, entities, onPress, userCount, onAllUsersPress, oneToOne}) => {
+  const displayUserHeader = oneToOne === true ? 'People' : `People (${userCount})`
   let content = []
 
   if (ids.length >= 30) {
@@ -48,22 +49,24 @@ const RoomUsers = ({ids, entities, onPress, userCount, onAllUsersPress}) => {
   return (
     <View style={s.container}>
       <Heading
-        text={`People (${userCount})`} />
+        text={displayUserHeader} />
       <View style={s.usersContainer}>
         {content}
       </View>
-      <View style={s.buttonsGroup}>
-        <Button
-          onPress={() => {}}
-          styles={[s.button, s.primaryButton]}>
-          <Text>Add</Text>
-        </Button>
-        <Button
-          onPress={() => onAllUsersPress()}
-          styles={s.button}>
-          <Text>See all</Text>
-        </Button>
-      </View>
+      {!oneToOne && (
+        <View style={s.buttonsGroup}>
+          <Button
+            onPress={() => {}}
+            styles={[s.button, s.primaryButton]}>
+            <Text>Add</Text>
+          </Button>
+          <Button
+            onPress={() => onAllUsersPress()}
+            styles={s.button}>
+            <Text>See all</Text>
+          </Button>
+        </View>
+    )}
     </View>
   )
 }
@@ -73,7 +76,8 @@ RoomUsers.propTypes = {
   entities: PropTypes.object,
   onPress: PropTypes.func,
   userCount: PropTypes.number,
-  onAllUsersPress: PropTypes.func
+  onAllUsersPress: PropTypes.func,
+  oneToOne: PropTypes.bool
 }
 
 export default RoomUsers

@@ -14,16 +14,24 @@ import Divider from '../Divider'
 const RoomInfo = ({name}) => {
   const avatarSrc = createGhAvatarLink(name.split('/')[0], 200)
   const channel = channelNameAndOwner(name)
+
   return (
     <View style={s.container}>
       <View style={s.header}>
         <Avatar
           src={avatarSrc}
           size={50} />
-        <View style={s.headerTextContainer}>
-          <Text style={s.name}>{channel.name}</Text>
-          <Text style={s.owner}>by {channel.owner}</Text>
-        </View>
+        {!channel.name
+          ? (
+          <View style={s.headerTextContainer}>
+            <Text style={s.name}>{channel.owner}</Text>
+          </View>
+        ) : (
+          <View style={s.headerTextContainer}>
+            <Text style={s.name}>{channel.name}</Text>
+            <Text style={s.owner}>by {channel.owner}</Text>
+          </View>
+        )}
       </View>
       <Divider />
     </View>

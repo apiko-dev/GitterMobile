@@ -107,6 +107,7 @@ class RoomInfoScreen extends Component {
     const {users, rooms, route: {roomId}} = this.props
     return (
       <RoomUsers
+        oneToOne={rooms[roomId].githubType === 'ONETOONE' ? true : false}
         userCount={rooms[roomId].userCount}
         ids={users[roomId].ids}
         entities={users[roomId].entities}
