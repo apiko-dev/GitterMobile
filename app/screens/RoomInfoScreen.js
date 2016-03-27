@@ -32,6 +32,7 @@ class RoomInfoScreen extends Component {
     this.handleUserPress = this.handleUserPress.bind(this)
     this.handleUrlPress = this.handleUrlPress.bind(this)
     this.handleStatItemPress = this.handleStatItemPress.bind(this)
+    this.handleAddPress = this.handleAddPress.bind(this)
   }
 
   componentDidMount() {
@@ -65,6 +66,11 @@ class RoomInfoScreen extends Component {
 
   handleStatItemPress(url, type) {
     Linking.openURL(`${url}/${type}`)
+  }
+
+  handleAddPress() {
+    const {dispatch, route: {roomId}} = this.props
+    dispatch(Navigation.goTo({name: 'addUser', roomId}))
   }
 
   handleAllUsersPress() {
@@ -112,7 +118,8 @@ class RoomInfoScreen extends Component {
         ids={users[roomId].ids}
         entities={users[roomId].entities}
         onPress={this.handleUserPress.bind(this)}
-        onAllUsersPress={this.handleAllUsersPress.bind(this)} />
+        onAllUsersPress={this.handleAllUsersPress.bind(this)}
+        onAddPress={this.handleAddPress.bind(this)} />
     )
   }
 
