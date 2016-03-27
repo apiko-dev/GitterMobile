@@ -17,7 +17,14 @@ import s from '../styles/screens/Room/RoomStyles'
 import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault
 
-import {getRoom, selectRoom, joinRoom, changeFavoriteStatus, leaveRoom} from '../modules/rooms'
+import {
+  getRoom,
+  selectRoom,
+  joinRoom,
+  changeFavoriteStatus,
+  leaveRoom,
+  markAllAsRead
+} from '../modules/rooms'
 import {
   getRoomMessages,
   prepareListView,
@@ -235,6 +242,9 @@ class Room extends Component {
       dispatch(changeFavoriteStatus(roomId))
     }
     if (index === 2) {
+      dispatch(markAllAsRead(roomId))
+    }
+    if (index === 3) {
       this.leaveRoom()
     }
   }
@@ -288,10 +298,14 @@ class Room extends Component {
         actions = [{
           title: 'Open room info',
           icon: require('image!ic_info_outline_white_24dp'),
-          show: 'always'
+          show: 'never'
         },
         {
           title: 'Remove from favorite',
+          show: 'never'
+        },
+        {
+          title: 'Mark all as read',
           show: 'never'
         },
         {
@@ -302,10 +316,14 @@ class Room extends Component {
         actions = [{
           title: 'Open room info',
           icon: require('image!ic_info_outline_white_24dp'),
-          show: 'always'
+          show: 'never'
         },
         {
           title: 'Add to favorite',
+          show: 'never'
+        },
+        {
+          title: 'Mark all as read',
           show: 'never'
         },
         {
