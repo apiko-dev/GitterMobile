@@ -11,11 +11,14 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   displayNameWapper: {
-    height: 50,
+    flex: 1,
+    paddingHorizontal: 30,
     alignItems: 'center',
-    marginBottom: 15
+    justifyContent: 'center',
+    marginBottom: 15,
   },
   displayName: {
+    textAlign: 'center',
     color: 'black',
     fontSize: 24,
     fontWeight: 'bold'
@@ -30,12 +33,16 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   githubItem: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
     margin: 15
   },
   githubItemText: {
     fontSize: 18
   },
   bold: {
+    fontSize: 18,
     fontWeight: 'bold'
   }
 })

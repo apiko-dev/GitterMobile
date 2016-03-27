@@ -17,7 +17,9 @@ const UserInfo = ({id, company, location, email, profile, has_gitter_login,
           <Image
             source={require('image!ic_location_on_black_24dp')}
             style={s.icon} />
-          <Text style={s.text}>{location}</Text>
+          <View style={s.textWrapper}>
+            <Text style={s.text}>{location}</Text>
+          </View>
         </View>
       )}
       {!!company && (
@@ -25,7 +27,9 @@ const UserInfo = ({id, company, location, email, profile, has_gitter_login,
           <Image
             source={require('image!ic_business_black_24dp')}
             style={s.icon} />
-          <Text style={s.text}>{company}</Text>
+          <View style={s.textWrapper}>
+            <Text style={s.text}>{company}</Text>
+          </View>
         </View>
       )}
       {!!email && (

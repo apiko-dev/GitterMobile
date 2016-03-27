@@ -8,12 +8,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'white'
   },
   item: {
-    height: 50,
-    marginLeft: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderTopColor: colors.androidGray,
-    borderBottomColor: colors.androidGray
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+    flexDirection: 'row'
   },
   icon: {
     height: 28,
@@ -29,9 +26,8 @@ const styles = StyleSheet.create({
   chatPrivately: {
     backgroundColor: colors.primaryButton
   },
-  center: {
-    // justifyContent: 'center',
-    // alignItems: 'center'
+  textWrapper: {
+    flex: 1
   },
   text: {
     fontSize: 18

@@ -25,13 +25,16 @@ const UserTop = ({displayName, username, github}) => {
       </View>
       <View style={s.github}>
         <View style={s.githubItem}>
-          <Text style={s.githubItemText}><Text style={s.bold}>{github.followers}</Text> followers</Text>
+          <Text style={s.bold}>{github.followers}</Text>
+          <Text style={s.githubItemText}>followers</Text>
         </View>
         <View style={s.githubItem}>
-          <Text style={s.githubItemText}><Text style={s.bold}>{github.public_repos}</Text> repos</Text>
+          <Text style={s.bold}>{github.public_repos}</Text>
+          <Text style={s.githubItemText}>repos</Text>
         </View>
         <View style={s.githubItem}>
-          <Text style={s.githubItemText}><Text style={s.bold}>{github.following}</Text> following</Text>
+          <Text style={s.bold}>{github.following}</Text>
+          <Text style={s.githubItemText}>following</Text>
         </View>
       </View>
     </View>
