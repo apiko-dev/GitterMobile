@@ -65,6 +65,12 @@ export function leaveRoom(token, roomId, userId) {
   })
 }
 
+export function hideRoom(token, roomId, userId) {
+  return callApi(`user/${userId}/rooms/${roomId}`, token, {
+    method: 'DELETE'
+  })
+}
+
 export function markAllAsRead(token, roomId, userId) {
   return callApi(`user/${userId}/rooms/${roomId}/unreadItems/all`, token, {
     method: 'DELETE'
@@ -142,7 +148,21 @@ function callApi(endpoint, token, options = {method: 'get'}) {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     }
-  }).then(res => {console.log(res); return res.text()}).then(res => JSON.parse(res))
+  })
+  .then(res => {
+    console.log(res)
+    return res.text()
+  })
+  .then(text => {
+    debugger
+    if (text === 'OK') {
+      return []
+    }
+    if (text.length === 0) {
+      return []
+    }
+    return JSON.parse(text)
+  })
 }
 // GET https://gitter.im/api/v1/user/555e610f15522ed4b3e0c169/suggestedRooms
 // GET https://gitter.im/api/v1/repo-info?repo=dev-ua%2Freactjs

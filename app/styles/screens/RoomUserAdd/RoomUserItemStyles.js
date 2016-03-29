@@ -15,7 +15,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     height: 70,
-    ustifyContent: 'space-between',
     flexWrap: 'wrap'
   },
   userInfo: {

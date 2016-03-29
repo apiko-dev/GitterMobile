@@ -49,7 +49,7 @@ export function init() {
       // and uncomment navigation to 'room'
       dispatch(Navigation.resetTo({name: 'home'}))
       // dispatch(Navigation.resetTo({name: 'user', userId: '52ce7f4eed5ab0b3bf053782', username: 'blia'}))
-      // dispatch(Navigation.resetTo({name: 'addUser', roomId: '56a41e0fe610378809bde160'}))
+      // dispatch(Navigation.resetTo({name: 'room', roomId: '56d77767e610378809c4b6a3'}))
       // dispatch(Navigation.resetTo({name: 'roomUsers', roomId: '56a41e0fe610378809bde160'}))
     } catch (error) {
       dispatch({ type: INITIALIZED, error })

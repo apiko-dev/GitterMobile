@@ -3,6 +3,7 @@ import _ from 'lodash'
 import {ToastAndroid} from 'react-native'
 import normalize from '../utils/normalize'
 import {LOGOUT} from './auth'
+import * as Navigation from './navigation'
 import {subscribeToChatMessages, unsubscribeToChatMessages} from './realtime'
 
 
@@ -38,6 +39,7 @@ export const CHANGE_FAVORITE_STATUS_FAILED = 'rooms/CHANGE_FAVORITE_STATUS_FAILE
 export const ADD_USER_TO_ROOM = 'rooms/ADD_USER_TO_ROOM'
 export const ADD_USER_TO_ROOM_OK = 'rooms/ADD_USER_TO_ROOM_OK'
 export const ADD_USER_TO_ROOM_ERROR = 'rooms/ADD_USER_TO_ROOM_ERROR'
+export const HIDE_ROOM = 'rooms/HIDE_ROOM'
 
 /**
  * Action Creators
@@ -167,17 +169,23 @@ export function joinUserRoom(username) {
 export function leaveRoom(roomId, userId) {
   return async (dispatch, getState) => {
     const {token} = getState().auth
+    const room = getState().rooms.rooms[roomId]
     const newUserId = userId || getState().viewer.user.id
-
     dispatch({type: LEAVE_ROOM, roomId})
 
     try {
-      const payload = await Api.leaveRoom(token, roomId, newUserId)
-
-      if (!!payload.success && payload.success === true) {
-        dispatch({type: LEAVE_ROOM_OK, roomId, userId})
+      if (room.githubType === 'ONETOONE') {
+        await Api.hideRoom(token, roomId, newUserId)
+        dispatch({type: HIDE_ROOM, roomId})
+        dispatch(Navigation.resetTo({name: 'home'}))
       } else {
-        dispatch({type: LEAVE_ROOM_FAILED, error: `User ${newUserId} can't leave room ${roomId}`})
+        const payload = await Api.leaveRoom(token, roomId, newUserId)
+
+        if (!!payload.success && payload.success === true) {
+          dispatch({type: LEAVE_ROOM_OK, roomId, userId})
+        } else {
+          dispatch({type: LEAVE_ROOM_FAILED, error: `User ${newUserId} can't leave room ${roomId}`})
+        }
       }
     } catch (error) {
       dispatch({type: LEAVE_ROOM_FAILED, error})
@@ -312,7 +320,7 @@ export default function rooms(state = initialState, action) {
     const room = state.rooms[id]
     return {...state,
       rooms: {...state.rooms,
-        [id]: _.merge(room, action.payload.model)
+        [id]: _.merge({}, room, action.payload.model)
       }
     }
   }

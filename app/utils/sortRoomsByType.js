@@ -5,6 +5,7 @@ export const sortRoomsByType = ({ids, entities}) => {
   const orgs = []
   const channels = []
   const favoriteIds = []
+  const hidden = []
 
   for (const id of ids) {
     const entity = entities[id]
@@ -14,10 +15,15 @@ export const sortRoomsByType = ({ids, entities}) => {
     if (!!entity.favourite) {
       favoriteIds.push(entity.id)
     }
+
     if (entity.githubType === 'REPO') {
       repos.push(entity)
     } else if (entity.githubType === 'ONETOONE') {
-      onetoone.push(entity)
+      if (!!entity.lastAccessTime) {
+        onetoone.push(entity)
+      } else {
+        hidden.push(entity)
+      }
     } else if (entity.githubType === 'ORG') {
       orgs.push(entity)
     } else if (entity.githubType === 'ORG_CHANNEL' ||
@@ -35,7 +41,8 @@ export const sortRoomsByType = ({ids, entities}) => {
     onetoone,
     orgs,
     channels,
-    favoriteIds
+    favoriteIds,
+    hidden
   }
 }
 
@@ -48,6 +55,7 @@ export const categorize = (ids, entities) => {
   const orgs = []
   const channels = []
   const favoriteIds = []
+  const hidden = []
 
   for (const id of ids) {
     const entity = entities[id]
@@ -55,7 +63,7 @@ export const categorize = (ids, entities) => {
       continue
     }
 
-    if (entity.hasOwnProperty('favourite')) {
+    if (entity.hasOwnProperty('favourite') && entity.favourite !== null) {
       favoriteIds.push(entity.id)
     }
     if (entity.unreadItems !== 0) {
@@ -63,7 +71,11 @@ export const categorize = (ids, entities) => {
     } else if (entity.githubType === 'REPO') {
       channels.push(entity)
     } else if (entity.githubType === 'ONETOONE') {
-      channels.push(entity)
+      if (!entity.lastAccessTime || entity.lastAccessTime === null) {
+        hidden.push(entity)
+      } else {
+        channels.push(entity)
+      }
     } else if (entity.githubType === 'ORG') {
       orgs.push(entity)
     } else if (entity.githubType === 'ORG_CHANNEL' ||
@@ -79,6 +91,7 @@ export const categorize = (ids, entities) => {
     unread,
     orgs,
     channels,
-    favoriteIds
+    favoriteIds,
+    hidden
   }
 }
