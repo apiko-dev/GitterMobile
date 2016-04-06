@@ -10,9 +10,9 @@ Go to the [releases page](https://github.com/terrysahaidak/GitterMobile/releases
 ## App preview
 ![Home screen](screenshots/home.png "Home screen")
 ![Search rooms screen](screenshots/search_rooms.png "Search rooms screen")
-![Search users screen](screenshots/search_users.png "Search users screen")
 ![User screen](screenshots/user_screen.png "User screen")
 ![Room screen](screenshots/room.png "Room screen")
+![Room info screen](screenshots/room_info_screen.png "Room info screen")
 ![Drawer](screenshots/drawer.png "Drawer")
 
 ## Features
