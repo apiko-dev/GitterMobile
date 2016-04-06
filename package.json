@@ -15,7 +15,7 @@
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "android:check": "adb devices && adb reverse tcp:8081 tcp:8081",
-    "android": "npm run android:check && react-native run-android",
+    "android": "node node_modules/react-native/local-cli/cli.js run-android",
     "lint": "node node_modules/eslint/bin/eslint -c .eslintrc ./"
   },
   "dependencies": {
@@ -23,7 +23,7 @@
     "moment": "^2.11.2",
     "react": "^0.14.7",
     "react-native": "^0.22.0",
-    "react-native-extra-dimensions-android": "^0.17.0",
+    "react-native-dialogs": "0.0.14",
     "react-native-invertible-scroll-view": "^0.2.0",
     "react-native-parsed-text": "0.0.11",
     "react-native-scrollable-tab-view": "^0.4.0",
