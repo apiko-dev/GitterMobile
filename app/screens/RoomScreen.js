@@ -12,10 +12,12 @@ import React, {
 } from 'react-native'
 import {connect} from 'react-redux'
 import moment from 'moment'
+import DialogAndroid from 'react-native-dialogs'
 import _ from 'lodash'
 import s from '../styles/screens/Room/RoomStyles'
 import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault
+import {quoteLink} from '../utils/links'
 
 import {
   getRoom,
@@ -67,6 +69,9 @@ class Room extends Component {
     this.handleUsernamePress = this.handleUsernamePress.bind(this)
     this.handleUserAvatarPress = this.handleUserAvatarPress.bind(this)
     this.renderRoomInfo = this.renderRoomInfo.bind(this)
+    this.handleDialogPress = this.handleDialogPress.bind(this)
+    this.handleQuotePress = this.handleQuotePress.bind(this)
+    this.handleQuoteWithLinkPress = this.handleQuoteWithLinkPress.bind(this)
 
     this.state = {
       textInputValue: '',
@@ -135,30 +140,26 @@ class Room extends Component {
     const {currentUser, entities} = this.props
     const message = entities[id]
     const experied = moment(message.sent).add(5, 'm')
-    const countDown = ''
+    const dialog = new DialogAndroid();
 
-    const actions = [
-      {text: 'Copy text', onPress: () => this.handleCopyToClipboard(message.text)}
-    ]
+    const options = {
+      title: 'Message',
+      items: [
+        'Copy text',
+        'Reply',
+        'Quote',
+        'Quote with link'
+      ],
+      itemsCallback: (index, text) => this.handleDialogPress(index, text, message, rowId, id)
+    }
 
     if (currentUser.username === message.fromUser.username &&
         moment().isBefore(experied) && !!message.text) {
-      // time which's show editing experied time
-      // setTimeout(() => {
-      //   if (moment().isBefore(experied)) {
-      //     const time = experied.subtract(moment()).format('mm:ss')
-      //     countDown = `${time} to edit or delete`
-      //   } else {
-      //     countDown = `Can't edit or delete`
-      //   }
-      // }, 1000)
-      actions.push(
-        {text: 'Delete', onPress: () => this.onDelete(rowId, id)},
-        {text: 'Edit', onPress: () => this.onEdit(rowId, id)}
-      )
+      options.items.push('Edit', 'Delete')
     }
     // TODO: Use BottomSheet/ActionSheet instead of Alert
-    Alert.alert('Actions', countDown, actions)
+    dialog.set(options)
+    dialog.show()
   }
 
   onDelete(rowId, id) {
@@ -233,6 +234,31 @@ class Room extends Component {
     dispatch(getRoomMessages(roomId))
   }
 
+  handleDialogPress(index, text, message, rowId, id) {
+    switch (text) {
+    case 'Copy text':
+      this.handleCopyToClipboard(message.text)
+      break
+    case 'Edit':
+      this.onEdit(rowId, id)
+      break
+    case 'Delete':
+      this.onDelete(rowId, id)
+      break
+    case 'Quote':
+      this.handleQuotePress(message)
+      break
+    case 'Quote with link':
+      this.handleQuoteWithLinkPress(message)
+      break
+    case 'Reply':
+      this.handleUsernamePress(message.fromUser.username)
+      break
+    default:
+      break
+    }
+  }
+
   handleToolbarActionSelected(index) {
     const {dispatch, route: {roomId}} = this.props
     if (index === 0) {
@@ -265,6 +291,26 @@ class Room extends Component {
   handleUserAvatarPress(id, username) {
     const {dispatch} = this.props
     dispatch(Navigation.goTo({name: 'user', userId: id, username}))
+  }
+
+  handleQuotePress(message) {
+    const {textInputValue} = this.state
+    this.setState({
+      textInputValue: !!textInputValue ? `${textInputValue}\n> ${message.text}\n\n ` : `> ${message.text}\n\n `
+    })
+    this.refs.sendMessageField.focus()
+  }
+
+  handleQuoteWithLinkPress(message) {
+    const {rooms, route} = this.props
+    const room = rooms[route.roomId]
+    const time = moment(message.sent).format('YYYY MMM D, HH:mm')
+    const link = quoteLink(time, room.url, message.id)
+    const {textInputValue} = this.state
+    this.setState({
+      textInputValue: !!textInputValue ? `${textInputValue}\n${link} ` : `${link} `
+    })
+    this.refs.sendMessageField.focus()
   }
 
   leaveRoom() {
