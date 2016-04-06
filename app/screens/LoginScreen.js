@@ -4,7 +4,8 @@ import React, {
   TouchableNativeFeedback,
   Text,
   Image,
-  View
+  View,
+  ToastAndroid
 } from 'react-native'
 import s from '../styles/screens/Login/LoginScreenStyles'
 import {connect} from 'react-redux'
@@ -30,7 +31,7 @@ class LoginScreen extends Component {
         <View style={s.buttonGroup}>
           <TouchableNativeFeedback
             background={TouchableNativeFeedback.Ripple(colors.raspberry, false)}
-            onPress={() => {}}>
+            onPress={() => ToastAndroid.show('Login by WebView not supported yet', ToastAndroid.SHORT)}>
             <View style={[s.buttonStyle, {backgroundColor: colors.darkRed}]}>
               <Text pointerEvents="none"
                 style={s.buttonText}>
