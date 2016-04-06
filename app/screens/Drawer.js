@@ -5,9 +5,12 @@ import React, {
   View
 } from 'react-native'
 import {connect} from 'react-redux'
+import DialogAndroid from 'react-native-dialogs'
+
 import {logOut} from '../modules/auth'
 import * as Navigation from '../modules/navigation'
 import {selectRoom, leaveRoom, markAllAsRead} from '../modules/rooms'
+
 import s from '../styles/screens/Drawer/DrawerStyles'
 import DrawerUserInfo from '../components/Drawer/DrawerUserInfo'
 import ChannelList from '../components/Drawer/ChannelList'
@@ -23,6 +26,7 @@ class Drawer extends Component {
     this.onLongRoomPress = this.onLongRoomPress.bind(this)
     this.onLeave = this.onLeave.bind(this)
     this.logOut = this.logOut.bind(this)
+    this.handleDialogPress = this.handleDialogPress.bind(this)
   }
 
   onRoomPress(id) {
@@ -32,16 +36,20 @@ class Drawer extends Component {
   }
 
   onLongRoomPress(id) {
-    const {rooms, dispatch} = this.props
-    Alert.alert(
-      rooms[id].name,
-      'What do you want to do?',
-      [
-        {text: 'Mark as read', onPress: () => dispatch(markAllAsRead(id))},
-        {text: 'Leave room', onPress: () => this.onLeave(id)},
-        {text: 'Close', onPress: () => console.log('Cancel Pressed!')}
-      ]
-    )
+    const {rooms} = this.props
+    const dialog = new DialogAndroid()
+
+    const options = {
+      title: rooms[id].name,
+      items: [
+        'Mark as read',
+        'Leave this room'
+      ],
+      itemsCallback: (index, text) => this.handleDialogPress(index, text, id)
+    }
+
+    dialog.set(options)
+    dialog.show()
   }
 
   onLeave(id) {
@@ -50,8 +58,8 @@ class Drawer extends Component {
       'Leave room',
       'Are you sure?',
       [
-        {text: 'Cancel', onPress: () => console.log('Cancel Pressed!')},
-        {text: 'OK', onPress: () => dispatch(leaveRoom(id))}
+        {text: 'No', onPress: () => console.log('Cancel Pressed!')},
+        {text: 'Yes', onPress: () => dispatch(leaveRoom(id))}
       ]
     )
   }
@@ -61,8 +69,8 @@ class Drawer extends Component {
       'Logout',
       'Are you sure?',
       [
-        {text: 'Cancel', onPress: () => console.log('Cancel Pressed!')},
-        {text: 'OK', onPress: () => this.logOut()}
+        {text: 'No', onPress: () => console.log('Cancel Pressed!')},
+        {text: 'Yes', onPress: () => this.logOut()}
       ]
     )
   }
@@ -70,6 +78,20 @@ class Drawer extends Component {
   logOut() {
     const {dispatch} = this.props
     dispatch(logOut())
+  }
+
+  handleDialogPress(index, text, id) {
+    const {dispatch} = this.props
+    switch (text) {
+    case 'Mark as read':
+      dispatch(markAllAsRead(id))
+      break
+    case 'Leave this room':
+      this.onLeave(id)
+      break
+    default:
+      return null
+    }
   }
 
   render() {
