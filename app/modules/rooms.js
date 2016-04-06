@@ -54,6 +54,7 @@ export function getRooms() {
     dispatch({type: CURRENT_USER_ROOMS})
     try {
       const payload = await Api.currentUserRooms(token)
+
       dispatch({type: CURRENT_USER_ROOMS_RECEIVED, payload})
     } catch (error) {
       dispatch({type: CURRENT_USER_ROOMS_FAILED, error})
@@ -282,12 +283,14 @@ export default function rooms(state = initialState, action) {
   }
 
   case CURRENT_USER_ROOMS_RECEIVED: {
-    const sorted = action.payload.sort((item1, item2) => Date.parse(item2.lastAccessTime) - Date.parse(item1.lastAccessTime))
-    const normalized = normalize(sorted)
+    const sorted = action.payload
+      .filter(item => item.hasOwnProperty('lastAccessTime') && item.lastAccessTime !== null)
+      .sort((item1, item2) => Date.parse(item2.lastAccessTime) - Date.parse(item1.lastAccessTime))
+    const {ids, entities} = normalize(sorted)
     return {...state,
       isLoading: false,
-      ids: state.ids.concat(normalized.ids),
-      rooms: _.merge({}, state.rooms, normalized.entities)
+      ids: state.ids.concat(ids),
+      rooms: _.merge({}, state.rooms, entities)
     }
   }
 

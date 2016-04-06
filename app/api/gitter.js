@@ -154,7 +154,7 @@ function callApi(endpoint, token, options = {method: 'get'}) {
     return res.text()
   })
   .then(text => {
-    debugger
+    // debugger
     if (text === 'OK') {
       return []
     }

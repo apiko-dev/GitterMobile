@@ -68,10 +68,11 @@ export const categorize = (ids, entities) => {
     }
     if (entity.unreadItems !== 0) {
       unread.push(entity)
+      continue
     } else if (entity.githubType === 'REPO') {
       channels.push(entity)
     } else if (entity.githubType === 'ONETOONE') {
-      if (!entity.lastAccessTime || entity.lastAccessTime === null) {
+      if (!entity.hasOwnProperty('lastAccessTime') || entity.lastAccessTime === null) {
         hidden.push(entity)
       } else {
         channels.push(entity)
@@ -86,6 +87,7 @@ export const categorize = (ids, entities) => {
       console.log('Unknow room: ', entity)
     }
   }
+  // debugger
 
   return {
     unread,
