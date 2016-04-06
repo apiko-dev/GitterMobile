@@ -8,18 +8,26 @@ const ChannelList = ({ids, rooms, activeRoom, onRoomPress, onLongRoomPress}) => 
     return <Text>Nothing to display</Text>
   }
 
-  const {unread, channels, orgs} = categorize(ids, rooms)
+  const {favorites, unread, channels, orgs} = categorize(ids, rooms)
 
   // TODO: Use ListView instead to reduce performance issues
   return (
     <ScrollView>
+      {!!favorites.length &&
+        <ChannelListSection
+          name="Favorites"
+          items={favorites}
+          activeRoom={activeRoom}
+          onRoomPress={onRoomPress}
+          onLongRoomPress={onLongRoomPress} />
+      }
       {!!unread.length &&
         <ChannelListSection
           name="Unread"
           items={unread}
           activeRoom={activeRoom}
           onRoomPress={onRoomPress}
-          onLongRoomPress={onLongRoomPress}/>
+          onLongRoomPress={onLongRoomPress} />
       }
       {!!channels.length &&
         <ChannelListSection
@@ -27,7 +35,7 @@ const ChannelList = ({ids, rooms, activeRoom, onRoomPress, onLongRoomPress}) => 
           items={channels}
           activeRoom={activeRoom}
           onRoomPress={onRoomPress}
-          onLongRoomPress={onLongRoomPress}/>
+          onLongRoomPress={onLongRoomPress} />
       }
       {!!orgs.length &&
         <ChannelListSection
@@ -35,7 +43,7 @@ const ChannelList = ({ids, rooms, activeRoom, onRoomPress, onLongRoomPress}) => 
           items={orgs}
           activeRoom={activeRoom}
           onRoomPress={onRoomPress}
-          onLongRoomPress={onLongRoomPress}/>
+          onLongRoomPress={onLongRoomPress} />
       }
     </ScrollView>
   )
