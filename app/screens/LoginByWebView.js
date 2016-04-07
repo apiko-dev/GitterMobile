@@ -18,7 +18,7 @@ const jsForInjection = `
   el.style.height = '${Dimensions.get('window').height}px';
 `
 
-export default class LoginByWebView extends Component {
+class LoginByWebView extends Component {
   constructor(props) {
     super(props)
 
