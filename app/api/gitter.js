@@ -1,4 +1,46 @@
+import qs from 'qs'
+
 const apiUrl = 'https://api.gitter.im/v1'
+
+export const gitterLoginUrl = () => {
+  const clientId = ''
+  const responseType = 'code'
+  const redirectUri = 'gittermobile://code?code='
+
+  return `http://gitter.im/login/oauth/authorize?client_id=${clientId}&response_type=${responseType}&redirect_uri=${redirectUri}`
+}
+
+export function getToken(code) {
+  const params = {
+    client_id: '',
+    client_secret: '',
+    code,
+    redirect_uri: 'gittermobile://code?code=',
+    grant_type: 'authorization_code'
+  }
+
+  return fetch(`https://gitter.im/login/oauth/token`, {
+    method: 'post',
+    headers: {
+      'Accept': 'application/json'
+    },
+    body: JSON.stringify(params)
+  })
+  .then(res => {
+    console.log(res)
+    return res.text()
+  })
+  .then(text => {
+    // debugger
+    if (text === 'OK') {
+      return []
+    }
+    if (text.length === 0) {
+      return []
+    }
+    return JSON.parse(text)
+  })
+}
 
 /**
  * Authed user stuff

@@ -21,6 +21,7 @@
   "dependencies": {
     "lodash": "^4.2.1",
     "moment": "^2.11.2",
+    "qs": "^6.1.0",
     "react": "^0.14.7",
     "react-native": "^0.23.0-rc4",
     "react-native-dialogs": "0.0.14",

@@ -1,3 +1,4 @@
+import * as Api from '../api/gitter'
 import {INITIALIZED, init} from './app'
 import * as Navigation from './navigation'
 import {setItem, removeItem} from '../utils/storage'
@@ -24,6 +25,26 @@ export function loginByToken(token) {
 
       await setItem('token', token)
       dispatch({type: LOGIN_USER_BY_TOKEN, token})
+
+      dispatch(Navigation.resetTo({name: 'launch'}))
+      await dispatch(init())
+
+      dispatch({LOGINED_IN_SUCCESS})
+    } catch (err) {
+      dispatch({type: UNEXPECTED_ERROR, error: err})
+    }
+  }
+}
+
+export function loginByWebView(code) {
+  return async dispatch => {
+    try {
+      dispatch({type: LOGINING})
+
+      const payload = await Api.getToken(code)
+
+      await setItem('token', payload.access_token)
+      dispatch({type: LOGIN_USER_BY_TOKEN, token: payload.access_token})
 
       dispatch(Navigation.resetTo({name: 'launch'}))
       await dispatch(init())

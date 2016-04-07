@@ -23,6 +23,7 @@ import UserScreen from './UserScreen'
 import Drawer from './Drawer'
 import RoomUsersScreen from './RoomUsersScreen'
 import RoomUserAddScreen from './RoomUserAddScreen'
+import LoginByWebView from './LoginByWebView'
 
 // this need for passing navigator instance to navigation module
 export let nav
@@ -169,6 +170,11 @@ class App extends Component {
       return (
         <RoomUserAddScreen
           route={route} />
+      )
+
+    case 'loginByWebView':
+      return (
+        <LoginByWebView />
       )
 
     default:
