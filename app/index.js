@@ -13,8 +13,6 @@ class Root extends Component {
     return (
       <Provider store={store}>
         <View style={{flex: 1}}>
-          <StatusBar
-            backgroundColor={colors.darkRed} />
           <App />
         </View>
       </Provider>

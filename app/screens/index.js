@@ -24,6 +24,9 @@ import Drawer from './Drawer'
 import RoomUsersScreen from './RoomUsersScreen'
 import RoomUserAddScreen from './RoomUserAddScreen'
 
+import {THEMES} from '../constants'
+const {colors} = THEMES.gitterDefault
+
 // this need for passing navigator instance to navigation module
 export let nav
 
@@ -102,7 +105,7 @@ class App extends Component {
       } else {
         dispatch(Navigation.goTo(route))
       }
-    }, 300)
+    })
   }
 
 
@@ -196,6 +199,7 @@ class App extends Component {
       <DrawerLayoutAndroid
         ref="drawer"
         drawerLockMode={drawerLockMode}
+        statusBarBackgroundColor={colors.darkRed}
         style={{backgroundColor: 'white'}}
         drawerWidth={300}
         drawerPosition={DrawerLayoutAndroid.positions.Left}
