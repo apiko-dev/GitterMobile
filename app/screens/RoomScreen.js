@@ -142,7 +142,7 @@ class Room extends Component {
     const experied = moment(message.sent).add(5, 'm')
 
     const options = {
-      title: message.text,
+      title: !!message.editedAt && !message.text ? 'This message was deleted' : message.text,
       items: [
         'Copy text',
         'Reply',
