@@ -12,7 +12,7 @@ import React, {
 } from 'react-native'
 import {connect} from 'react-redux'
 import moment from 'moment'
-import DialogAndroid from 'react-native-dialogs'
+import BottomSheet from '../../libs/react-native-android-bottom-sheet'
 import _ from 'lodash'
 import s from '../styles/screens/Room/RoomStyles'
 import {THEMES} from '../constants'
@@ -140,17 +140,15 @@ class Room extends Component {
     const {currentUser, entities} = this.props
     const message = entities[id]
     const experied = moment(message.sent).add(5, 'm')
-    const dialog = new DialogAndroid();
 
     const options = {
-      title: 'Message',
+      title: message.text,
       items: [
         'Copy text',
         'Reply',
         'Quote',
         'Quote with link'
-      ],
-      itemsCallback: (index, text) => this.handleDialogPress(index, text, message, rowId, id)
+      ]
     }
 
     if (currentUser.username === message.fromUser.username &&
@@ -158,8 +156,8 @@ class Room extends Component {
       options.items.push('Edit', 'Delete')
     }
     // TODO: Use BottomSheet/ActionSheet instead of Alert
-    dialog.set(options)
-    dialog.show()
+    BottomSheet.showBotttomSheetWithOptions(options, (index, text) =>
+      this.handleDialogPress(index, text, message, rowId, id))
   }
 
   onDelete(rowId, id) {

@@ -1,5 +1,6 @@
 rootProject.name = 'gittermobile'
 
-include ':app', ':react-native-gitter-faye', ':react-native-dialogs'
+include ':app', ':react-native-android-bottom-sheet', ':react-native-gitter-faye', ':react-native-dialogs'
+project(':react-native-android-bottom-sheet').projectDir = new File(rootProject.projectDir, '../libs/react-native-android-bottom-sheet')
 project(':react-native-gitter-faye').projectDir = new File(rootProject.projectDir, '../libs/react-native-gitter-faye')
 project(':react-native-dialogs').projectDir = file('../node_modules/react-native-dialogs/android')

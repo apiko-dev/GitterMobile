@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.terrysahaidak.faye.FayeGitterPackage;
 import com.aakashns.reactnativedialogs.ReactNativeDialogsPackage;
+import com.terrysahaidak.bottomsheet.AndroidBottomSheetPackage;
 
 public class MainActivity extends ReactActivity {
 
@@ -39,7 +40,8 @@ public class MainActivity extends ReactActivity {
         return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
             new ReactNativeDialogsPackage(),
-            new FayeGitterPackage()
+            new FayeGitterPackage(),
+            new AndroidBottomSheetPackage(this)
         );
     }
 }
