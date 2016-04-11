@@ -1,6 +1,6 @@
 import FayeGitter from '../../libs/react-native-gitter-faye'
 import {DeviceEventEmitter} from 'react-native'
-import {updateRoomState} from './rooms'
+import {updateRoomState, receiveRoomsSnapshot} from './rooms'
 import {appendMessages, updateMessageRealtime} from './messages'
 
 /**
@@ -73,13 +73,15 @@ export function setupFayeEvents() {
         dispatch(parseEvent(event))
       })
     DeviceEventEmitter
+      .addListener('FayeGitter:log', event => {
+        dispatch(parseSnapshotEvent(event))
+      })
+    DeviceEventEmitter
       .addListener('FayeGitter:SubscribtionFailed', log => console.warn(log)) // eslint-disable-line no-console
     DeviceEventEmitter
       .addListener('FayeGitter:Subscribed', log => console.log('SUBSCRIBED', log)) // eslint-disable-line no-console
     DeviceEventEmitter
       .addListener('FayeGitter:Unsubscribed', log => console.log(log)) // eslint-disable-line no-console
-    DeviceEventEmitter
-      .addListener('FayeGitter:log', log => console.log(log)) // eslint-disable-line no-console
   }
 }
 
@@ -89,6 +91,7 @@ export function setupFayeEvents() {
 
 function parseEvent(event) {
   return (dispatch, getState) => {
+    console.log('MESSAGE', event)
     const message = JSON.parse(event.json)
 
     const {id} = getState().viewer.user
@@ -109,6 +112,50 @@ function parseEvent(event) {
         dispatch(updateMessageRealtime(activeRoom, message.model))
       }
     }
+  }
+}
+
+export function parseSnapshotEvent(event) {
+  return dispatch => {
+    if (!event.log.match('Received message: ')) {
+      return
+    }
+
+    const message = JSON.parse(event.log.split('Received message: ')[1])
+
+    if (message.channel !== '/meta/subscribe' || message.successful !== true) {
+      return
+    }
+
+    const sbs = message.subscription
+
+    const roomsRegx = /\/api\/v1\/user\/[a-f\d]{24}\/rooms/
+    // const messagesRegx = /\/api\/v1\/rooms\/[a-f\d]{24}\/chatMessages/
+    // const messagesRegxIds = /\/api\/v1\/rooms\/([a-f\d]{24})\/chatMessages/
+    // const eventsRegx = /\/api\/v1\/rooms\/[a-f\d]{24}\/events/
+    // const eventsRegxIds = /\/api\/v1\/rooms\/([a-f\d]{24})\/events/
+    // const readByRegx = /\/api\/v1\/rooms\/[a-f\d]{24}\/chatMessages\/[a-f\d]{24}\/readBy/
+    // const readByRegxIds = /\/api\/v1\/rooms\/([a-f\d]{24})\/chatMessages\/([a-f\d]{24})\/readBy/
+
+    if (sbs.match(roomsRegx)) {
+      dispatch(receiveRoomsSnapshot(message.ext.snapshot))
+    }
+
+    // if (sbs.match(messagesRegx)) {
+    //   const id = sbs.match(messagesRegxIds)[1]
+    //   dispatch(receiveRoomSnapshot(id, message.ext.snapshot))
+    // }
+    //
+    // if (sbs.match(eventsRegx)) {
+    //   const id = sbs.match(eventsRegxIds)[1]
+    //   dispatch(receiveEventsSnapshot(id, message.ext.snapshot))
+    // }
+    //
+    // if (sbs.match(readByRegx)) {
+    //   const roomId = sbs.match(readByRegxIds)[1]
+    //   const messageId = sbs.match(readByRegxIds)[2]
+    //   dispatch(receiveReadbySnapshot(roomId, messageId, message.ext.snapshot))
+    // }
   }
 }
 

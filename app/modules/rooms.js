@@ -40,6 +40,7 @@ export const ADD_USER_TO_ROOM = 'rooms/ADD_USER_TO_ROOM'
 export const ADD_USER_TO_ROOM_OK = 'rooms/ADD_USER_TO_ROOM_OK'
 export const ADD_USER_TO_ROOM_ERROR = 'rooms/ADD_USER_TO_ROOM_ERROR'
 export const HIDE_ROOM = 'rooms/HIDE_ROOM'
+export const RECEIVE_ROOMS_SNAPSHOT = 'rooms/RECEIVE_ROOMS_SNAPSHOT'
 
 /**
  * Action Creators
@@ -59,6 +60,13 @@ export function getRooms() {
     } catch (error) {
       dispatch({type: CURRENT_USER_ROOMS_FAILED, error})
     }
+  }
+}
+
+export function receiveRoomsSnapshot(payload) {
+  return {
+    type: RECEIVE_ROOMS_SNAPSHOT,
+    payload
   }
 }
 
@@ -282,6 +290,7 @@ export default function rooms(state = initialState, action) {
     }
   }
 
+  case RECEIVE_ROOMS_SNAPSHOT:
   case CURRENT_USER_ROOMS_RECEIVED: {
     const sorted = action.payload
       .filter(item => item.hasOwnProperty('lastAccessTime') && item.lastAccessTime !== null)
@@ -289,8 +298,8 @@ export default function rooms(state = initialState, action) {
     const {ids, entities} = normalize(sorted)
     return {...state,
       isLoading: false,
-      ids: state.ids.concat(ids),
-      rooms: _.merge({}, state.rooms, entities)
+      ids,
+      rooms: entities
     }
   }
 
