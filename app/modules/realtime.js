@@ -2,6 +2,7 @@ import FayeGitter from '../../libs/react-native-gitter-faye'
 import {DeviceEventEmitter} from 'react-native'
 import {updateRoomState, receiveRoomsSnapshot} from './rooms'
 import {appendMessages, updateMessageRealtime} from './messages'
+import {receiveRoomEventsSnapshot} from './activity'
 
 /**
  * Constants
@@ -12,6 +13,9 @@ export const ROOMS_SUBSCRIBED = 'realtime/ROOMS_SUBSCRIBED'
 export const ROOMS_UNSUBSCRIBED = 'realtime/ROOMS_UNSUBSCRIBED'
 export const SUBSCRIBE_TO_CHAT_MESSAGES = 'realtime/SUBSCRIBE_TO_CHAT_MESSAGES'
 export const UNSUBSCRIBE_TO_CHAT_MESSAGES = 'realtime/UNSUBSCRIBE_TO_CHAT_MESSAGES'
+export const SUBSCRIBE_TO_ROOM_EVENTS = 'realtime/SUBSCRIBE_TO_ROOM_EVENTS'
+export const UNSUBSCRIBE_TO_ROOM_EVENTS = 'realtime/UNSUBSCRIBE_TO_ROOM_EVENTS'
+
 
 /**
  * Actions
@@ -132,8 +136,8 @@ export function parseSnapshotEvent(event) {
     const roomsRegx = /\/api\/v1\/user\/[a-f\d]{24}\/rooms/
     // const messagesRegx = /\/api\/v1\/rooms\/[a-f\d]{24}\/chatMessages/
     // const messagesRegxIds = /\/api\/v1\/rooms\/([a-f\d]{24})\/chatMessages/
-    // const eventsRegx = /\/api\/v1\/rooms\/[a-f\d]{24}\/events/
-    // const eventsRegxIds = /\/api\/v1\/rooms\/([a-f\d]{24})\/events/
+    const eventsRegx = /\/api\/v1\/rooms\/[a-f\d]{24}\/events/
+    const eventsRegxIds = /\/api\/v1\/rooms\/([a-f\d]{24})\/events/
     // const readByRegx = /\/api\/v1\/rooms\/[a-f\d]{24}\/chatMessages\/[a-f\d]{24}\/readBy/
     // const readByRegxIds = /\/api\/v1\/rooms\/([a-f\d]{24})\/chatMessages\/([a-f\d]{24})\/readBy/
 
@@ -146,10 +150,10 @@ export function parseSnapshotEvent(event) {
     //   dispatch(receiveRoomSnapshot(id, message.ext.snapshot))
     // }
     //
-    // if (sbs.match(eventsRegx)) {
-    //   const id = sbs.match(eventsRegxIds)[1]
-    //   dispatch(receiveEventsSnapshot(id, message.ext.snapshot))
-    // }
+    if (sbs.match(eventsRegx)) {
+      const id = sbs.match(eventsRegxIds)[1]
+      dispatch(receiveRoomEventsSnapshot(id, message.ext.snapshot))
+    }
     //
     // if (sbs.match(readByRegx)) {
     //   const roomId = sbs.match(readByRegxIds)[1]
@@ -193,6 +197,24 @@ export function unsubscribeToChatMessages(roomId) {
   }
 }
 
+
+export function subscribeToRoomEvents(roomId) {
+  return dispatch => {
+    FayeGitter.subscribe(`/api/v1/rooms/${roomId}/events`)
+    dispatch({type: SUBSCRIBE_TO_ROOM_EVENTS, roomId})
+  }
+}
+
+/**
+ * Unsubscribe for new room's messages => faye chat messages endpoint
+ */
+
+export function unsubscribeToRoomEvents(roomId) {
+  return (dispatch) => {
+    FayeGitter.unsubscribe(`/api/v1/rooms/${roomId}/events`)
+    dispatch({type: UNSUBSCRIBE_TO_ROOM_EVENTS, roomId})
+  }
+}
 
 /**
  * Reducer

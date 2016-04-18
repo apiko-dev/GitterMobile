@@ -1,4 +1,5 @@
 import * as Api from '../api/gitter'
+import {subscribeToRoomEvents} from './realtime'
 
 export const REPO_INFO = 'roomInfo/REPO_INFO'
 export const REPO_INFO_OK = 'roomInfo/REPO_INFO_OK'
@@ -10,6 +11,10 @@ export function getRoomInfo(repoName, roomId) {
   return async (dispatch, getState) => {
     const {token} = getState().auth
     const room = getState().rooms.rooms[roomId]
+
+    if (room.githubType !== 'ONETOONE') {
+      dispatch(subscribeToRoomEvents(roomId))
+    }
 
     if (room.githubType !== 'REPO') {
       dispatch({type: ROOM_INFO, payload: room})

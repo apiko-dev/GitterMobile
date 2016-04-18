@@ -11,6 +11,7 @@ import roomInfo from './roomInfo'
 import messages from './messages'
 import settings from './settings'
 import realtime from './realtime'
+import activity from './activity'
 import navigation from './navigation'
 
 const rootReducer = combineReducers({
@@ -25,6 +26,7 @@ const rootReducer = combineReducers({
   messages,
   settings,
   realtime,
+  activity,
   navigation
 })
 
