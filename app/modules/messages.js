@@ -21,12 +21,14 @@ export const SEND_MESSAGE = 'messages/SEND_MESSAGE'
 export const SEND_MESSAGE_RECEIVED = 'messages/SEND_MESSAGE_RECEIVED'
 export const SEND_MESSAGE_FAILED = 'messages/SEND_MESSAGE_FAILED'
 export const RESEND_MESSAGE = 'messages/RESEND_MESSAGE'
+export const RESEND_MESSAGE_OK = 'messages/RESEND_MESSAGE_OK'
 export const UPDATE_MESSAGE = 'messages/UPDATE_MESSAGE'
 export const UPDATE_MESSAGE_OK = 'messages/UPDATE_MESSAGE_OK'
 export const UPDATE_MESSAGE_FAILED = 'messages/UPDATE_MESSAGE_FAILED'
 export const CLEAR_ERROR = 'messages/CLEAR_ERROR'
 export const GETTING_MORE_MESSAGES = 'messages/GETTING_MORE_MESSAGES'
 export const GETTING_MORE_MESSAGES_OK = 'messages/GETTING_MORE_MESSAGES_OK'
+export const DELETE_MESSAGE = 'messages/DELETE_MESSAGE'
 
 
 /**
@@ -210,7 +212,8 @@ export function resendMessage(roomId, rowId, text) {
 
     try {
       const payload = await Api.sendMessage(token, roomId, text)
-      dispatch({type: SEND_MESSAGE_RECEIVED, message, roomId, payload})
+      dispatch({type: DELETE_MESSAGE, rowId, roomId})
+      dispatch({type: RESEND_MESSAGE_OK, roomId, payload})
     } catch (error) {
       dispatch({type: SEND_MESSAGE_FAILED, error, message, roomId})
     }
@@ -237,6 +240,14 @@ export function updateMessageRealtime(roomId, message) {
 export function clearError() {
   return {
     type: CLEAR_ERROR
+  }
+}
+
+export function deleteFailedMessage(rowId, roomId) {
+  return {
+    type: DELETE_MESSAGE,
+    rowId,
+    roomId
   }
 }
 
@@ -481,6 +492,31 @@ export default function messages(state = initialState, action) {
     }
   }
 
+  case RESEND_MESSAGE_OK: {
+    const {roomId, payload} = action
+    const {ids, entities} = normalize([payload])
+    const byRoom = state.byRoom[roomId]
+    const rowIds = [].concat(state.listView[roomId].rowIds)
+    const data = [].concat(state.listView[roomId].data)
+
+    data.push(payload)
+    rowIds.unshift(data.length - 1)
+
+    return {...state,
+      byRoom: {...state.byRoom,
+        [roomId]: byRoom.concat(ids)
+      },
+      entities: _.merge({}, state.entities, entities),
+      listView: {...state.listView,
+        [roomId]: {
+          dataSource: state.listView[roomId].dataSource.cloneWithRows(data, rowIds),
+          data,
+          rowIds
+        }
+      }
+    }
+  }
+
   case SEND_MESSAGE_FAILED: {
     const {message, roomId, error} = action
 
@@ -500,9 +536,7 @@ export default function messages(state = initialState, action) {
           data,
           rowIds
         }
-      },
-      error: true,
-      errors: error
+      }
     }
   }
 
@@ -513,6 +547,23 @@ export default function messages(state = initialState, action) {
     const newMessage = _.merge({}, message)
 
     data[rowId] = newMessage
+
+    return {...state,
+      listView: {...state.listView,
+        [roomId]: {
+          dataSource: state.listView[roomId].dataSource.cloneWithRows(data, rowIds),
+          data,
+          rowIds
+        }
+      }
+    }
+  }
+
+  case DELETE_MESSAGE: {
+    const {roomId, rowId} = action
+    const rowIds = [].concat(state.listView[roomId].rowIds).filter(id => id !== rowId)
+    const data = [].concat(state.listView[roomId].data)
+    data.splice(rowId, 1)
 
     return {...state,
       listView: {...state.listView,

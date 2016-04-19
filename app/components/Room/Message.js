@@ -35,15 +35,14 @@ class Message extends Component {
   }
 
   onMessagePress() {
-    const {onResendingMessage, text, rowId} = this.props
-    if (!!this.props.failed && this.props.failed === true) {
-      onResendingMessage(rowId, text)
-    }
+    const {id, onPress, text, rowId} = this.props
+    const failed = !!this.props.failed && this.props.failed === true
+    onPress(id, rowId, text, failed)
   }
 
   onLongPress() {
-    const {id, rowId, onLongPress} = this.props
-    onLongPress(rowId, id)
+    const {id, onLongPress} = this.props
+    onLongPress(id)
   }
 
   handleUrlPress(url) {
@@ -180,7 +179,7 @@ Message.propTypes = {
   sending: PropTypes.bool,
   failed: PropTypes.bool,
   dispatch: PropTypes.func,
-  onResendingMessage: PropTypes.func,
+  onPress: PropTypes.func,
   onLongPress: PropTypes.func,
   onUsernamePress: PropTypes.func,
   onUserAvatarPress: PropTypes.func,
