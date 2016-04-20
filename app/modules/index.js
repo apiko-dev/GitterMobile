@@ -5,6 +5,7 @@ import app from './app'
 import auth from './auth'
 import rooms from './rooms'
 import users from './users'
+import readBy from './readBy'
 import viewer from './viewer'
 import search from './search'
 import roomInfo from './roomInfo'
@@ -20,6 +21,7 @@ const rootReducer = combineReducers({
   auth,
   rooms,
   users,
+  readBy,
   viewer,
   search,
   roomInfo,

@@ -175,8 +175,8 @@ class Room extends Component {
   }
 
   onMessageLongPress(messageId) {
-    const {dispatch} = this.props
-    // dispatch(Navigation.goTo({name: 'message', messageId}))
+    const {dispatch, route: {roomId}} = this.props
+    dispatch(Navigation.goTo({name: 'message', messageId, roomId}))
   }
 
   onDelete(rowId, id) {

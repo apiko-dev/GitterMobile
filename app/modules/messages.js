@@ -29,6 +29,9 @@ export const CLEAR_ERROR = 'messages/CLEAR_ERROR'
 export const GETTING_MORE_MESSAGES = 'messages/GETTING_MORE_MESSAGES'
 export const GETTING_MORE_MESSAGES_OK = 'messages/GETTING_MORE_MESSAGES_OK'
 export const DELETE_MESSAGE = 'messages/DELETE_MESSAGE'
+export const SINGLE_MESSAGE = 'messages/SINGLE_MESSAGE'
+export const SINGLE_MESSAGE_OK = 'messages/SINGLE_MESSAGE_OK'
+export const SINGLE_MESSAGE_ERROR = 'messages/SINGLE_MESSAGE_ERROR'
 
 
 /**
@@ -251,6 +254,20 @@ export function deleteFailedMessage(rowId, roomId) {
   }
 }
 
+export function getSingleMessage(roomId, messageId) {
+  return async (dispatch, getState) => {
+    const {token} = getState().auth
+    dispatch({type: SINGLE_MESSAGE, roomId, messageId})
+
+    try {
+      const payload = await Api.getMessage(token, roomId, messageId)
+      dispatch({type: SINGLE_MESSAGE_OK, roomId, messageId, payload})
+    } catch (error) {
+      dispatch({type: SINGLE_MESSAGE_ERROR, error, messageId, roomId})
+    }
+  }
+}
+
 
 /**
  * Reducer
@@ -271,7 +288,9 @@ const initialState = {
   },
   hasNoMore: {
     // [id]: bool
-  }
+  },
+  isLoadingMessage: false,
+  messages: {}
 }
 
 export default function messages(state = initialState, action) {
@@ -608,11 +627,26 @@ export default function messages(state = initialState, action) {
     }
   }
 
+  case SINGLE_MESSAGE:
+    return {...state,
+      isLoadingMessage: true
+    }
+
+  case SINGLE_MESSAGE_OK:
+    return {...state,
+      isLoadingMessage: false,
+      messages: {...state.messages,
+        [action.messageId]: action.payload
+      }
+    }
+
+  case SINGLE_MESSAGE_ERROR:
   case ROOM_MESSAGES_BEFORE_FAILED:
   case ROOM_MESSAGES_FAILED:
     return {...state,
       isLoading: false,
       isLoadingMore: false,
+      isLoadingMessage: false,
       error: true,
       errors: action.error
     }

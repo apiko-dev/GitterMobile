@@ -3,6 +3,7 @@ import {DeviceEventEmitter} from 'react-native'
 import {updateRoomState, receiveRoomsSnapshot} from './rooms'
 import {appendMessages, updateMessageRealtime} from './messages'
 import {receiveRoomEventsSnapshot} from './activity'
+import {receiveReadBySnapshot} from './readBy'
 
 /**
  * Constants
@@ -15,6 +16,8 @@ export const SUBSCRIBE_TO_CHAT_MESSAGES = 'realtime/SUBSCRIBE_TO_CHAT_MESSAGES'
 export const UNSUBSCRIBE_TO_CHAT_MESSAGES = 'realtime/UNSUBSCRIBE_TO_CHAT_MESSAGES'
 export const SUBSCRIBE_TO_ROOM_EVENTS = 'realtime/SUBSCRIBE_TO_ROOM_EVENTS'
 export const UNSUBSCRIBE_TO_ROOM_EVENTS = 'realtime/UNSUBSCRIBE_TO_ROOM_EVENTS'
+export const SUBSCRIBE_TO_READ_BY = 'realtime/SUBSCRIBE_TO_READ_BY'
+export const UNSUBSCRIBE_FROM_READ_BY = 'realtime/UNSUBSCRIBE_FROM_READ_BY'
 
 
 /**
@@ -138,8 +141,8 @@ export function parseSnapshotEvent(event) {
     // const messagesRegxIds = /\/api\/v1\/rooms\/([a-f\d]{24})\/chatMessages/
     const eventsRegx = /\/api\/v1\/rooms\/[a-f\d]{24}\/events/
     const eventsRegxIds = /\/api\/v1\/rooms\/([a-f\d]{24})\/events/
-    // const readByRegx = /\/api\/v1\/rooms\/[a-f\d]{24}\/chatMessages\/[a-f\d]{24}\/readBy/
-    // const readByRegxIds = /\/api\/v1\/rooms\/([a-f\d]{24})\/chatMessages\/([a-f\d]{24})\/readBy/
+    const readByRegx = /\/api\/v1\/rooms\/[a-f\d]{24}\/chatMessages\/[a-f\d]{24}\/readBy/
+    const readByRegxIds = /\/api\/v1\/rooms\/([a-f\d]{24})\/chatMessages\/([a-f\d]{24})\/readBy/
 
     if (sbs.match(roomsRegx)) {
       dispatch(receiveRoomsSnapshot(message.ext.snapshot))
@@ -155,11 +158,10 @@ export function parseSnapshotEvent(event) {
       dispatch(receiveRoomEventsSnapshot(id, message.ext.snapshot))
     }
     //
-    // if (sbs.match(readByRegx)) {
-    //   const roomId = sbs.match(readByRegxIds)[1]
-    //   const messageId = sbs.match(readByRegxIds)[2]
-    //   dispatch(receiveReadbySnapshot(roomId, messageId, message.ext.snapshot))
-    // }
+    if (sbs.match(readByRegx)) {
+      const messageId = sbs.match(readByRegxIds)[2]
+      dispatch(receiveReadBySnapshot(messageId, message.ext.snapshot))
+    }
   }
 }
 
@@ -213,6 +215,24 @@ export function unsubscribeToRoomEvents(roomId) {
   return (dispatch) => {
     FayeGitter.unsubscribe(`/api/v1/rooms/${roomId}/events`)
     dispatch({type: UNSUBSCRIBE_TO_ROOM_EVENTS, roomId})
+  }
+}
+
+export function subscribeToReadBy(roomId, messageId) {
+  return dispatch => {
+    FayeGitter.subscribe(`/api/v1/rooms/${roomId}/chatMessages/${messageId}/readBy`)
+    dispatch({type: SUBSCRIBE_TO_READ_BY, roomId})
+  }
+}
+
+/**
+ * Unsubscribe for new room's messages => faye chat messages endpoint
+ */
+
+export function unsubscribeFromReadBy(roomId, messageId) {
+  return (dispatch) => {
+    FayeGitter.unsubscribe(`/api/v1/rooms/${roomId}/chatMessages/${messageId}/readBy`)
+    dispatch({type: UNSUBSCRIBE_FROM_READ_BY, roomId})
   }
 }
 

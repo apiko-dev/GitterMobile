@@ -23,6 +23,7 @@ import UserScreen from './UserScreen'
 import Drawer from './Drawer'
 import RoomUsersScreen from './RoomUsersScreen'
 import RoomUserAddScreen from './RoomUserAddScreen'
+import Message from './Message'
 
 import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault
@@ -171,6 +172,12 @@ class App extends Component {
     case 'addUser':
       return (
         <RoomUserAddScreen
+          route={route} />
+      )
+
+    case 'message':
+      return (
+        <Message
           route={route} />
       )
 

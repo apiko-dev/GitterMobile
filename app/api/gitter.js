@@ -134,6 +134,10 @@ export function addUserToRoom(token, roomId, username) {
   })
 }
 
+export function getMessage(token, roomId, messageId) {
+  return callApi(`rooms/${roomId}/chatMessages/${messageId}`, token)
+}
+
 
 /**
  * Private functions
