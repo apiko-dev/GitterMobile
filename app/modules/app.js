@@ -2,7 +2,13 @@ import {getItem} from '../utils/storage'
 import {getCurrentUser} from './viewer'
 import {getRooms, getSuggestedRooms} from './rooms'
 import {NetInfo, AppState} from 'react-native'
-import {setupFayeEvents, setupFaye, onNetStatusChangeFaye} from './realtime'
+import {
+  setupFayeEvents,
+  setupFaye,
+  onNetStatusChangeFaye,
+  subscribeToChatMessages,
+  subscribeToRooms
+} from './realtime'
 import * as Navigation from './navigation'
 
 /**
@@ -71,10 +77,24 @@ function setupNetStatusListener() {
 
 function setupAppStatusListener() {
   return (dispatch, getState) => {
-    AppState.addEventListener('change', status => {
+    AppState.addEventListener('change', async status => {
       // TODO: Update drawer rooms state and messages in current room
       // if app status changes from backgrount to active
-      dispatch({type: CHANGE_APP_STATE, payload: status})
+      try {
+        dispatch({type: CHANGE_APP_STATE, payload: status})
+        const {fayeConnected} = getState().app
+        if (!fayeConnected) {
+          await setupFaye()
+        }
+
+        const {activeRoom} = getState().rooms
+        if (!!activeRoom) {
+          dispatch(subscribeToChatMessages(activeRoom))
+        }
+        dispatch(subscribeToRooms())
+      } catch (error) {
+        console.log(error)
+      }
     })
   }
 }

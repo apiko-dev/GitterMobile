@@ -49,8 +49,12 @@ export function onNetStatusChangeFaye(status) {
     if (!status && fayeConnected) {
       dispatch({type: FAYE_CONNECT, payload: status})
     }
-    if (status && !fayeConnected) {
-      dispatch(setupFaye())
+    try {
+      if (status && !fayeConnected) {
+        await dispatch(setupFaye())
+      }
+    } catch (error) {
+      console.log(error)
     }
   }
 }
