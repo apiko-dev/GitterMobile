@@ -1,7 +1,7 @@
 import FayeGitter from '../../libs/react-native-gitter-faye'
 import {DeviceEventEmitter} from 'react-native'
 import {updateRoomState, receiveRoomsSnapshot} from './rooms'
-import {appendMessages, updateMessageRealtime} from './messages'
+import {appendMessages, updateMessageRealtime, receiveRoomMessagesSnapshot} from './messages'
 import {receiveRoomEventsSnapshot} from './activity'
 import {receiveReadBySnapshot} from './readBy'
 
@@ -141,8 +141,8 @@ export function parseSnapshotEvent(event) {
     const sbs = message.subscription
 
     const roomsRegx = /\/api\/v1\/user\/[a-f\d]{24}\/rooms/
-    // const messagesRegx = /\/api\/v1\/rooms\/[a-f\d]{24}\/chatMessages/
-    // const messagesRegxIds = /\/api\/v1\/rooms\/([a-f\d]{24})\/chatMessages/
+    const messagesRegx = /\/api\/v1\/rooms\/[a-f\d]{24}\/chatMessages/
+    const messagesRegxIds = /\/api\/v1\/rooms\/([a-f\d]{24})\/chatMessages/
     const eventsRegx = /\/api\/v1\/rooms\/[a-f\d]{24}\/events/
     const eventsRegxIds = /\/api\/v1\/rooms\/([a-f\d]{24})\/events/
     const readByRegx = /\/api\/v1\/rooms\/[a-f\d]{24}\/chatMessages\/[a-f\d]{24}\/readBy/
@@ -152,11 +152,11 @@ export function parseSnapshotEvent(event) {
       dispatch(receiveRoomsSnapshot(message.ext.snapshot))
     }
 
-    // if (sbs.match(messagesRegx)) {
-    //   const id = sbs.match(messagesRegxIds)[1]
-    //   dispatch(receiveRoomSnapshot(id, message.ext.snapshot))
-    // }
-    //
+    if (sbs.match(messagesRegx)) {
+      const id = sbs.match(messagesRegxIds)[1]
+      dispatch(receiveRoomMessagesSnapshot(id, message.ext.snapshot))
+    }
+
     if (sbs.match(eventsRegx)) {
       const id = sbs.match(eventsRegxIds)[1]
       dispatch(receiveRoomEventsSnapshot(id, message.ext.snapshot))

@@ -32,6 +32,7 @@ export const DELETE_MESSAGE = 'messages/DELETE_MESSAGE'
 export const SINGLE_MESSAGE = 'messages/SINGLE_MESSAGE'
 export const SINGLE_MESSAGE_OK = 'messages/SINGLE_MESSAGE_OK'
 export const SINGLE_MESSAGE_ERROR = 'messages/SINGLE_MESSAGE_ERROR'
+export const RECEIVE_ROOM_MESSAGES_SNAPSHOT = 'messages/RECEIVE_ROOM_MESSAGES_SNAPSHOT'
 
 
 /**
@@ -140,6 +141,22 @@ export function getRoomMessagesIfNeeded(roomId) {
     } finally {
       dispatch({type: GETTING_MORE_MESSAGES_OK})
     }
+  }
+}
+
+export function receiveRoomMessagesSnapshot(roomId, snapshot) {
+  return (dispatch, getState) => {
+    const listView = getState().messages.listView[roomId]
+    if (!listView.data.length | !snapshot.length) {
+      return
+    }
+
+    const index = _.findIndex(snapshot, listView.data[0])
+    if (index === -1 | index === 29) {
+      return
+    }
+
+    dispatch({type: RECEIVE_ROOM_MESSAGES_SNAPSHOT, roomId, index, snapshot})
   }
 }
 
@@ -372,6 +389,35 @@ export default function messages(state = initialState, action) {
   case ROOM_MESSAGES_APPEND: {
     const {payload, roomId} = action
     const {ids, entities} = normalize(payload)
+    const byRoom = state.byRoom[roomId]
+
+    const rowIds = [].concat(state.listView[roomId].rowIds)
+    const data = [].concat(state.listView[roomId].data)
+    // we need to reverse our messages array to display it inverted
+    const reversedIds = [].concat(ids).reverse()
+    for (let i = 0; i < reversedIds.length; i++) {
+      data.push(entities[reversedIds[i]])
+      rowIds.unshift(data.length - 1)
+    }
+    return {...state,
+      isLoadingMore: false,
+      byRoom: {...state.byRoom,
+        [roomId]: byRoom.concat(ids)
+      },
+      entities: _.merge({}, state.entities, entities),
+      listView: {...state.listView,
+        [roomId]: {
+          dataSource: state.listView[roomId].dataSource.cloneWithRows(data, rowIds),
+          data,
+          rowIds
+        }
+      }
+    }
+  }
+
+  case RECEIVE_ROOM_MESSAGES_SNAPSHOT: {
+    const {snapshot, index, roomId} = action
+    const {ids, entities} = normalize(snapshot.slice(index))
     const byRoom = state.byRoom[roomId]
 
     const rowIds = [].concat(state.listView[roomId].rowIds)
