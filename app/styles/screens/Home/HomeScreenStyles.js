@@ -25,6 +25,9 @@ const styles = StyleSheet.create({
     color: 'white',
     paddingBottom: 20
   },
+  loadingWrap: {
+    height: 200
+  },
   instructions: {
     textAlign: 'center',
     color: '#333333',

@@ -96,6 +96,18 @@ export function setupFayeEvents() {
   }
 }
 
+export function removeFayeEvents() {
+  return (dispatch) => {
+    DeviceEventEmitter.removeEventListener('FayeGitter:onDisconnected')
+    DeviceEventEmitter.removeEventListener('FayeGitter:onFailedToCreate')
+    DeviceEventEmitter.removeEventListener('FayeGitter:Message')
+    DeviceEventEmitter.removeEventListener('FayeGitter:log')
+    DeviceEventEmitter.removeEventListener('FayeGitter:SubscribtionFailed')
+    DeviceEventEmitter.removeEventListener('FayeGitter:Subscribed')
+    DeviceEventEmitter.removeEventListener('FayeGitter:Unsubscribed')
+  }
+}
+
 /**
  * Function which parse incoming events and dispatchs needed action
  */

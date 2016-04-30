@@ -1,4 +1,5 @@
 import {INITIALIZED, init} from './app'
+import {removeFayeEvents} from './realtime'
 import * as Navigation from './navigation'
 import {setItem, removeItem} from '../utils/storage'
 
@@ -40,6 +41,7 @@ export function logOut() {
     try {
       await removeItem('token')
       dispatch({type: LOGOUT})
+      dispatch(removeFayeEvents())
       dispatch(Navigation.resetTo({name: 'login'}))
     } catch (error) {
       console.warn("Can't logout. Error: ", error) // eslint-disable-line no-console
