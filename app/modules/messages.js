@@ -33,6 +33,9 @@ export const SINGLE_MESSAGE = 'messages/SINGLE_MESSAGE'
 export const SINGLE_MESSAGE_OK = 'messages/SINGLE_MESSAGE_OK'
 export const SINGLE_MESSAGE_ERROR = 'messages/SINGLE_MESSAGE_ERROR'
 export const RECEIVE_ROOM_MESSAGES_SNAPSHOT = 'messages/RECEIVE_ROOM_MESSAGES_SNAPSHOT'
+export const READ_MESSAGES = 'messages/READ_MESSAGES'
+export const READ_MESSAGES_OK = 'messages/READ_MESSAGES_OK'
+export const READ_MESSAGES_ERROR = 'messages/READ_MESSAGES_ERROR'
 
 
 /**
@@ -281,6 +284,30 @@ export function getSingleMessage(roomId, messageId) {
       dispatch({type: SINGLE_MESSAGE_OK, roomId, messageId, payload})
     } catch (error) {
       dispatch({type: SINGLE_MESSAGE_ERROR, error, messageId, roomId})
+    }
+  }
+}
+
+export function readMessages(roomId, changedRows) {
+  return async (dispatch, getState) => {
+    const {token} = getState().auth
+    const {id} = getState().viewer.user
+    const listView = getState().messages.listView[roomId]
+
+    const visibleAndUnread = Object.keys(changedRows)
+      .filter(rowId => (changedRows[rowId] === true))
+      .filter(rowId => (listView.data[rowId].unread === true))
+
+    console.log('UNREAD', visibleAndUnread)
+    dispatch({type: READ_MESSAGES, roomId, visibleAndUnread})
+
+    try {
+      await Api.readMessages(
+        token, id, roomId, visibleAndUnread.map(item => listView.data[item].id)
+      )
+      dispatch({type: READ_MESSAGES_OK, roomId, visibleAndUnread})
+    } catch (error) {
+      dispatch({type: READ_MESSAGES_ERROR, error: error.message, roomId, visibleAndUnread})
     }
   }
 }
@@ -665,6 +692,26 @@ export default function messages(state = initialState, action) {
       }
     }
   }
+
+  case READ_MESSAGES_OK: {
+    const {roomId, visibleAndUnread} = action
+
+    const rowIds = [].concat(state.listView[roomId].rowIds)
+    const data = [].concat(state.listView[roomId].data)
+
+    visibleAndUnread.forEach(rowId => data[rowId].unread = false)
+
+    return {...state,
+      listView: {...state.listView,
+        [roomId]: {
+          dataSource: state.listView[roomId].dataSource.cloneWithRows(data, rowIds),
+          data,
+          rowIds
+        }
+      }
+    }
+  }
+
 
   case CLEAR_ERROR: {
     return {...state,

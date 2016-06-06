@@ -36,7 +36,8 @@ import {
   resendMessage,
   updateMessage,
   deleteFailedMessage,
-  clearError as clearMessagesError
+  clearError as clearMessagesError,
+  readMessages
 } from '../modules/messages'
 import {changeRoomInfoDrawerState} from '../modules/ui'
 import * as Navigation from '../modules/navigation'
@@ -54,6 +55,7 @@ class Room extends Component {
   constructor(props) {
     super(props)
     this.roomInfoDrawer = null
+    this.readMessages = {}
 
     this.renderToolbar = this.renderToolbar.bind(this)
     this.renderListView = this.renderListView.bind(this)
@@ -74,6 +76,8 @@ class Room extends Component {
     this.handleQuoteWithLinkPress = this.handleQuoteWithLinkPress.bind(this)
     this.onMessagePress = this.onMessagePress.bind(this)
     this.onResendingMessage = this.onResendingMessage.bind(this)
+    this.handleChangeVisibleRows = this.handleChangeVisibleRows.bind(this)
+    this.handleReadMessages = _.debounce(this.handleReadMessages.bind(this), 250)
 
     this.state = {
       textInputValue: '',
@@ -346,6 +350,26 @@ class Room extends Component {
     this.refs.sendMessageField.focus()
   }
 
+  handleChangeVisibleRows(visibleRows, changedRows) {
+    const {dispatch, route: {roomId}} = this.props
+    console.log('VISIBLE', visibleRows)
+    console.log('CHANGED', changedRows)
+
+    this.readMessages = Object.assign({}, this.readMessages, changedRows.s1)
+
+    this.handleReadMessages()
+  }
+
+  handleReadMessages() {
+    const {dispatch, route: {roomId}} = this.props
+    if (!Object.keys(this.readMessages).length) {
+      return
+    }
+    dispatch(readMessages(roomId, this.readMessages))
+
+    this.readMessages = {}
+  }
+
   leaveRoom() {
     const {dispatch, route: {roomId}} = this.props
     Alert.alert(
@@ -361,7 +385,15 @@ class Room extends Component {
   prepareDataSources() {
     const {listViewData, route: {roomId}, dispatch} = this.props
     if (!listViewData[roomId]) {
-      const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => !_.isEqual(r1, r2)})
+      const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => {
+        // if (r1.unread !== r2.unread) {
+        //   return true
+        // } else if (r1.text === r2.text) {
+        //   return false
+        // } else {
+          return true
+        // }
+      }})
       dispatch(prepareListView(roomId, ds.cloneWithRows([])))
     }
   }
@@ -465,7 +497,7 @@ class Room extends Component {
     }
     return (
       <MessagesList
-
+        onChangeVisibleRows={this.handleChangeVisibleRows}
         listViewData={listViewData[roomId]}
         onPress={this.onMessagePress.bind(this)}
         onLongPress={this.onMessageLongPress.bind(this)}

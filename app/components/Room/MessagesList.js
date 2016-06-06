@@ -76,7 +76,7 @@ export default class MessagesList extends Component {
   }
 
   render() {
-    const {listViewData} = this.props
+    const {listViewData, onChangeVisibleRows} = this.props
 
     if (!listViewData) {
       return <View style={{flex: 1}} />
@@ -88,7 +88,7 @@ export default class MessagesList extends Component {
       <ListView
         ref="listView"
         childSizes={this.childHeights}
-        onChangeVisibleRows={(a, b) => console.log(a, b)}
+        onChangeVisibleRows={(a, b) => onChangeVisibleRows(a, b)}
         renderScrollComponent={props => <InvertibleScrollView {...props} inverted />}
         dataSource={listViewData.dataSource}
         onEndReached={this.props.onEndReached}
@@ -108,5 +108,6 @@ MessagesList.propTypes = {
   onEndReached: PropTypes.func,
   onLongPress: PropTypes.func,
   onUsernamePress: PropTypes.func,
-  onUserAvatarPress: PropTypes.func
+  onUserAvatarPress: PropTypes.func,
+  onChangeVisibleRows: PropTypes.func
 }

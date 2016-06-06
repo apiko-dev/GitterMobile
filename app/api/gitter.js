@@ -138,6 +138,14 @@ export function getMessage(token, roomId, messageId) {
   return callApi(`rooms/${roomId}/chatMessages/${messageId}`, token)
 }
 
+export function readMessages(token, userId, roomId, chat) {
+  return callApi(`user/${userId}/rooms/${roomId}/unreadItems`, token, {
+    method: 'post',
+    body: JSON.stringify({
+      chat
+    })
+  })
+}
 
 /**
  * Private functions
