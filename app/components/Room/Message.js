@@ -88,16 +88,21 @@ class Message extends Component {
   }
 
   render() {
-    const {fromUser, sending, failed, readBy, isCollapsed,
-      text, status, onUsernamePress, onUserAvatarPress, sent} = this.props
+    const {fromUser, sending, failed, readBy, isCollapsed, unread,
+      text, status, onUsernamePress, onUserAvatarPress, sent, onLayout} = this.props
     const opacity = sending === true ? 0.4 : 1
 
-    const backgroundColor = failed === true ? 'rgba(255, 0, 0, 0.2)' : 'transparent'
+    const backgroundColor = failed === true
+      ? 'rgba(255, 0, 0, 0.2)'
+      : unread === true
+        ? 'rgba(213,245,226,.8)'
+        : 'transparent'
     const readStatusOpacity = readBy === 0 || ['sending...', 'failed'].indexOf(sent) !== -1 ? 0 : 0.6
 
     if (!!status) {
       return (
         <StatusMessage
+          onLayout={onLayout}
           text={text}
           onLongPress={this.onLongPress.bind(this)}
           onPress={this.onMessagePress.bind(this)}
@@ -111,8 +116,10 @@ class Message extends Component {
       return (
         <TouchableNativeFeedback
           onPress={() => this.onMessagePress()}
+          onLayout={e => onLayout(e)}
           onLongPress={() => this.onLongPress()}>
-          <View style={[s.container, {opacity, backgroundColor}]}>
+          <View
+            style={[s.container, {opacity, backgroundColor}]}>
             <View style={{
               width: 30
             }} />
@@ -132,10 +139,13 @@ class Message extends Component {
     }
 
     return (
+      <View
+        onLayout={e => onLayout(e)}>
       <TouchableNativeFeedback
         onPress={() => this.onMessagePress()}
         onLongPress={() => this.onLongPress()}>
-        <View style={[s.container, {opacity, backgroundColor}]}>
+        <View
+          style={[s.container, {opacity, backgroundColor}]}>
           <TouchableOpacity
             onPress={() => onUserAvatarPress(fromUser.id, fromUser.username)}>
               <Avatar src={fromUser.avatarUrlSmall} size={30} />
@@ -160,6 +170,7 @@ class Message extends Component {
           </View>
         </View>
       </TouchableNativeFeedback>
+    </View>
     )
   }
 }
