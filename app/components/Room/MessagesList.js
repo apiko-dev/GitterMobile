@@ -1,13 +1,13 @@
 import React, {
   Component,
   PropTypes,
-  ListView,
   View
 } from 'react-native'
 import moment from 'moment'
 import InvertibleScrollView from 'react-native-invertible-scroll-view'
 import Message from './Message'
 import HistoryBegin from './HistoryBegin'
+import ListView from '../../../libs/ListView/ExtendedListView'
 
 export default class MessagesList extends Component {
   constructor(props) {
@@ -15,6 +15,9 @@ export default class MessagesList extends Component {
 
     this.renderRow = this.renderRow.bind(this)
     this.isCollapsed = this.isCollapsed.bind(this)
+    this.handleOnLayout = this.handleOnLayout.bind(this)
+
+    this.childHeights = {}
   }
 
   isCollapsed(rowData, rowId) {
@@ -44,6 +47,11 @@ export default class MessagesList extends Component {
     return false
   }
 
+  handleOnLayout(e, rowId) {
+    this.childHeights[parseInt(rowId)] = e.nativeEvent.layout.height
+    // debugger
+  }
+
   renderRow(rowData, rowId) {
     const {onPress, onLongPress, onUsernamePress, onUserAvatarPress} = this.props
     if (!!rowData.hasNoMore) {
@@ -56,6 +64,7 @@ export default class MessagesList extends Component {
 
     return (
       <Message
+        onLayout={(e) => this.handleOnLayout(e, rowId)}
         onPress={onPress}
         rowId={rowId}
         isCollapsed={isCollapsed}
@@ -73,9 +82,13 @@ export default class MessagesList extends Component {
       return <View style={{flex: 1}} />
     }
 
+    // debugger
+
     return (
       <ListView
         ref="listView"
+        childSizes={this.childHeights}
+        onChangeVisibleRows={(a, b) => console.log(a, b)}
         renderScrollComponent={props => <InvertibleScrollView {...props} inverted />}
         dataSource={listViewData.dataSource}
         onEndReached={this.props.onEndReached}

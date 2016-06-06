@@ -465,6 +465,7 @@ class Room extends Component {
     }
     return (
       <MessagesList
+
         listViewData={listViewData[roomId]}
         onPress={this.onMessagePress.bind(this)}
         onLongPress={this.onMessageLongPress.bind(this)}
