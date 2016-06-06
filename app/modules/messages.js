@@ -299,6 +299,11 @@ export function readMessages(roomId, changedRows) {
       .filter(rowId => (listView.data[rowId].unread === true))
 
     console.log('UNREAD', visibleAndUnread)
+
+    if (!visibleAndUnread.length) {
+      return
+    }
+
     dispatch({type: READ_MESSAGES, roomId, visibleAndUnread})
 
     try {
@@ -699,7 +704,7 @@ export default function messages(state = initialState, action) {
     const rowIds = [].concat(state.listView[roomId].rowIds)
     const data = [].concat(state.listView[roomId].data)
 
-    visibleAndUnread.forEach(rowId => data[rowId].unread = false)
+    visibleAndUnread.forEach(rowId => data[rowId] = Object.assign({}, data[rowId], {unread: false}))
 
     return {...state,
       listView: {...state.listView,

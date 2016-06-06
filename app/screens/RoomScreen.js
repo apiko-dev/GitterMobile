@@ -385,13 +385,13 @@ class Room extends Component {
   prepareDataSources() {
     const {listViewData, route: {roomId}, dispatch} = this.props
     if (!listViewData[roomId]) {
-      const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => {
-        // if (r1.unread !== r2.unread) {
+      const ds = new ListView.DataSource({rowHasChanged: (row1, row2) => {
+        return row1 !== row2
         //   return true
         // } else if (r1.text === r2.text) {
         //   return false
         // } else {
-          return true
+          // return true
         // }
       }})
       dispatch(prepareListView(roomId, ds.cloneWithRows([])))
