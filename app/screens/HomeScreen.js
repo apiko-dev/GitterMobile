@@ -95,8 +95,10 @@ class HomeScreen extends Component {
 
     if (isLoadingRooms || isLoadingViewer || !suggested) {
       return (
-        <Loading
-          color={colors.brand}/>
+        <View style={s.loadingWrap}>
+          <Loading
+            color={colors.brand}/>
+        </View>
       )
     }
 

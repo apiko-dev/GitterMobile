@@ -1,7 +1,9 @@
 import FayeGitter from '../../libs/react-native-gitter-faye'
 import {DeviceEventEmitter} from 'react-native'
-import {updateRoomState} from './rooms'
-import {appendMessages, updateMessageRealtime} from './messages'
+import {updateRoomState, receiveRoomsSnapshot} from './rooms'
+import {appendMessages, updateMessageRealtime, receiveRoomMessagesSnapshot} from './messages'
+import {receiveRoomEventsSnapshot} from './activity'
+import {receiveReadBySnapshot} from './readBy'
 
 /**
  * Constants
@@ -12,6 +14,11 @@ export const ROOMS_SUBSCRIBED = 'realtime/ROOMS_SUBSCRIBED'
 export const ROOMS_UNSUBSCRIBED = 'realtime/ROOMS_UNSUBSCRIBED'
 export const SUBSCRIBE_TO_CHAT_MESSAGES = 'realtime/SUBSCRIBE_TO_CHAT_MESSAGES'
 export const UNSUBSCRIBE_TO_CHAT_MESSAGES = 'realtime/UNSUBSCRIBE_TO_CHAT_MESSAGES'
+export const SUBSCRIBE_TO_ROOM_EVENTS = 'realtime/SUBSCRIBE_TO_ROOM_EVENTS'
+export const UNSUBSCRIBE_TO_ROOM_EVENTS = 'realtime/UNSUBSCRIBE_TO_ROOM_EVENTS'
+export const SUBSCRIBE_TO_READ_BY = 'realtime/SUBSCRIBE_TO_READ_BY'
+export const UNSUBSCRIBE_FROM_READ_BY = 'realtime/UNSUBSCRIBE_FROM_READ_BY'
+
 
 /**
  * Actions
@@ -42,8 +49,12 @@ export function onNetStatusChangeFaye(status) {
     if (!status && fayeConnected) {
       dispatch({type: FAYE_CONNECT, payload: status})
     }
-    if (status && !fayeConnected) {
-      dispatch(setupFaye())
+    try {
+      if (status && !fayeConnected) {
+        await dispatch(setupFaye())
+      }
+    } catch (error) {
+      console.log(error)
     }
   }
 }
@@ -73,13 +84,27 @@ export function setupFayeEvents() {
         dispatch(parseEvent(event))
       })
     DeviceEventEmitter
+      .addListener('FayeGitter:log', event => {
+        dispatch(parseSnapshotEvent(event))
+      })
+    DeviceEventEmitter
       .addListener('FayeGitter:SubscribtionFailed', log => console.warn(log)) // eslint-disable-line no-console
     DeviceEventEmitter
       .addListener('FayeGitter:Subscribed', log => console.log('SUBSCRIBED', log)) // eslint-disable-line no-console
     DeviceEventEmitter
       .addListener('FayeGitter:Unsubscribed', log => console.log(log)) // eslint-disable-line no-console
-    DeviceEventEmitter
-      .addListener('FayeGitter:log', log => console.log(log)) // eslint-disable-line no-console
+  }
+}
+
+export function removeFayeEvents() {
+  return (dispatch) => {
+    DeviceEventEmitter.removeEventListener('FayeGitter:onDisconnected')
+    DeviceEventEmitter.removeEventListener('FayeGitter:onFailedToCreate')
+    DeviceEventEmitter.removeEventListener('FayeGitter:Message')
+    DeviceEventEmitter.removeEventListener('FayeGitter:log')
+    DeviceEventEmitter.removeEventListener('FayeGitter:SubscribtionFailed')
+    DeviceEventEmitter.removeEventListener('FayeGitter:Subscribed')
+    DeviceEventEmitter.removeEventListener('FayeGitter:Unsubscribed')
   }
 }
 
@@ -89,6 +114,7 @@ export function setupFayeEvents() {
 
 function parseEvent(event) {
   return (dispatch, getState) => {
+    console.log('MESSAGE', event)
     const message = JSON.parse(event.json)
 
     const {id} = getState().viewer.user
@@ -108,6 +134,49 @@ function parseEvent(event) {
       if (message.operation === 'update' || message.operation === 'patch') {
         dispatch(updateMessageRealtime(activeRoom, message.model))
       }
+    }
+  }
+}
+
+export function parseSnapshotEvent(event) {
+  return dispatch => {
+    if (!event.log.match('Received message: ')) {
+      return
+    }
+
+    const message = JSON.parse(event.log.split('Received message: ')[1])
+
+    if (message.channel !== '/meta/subscribe' || message.successful !== true) {
+      return
+    }
+
+    const sbs = message.subscription
+
+    const roomsRegx = /\/api\/v1\/user\/[a-f\d]{24}\/rooms/
+    const messagesRegx = /\/api\/v1\/rooms\/[a-f\d]{24}\/chatMessages/
+    const messagesRegxIds = /\/api\/v1\/rooms\/([a-f\d]{24})\/chatMessages/
+    const eventsRegx = /\/api\/v1\/rooms\/[a-f\d]{24}\/events/
+    const eventsRegxIds = /\/api\/v1\/rooms\/([a-f\d]{24})\/events/
+    const readByRegx = /\/api\/v1\/rooms\/[a-f\d]{24}\/chatMessages\/[a-f\d]{24}\/readBy/
+    const readByRegxIds = /\/api\/v1\/rooms\/([a-f\d]{24})\/chatMessages\/([a-f\d]{24})\/readBy/
+
+    if (sbs.match(roomsRegx)) {
+      dispatch(receiveRoomsSnapshot(message.ext.snapshot))
+    }
+
+    if (sbs.match(messagesRegx)) {
+      const id = sbs.match(messagesRegxIds)[1]
+      dispatch(receiveRoomMessagesSnapshot(id, message.ext.snapshot))
+    }
+
+    if (sbs.match(eventsRegx)) {
+      const id = sbs.match(eventsRegxIds)[1]
+      dispatch(receiveRoomEventsSnapshot(id, message.ext.snapshot))
+    }
+    //
+    if (sbs.match(readByRegx)) {
+      const messageId = sbs.match(readByRegxIds)[2]
+      dispatch(receiveReadBySnapshot(messageId, message.ext.snapshot))
     }
   }
 }
@@ -146,6 +215,42 @@ export function unsubscribeToChatMessages(roomId) {
   }
 }
 
+
+export function subscribeToRoomEvents(roomId) {
+  return dispatch => {
+    FayeGitter.subscribe(`/api/v1/rooms/${roomId}/events`)
+    dispatch({type: SUBSCRIBE_TO_ROOM_EVENTS, roomId})
+  }
+}
+
+/**
+ * Unsubscribe for new room's messages => faye chat messages endpoint
+ */
+
+export function unsubscribeToRoomEvents(roomId) {
+  return (dispatch) => {
+    FayeGitter.unsubscribe(`/api/v1/rooms/${roomId}/events`)
+    dispatch({type: UNSUBSCRIBE_TO_ROOM_EVENTS, roomId})
+  }
+}
+
+export function subscribeToReadBy(roomId, messageId) {
+  return dispatch => {
+    FayeGitter.subscribe(`/api/v1/rooms/${roomId}/chatMessages/${messageId}/readBy`)
+    dispatch({type: SUBSCRIBE_TO_READ_BY, roomId})
+  }
+}
+
+/**
+ * Unsubscribe for new room's messages => faye chat messages endpoint
+ */
+
+export function unsubscribeFromReadBy(roomId, messageId) {
+  return (dispatch) => {
+    FayeGitter.unsubscribe(`/api/v1/rooms/${roomId}/chatMessages/${messageId}/readBy`)
+    dispatch({type: UNSUBSCRIBE_FROM_READ_BY, roomId})
+  }
+}
 
 /**
  * Reducer

@@ -2,7 +2,13 @@ import {getItem} from '../utils/storage'
 import {getCurrentUser} from './viewer'
 import {getRooms, getSuggestedRooms} from './rooms'
 import {NetInfo, AppState} from 'react-native'
-import {setupFayeEvents, setupFaye, onNetStatusChangeFaye} from './realtime'
+import {
+  setupFayeEvents,
+  setupFaye,
+  onNetStatusChangeFaye,
+  subscribeToChatMessages,
+  subscribeToRooms
+} from './realtime'
 import * as Navigation from './navigation'
 
 /**
@@ -40,7 +46,6 @@ export function init() {
       await dispatch(getCurrentUser())
       await Promise.all([
         dispatch(getRooms()),
-        dispatch(getSuggestedRooms()),
         dispatch(setupFaye()),
         dispatch(setupNetStatusListener())
       ])
@@ -49,7 +54,8 @@ export function init() {
       // and uncomment navigation to 'room'
       dispatch(Navigation.resetTo({name: 'home'}))
       // dispatch(Navigation.resetTo({name: 'user', userId: '52ce7f4eed5ab0b3bf053782', username: 'blia'}))
-      // dispatch(Navigation.resetTo({name: 'room', roomId: '56d77767e610378809c4b6a3'}))
+      // dispatch(Navigation.resetTo({name: 'room', roomId: '54774579db8155e6700d8cc6'}))
+      await dispatch(getSuggestedRooms())
       // dispatch(Navigation.resetTo({name: 'roomUsers', roomId: '56a41e0fe610378809bde160'}))
     } catch (error) {
       dispatch({ type: INITIALIZED, error })
@@ -71,10 +77,24 @@ function setupNetStatusListener() {
 
 function setupAppStatusListener() {
   return (dispatch, getState) => {
-    AppState.addEventListener('change', status => {
+    AppState.addEventListener('change', async status => {
       // TODO: Update drawer rooms state and messages in current room
       // if app status changes from backgrount to active
-      dispatch({type: CHANGE_APP_STATE, payload: status})
+      try {
+        dispatch({type: CHANGE_APP_STATE, payload: status})
+        const {fayeConnected} = getState().app
+        if (!fayeConnected) {
+          await setupFaye()
+        }
+
+        const {activeRoom} = getState().rooms
+        if (!!activeRoom) {
+          dispatch(subscribeToChatMessages(activeRoom))
+        }
+        dispatch(subscribeToRooms())
+      } catch (error) {
+        console.log(error)
+      }
     })
   }
 }

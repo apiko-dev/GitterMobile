@@ -35,7 +35,9 @@ import {
   sendMessage,
   resendMessage,
   updateMessage,
-  clearError as clearMessagesError
+  deleteFailedMessage,
+  clearError as clearMessagesError,
+  readMessages
 } from '../modules/messages'
 import {changeRoomInfoDrawerState} from '../modules/ui'
 import * as Navigation from '../modules/navigation'
@@ -46,20 +48,20 @@ import Loading from '../components/Loading'
 import MessagesList from '../components/Room/MessagesList'
 import SendMessageField from '../components/Room/SendMessageField'
 import JoinRoomField from '../components/Room/JoinRoomField'
-import LoadginMoreSnack from '../components/LoadingMoreSnack'
+import LoadingMoreSnack from '../components/LoadingMoreSnack'
 import FailedToLoad from '../components/FailedToLoad'
 
 class Room extends Component {
   constructor(props) {
     super(props)
     this.roomInfoDrawer = null
+    this.readMessages = {}
 
     this.renderToolbar = this.renderToolbar.bind(this)
     this.renderListView = this.renderListView.bind(this)
     this.prepareDataSources = this.prepareDataSources.bind(this)
     this.onEndReached = this.onEndReached.bind(this)
     this.onSending = this.onSending.bind(this)
-    this.onResendingMessage = this.onResendingMessage.bind(this)
     this.onJoinRoom = this.onJoinRoom.bind(this)
     this.onMessageLongPress = this.onMessageLongPress.bind(this)
     this.onTextFieldChange = this.onTextFieldChange.bind(this)
@@ -72,6 +74,10 @@ class Room extends Component {
     this.handleDialogPress = this.handleDialogPress.bind(this)
     this.handleQuotePress = this.handleQuotePress.bind(this)
     this.handleQuoteWithLinkPress = this.handleQuoteWithLinkPress.bind(this)
+    this.onMessagePress = this.onMessagePress.bind(this)
+    this.onResendingMessage = this.onResendingMessage.bind(this)
+    this.handleChangeVisibleRows = this.handleChangeVisibleRows.bind(this)
+    this.handleReadMessages = _.debounce(this.handleReadMessages.bind(this), 250)
 
     this.state = {
       textInputValue: '',
@@ -136,28 +142,45 @@ class Room extends Component {
     )
   }
 
-  onMessageLongPress(rowId, id) {
+  onMessagePress(id, rowId, messageText, failed) {
     const {currentUser, entities} = this.props
     const message = entities[id]
-    const experied = moment(message.sent).add(5, 'm')
+    let options
 
-    const options = {
-      title: !!message.editedAt && !message.text ? 'This message was deleted' : message.text,
-      items: [
-        'Copy text',
-        'Reply',
-        'Quote',
-        'Quote with link'
-      ]
-    }
-
-    if (currentUser.username === message.fromUser.username &&
+    if (failed) {
+      options = {
+        title: messageText,
+        items: [
+          'Retry',
+          'Copy text',
+          'Delete'
+        ]
+      }
+    } else {
+      options = {
+        title: !!message.editedAt && !message.text ? 'This message was deleted' : message.text,
+        items: [
+          'Copy text',
+          'Reply',
+          'Quote',
+          'Quote with link'
+        ]
+      }
+      const experied = moment(message.sent).add(5, 'm')
+      if (currentUser.username === message.fromUser.username &&
         moment().isBefore(experied) && !!message.text) {
-      options.items.push('Edit', 'Delete')
+        options.items.push('Edit', 'Delete')
+      }
     }
+
     // TODO: Use BottomSheet/ActionSheet instead of Alert
-    BottomSheet.showBotttomSheetWithOptions(options, (index, text) =>
-      this.handleDialogPress(index, text, message, rowId, id))
+    BottomSheet.showBotttomSheetWithOptions(options, (index, itemText) =>
+      this.handleDialogPress(index, itemText, message, rowId, id, failed, messageText))
+  }
+
+  onMessageLongPress(messageId) {
+    const {dispatch, route: {roomId}} = this.props
+    dispatch(Navigation.goTo({name: 'message', messageId, roomId}))
   }
 
   onDelete(rowId, id) {
@@ -172,6 +195,11 @@ class Room extends Component {
 
     const text = ''
     dispatch(updateMessage(roomId, id, text))
+  }
+
+  onDeleteFailedMsg(rowId) {
+    const {dispatch, route: {roomId}} = this.props
+    dispatch(deleteFailedMessage(rowId, roomId))
   }
 
   onEdit(rowId, id) {
@@ -232,16 +260,24 @@ class Room extends Component {
     dispatch(getRoomMessages(roomId))
   }
 
-  handleDialogPress(index, text, message, rowId, id) {
+  handleDialogPress(index, text, message, rowId, id, failed, messageText) {
     switch (text) {
     case 'Copy text':
-      this.handleCopyToClipboard(message.text)
+      if (failed) {
+        this.handleCopyToClipboard(messageText)
+      } else {
+        this.handleCopyToClipboard(message.text)
+      }
       break
     case 'Edit':
       this.onEdit(rowId, id)
       break
     case 'Delete':
-      this.onDelete(rowId, id)
+      if (failed) {
+        this.onDeleteFailedMsg(rowId)
+      } else {
+        this.onDelete(rowId, id)
+      }
       break
     case 'Quote':
       this.handleQuotePress(message)
@@ -251,6 +287,9 @@ class Room extends Component {
       break
     case 'Reply':
       this.handleUsernamePress(message.fromUser.username)
+      break
+    case 'Retry':
+      this.onResendingMessage(rowId, messageText)
       break
     default:
       break
@@ -311,6 +350,26 @@ class Room extends Component {
     this.refs.sendMessageField.focus()
   }
 
+  handleChangeVisibleRows(visibleRows, changedRows) {
+    const {dispatch, route: {roomId}} = this.props
+    console.log('VISIBLE', visibleRows)
+    console.log('CHANGED', changedRows)
+
+    this.readMessages = Object.assign({}, this.readMessages, changedRows.s1)
+
+    this.handleReadMessages()
+  }
+
+  handleReadMessages() {
+    const {dispatch, route: {roomId}} = this.props
+    if (!Object.keys(this.readMessages).length) {
+      return
+    }
+    dispatch(readMessages(roomId, this.readMessages))
+
+    this.readMessages = {}
+  }
+
   leaveRoom() {
     const {dispatch, route: {roomId}} = this.props
     Alert.alert(
@@ -326,7 +385,15 @@ class Room extends Component {
   prepareDataSources() {
     const {listViewData, route: {roomId}, dispatch} = this.props
     if (!listViewData[roomId]) {
-      const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => !_.isEqual(r1, r2)})
+      const ds = new ListView.DataSource({rowHasChanged: (row1, row2) => {
+        return row1 !== row2
+        //   return true
+        // } else if (r1.text === r2.text) {
+        //   return false
+        // } else {
+          // return true
+        // }
+      }})
       dispatch(prepareListView(roomId, ds.cloneWithRows([])))
     }
   }
@@ -409,7 +476,7 @@ class Room extends Component {
 
   renderLoadingMore() {
     return (
-      <LoadginMoreSnack loading/>
+      <LoadingMoreSnack loading/>
     )
   }
 
@@ -430,8 +497,9 @@ class Room extends Component {
     }
     return (
       <MessagesList
+        onChangeVisibleRows={this.handleChangeVisibleRows}
         listViewData={listViewData[roomId]}
-        onResendingMessage={this.onResendingMessage.bind(this)}
+        onPress={this.onMessagePress.bind(this)}
         onLongPress={this.onMessageLongPress.bind(this)}
         onUsernamePress={this.handleUsernamePress.bind(this)}
         onUserAvatarPress={this.handleUserAvatarPress.bind(this)}

@@ -19,7 +19,7 @@ const renderEmoji = (matchingString, matches) => {
   )
 }
 
-const StatusMessage = ({onPress, onLongPress, text, handleUrlPress, backgroundColor, opacity}) => {
+const StatusMessage = ({onPress, onLongPress, text, handleUrlPress, backgroundColor, opacity, onLayout}) => {
   const patterns = [
     {type: 'url', style: s.url, onPress: handleUrlPress},
     {pattern: EMOJI_REGEX, style: s.emoji, renderText: renderEmoji},
@@ -30,8 +30,10 @@ const StatusMessage = ({onPress, onLongPress, text, handleUrlPress, backgroundCo
   return (
     <TouchableNativeFeedback
       onPress={() => onPress()}
+      onLayout={e => onLayout(e)}
       onLongPress={() => onLongPress()}>
-      <View style={[s.container, {backgroundColor}]}>
+      <View
+        style={[s.container, {backgroundColor}]}>
         <View style={{
           width: 30
         }} />
