@@ -10,6 +10,8 @@ import {
   subscribeToRooms
 } from './realtime'
 import * as Navigation from './navigation'
+import * as GithubApi from '../api/github'
+import {Alert, Linking} from 'react-native'
 
 /**
  * Constants
@@ -49,6 +51,7 @@ export function init() {
         dispatch(setupFaye()),
         dispatch(setupNetStatusListener())
       ])
+      await dispatch(checkNewReleases())
 
       // if you need debug room screen, just comment nevigation to 'hone'
       // and uncomment navigation to 'room'
@@ -96,6 +99,27 @@ function setupAppStatusListener() {
         console.log(error)
       }
     })
+  }
+}
+
+export function checkNewReleases() {
+  return async dispatch => {
+    try {
+      const payload = await GithubApi.checkNewReleases()
+      console.log(payload)
+      if (payload[0].name !== global.CURRENT_VERSION) {
+        Alert.alert(
+          'New version available',
+          'Do you wanna download new version?',
+          [
+            {text: 'Later', onPress: () => console.log('Later Pressed!')},
+            {text: 'Yes', onPress: () => Linking.openURL(payload[0].assets[0].browser_download_url)}
+          ]
+        )
+      }
+    } catch (error) {
+      console.log(error)
+    }
   }
 }
 
