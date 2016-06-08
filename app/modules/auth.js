@@ -40,9 +40,9 @@ export function logOut() {
   return async dispatch => {
     try {
       await removeItem('token')
+      dispatch(Navigation.resetTo({name: 'login'}))
       dispatch({type: LOGOUT})
       dispatch(removeFayeEvents())
-      dispatch(Navigation.resetTo({name: 'login'}))
     } catch (error) {
       console.warn("Can't logout. Error: ", error) // eslint-disable-line no-console
     }
