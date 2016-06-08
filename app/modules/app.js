@@ -85,6 +85,10 @@ function setupAppStatusListener() {
       // if app status changes from backgrount to active
       try {
         dispatch({type: CHANGE_APP_STATE, payload: status})
+        const {token} = getState().auth
+        if (!token.length) {
+          return
+        }
         const {fayeConnected} = getState().app
         if (!fayeConnected) {
           await setupFaye()
