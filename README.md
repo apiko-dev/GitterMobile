@@ -29,10 +29,5 @@ Once you have downloaded or cloned this repository, run `npm install` inside the
 - [Setting up React Native for Android](https://facebook.github.io/react-native/docs/android-setup.html#content)
 - [Running app on Android Device](https://facebook.github.io/react-native/docs/running-on-device-android.html#content)
 
-## Need help
-- Mark visible messages as read once you have navigated to room. See [#17](https://github.com/terrysahaidak/project/issues/17)
-- Use Faye client as an android service. See [#6](https://github.com/terrysahaidak/project/issues/6)
-- Better design
-
 ## License
 All the code available under the MIT + Apache 2.0. licenses. See [LICENSE](LICENSE).
