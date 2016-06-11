@@ -25,7 +25,7 @@ class Drawer extends Component {
     this.onRoomPress = this.onRoomPress.bind(this)
     this.onLongRoomPress = this.onLongRoomPress.bind(this)
     this.onLeave = this.onLeave.bind(this)
-    this.logOut = this.logOut.bind(this)
+    this.handleSettingsPress = this.handleSettingsPress.bind(this)
     this.handleDialogPress = this.handleDialogPress.bind(this)
   }
 
@@ -64,20 +64,9 @@ class Drawer extends Component {
     )
   }
 
-  onLogOut() {
-    Alert.alert(
-      'Logout',
-      'Are you sure?',
-      [
-        {text: 'No', onPress: () => console.log('Cancel Pressed!')},
-        {text: 'Yes', onPress: () => this.logOut()}
-      ]
-    )
-  }
-
-  logOut() {
-    const {dispatch} = this.props
-    dispatch(logOut())
+  handleSettingsPress() {
+    const {navigateTo} = this.props
+    navigateTo({name: 'settings'})
   }
 
   handleDialogPress(index, text, id) {
@@ -99,7 +88,7 @@ class Drawer extends Component {
 
     return (
       <View style={s.container}>
-        <DrawerUserInfo {...user} onLogOut={this.onLogOut.bind(this)}/>
+        <DrawerUserInfo {...user} onSettingsPress={this.handleSettingsPress.bind(this)}/>
         {ids.length === 0
           ? <Loading color={colors.brand} />
           : <ChannelList

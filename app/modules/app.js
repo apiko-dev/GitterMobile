@@ -52,10 +52,10 @@ export function init() {
         dispatch(setupNetStatusListener())
       ])
       await dispatch(checkNewReleases())
+      dispatch(Navigation.resetTo({name: 'home'}))
 
       // if you need debug room screen, just comment nevigation to 'hone'
       // and uncomment navigation to 'room'
-      dispatch(Navigation.resetTo({name: 'home'}))
       // dispatch(Navigation.resetTo({name: 'user', userId: '52ce7f4eed5ab0b3bf053782', username: 'blia'}))
       // dispatch(Navigation.resetTo({name: 'room', roomId: '54774579db8155e6700d8cc6'}))
       await dispatch(getSuggestedRooms())

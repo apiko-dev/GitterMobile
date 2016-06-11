@@ -4,16 +4,16 @@ import React, {
   ToolbarAndroid,
   ScrollView,
   View,
-  Switch,
-  TextInput
+  Alert
 } from 'react-native'
 import {connect} from 'react-redux'
 
 import s from '../styles/screens/Settings'
 import * as Navigation from '../modules/navigation'
-import {readAll} from '../modules/settings'
+import {logout} from '../modules/auth'
 
-import Heading from '../components/Heading'
+import Group from '../components/Settings/Group'
+import TextItem from '../components/Settings/TextItem'
 
 class Settings extends Component {
   constructor(props) {
@@ -22,21 +22,23 @@ class Settings extends Component {
     this.renderToolbar = this.renderToolbar.bind(this)
     this.navigateBack = this.navigateBack.bind(this)
     this.renderSettings = this.renderSettings.bind(this)
-    this.handleSwitchChange = this.changeSwitch.bind(this)
-    this.handleCountChange = this.handleCountChange.bind(this)
-
-    this.state = {
-    }
+    this.handleLogout = this.handleLogout.bind(this)
   }
 
-  handleSwitchChange(value) {
-    const {dispatch, readAllMessages: {limit}} = this.props
-    dispatch(readAll(value, limit))
+  onLogOut() {
+    Alert.alert(
+      'Logout',
+      'Are you sure?',
+      [
+        {text: 'No', onPress: () => console.log('Cancel Pressed!')},
+        {text: 'Yes', onPress: () => this.handleLogout()}
+      ]
+    )
   }
 
-  handleCountChange(count) {
-    const {dispatch, readAllMessages: {enabled}} = this.props
-    dispatch(readAll(enabled, count))
+  handleLogout() {
+    const {dispatch} = this.props
+    dispatch(logout())
   }
 
   navigateBack() {
@@ -45,7 +47,6 @@ class Settings extends Component {
   }
 
   renderToolbar() {
-    const {route} = this.props
     return (
       <ToolbarAndroid
         navIcon={require('image!ic_arrow_back_white_24dp')}
@@ -57,22 +58,16 @@ class Settings extends Component {
   }
 
   renderSettings() {
-    const {readAllMessages: {enabled, limit}} = this.props
     return (
-      <View style={s.itemWrap}>
-        <Heading
-          text="Read all messages" />
-        <View style={s.readAllwrap}>
-          <Text>Read all messages once navigate to room and it's count is {limit}</Text>
-          <Switch
-            value={enabled}
-            onValueChange={this.handleSwitchChange} />
-        </View>
-        {enabled && (
-          <TextInput
-            defaultValue={limit}
-            onChangeText={this.handleCountChange} />
-        )}
+      <View style={s.container}>
+
+          <Group
+            heading="General">
+            <TextItem
+              text="LOGOUT"
+              onPress={() => this.onLogOut()} />
+          </Group>
+
       </View>
     )
   }
@@ -82,6 +77,7 @@ class Settings extends Component {
       <View style={s.container}>
         {this.renderToolbar()}
         {this.renderSettings()}
+
       </View>
     )
   }

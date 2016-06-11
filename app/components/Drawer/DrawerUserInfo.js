@@ -10,8 +10,9 @@ import Avatar from '../Avatar'
 import {THEMES} from '../../constants'
 const {colors} = THEMES.gitterDefault
 
+import Icon from 'react-native-vector-icons/MaterialIcons'
 
-const DrawerUserInfo = ({username, displayName, avatarUrlMedium, onLogOut}) => {
+const DrawerUserInfo = ({username, displayName, avatarUrlMedium, onSettingsPress}) => {
   return (
     <View style={[s.container,
       {
@@ -28,11 +29,9 @@ const DrawerUserInfo = ({username, displayName, avatarUrlMedium, onLogOut}) => {
 
         <TouchableNativeFeedback
           background={TouchableNativeFeedback.SelectableBackgroundBorderless()}
-          onPress={onLogOut}>
+          onPress={onSettingsPress}>
           <View style={s.buttonStyle}>
-            <Image
-              source={require('image!ic_exit_to_app_white_24dp')}
-              style={s.icon} />
+            <Icon name="settings" size={30} color="white" />
           </View>
         </TouchableNativeFeedback>
 
@@ -44,7 +43,7 @@ DrawerUserInfo.propTypes = {
   username: PropTypes.string,
   displayName: PropTypes.string,
   avatarUrlMedium: PropTypes.string,
-  onLogOut: PropTypes.func
+  onSettingsPress: PropTypes.func
 }
 
 export default DrawerUserInfo
