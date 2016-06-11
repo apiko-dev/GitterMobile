@@ -13,6 +13,7 @@ import React, {
 import {connect} from 'react-redux'
 import moment from 'moment'
 import BottomSheet from '../../libs/react-native-android-bottom-sheet'
+import DialogAndroid from 'react-native-dialogs'
 import _ from 'lodash'
 import s from '../styles/screens/Room/RoomStyles'
 import {THEMES} from '../constants'
@@ -25,7 +26,9 @@ import {
   joinRoom,
   changeFavoriteStatus,
   leaveRoom,
-  markAllAsRead
+  markAllAsRead,
+  getNotificationSettings,
+  changeNotificationSettings
 } from '../modules/rooms'
 import {
   getRoomMessages,
@@ -78,6 +81,7 @@ class Room extends Component {
     this.onResendingMessage = this.onResendingMessage.bind(this)
     this.handleChangeVisibleRows = this.handleChangeVisibleRows.bind(this)
     this.handleReadMessages = _.debounce(this.handleReadMessages.bind(this), 250)
+    this.handleNotificationSettingsChange = this.handleNotificationSettingsChange.bind(this)
 
     this.state = {
       textInputValue: '',
@@ -99,6 +103,7 @@ class Room extends Component {
       if (!rooms[roomId]) {
         dispatch(getRoom(roomId))
       }
+      dispatch(getNotificationSettings(roomId))
       if (!listViewData[roomId]) {
         dispatch(getRoomMessages(roomId))
       } else {
@@ -308,6 +313,9 @@ class Room extends Component {
       return dispatch(markAllAsRead(roomId))
     }
     if (index === 3) {
+      return this.handleNotificationSettingsChange()
+    }
+    if (index === 4) {
       return this.leaveRoom()
     }
   }
@@ -370,6 +378,37 @@ class Room extends Component {
     this.readMessages = {}
   }
 
+  handleNotificationSettingsChange() {
+    const {dispatch, route: {roomId}, notifications} = this.props
+    const roomNotif = notifications[roomId]
+
+    if (!roomNotif) {
+      return
+    }
+
+    const items = [
+      'All: Notify me for all messages',
+      'Announcements: Notify for mentions and announcements',
+      "Mute: Notify me only when I'm directly mentioned"
+    ]
+
+    const selectedIndex = roomNotif.mode === 'all' ? 0 : roomNotif.mode === 'announcement' ? 1 : 2
+
+    const dialog = new DialogAndroid()
+
+    const options = {
+      title: 'Notifications setting',
+      items,
+      positiveText: 'Change',
+      negativeText: 'Cancle',
+      selectedIndex,
+      itemsCallbackSingleChoice: (index, text) => dispatch(changeNotificationSettings(roomId, index))
+    }
+
+    dialog.set(options)
+    dialog.show()
+  }
+
   leaveRoom() {
     const {dispatch, route: {roomId}} = this.props
     Alert.alert(
@@ -420,6 +459,10 @@ class Room extends Component {
           show: 'never'
         },
         {
+          title: 'Change notification settings',
+          show: 'never'
+        },
+        {
           title: 'Leave room',
           show: 'never'
         }]
@@ -435,6 +478,10 @@ class Room extends Component {
         },
         {
           title: 'Mark all as read',
+          show: 'never'
+        },
+        {
+          title: 'Change notification settings',
           show: 'never'
         },
         {
@@ -576,12 +623,13 @@ Room.propTypes = {
   hasNoMore: PropTypes.object,
   currentUser: PropTypes.object,
   getMessagesError: PropTypes.bool,
-  roomInfoDrawerState: PropTypes.string
+  roomInfoDrawerState: PropTypes.string,
+  notifications: PropTypes.object
 }
 
 function mapStateToProps(state) {
   const {listView, isLoading, isLoadingMore, byRoom, hasNoMore, entities} = state.messages
-  const {activeRoom, rooms} = state.rooms
+  const {activeRoom, rooms, notifications} = state.rooms
   const {roomInfoDrawerState} = state.ui
   return {
     activeRoom,
@@ -594,7 +642,8 @@ function mapStateToProps(state) {
     byRoom,
     hasNoMore,
     currentUser: state.viewer.user,
-    roomInfoDrawerState
+    roomInfoDrawerState,
+    notifications
   }
 }
 

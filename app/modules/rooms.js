@@ -41,6 +41,11 @@ export const ADD_USER_TO_ROOM_OK = 'rooms/ADD_USER_TO_ROOM_OK'
 export const ADD_USER_TO_ROOM_ERROR = 'rooms/ADD_USER_TO_ROOM_ERROR'
 export const HIDE_ROOM = 'rooms/HIDE_ROOM'
 export const RECEIVE_ROOMS_SNAPSHOT = 'rooms/RECEIVE_ROOMS_SNAPSHOT'
+export const GET_NOTIFICATION_SETTINGS = 'rooms/GET_NOTIFICATION_SETTINGS'
+export const GET_NOTIFICATION_SETTINGS_OK = 'rooms/GET_NOTIFICATION_SETTINGS_OK'
+export const GET_NOTIFICATION_SETTINGS_ERROR = 'rooms/GET_NOTIFICATION_SETTINGS_ERROR'
+export const CHANGE_NOTIFICATION_SETTINGS_OK = 'rooms/CHANGE_NOTIFICATION_SETTINGS_OK'
+export const CHANGE_NOTIFICATION_SETTINGS_ERROR = 'rooms/CHANGE_NOTIFICATION_SETTINGS_ERROR'
 
 /**
  * Action Creators
@@ -80,6 +85,7 @@ export function getRoom(id) {
     dispatch({type: ROOM})
     try {
       const payload = await Api.room(token, id)
+
       dispatch({type: ROOM_RECEIVED, payload})
     } catch (error) {
       dispatch({type: ROOM_FAILED, error})
@@ -266,6 +272,37 @@ export function addUserToRoom(roomId, username) {
   }
 }
 
+export function getNotificationSettings(roomId) {
+  return async (dispatch, getState) => {
+    const {token} = getState().auth
+    const {id} = getState().viewer.user
+
+    dispatch({type: GET_NOTIFICATION_SETTINGS, roomId})
+
+    try {
+      const payload = await Api.getNotificationSettings(token, id, roomId)
+      dispatch({type: GET_NOTIFICATION_SETTINGS_OK, roomId, payload})
+    } catch (error) {
+      dispatch({type: GET_NOTIFICATION_SETTINGS_ERROR, error: error.message})
+    }
+  }
+}
+
+export function changeNotificationSettings(roomId, index) {
+  return async (dispatch, getState) => {
+    const {token} = getState().auth
+    const {id} = getState().viewer.user
+    const modes = ['all', 'announcement', 'mute']
+
+    try {
+      const payload = await Api.changeNotificationSettings(token, id, roomId, modes[index])
+      dispatch({type: CHANGE_NOTIFICATION_SETTINGS_OK, roomId, payload})
+    } catch (error) {
+      dispatch({type: CHANGE_NOTIFICATION_SETTINGS_ERROR, error: error.message})
+    }
+  }
+}
+
 /**
  * Reducer
  */
@@ -277,7 +314,8 @@ const initialState = {
   suggestedRooms: [],
   activeRoom: '',
   error: false,
-  errors: {}
+  errors: {},
+  notifications: {}
 }
 
 export default function rooms(state = initialState, action) {
@@ -399,6 +437,16 @@ export default function rooms(state = initialState, action) {
     return initialState
   }
 
+  case CHANGE_NOTIFICATION_SETTINGS_OK:
+  case GET_NOTIFICATION_SETTINGS_OK:
+    return {...state,
+      notifications: {...state.notifications,
+        [action.roomId]: action.payload
+      }
+    }
+
+  case CHANGE_NOTIFICATION_SETTINGS_ERROR:
+  case GET_NOTIFICATION_SETTINGS_ERROR:
   case JOIN_USER_ROOM_FAILED:
   case CHANGE_FAVORITE_STATUS_FAILED:
   case MARK_ALL_AS_READ_FAILED:
