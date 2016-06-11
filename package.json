@@ -1,6 +1,6 @@
 {
   "name": "gittermobile",
-  "version": "1.0.0-alpha-3",
+  "version": "0.4.0",
   "description": "Gitter client for mobile devices.",
   "author": "Terry Sahaidak <terry@sahaidak.com> (http://sahaidak.com)",
   "repository": {
