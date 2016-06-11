@@ -13,7 +13,7 @@ const JoinRoomField = ({onPress}) => {
       onPress={() => onPress()}>
       <View style={s.container}>
         <Text style={s.text}>
-          Join room!
+          JOIN ROOM
         </Text>
       </View>
     </TouchableNativeFeedback>

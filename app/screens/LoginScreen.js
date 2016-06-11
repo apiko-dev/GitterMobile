@@ -31,7 +31,7 @@ class LoginScreen extends Component {
         <View style={s.buttonGroup}>
           <TouchableNativeFeedback
             background={TouchableNativeFeedback.Ripple(colors.raspberry, false)}
-            onPress={() => ToastAndroid.show('Login by WebView not supported yet', ToastAndroid.SHORT)}>
+            onPress={() => ToastAndroid.show('Login by WebView is not supported yet', ToastAndroid.SHORT)}>
             <View style={[s.buttonStyle, {backgroundColor: colors.darkRed}]}>
               <Text pointerEvents="none"
                 style={s.buttonText}>
