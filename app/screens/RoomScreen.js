@@ -299,16 +299,16 @@ class Room extends Component {
   handleToolbarActionSelected(index) {
     const {dispatch, route: {roomId}} = this.props
     if (index === 0) {
-      this.roomInfoDrawer.openDrawer()
+      return this.roomInfoDrawer.openDrawer()
     }
     if (index === 1) {
-      dispatch(changeFavoriteStatus(roomId))
+      return dispatch(changeFavoriteStatus(roomId))
     }
     if (index === 2) {
-      dispatch(markAllAsRead(roomId))
+      return dispatch(markAllAsRead(roomId))
     }
     if (index === 3) {
-      this.leaveRoom()
+      return this.leaveRoom()
     }
   }
 

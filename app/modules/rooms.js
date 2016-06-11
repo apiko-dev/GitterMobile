@@ -238,10 +238,10 @@ export function changeFavoriteStatus(roomId) {
     const room = getState().rooms.rooms[roomId]
     const status = room.hasOwnProperty('favourite') ? false : true
     try {
-      const payload = await Api.changeFavoriteStatus(token, id, roomId, status)
-      dispatch({type: CHANGE_FAVORITE_STATUS_OK, roomId, payload})
+      await Api.changeFavoriteStatus(token, id, roomId, status)
+      dispatch({type: CHANGE_FAVORITE_STATUS_OK, roomId, status})
     } catch (error) {
-      dispatch({type: CHANGE_FAVORITE_STATUS_FAILED, roomId, error})
+      dispatch({type: CHANGE_FAVORITE_STATUS_FAILED, roomId, error: error.message})
     }
   }
 }
@@ -380,10 +380,17 @@ export default function rooms(state = initialState, action) {
   }
 
   case CHANGE_FAVORITE_STATUS_OK: {
-    const {roomId, payload} = action
+    const {roomId, status} = action
+    const newRoom = Object.assign({}, state.rooms[roomId])
+
+    if (status) {
+      newRoom.favourite = true
+    } else {
+      newRoom.hasOwnProperty('favourite') && delete newRoom.favourite
+    }
     return {...state,
       rooms: {...state.rooms,
-        [roomId]: payload
+        [roomId]: newRoom
       }
     }
   }
