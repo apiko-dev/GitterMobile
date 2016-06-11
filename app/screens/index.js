@@ -204,8 +204,8 @@ class App extends Component {
     const {navigation} = this.props
     // const initialRoute = {name: 'launch'}
     // const initialRoute = {name: 'room', roomId: '56a41e0fe610378809bde160'}
-    const drawerLockMode = ['settings', 'launch', 'login', 'loginByToken']
-      .indexOf(navigation.current.name) === -1
+    const drawerLockMode = ['home', 'room']
+      .indexOf(navigation.current.name) !== -1
         ? 'unlocked'
         : 'locked-closed'
 
