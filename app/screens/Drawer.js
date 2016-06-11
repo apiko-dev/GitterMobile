@@ -27,6 +27,7 @@ class Drawer extends Component {
     this.onLeave = this.onLeave.bind(this)
     this.handleSettingsPress = this.handleSettingsPress.bind(this)
     this.handleDialogPress = this.handleDialogPress.bind(this)
+    this.handleSearchPress = this.handleSearchPress.bind(this)
   }
 
   onRoomPress(id) {
@@ -69,6 +70,11 @@ class Drawer extends Component {
     navigateTo({name: 'settings'})
   }
 
+  handleSearchPress() {
+    const {navigateTo} = this.props
+    navigateTo({name: 'search'})
+  }
+
   handleDialogPress(index, text, id) {
     const {dispatch} = this.props
     switch (text) {
@@ -88,7 +94,10 @@ class Drawer extends Component {
 
     return (
       <View style={s.container}>
-        <DrawerUserInfo {...user} onSettingsPress={this.handleSettingsPress.bind(this)}/>
+        <DrawerUserInfo
+          {...user}
+          onSettingsPress={this.handleSettingsPress.bind(this)}
+          onSearchPress={this.handleSearchPress} />
         {ids.length === 0
           ? <Loading color={colors.brand} />
           : <ChannelList
