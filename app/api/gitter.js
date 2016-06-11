@@ -59,6 +59,19 @@ export function changeFavoriteStatus(token, userId, roomId, status) {
   })
 }
 
+export function getNotificationSettings(token, userId, roomId) {
+  return callApi(`user/${userId}/rooms/${roomId}/settings/notifications`, token)
+}
+
+export function changeNotificationSettings(token, userId, roomId, mode) {
+  return callApi(`user/${userId}/rooms/${roomId}/settings/notifications`, token, {
+    method: 'PUT',
+    body: JSON.stringify({
+      mode
+    })
+  })
+}
+
 export function leaveRoom(token, roomId, userId) {
   return callApi(`rooms/${roomId}/users/${userId}`, token, {
     method: 'DELETE'

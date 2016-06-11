@@ -24,7 +24,7 @@ const Heading = ({text, color, styles}) => {
 }
 
 Heading.defaultProps = {
-  color: 'black'
+  color: '#E20354'
 }
 
 Heading.propTypes = {

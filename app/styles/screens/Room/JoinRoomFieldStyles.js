@@ -10,10 +10,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 10,
-    backgroundColor: colors.raspberry
+    backgroundColor: 'white'
   },
   text: {
-    color: 'white',
+    color: colors.raspberry,
     fontSize: 18
   }
 

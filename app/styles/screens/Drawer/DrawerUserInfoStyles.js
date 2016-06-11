@@ -3,15 +3,16 @@ const STATUS_BAR_HEIGHT = StatusBar.currentHeight
 
 const styles = StyleSheet.create({
   container: {
+    elevation: 4
+  },
+  topContainer: {
     paddingLeft: 16,
     paddingRight: 8,
     paddingTop: 8 + STATUS_BAR_HEIGHT,
-    paddingBottom: 8,
     alignSelf: 'stretch',
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center',
-    elevation: 4
+    alignItems: 'center'
   },
   info: {
     flex: 1,
