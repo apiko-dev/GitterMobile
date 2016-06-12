@@ -55,7 +55,7 @@ import JoinRoomField from '../components/Room/JoinRoomField'
 import LoadingMoreSnack from '../components/LoadingMoreSnack'
 import FailedToLoad from '../components/FailedToLoad'
 
-const COMMAND_REGEX = /\/\w+/
+const COMMAND_REGEX = /\/\S+/
 
 class Room extends Component {
   constructor(props) {
@@ -277,6 +277,30 @@ class Room extends Component {
       switch (matches[0]) {
       case '/me':
         dispatch(sendStatusMessage(roomId, text))
+        break
+
+      case '/notify-all':
+        dispatch(changeNotificationSettings(roomId, 0))
+        break
+
+      case '/notify-announcements':
+        dispatch(changeNotificationSettings(roomId, 1))
+        break
+
+      case '/notify-mute':
+        dispatch(changeNotificationSettings(roomId, 2))
+        break
+
+      case '/mark-all-read':
+        dispatch(markAllAsRead(roomId))
+        break
+
+      case '/fav':
+        dispatch(changeFavoriteStatus(roomId))
+        break
+
+      case '/leave':
+        this.leaveRoom()
         break
       default:
         dispatch(sendMessage(roomId, text))
