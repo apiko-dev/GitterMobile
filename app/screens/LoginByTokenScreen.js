@@ -15,7 +15,7 @@ import Link from '../components/Link'
 import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault
 
-export default class LoginByTokenScreen extends Component {
+class LoginByTokenScreen extends Component {
   constructor(props) {
     super(props)
     this.handleLogin = this.handleLogin.bind(this)

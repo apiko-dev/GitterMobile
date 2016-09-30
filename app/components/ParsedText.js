@@ -3,7 +3,7 @@ import Parser from 'react-native-parsed-text'
 import Emoji from './Emoji'
 import s from '../styles/components/ParsedTextStyles'
 
-const MENTION_REGEX = /(([^`]|^)@([a-zA-Z0-9_\-]+))/g
+const MENTION_REGEX = /(([^`]|^)@([a-zA-Z0-9_\-]+))/
 const GROUP_MENTION_REGEX = /^(@\/([a-zA-Z0-9_\-]+))/
 const EMOJI_REGEX = /:([a-z0-9A-Z_-]+):/
 const THUMBSUP = /:\+1:/g
