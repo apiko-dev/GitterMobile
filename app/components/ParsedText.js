@@ -1,4 +1,4 @@
-import React, {PropTypes} from 'react-native'
+import React, {PropTypes, Text} from 'react-native'
 import Parser from 'react-native-parsed-text'
 import Emoji from './Emoji'
 import s from '../styles/components/ParsedTextStyles'
@@ -6,14 +6,29 @@ import s from '../styles/components/ParsedTextStyles'
 const MENTION_REGEX = /(([^`]|^)@([a-zA-Z0-9_\-]+))/
 const GROUP_MENTION_REGEX = /^(@\/([a-zA-Z0-9_\-]+))/
 const EMOJI_REGEX = /:([a-z0-9A-Z_-]+):/
-const THUMBSUP = /:\+1:/g
-const THUMBSDOWN = /:\-1:/g
+const THUMBSUP = /:\+1:/
+const THUMBSDOWN = /:\-1:/
+const CODE_REGEX = /(^|[^\\])(`+)([^\r]*?[^`])\2(?!`)/m
 
 const renderEmoji = (matchingString, matches) => {
   const name = matches[0].replace(/:/g, '')
   return (
     <Emoji name={name} />
   )
+}
+
+const renderCodespan = (matchingString, matches) => {
+  let component
+  matchingString.replace(/(^|[^\\])(`+)([^\r]*?[^`])\2(?!`)/gm,
+  (wholeMatch, m1, m2, m3) => {
+    let c = m3;
+    c = c.replace(/^([ \t]*)/g, '');	// leading whitespace
+    c = c.replace(/[ \t]*$/g, '');	// trailing whitespace
+    component = (
+      <Text style={s.codespan}>{c}</Text>
+    )
+  })
+  return component
 }
 
 const ParsedText = ({text, username, handleUrlPress}) => {
@@ -24,7 +39,8 @@ const ParsedText = ({text, username, handleUrlPress}) => {
     {pattern: GROUP_MENTION_REGEX, style: s.groupMention},
     {pattern: EMOJI_REGEX, style: s.emoji, renderText: renderEmoji},
     {pattern: THUMBSUP, style: s.emoji, renderText: renderEmoji},
-    {pattern: THUMBSDOWN, style: s.emoji, renderText: renderEmoji}
+    {pattern: THUMBSDOWN, style: s.emoji, renderText: renderEmoji},
+    {pattern: CODE_REGEX, style: s.codespan, renderText: renderCodespan}
   ]
 
   return (

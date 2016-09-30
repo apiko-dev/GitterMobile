@@ -20,6 +20,10 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 14
+  },
+  codespan: {
+    fontFamily: 'monospace',
+    color: 'green'
   }
 })
 
