@@ -97,7 +97,7 @@ class Message extends Component {
       : unread === true
         ? 'rgba(213,245,226,.8)'
         : 'transparent'
-    const readStatusOpacity = readBy === 0 || ['sending...', 'failed'].indexOf(sent) !== -1 ? 0 : 0.6
+    const readStatusOpacity = readBy === 0 || ['sending...', 'failed'].indexOf(sent) !== -1 ? 0 : 0.1
 
     if (!!status) {
       return (

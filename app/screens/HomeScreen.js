@@ -10,7 +10,7 @@ import {connect} from 'react-redux'
 import s from '../styles/screens/Home/HomeScreenStyles'
 import * as Navigation from '../modules/navigation'
 
-import HomeRoomItem from '../components/Home/HomeRoomItem'
+import {HomeRoomItem, HomeRoomItemMy} from '../components/Home/HomeRoomItem'
 import Loading from '../components/Loading'
 
 import {THEMES} from '../constants'
@@ -62,7 +62,7 @@ class HomeScreen extends Component {
       <View style={s.roomItem}>
         <Text style={s.bottomSectionHeading}>Favorites</Text>
         {favorites.map(favorite => (
-          <HomeRoomItem
+          <HomeRoomItemMy
             onPress={this.onRoomPress.bind(this)}
             key={favorite.id}{...favorite} />
         ))}
