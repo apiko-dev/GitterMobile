@@ -1,11 +1,5 @@
-import React, {
-  PropTypes,
-  Component,
-  TouchableNativeFeedback,
-  View,
-  Text,
-  Image
-} from 'react-native'
+import React, {Component, PropTypes} from 'react';
+import {TouchableNativeFeedback, View, Text, Image} from 'react-native';
 import {connect} from 'react-redux'
 import s from '../styles/screens/NoInternetScreenStyles'
 import * as Navigation from '../modules/navigation'

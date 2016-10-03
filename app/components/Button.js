@@ -1,10 +1,5 @@
-import React, {
-  PropTypes,
-  TouchableNativeFeedback,
-  TouchableOpacity,
-  View,
-  Children
-} from 'react-native'
+import React, {Children, PropTypes} from 'react';
+import {TouchableNativeFeedback, TouchableOpacity, View} from 'react-native';
 import s from '../styles/components/ButtonStyles'
 import DeviceInfo from 'react-native-device-info'
 import {OLD_ANDROID_VERSIONS} from '../constants'

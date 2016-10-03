@@ -1,9 +1,5 @@
-import React, {
-  PropTypes,
-  View,
-  Text,
-  TouchableNativeFeedback
-} from 'react-native'
+import React, {PropTypes} from 'react';
+import {View, Text, TouchableNativeFeedback} from 'react-native';
 import s from '../../styles/screens/Home/HomeRoomItemStyles'
 import s2 from '../../styles/screens/Home/HomeRoomItemMy'
 

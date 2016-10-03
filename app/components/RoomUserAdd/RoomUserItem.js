@@ -1,9 +1,5 @@
-import React, {
-  PropTypes,
-  Image,
-  View,
-  Text
-} from 'react-native'
+import React, {PropTypes} from 'react';
+import {Image, View, Text} from 'react-native';
 import s from '../../styles/screens/RoomUserAdd/RoomUserItemStyles'
 
 import Avatar from '../Avatar'

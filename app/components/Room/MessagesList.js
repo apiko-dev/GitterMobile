@@ -1,8 +1,5 @@
-import React, {
-  Component,
-  PropTypes,
-  View
-} from 'react-native'
+import React, {Component, PropTypes} from 'react';
+import {View} from 'react-native';
 import moment from 'moment'
 import InvertibleScrollView from 'react-native-invertible-scroll-view'
 import Message from './Message'

@@ -1,8 +1,5 @@
-import React, {
-  PropTypes,
-  View,
-  Text
-} from 'react-native'
+import React, {PropTypes} from 'react';
+import {View, Text} from 'react-native';
 import s from '../../styles/screens/Drawer/ChannelListItemStyles'
 
 import Avatar from '../Avatar'

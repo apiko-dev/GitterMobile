@@ -1,4 +1,5 @@
-import React, {PropTypes, Text} from 'react-native'
+import React, {PropTypes} from 'react';
+import {Text} from 'react-native';
 import Parser from 'react-native-parsed-text'
 import Emoji from './Emoji'
 import s from '../styles/components/ParsedTextStyles'

@@ -1,10 +1,5 @@
-import React, {
-  Component,
-  PropTypes,
-  DrawerLayoutAndroid,
-  BackAndroid,
-  Navigator
-} from 'react-native'
+import React, {Component, PropTypes} from 'react';
+import {DrawerLayoutAndroid, BackAndroid, Navigator} from 'react-native';
 import _ from 'lodash'
 import {init} from '../modules/app'
 import {connect} from 'react-redux'

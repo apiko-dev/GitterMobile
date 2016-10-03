@@ -1,12 +1,5 @@
-import React, {
-  Component,
-  PropTypes,
-  TouchableNativeFeedback,
-  TextInput,
-  View,
-  Text,
-  Image
-} from 'react-native'
+import React, {Component, PropTypes} from 'react';
+import {TouchableNativeFeedback, TextInput, View, Text, Image} from 'react-native';
 import s from '../styles/screens/Login/LoginByTokenScreenStyles'
 import {connect} from 'react-redux'
 import {loginByToken} from '../modules/auth'

@@ -1,15 +1,5 @@
-import React, {
-  Component,
-  PropTypes,
-  InteractionManager,
-  DrawerLayoutAndroid,
-  ToolbarAndroid,
-  ToastAndroid,
-  Clipboard,
-  Alert,
-  ListView,
-  View
-} from 'react-native'
+import React, {Component, PropTypes} from 'react';
+import {InteractionManager, DrawerLayoutAndroid, ToolbarAndroid, ToastAndroid, Clipboard, Alert, ListView, View} from 'react-native';
 import {connect} from 'react-redux'
 import moment from 'moment'
 import BottomSheet from '../../libs/react-native-android-bottom-sheet'

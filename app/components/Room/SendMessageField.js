@@ -1,11 +1,5 @@
-import React, {
-  Component,
-  PropTypes,
-  TextInput,
-  TouchableNativeFeedback,
-  Image,
-  View
-} from 'react-native'
+import React, {Component, PropTypes} from 'react';
+import {TextInput, TouchableNativeFeedback, Image, View} from 'react-native';
 import s from '../../styles/screens/Room/SendMessageFieldStyles'
 
 export default class SendMessageField extends Component {

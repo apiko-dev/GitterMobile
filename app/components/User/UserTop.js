@@ -1,8 +1,5 @@
-import React, {
-  PropTypes,
-  View,
-  Text
-} from 'react-native'
+import React, {PropTypes} from 'react';
+import {View, Text} from 'react-native';
 import Avatar from '../Avatar'
 import s from '../../styles/screens/User/UserTopStyles'
 import {createGhAvatarLink} from '../../utils/links'

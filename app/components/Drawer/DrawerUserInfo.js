@@ -1,10 +1,5 @@
-import React, {
-  PropTypes,
-  TouchableNativeFeedback,
-  Image,
-  View,
-  Text
-} from 'react-native'
+import React, {PropTypes} from 'react';
+import {TouchableNativeFeedback, Image, View, Text} from 'react-native';
 import s from '../../styles/screens/Drawer/DrawerUserInfoStyles'
 import Avatar from '../Avatar'
 import SearchField from './SearchField'

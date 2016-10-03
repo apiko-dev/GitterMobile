@@ -1,11 +1,5 @@
-import React, {
-  Component,
-  PropTypes,
-  ToolbarAndroid,
-  ToastAndroid,
-  TextInput,
-  View
-} from 'react-native'
+import React, {Component, PropTypes} from 'react';
+import {ToolbarAndroid, ToastAndroid, TextInput, View} from 'react-native';
 import {connect} from 'react-redux'
 import _ from 'lodash'
 import ScrollableTabView from 'react-native-scrollable-tab-view';

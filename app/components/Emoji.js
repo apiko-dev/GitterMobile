@@ -1,8 +1,5 @@
-import React, {
-  PropTypes,
-  Image,
-  Text
-} from 'react-native'
+import React, {PropTypes} from 'react';
+import {Image, Text} from 'react-native';
 import {emoji} from '../images/emoji'
 
 const Emoji = ({name, styles}) => {

@@ -1,11 +1,5 @@
-import React, {
-  PropTypes,
-  Component,
-  ScrollView,
-  Linking,
-  View,
-  Text
-} from 'react-native'
+import React, {Component, PropTypes} from 'react';
+import {ScrollView, Linking, View, Text} from 'react-native';
 import {connect} from 'react-redux'
 import s from '../styles/screens/RoomInfo/RoomInfoScreenStyles'
 import {THEMES} from '../constants'

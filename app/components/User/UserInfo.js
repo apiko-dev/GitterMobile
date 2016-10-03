@@ -1,9 +1,5 @@
-import React, {
-  PropTypes,
-  View,
-  Image,
-  Text
-} from 'react-native'
+import React, {PropTypes} from 'react';
+import {View, Image, Text} from 'react-native';
 import s from '../../styles/screens/User/UserInfoStyles'
 import Button from '../Button'
 

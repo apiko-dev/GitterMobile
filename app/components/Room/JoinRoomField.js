@@ -1,9 +1,5 @@
-import React, {
-  PropTypes,
-  TouchableNativeFeedback,
-  View,
-  Text
-} from 'react-native'
+import React, {PropTypes} from 'react';
+import {TouchableNativeFeedback, View, Text} from 'react-native';
 import s from '../../styles/screens/Room/JoinRoomFieldStyles'
 
 const JoinRoomField = ({onPress}) => {

@@ -1,8 +1,5 @@
-import React, {
-  PropTypes,
-  View,
-  Children
-} from 'react-native'
+import React, {Children, PropTypes} from 'react';
+import {View} from 'react-native';
 import s from '../../styles/screens/Settings/Group'
 
 import Heading from '../Heading'

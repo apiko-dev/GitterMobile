@@ -1,9 +1,5 @@
-import React, {
-  PropTypes,
-  TouchableNativeFeedback,
-  Image,
-  View
-} from 'react-native'
+import React, {PropTypes} from 'react';
+import {TouchableNativeFeedback, Image, View} from 'react-native';
 import s from '../../styles/screens/Room/StatusMessageStyles'
 import Parser from 'react-native-parsed-text'
 import Emoji from '../Emoji'

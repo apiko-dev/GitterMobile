@@ -1,2 +1,2 @@
-var { NativeModules } = require('react-native');
+var { NativeModules } = require('react');
 module.exports = NativeModules.FayeGitter;

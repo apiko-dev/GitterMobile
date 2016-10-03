@@ -1,11 +1,5 @@
-import React, {
-  Component,
-  PropTypes,
-  ToolbarAndroid,
-  ScrollView,
-  View,
-  Alert
-} from 'react-native'
+import React, {Component, PropTypes} from 'react';
+import {ToolbarAndroid, ScrollView, View, Alert} from 'react-native';
 import {connect} from 'react-redux'
 
 import s from '../styles/screens/Settings'

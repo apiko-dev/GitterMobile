@@ -1,16 +1,11 @@
 package com.gittermobile;
 
 import com.facebook.react.ReactActivity;
-import com.oblador.vectoricons.VectorIconsPackage;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 
 import java.util.Arrays;
 import java.util.List;
-
-import com.terrysahaidak.faye.FayeGitterPackage;
-import com.aakashns.reactnativedialogs.ReactNativeDialogsPackage;
-import com.terrysahaidak.bottomsheet.AndroidBottomSheetPackage;
 
 public class MainActivity extends ReactActivity {
 
@@ -39,11 +34,7 @@ public class MainActivity extends ReactActivity {
     @Override
     protected List<ReactPackage> getPackages() {
         return Arrays.<ReactPackage>asList(
-            new MainReactPackage(),
-            new VectorIconsPackage(),
-            new ReactNativeDialogsPackage(),
-            new FayeGitterPackage(),
-            new AndroidBottomSheetPackage(this)
+            new MainReactPackage()
         );
     }
 }

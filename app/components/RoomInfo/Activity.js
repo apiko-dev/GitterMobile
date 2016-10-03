@@ -1,9 +1,5 @@
-import React, {
-  Component,
-  PropTypes,
-  View,
-  Text
-} from 'react-native'
+import React, {Component, PropTypes} from 'react';
+import {View, Text} from 'react-native';
 import s from '../../styles/screens/RoomInfo/Activity'
 import ParsedText from '../ParsedText'
 import Heading from '../Heading'

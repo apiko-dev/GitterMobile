@@ -1,8 +1,5 @@
-import React, {
-  PropTypes,
-  View,
-  TouchableOpacity
-} from 'react-native'
+import React, {PropTypes} from 'react';
+import {View, TouchableOpacity} from 'react-native';
 import s from '../../styles/screens/Message/ReadBy'
 
 import Avatar from '../Avatar'

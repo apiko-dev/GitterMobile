@@ -1,10 +1,5 @@
-import React, {
-  Component,
-  PropTypes,
-  TextInput,
-  Image,
-  View
-} from 'react-native'
+import React, {Component, PropTypes} from 'react';
+import {TextInput, Image, View} from 'react-native';
 import s from '../styles/components/CustomSearchStyles'
 import Button from './Button'
 
