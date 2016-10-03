@@ -140,4 +140,7 @@ dependencies {
     compile project(':react-native-android-bottom-sheet')
     compile project(':react-native-gitter-faye')
     compile project(':react-native-dialogs')
+
+    compile project(":react-native-device-info")
+    compile fileTree(dir: "node_modules/react-native-device-info/android/libs", include: ["*.jar"])
 }

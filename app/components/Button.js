@@ -1,25 +1,67 @@
 import React, {
   PropTypes,
   TouchableNativeFeedback,
-  View
+  TouchableOpacity,
+  View,
+  Children
 } from 'react-native'
 import s from '../styles/components/ButtonStyles'
+import DeviceInfo from 'react-native-device-info'
+import {OLD_ANDROID_VERSIONS} from '../constants'
 
-const Button = ({onPress, children, styles}) => {
-  return (
-    <TouchableNativeFeedback
-      onPress={() => onPress()}>
-      <View style={[s.button, styles]}>
-        {children}
-      </View>
-    </TouchableNativeFeedback>
-  )
+const noop = () => {}
+
+const Button = ({
+  onPress = noop,
+  onLongPress = noop,
+  onLayout = noop,
+  children,
+  rippleColor,
+  style
+}) => {
+  const version = DeviceInfo.getSystemVersion()
+
+  if (!!OLD_ANDROID_VERSIONS.find(oldVersion => oldVersion === version)) {
+    return (
+      <TouchableOpacity
+        onLongPress={onLongPress}
+        onLayout={onLayout}
+        onPress={onPress}>
+        <View style={style}>
+          {Children.map(children, child => child)}
+        </View>
+      </TouchableOpacity>
+    )
+  } else {
+    return (
+      <TouchableNativeFeedback
+        onLongPress={onLongPress}
+        onLayout={onLayout}
+        onPress={onPress}
+        background={TouchableNativeFeedback.Ripple(rippleColor, false)}>
+        <View style={style}>
+          {Children.map(children, child => child)}
+        </View>
+      </TouchableNativeFeedback>
+    )
+  }
+}
+
+Button.defaultProps = {
+  onPress: noop,
+  onLongPress: noop,
+  onLayout: noop,
+  rippleColor: '#FFF',
+  style: s
 }
 
 Button.propTypes = {
   onPress: PropTypes.func,
   children: React.PropTypes.element.isRequired,
-  styles: PropTypes.object
+  style: PropTypes.object,
+  onLongPress: PropTypes.func,
+  onLayout: PropTypes.func,
+  rippleColor: PropTypes.string
 }
 
 export default Button
