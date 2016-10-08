@@ -36,7 +36,7 @@ class LoginByTokenScreen extends Component {
           Login by token
         </Text>
         <Text style={s.hero}>
-          <Link to="https://developer.gitter.im/login" fontSize={24}>Sign in</Link> to Gitter and follow this<Link to="https://developer.gitter.im/apps" fontSize={24}> link </Link>
+          <Link to="https://developer.gitter.im/login" fontSize={24}>Sign in</Link> to Gitter
         to get your authentication token. Copy it and paste into the textinput below.
         </Text>
 
