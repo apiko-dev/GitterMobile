@@ -5,7 +5,7 @@ import DialogAndroid from 'react-native-dialogs'
 
 import {logOut} from '../modules/auth'
 import * as Navigation from '../modules/navigation'
-import {selectRoom, leaveRoom, markAllAsRead} from '../modules/rooms'
+import {selectRoom, leaveRoom, markAllAsRead, refreshRooms} from '../modules/rooms'
 
 import s from '../styles/screens/Drawer/DrawerStyles'
 import DrawerUserInfo from '../components/Drawer/DrawerUserInfo'
@@ -24,6 +24,7 @@ class Drawer extends Component {
     this.handleSettingsPress = this.handleSettingsPress.bind(this)
     this.handleDialogPress = this.handleDialogPress.bind(this)
     this.handleSearchPress = this.handleSearchPress.bind(this)
+    this.handleRefresh = this.handleRefresh.bind(this)
   }
 
   onRoomPress(id) {
@@ -85,8 +86,13 @@ class Drawer extends Component {
     }
   }
 
+  handleRefresh() {
+    const {dispatch} = this.props
+    dispatch(refreshRooms())
+  }
+
   render() {
-    const {user, ids} = this.props
+    const {user, ids, isLoadingRooms} = this.props
 
     return (
       <View style={s.container}>
@@ -98,6 +104,8 @@ class Drawer extends Component {
           ? <Loading color={colors.brand} />
           : <ChannelList
               {...this.props}
+              isLoadingRooms={isLoadingRooms}
+              onRefresh={this.handleRefresh}
               onLongRoomPress={this.onLongRoomPress.bind(this)}
               onRoomPress={this.onRoomPress.bind(this)} />
         }

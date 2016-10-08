@@ -199,7 +199,7 @@ export function leaveRoom(roomId, userId) {
         if (!!payload.success && payload.success === true) {
           dispatch({type: LEAVE_ROOM_OK, roomId, userId})
         } else {
-          dispatch({type: LEAVE_ROOM_FAILED, error: `User ${newUserId} can't leave room ${roomId}`})
+          dispatch({type: LEAVE_ROOM_FAILED, error: `User ${newUserId} cant leave room ${roomId}`})
         }
       }
     } catch (error) {
@@ -225,7 +225,7 @@ export function markAllAsRead(roomId) {
       if (!!payload.success && payload.success === true) {
         dispatch({type: MARK_ALL_AS_READ_OK, roomId})
       } else {
-        dispatch({type: MARK_ALL_AS_READ_FAILED, error: `Can't mark all room ${roomId} messages as read`})
+        dispatch({type: MARK_ALL_AS_READ_FAILED, error: `Cant mark all room ${roomId} messages as read`})
       }
     } catch (error) {
       dispatch({type: MARK_ALL_AS_READ_FAILED, error})
@@ -264,7 +264,7 @@ export function addUserToRoom(roomId, username) {
         ToastAndroid.show(`User ${username} was added.`, ToastAndroid.SHORT)
       } else {
         dispatch({type: ADD_USER_TO_ROOM_ERROR, error: payload})
-        ToastAndroid.show(`User ${username} wasn't added.`, ToastAndroid.SHORT)
+        ToastAndroid.show(`User ${username} wasnt added.`, ToastAndroid.SHORT)
       }
     } catch (error) {
       dispatch({type: ADD_USER_TO_ROOM_ERROR, error})
@@ -300,6 +300,12 @@ export function changeNotificationSettings(roomId, index) {
     } catch (error) {
       dispatch({type: CHANGE_NOTIFICATION_SETTINGS_ERROR, error: error.message})
     }
+  }
+}
+
+export function refreshRooms() {
+  return (dispatch, getState) => {
+    dispatch(getRooms())
   }
 }
 
