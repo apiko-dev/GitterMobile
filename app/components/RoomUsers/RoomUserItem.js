@@ -23,7 +23,7 @@ const RoomUserItem = ({onUserItemPress, id, username, displayName, avatarUrlSmal
 
 RoomUserItem.propTypes = {
   onUserItemPress: PropTypes.func,
-  id: PropType.oneOfType([PropTypes.string, PropTypes.number]),
+  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   username: PropTypes.string,
   displayName: PropTypes.string,
   avatarUrlSmall: PropTypes.string

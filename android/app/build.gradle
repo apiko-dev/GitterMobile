@@ -90,6 +90,10 @@ android {
             abiFilters "armeabi-v7a", "x86"
         }
     }
+
+    defaultConfig {
+       vectorDrawables.useSupportLibrary = true
+    }
     signingConfigs {
         release {
             storeFile file(MYAPP_RELEASE_STORE_FILE)
@@ -134,7 +138,7 @@ repositories {
 dependencies {
 
     compile fileTree(dir: "libs", include: ["*.jar"])
-    compile "com.android.support:appcompat-v7:23.0.1"
+    compile "com.android.support:appcompat-v7:23.1.1"
     compile "com.facebook.react:react-native:+"  // From node_modules
     compile project(':react-native-dialogs')
     compile project(':react-native-device-info')
