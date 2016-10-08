@@ -16,7 +16,9 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "android:check": "adb devices && adb reverse tcp:8081 tcp:8081",
     "android": "node node_modules/react-native/local-cli/cli.js run-android",
-    "lint": "node node_modules/eslint/bin/eslint -c .eslintrc ./"
+    "lint": "node node_modules/eslint/bin/eslint -c .eslintrc ./",
+    "release": "cd android && ./gradlew assembleRelease",
+    "run-release": "node node_modules/react-native/local-cli/cli.js run-android --variant=release"
   },
   "dependencies": {
     "lodash": "^4.2.1",
