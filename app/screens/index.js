@@ -20,6 +20,7 @@ import RoomUsersScreen from './RoomUsersScreen'
 import RoomUserAddScreen from './RoomUserAddScreen'
 import Message from './Message'
 import Settings from './Settings'
+import SearchMessages from './SearchMessages'
 
 import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault
@@ -180,6 +181,12 @@ class App extends Component {
     case 'settings':
       return (
         <Settings />
+      )
+
+    case 'searchMessages':
+      return (
+        <SearchMessages
+          route={route} />
       )
 
     default:

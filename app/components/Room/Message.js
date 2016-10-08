@@ -169,9 +169,16 @@ class Message extends Component {
   }
 }
 
+const noop = () => {}
+
 Message.defaultProps = {
   sending: false,
-  failed: false
+  failed: false,
+  onLayout: noop,
+  onLongPress: noop,
+  onPress: noop,
+  onUsernamePress: noop,
+  onUserAvatarPress: noop
 }
 
 Message.propTypes = {
