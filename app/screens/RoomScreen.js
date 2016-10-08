@@ -138,7 +138,7 @@ class Room extends Component {
   }
 
   onMessagePress(id, rowId, messageText, failed) {
-    const {currentUser, entities} = this.props
+    const {currentUser, entities, rooms, route: {roomId}} = this.props
     const message = entities[id]
     let options
 
@@ -149,6 +149,14 @@ class Room extends Component {
           'Retry',
           'Copy text',
           'Delete'
+        ]
+      }
+    } else if (!rooms[roomId].roomMember) {
+      options = {
+        title: !!message.editedAt && !message.text ? 'This message was deleted' : message.text,
+        items: [
+          'Copy text',
+          'Quote with link'
         ]
       }
     } else {
@@ -341,6 +349,12 @@ class Room extends Component {
     const room = rooms[route.roomId]
     const time = moment(message.sent).format('YYYY MMM D, HH:mm')
     const link = quoteLink(time, room.url, message.id)
+
+    if (!rooms[route.roomId].roomMember) {
+      Clipboard.setString(link)
+      ToastAndroid.show('Copied quote link', ToastAndroid.SHORT)
+      return
+    }
     const {textInputValue} = this.state
     this.setState({
       textInputValue: !!textInputValue ? `${textInputValue}\n${link} ` : `${link} `
