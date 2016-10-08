@@ -4,7 +4,7 @@ import {ToastAndroid} from 'react-native'
 import normalize from '../utils/normalize'
 import {LOGOUT} from './auth'
 import * as Navigation from './navigation'
-import {subscribeToChatMessages, unsubscribeToChatMessages} from './realtime'
+import {subscribeToChatMessages, unsubscribeToChatMessages, checkFayeConnection} from './realtime'
 
 
 /**
@@ -304,8 +304,9 @@ export function changeNotificationSettings(roomId, index) {
 }
 
 export function refreshRooms() {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
     dispatch(getRooms())
+    await checkFayeConnection()
   }
 }
 

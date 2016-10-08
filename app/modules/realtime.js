@@ -39,6 +39,19 @@ export function setupFaye() {
   }
 }
 
+export function checkFayeConnection() {
+  return async (dispatch, getState) => {
+    try {
+      const {fayeConnected} = getState().realtime
+      if (!fayeConnected) {
+        await dispatch(setupFaye())
+      }
+    } catch (error) {
+      console.error(error.message)
+    }
+  }
+}
+
 /**
  * Handler which handles net status changes and reconnects to faye if needed
  */
@@ -186,7 +199,8 @@ export function parseSnapshotEvent(event) {
  */
 
 export function subscribeToRooms() {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
+    await checkFayeConnection()
     const {id} = getState().viewer.user
     FayeGitter.subscribe(`/api/v1/user/${id}/rooms`)
     dispatch({type: ROOMS_SUBSCRIBED})
@@ -198,7 +212,8 @@ export function subscribeToRooms() {
  */
 
 export function subscribeToChatMessages(roomId) {
-  return dispatch => {
+  return async dispatch => {
+    await checkFayeConnection()
     FayeGitter.subscribe(`/api/v1/rooms/${roomId}/chatMessages`)
     dispatch({type: SUBSCRIBE_TO_CHAT_MESSAGES, roomId})
   }
@@ -209,7 +224,8 @@ export function subscribeToChatMessages(roomId) {
  */
 
 export function unsubscribeToChatMessages(roomId) {
-  return (dispatch) => {
+  return async (dispatch) => {
+    await checkFayeConnection()
     FayeGitter.unsubscribe(`/api/v1/rooms/${roomId}/chatMessages`)
     dispatch({type: UNSUBSCRIBE_TO_CHAT_MESSAGES, roomId})
   }
@@ -217,7 +233,8 @@ export function unsubscribeToChatMessages(roomId) {
 
 
 export function subscribeToRoomEvents(roomId) {
-  return dispatch => {
+  return async dispatch => {
+    await checkFayeConnection()
     FayeGitter.subscribe(`/api/v1/rooms/${roomId}/events`)
     dispatch({type: SUBSCRIBE_TO_ROOM_EVENTS, roomId})
   }
@@ -228,14 +245,16 @@ export function subscribeToRoomEvents(roomId) {
  */
 
 export function unsubscribeToRoomEvents(roomId) {
-  return (dispatch) => {
+  return async (dispatch) => {
+    await checkFayeConnection
     FayeGitter.unsubscribe(`/api/v1/rooms/${roomId}/events`)
     dispatch({type: UNSUBSCRIBE_TO_ROOM_EVENTS, roomId})
   }
 }
 
 export function subscribeToReadBy(roomId, messageId) {
-  return dispatch => {
+  return async dispatch => {
+    await checkFayeConnection()
     FayeGitter.subscribe(`/api/v1/rooms/${roomId}/chatMessages/${messageId}/readBy`)
     dispatch({type: SUBSCRIBE_TO_READ_BY, roomId})
   }
@@ -246,7 +265,8 @@ export function subscribeToReadBy(roomId, messageId) {
  */
 
 export function unsubscribeFromReadBy(roomId, messageId) {
-  return (dispatch) => {
+  return async (dispatch) => {
+    await checkFayeConnection()
     FayeGitter.unsubscribe(`/api/v1/rooms/${roomId}/chatMessages/${messageId}/readBy`)
     dispatch({type: UNSUBSCRIBE_FROM_READ_BY, roomId})
   }
