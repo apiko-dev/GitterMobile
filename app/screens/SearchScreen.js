@@ -141,7 +141,7 @@ class SearchScreen extends Component {
         <ScrollableTabView
           initialPage={this.state.activeTab}
           tabBarBackgroundColor={colors.raspberry}
-          tabBarUnderlineColor="white"
+          tabBarUnderlineStyle={{backgroundColor: 'white'}}
           tabBarActiveTextColor="white"
           tabBarInactiveTextColor={colors.androidGray}
           onChangeTab={this.handleTabChange}
