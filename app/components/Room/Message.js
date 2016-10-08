@@ -81,15 +81,20 @@ class Message extends Component {
   }
 
   render() {
-    const {fromUser, sending, failed, readBy, isCollapsed, unread,
+    const {fromUser, sending, failed, readBy, isCollapsed, unread, username,
       text, status, onUsernamePress, onUserAvatarPress, sent, onLayout} = this.props
     const opacity = sending === true ? 0.4 : 1
 
-    const backgroundColor = failed === true
-      ? 'rgba(255, 0, 0, 0.2)'
-      : unread === true
-        ? 'rgba(213,245,226,.8)'
-        : 'transparent'
+    let backgroundColor
+
+    if (failed === true) {
+      backgroundColor = 'rgba(255, 0, 0, 0.2)'
+    } else if (fromUser.username !== username && unread === true) {
+      backgroundColor = 'rgba(213,245,226,.8)'
+    } else {
+      backgroundColor = 'transparent'
+    }
+
     const readStatusOpacity = readBy === 0 || ['sending...', 'failed'].indexOf(sent) !== -1 ? 0 : 0.1
 
     if (!!status) {
