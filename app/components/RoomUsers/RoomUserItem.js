@@ -9,7 +9,7 @@ const RoomUserItem = ({onUserItemPress, id, username, displayName, avatarUrlSmal
   return (
     <Button
       onPress={() => onUserItemPress(id, username)}
-      styles={s.button}>
+      style={s.button}>
       <Avatar
         size={42}
         src={avatarUrlSmall} />

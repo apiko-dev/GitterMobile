@@ -53,12 +53,12 @@ const RoomUsers = ({ids, entities, onPress, userCount, onAllUsersPress, onAddPre
         <View style={s.buttonsGroup}>
           <Button
             onPress={() => onAddPress()}
-            styles={[s.button, s.primaryButton]}>
+            style={[s.button, s.primaryButton]}>
             <Text>Add</Text>
           </Button>
           <Button
             onPress={() => onAllUsersPress()}
-            styles={s.button}>
+            style={s.button}>
             <Text>See all</Text>
           </Button>
         </View>

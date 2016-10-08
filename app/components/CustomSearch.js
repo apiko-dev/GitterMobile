@@ -24,7 +24,7 @@ class CustomSearch extends Component {
     return (
       <View style={s.container}>
         <Button
-          styles={s.button}
+          style={s.button}
           onPress={() => onBackPress()}>
           <Image
             style={s.buttonIcon}
@@ -43,7 +43,7 @@ class CustomSearch extends Component {
         </View>
         {!!value && value.length !== 0 && (
           <Button
-            styles={s.button}
+            style={s.button}
             onPress={() => onClearPress()}>
             <Image
               style={s.buttonIcon}

@@ -47,13 +47,13 @@ Button.defaultProps = {
   onLongPress: noop,
   onLayout: noop,
   rippleColor: '#FFF',
-  style: s
+  // style: s.button
 }
 
 Button.propTypes = {
   onPress: PropTypes.func,
   children: React.PropTypes.element.isRequired,
-  style: PropTypes.object,
+  style: PropTypes.oneOf([PropTypes.object, PropTypes.array]),
   onLongPress: PropTypes.func,
   onLayout: PropTypes.func,
   rippleColor: PropTypes.string

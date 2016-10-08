@@ -31,7 +31,7 @@ const UserInfo = ({id, company, location, email, profile, has_gitter_login,
       {!!email && (
         <View style={s.center}>
           <Button
-            styles={s.button}
+            style={s.button}
             onPress={() => onEmailPress(email)}>
             <Image
               source={require('image!ic_email_black_24dp')}
@@ -43,7 +43,7 @@ const UserInfo = ({id, company, location, email, profile, has_gitter_login,
       {!!profile && (
         <View style={s.center}>
           <Button
-            styles={s.button}
+            style={s.button}
             onPress={() => onGithubPress(profile)}>
             <Image
               source={require('image!ic_github_24dp')}
@@ -55,7 +55,7 @@ const UserInfo = ({id, company, location, email, profile, has_gitter_login,
       {!!has_gitter_login && has_gitter_login === true && currentUserId !== id && (
         <View style={s.center}>
           <Button
-            styles={[s.button, s.chatPrivately]}
+            style={[s.button, s.chatPrivately]}
             onPress={() => onChatPrivatelyPress(id)}>
             <Image
               source={require('image!ic_textsms_black_24dp')}
