@@ -52,6 +52,12 @@ export default class SendMessageField extends Component {
               onChange(event.nativeEvent.text)
             }}
             placeholder="Type your message here..." />
+            <Text
+             ref="hidden"
+             onLayout={e => this.setState({height:  e.nativeEvent.layout.height})}
+             style={s.hidden}>
+             {value}
+            </Text>
         </View>
         <Button
           background="SelectableBackgroundBorderless"
