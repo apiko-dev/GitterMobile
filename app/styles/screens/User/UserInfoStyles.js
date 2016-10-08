@@ -21,13 +21,18 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginVertical: 10,
     backgroundColor: colors.secondaryButton,
-    elevation: 2
+    elevation: 2,
+    height: 35,
+    borderRadius: 2,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   chatPrivately: {
     backgroundColor: colors.primaryButton
   },
   textWrapper: {
-    flex: 1
+    // flex: 1
   },
   text: {
     fontSize: 18

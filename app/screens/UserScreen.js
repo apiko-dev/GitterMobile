@@ -1,12 +1,5 @@
-import React, {
-  Component,
-  PropTypes,
-  InteractionManager,
-  ToolbarAndroid,
-  Linking,
-  ScrollView,
-  View
-} from 'react-native'
+import React, {Component, PropTypes} from 'react';
+import {InteractionManager, ToolbarAndroid, Linking, ScrollView, View} from 'react-native';
 import {connect} from 'react-redux'
 import ScrollableTabView from 'react-native-scrollable-tab-view'
 import s from '../styles/screens/User/UserScreenStyles'

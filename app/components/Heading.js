@@ -1,8 +1,5 @@
-import React, {
-  PropTypes,
-  View,
-  Text
-} from 'react-native'
+import React, {PropTypes} from 'react';
+import {View, Text} from 'react-native';
 
 const Heading = ({text, color, styles}) => {
   return (
@@ -30,7 +27,7 @@ Heading.defaultProps = {
 Heading.propTypes = {
   text: PropTypes.string.isRequired,
   color: PropTypes.string,
-  styles: PropTypes.object
+  styles: PropTypes.any
 }
 
 export default Heading

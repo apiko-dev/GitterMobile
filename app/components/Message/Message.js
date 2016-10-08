@@ -1,11 +1,5 @@
-import React, {
-  Component,
-  PropTypes,
-  TouchableOpacity,
-  Linking,
-  View,
-  Text
-} from 'react-native'
+import React, {Component, PropTypes} from 'react';
+import {TouchableOpacity, Linking, View, Text} from 'react-native';
 import s from '../../styles/screens/Room/MessageStyles'
 import moment from 'moment'
 import ParsedText from '../ParsedText'

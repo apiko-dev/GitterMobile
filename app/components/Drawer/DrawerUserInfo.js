@@ -1,10 +1,6 @@
-import React, {
-  PropTypes,
-  TouchableNativeFeedback,
-  Image,
-  View,
-  Text
-} from 'react-native'
+import React, {PropTypes} from 'react';
+import {Image, View, Text} from 'react-native';
+import Button from '../Button'
 import s from '../../styles/screens/Drawer/DrawerUserInfoStyles'
 import Avatar from '../Avatar'
 import SearchField from './SearchField'
@@ -28,13 +24,12 @@ const DrawerUserInfo = ({username, displayName, avatarUrlMedium, onSettingsPress
             <Text style={[s.username, {color: 'white'}]}>@{username}</Text>
           </View>
 
-          <TouchableNativeFeedback
-            background={TouchableNativeFeedback.SelectableBackgroundBorderless()}
+          <Button
+            background="SelectableBackgroundBorderless"
+            style={s.buttonStyle}
             onPress={onSettingsPress}>
-            <View style={s.buttonStyle}>
-              <Icon name="settings" size={30} color="white" />
-            </View>
-          </TouchableNativeFeedback>
+            <Icon name="settings" size={30} color="white" />
+          </Button>
 
       </View>
 

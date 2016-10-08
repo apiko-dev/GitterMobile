@@ -1,9 +1,5 @@
-import React, {
-  Component,
-  PropTypes,
-  View,
-  ListView
-} from 'react-native'
+import React, {Component, PropTypes} from 'react';
+import {View, ListView} from 'react-native';
 import s from '../styles/screens/RoomUsers/RoomUsersScreenStyles'
 import {connect} from 'react-redux'
 import _ from 'lodash'

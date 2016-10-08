@@ -1,11 +1,5 @@
-import React, {
-  Component,
-  PropTypes,
-  ToolbarAndroid,
-  ToastAndroid,
-  TextInput,
-  View
-} from 'react-native'
+import React, {Component, PropTypes} from 'react';
+import {ToolbarAndroid, ToastAndroid, TextInput, View} from 'react-native';
 import {connect} from 'react-redux'
 import _ from 'lodash'
 import ScrollableTabView from 'react-native-scrollable-tab-view';
@@ -147,7 +141,7 @@ class SearchScreen extends Component {
         <ScrollableTabView
           initialPage={this.state.activeTab}
           tabBarBackgroundColor={colors.raspberry}
-          tabBarUnderlineColor="white"
+          tabBarUnderlineStyle={{backgroundColor: 'white'}}
           tabBarActiveTextColor="white"
           tabBarInactiveTextColor={colors.androidGray}
           onChangeTab={this.handleTabChange}

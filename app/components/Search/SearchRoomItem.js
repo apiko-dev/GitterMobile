@@ -1,9 +1,6 @@
-import React, {
-  PropTypes,
-  View,
-  Text,
-  TouchableNativeFeedback
-} from 'react-native'
+import React, {PropTypes} from 'react';
+import {View, Text} from 'react-native';
+import Button from '../Button'
 import s from '../../styles/screens/Home/HomeRoomItemStyles'
 // import {THEMES} from '../constants'
 // const {colors} = THEMES.gitterDefault
@@ -18,20 +15,19 @@ const SearchRoomItem = ({id, name, userCount, oneToOne, onPress, exists, room, .
 
   const roomId = !!exists && exists === true && !!room ? room.id : id
   return (
-    <TouchableNativeFeedback
+    <Button
+      style={s.container}
       onPress={() => onPress(roomId, exists)}
-      background={TouchableNativeFeedback.Ripple('#ECECEC', false)}>
-      <View style={s.container}>
-        <Avatar
-          src={src}
-          size={50} />
+      rippleColor="#ECECEC">
+      <Avatar
+        src={src}
+        size={50} />
 
-        <View style={s.infoContainer}>
-          <Text style={s.name}>{name}</Text>
-          <Text style={s.userCount}>{userCount} people</Text>
-        </View>
+      <View style={s.infoContainer}>
+        <Text style={s.name}>{name}</Text>
+        <Text style={s.userCount}>{userCount} people</Text>
       </View>
-    </TouchableNativeFeedback>
+    </Button>
 
   )
 }
@@ -43,7 +39,7 @@ SearchRoomItem.defaultProps = {
 SearchRoomItem.propTypes = {
   name: PropTypes.string.isRequired,
   userCount: PropTypes.number.isRequired,
-  id: PropTypes.string.isRequired,
+  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   user: PropTypes.object,
   onPress: PropTypes.func,
   exists: PropTypes.bool,

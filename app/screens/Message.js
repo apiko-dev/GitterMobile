@@ -1,10 +1,5 @@
-import React, {
-  PropTypes,
-  Component,
-  ToolbarAndroid,
-  View,
-  ScrollView
-} from 'react-native'
+import React, {Component, PropTypes} from 'react';
+import {ToolbarAndroid, View, ScrollView} from 'react-native';
 import {connect} from 'react-redux'
 import s from '../styles/screens/Message/MessageScreen'
 

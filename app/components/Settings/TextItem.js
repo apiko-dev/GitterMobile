@@ -1,8 +1,5 @@
-import React, {
-  PropTypes,
-  View,
-  Text
-} from 'react-native'
+import React, {PropTypes} from 'react';
+import {View, Text} from 'react-native';
 import s from '../../styles/screens/Settings/TextItem'
 
 import Button from '../Button'
@@ -13,7 +10,7 @@ const TextITem = ({
 }) => (
   <Button
     onPress={onPress}
-    styles={s.button}>
+    style={s.button}>
     <View style={s.container}>
       <Text style={s.text}>{text}</Text>
     </View>

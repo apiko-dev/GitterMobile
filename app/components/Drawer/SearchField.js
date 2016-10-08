@@ -1,9 +1,5 @@
-import React, {
-  PropTypes,
-  TouchableWithoutFeedback,
-  View,
-  Text
-} from 'react-native'
+import React, {PropTypes} from 'react';
+import {TouchableWithoutFeedback, View, Text} from 'react-native';
 import s from '../../styles/screens/Drawer/SearchFeild'
 
 import {THEMES} from '../../constants'

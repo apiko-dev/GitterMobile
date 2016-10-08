@@ -1,9 +1,5 @@
-import React, {
-  PropTypes,
-  View,
-  Text,
-  TouchableOpacity
-} from 'react-native'
+import React, {PropTypes} from 'react';
+import {View, Text, TouchableOpacity} from 'react-native';
 import s from '../../styles/screens/RoomInfo/RoomUserStyles'
 
 import Avatar from '../Avatar'
@@ -20,7 +16,7 @@ const RoomUsers = ({ids, entities, onPress, userCount, onAllUsersPress, onAddPre
       content.push(
         <TouchableOpacity
           onPress={() => onPress(id, entities[id].username)}
-          id={id}>
+          key={id}>
           <View
             key={id}
             style={s.itemContainer}>
@@ -35,7 +31,7 @@ const RoomUsers = ({ids, entities, onPress, userCount, onAllUsersPress, onAddPre
     content = ids.map(id => (
       <TouchableOpacity
         onPress={() => onPress(id, entities[id].username)}
-        id={id}>
+        key={id}>
         <View
           key={id}
           style={s.itemContainer}>
@@ -57,12 +53,12 @@ const RoomUsers = ({ids, entities, onPress, userCount, onAllUsersPress, onAddPre
         <View style={s.buttonsGroup}>
           <Button
             onPress={() => onAddPress()}
-            styles={[s.button, s.primaryButton]}>
+            style={[s.button, s.primaryButton]}>
             <Text>Add</Text>
           </Button>
           <Button
             onPress={() => onAllUsersPress()}
-            styles={s.button}>
+            style={s.button}>
             <Text>See all</Text>
           </Button>
         </View>

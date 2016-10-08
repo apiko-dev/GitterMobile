@@ -1,4 +1,5 @@
-import React, {PropTypes, ScrollView, Text} from 'react-native'
+import React, {PropTypes} from 'react';
+import {ScrollView, Text} from 'react-native';
 import {categorize} from '../../utils/sortRoomsByType'
 import ChannelListSection from './ChannelListSection'
 

@@ -1,11 +1,5 @@
-import React, {
-  Component,
-  PropTypes,
-  ToolbarAndroid,
-  ScrollView,
-  Text,
-  View
-} from 'react-native'
+import React, {Component, PropTypes} from 'react';
+import {ToolbarAndroid, ScrollView, Text, View} from 'react-native';
 import {connect} from 'react-redux'
 import s from '../styles/screens/Home/HomeScreenStyles'
 import * as Navigation from '../modules/navigation'

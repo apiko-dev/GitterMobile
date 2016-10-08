@@ -1,8 +1,5 @@
-import React, {
-  PropTypes,
-  View,
-  Text
-} from 'react-native'
+import React, {PropTypes} from 'react';
+import {View, Text} from 'react-native';
 import s from '../../styles/screens/RoomInfo/RepoInfoStyles'
 
 import Avatar from '../Avatar'
@@ -42,7 +39,7 @@ const RepoInfo = ({name, owner, description, open_issues_count,
     <View style={s.itemContainer}>
       <View style={s.statContainer}>
         <Button
-          styles={s.button}
+          style={s.button}
           onPress={() => onStatItemPress(html_url, 'issues')}>
           <View style={s.statItemContainer}>
             <Text style={s.statTop}>{open_issues_count}</Text>
@@ -50,7 +47,7 @@ const RepoInfo = ({name, owner, description, open_issues_count,
           </View>
         </Button>
         <Button
-          styles={s.button}
+          style={s.button}
           onPress={() => onStatItemPress(html_url, 'watchers')}>
           <View style={s.statItemContainer}>
             <Text style={s.statTop}>{watchers_count}</Text>
@@ -58,7 +55,7 @@ const RepoInfo = ({name, owner, description, open_issues_count,
           </View>
         </Button>
         <Button
-          styles={s.button}
+          style={s.button}
           onPress={() => onStatItemPress(html_url, 'stargazers')}>
           <View style={s.statItemContainer}>
             <Text style={s.statTop}>{stargazers_count}</Text>

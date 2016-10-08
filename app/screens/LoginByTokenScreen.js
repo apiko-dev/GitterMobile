@@ -1,17 +1,11 @@
-import React, {
-  Component,
-  PropTypes,
-  TouchableNativeFeedback,
-  TextInput,
-  View,
-  Text,
-  Image
-} from 'react-native'
+import React, {Component, PropTypes} from 'react';
+import {TextInput, View, Text, Image} from 'react-native';
 import s from '../styles/screens/Login/LoginByTokenScreenStyles'
 import {connect} from 'react-redux'
 import {loginByToken} from '../modules/auth'
 
 import Link from '../components/Link'
+import Button from '../components/Button'
 import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault
 
@@ -42,7 +36,7 @@ class LoginByTokenScreen extends Component {
           Login by token
         </Text>
         <Text style={s.hero}>
-          <Link to="https://gitter.im/login" fontSize={24}>Sign in</Link> to Gitter and follow this<Link to="https://developer.gitter.im/apps" fontSize={24}> link </Link>
+          <Link to="https://developer.gitter.im/login" fontSize={24}>Sign in</Link> to Gitter and follow this<Link to="https://developer.gitter.im/apps" fontSize={24}> link </Link>
         to get your authentication token. Copy it and paste into the textinput below.
         </Text>
 
@@ -52,16 +46,15 @@ class LoginByTokenScreen extends Component {
             style={s.textfield}
             placeholderTextColor="white"
             onChange={(e) => this.setState({token: e.nativeEvent.text})} />
-          <TouchableNativeFeedback
-            background={TouchableNativeFeedback.Ripple(colors.raspberry, false)}
+          <Button
+            rippleColor={colors.raspberry}
+            style={[s.buttonStyle, {backgroundColor: colors.darkRed}]}
             onPress={() => this.handleLogin()}>
-            <View style={[s.buttonStyle, {backgroundColor: colors.darkRed}]}>
-              <Text pointerEvents="none"
-                style={s.buttonText}>
-                Submit
-              </Text>
-            </View>
-          </TouchableNativeFeedback>
+            <Text pointerEvents="none"
+              style={s.buttonText}>
+              Submit
+            </Text>
+          </Button>
 
       </Image>
     )

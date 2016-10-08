@@ -1,9 +1,5 @@
-import React, {
-  Component,
-  PropTypes,
-  ListView,
-  View
-} from 'react-native'
+import React, {Component, PropTypes} from 'react';
+import {ListView, View} from 'react-native';
 import s from '../../styles/screens/RoomUsers/RoomUsersListStyle'
 
 import RoomUserItem from './RoomUserItem'
@@ -20,6 +16,7 @@ export default class RoomUsersList extends Component {
 
     return (
       <RoomUserItem
+        key={rowData.id}
         onItemPress={onItemPress}
         onUserItemPress={onUserItemPress}
         {...rowData} />

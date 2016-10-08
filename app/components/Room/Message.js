@@ -1,13 +1,5 @@
-import React, {
-  Component,
-  PropTypes,
-  TouchableNativeFeedback,
-  TouchableOpacity,
-  Linking,
-  Image,
-  View,
-  Text
-} from 'react-native'
+import React, {Component, PropTypes} from 'react';
+import {TouchableOpacity, Linking, Image, View, Text} from 'react-native';
 import s from '../../styles/screens/Room/MessageStyles'
 import {connect} from 'react-redux'
 import _ from 'lodash'
@@ -16,6 +8,7 @@ import ParsedText from '../ParsedText'
 
 import Avatar from '../Avatar'
 import StatusMessage from './StatusMessage'
+import Button from '../Button'
 
 class Message extends Component {
   constructor(props) {
@@ -114,51 +107,15 @@ class Message extends Component {
 
     if (isCollapsed) {
       return (
-        <TouchableNativeFeedback
+        <Button
+          style={[s.container, {opacity, backgroundColor}]}
           onPress={() => this.onMessagePress()}
           onLayout={e => onLayout(e)}
           onLongPress={() => this.onLongPress()}>
-          <View
-            style={[s.container, {opacity, backgroundColor}]}>
-            <View style={{
-              width: 30
-            }} />
-            <View style={s.content}>
-              <View style={s.bottom}>
-                {this.renderMessageText()}
-              </View>
-            </View>
-            <View style={s.readStatus}>
-              <Image
-                style={[s.readStatusIcon, {opacity: readStatusOpacity}]}
-                source={require('image!ic_done_black_24dp')} />
-            </View>
-          </View>
-        </TouchableNativeFeedback>
-      )
-    }
-
-    return (
-      <View
-        onLayout={e => onLayout(e)}>
-      <TouchableNativeFeedback
-        onPress={() => this.onMessagePress()}
-        onLongPress={() => this.onLongPress()}>
-        <View
-          style={[s.container, {opacity, backgroundColor}]}>
-          <TouchableOpacity
-            onPress={() => onUserAvatarPress(fromUser.id, fromUser.username)}>
-              <Avatar src={fromUser.avatarUrlSmall} size={30} />
-          </TouchableOpacity>
+          <View style={{
+            width: 30
+          }} />
           <View style={s.content}>
-            <View style={s.top}>
-              <Text
-                style={s.username}
-                onPress={() => onUsernamePress(fromUser.username)}>{fromUser.username}</Text>
-              <Text style={s.date}>
-                {this.renderDate()}
-              </Text>
-            </View>
             <View style={s.bottom}>
               {this.renderMessageText()}
             </View>
@@ -168,8 +125,40 @@ class Message extends Component {
               style={[s.readStatusIcon, {opacity: readStatusOpacity}]}
               source={require('image!ic_done_black_24dp')} />
           </View>
+        </Button>
+      )
+    }
+
+    return (
+      <View
+        onLayout={e => onLayout(e)}>
+      <Button
+        onPress={() => this.onMessagePress()}
+        onLongPress={() => this.onLongPress()}
+        style={[s.container, {opacity, backgroundColor}]}>
+        <TouchableOpacity
+          onPress={() => onUserAvatarPress(fromUser.id, fromUser.username)}>
+          <Avatar src={fromUser.avatarUrlSmall} size={30} />
+        </TouchableOpacity>
+        <View style={s.content}>
+          <View style={s.top}>
+            <Text
+              style={s.username}
+              onPress={() => onUsernamePress(fromUser.username)}>{fromUser.username}</Text>
+            <Text style={s.date}>
+              {this.renderDate()}
+            </Text>
+          </View>
+          <View style={s.bottom}>
+            {this.renderMessageText()}
+          </View>
         </View>
-      </TouchableNativeFeedback>
+        <View style={s.readStatus}>
+          <Image
+            style={[s.readStatusIcon, {opacity: readStatusOpacity}]}
+            source={require('image!ic_done_black_24dp')} />
+        </View>
+      </Button>
     </View>
     )
   }

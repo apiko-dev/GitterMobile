@@ -1,10 +1,5 @@
-import React, {
-  Component,
-  PropTypes,
-  TextInput,
-  Image,
-  View
-} from 'react-native'
+import React, {Component, PropTypes} from 'react';
+import {TextInput, Image, View} from 'react-native';
 import s from '../styles/components/CustomSearchStyles'
 import Button from './Button'
 
@@ -29,7 +24,7 @@ class CustomSearch extends Component {
     return (
       <View style={s.container}>
         <Button
-          styles={s.button}
+          style={s.button}
           onPress={() => onBackPress()}>
           <Image
             style={s.buttonIcon}
@@ -48,7 +43,7 @@ class CustomSearch extends Component {
         </View>
         {!!value && value.length !== 0 && (
           <Button
-            styles={s.button}
+            style={s.button}
             onPress={() => onClearPress()}>
             <Image
               style={s.buttonIcon}

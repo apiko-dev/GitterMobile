@@ -1,4 +1,5 @@
-import React, {PropTypes, Text} from 'react-native'
+import React, {PropTypes} from 'react';
+import {Text} from 'react-native';
 import Parser from 'react-native-parsed-text'
 import Emoji from './Emoji'
 import s from '../styles/components/ParsedTextStyles'
@@ -25,7 +26,7 @@ const renderCodespan = (matchingString, matches) => {
     c = c.replace(/^([ \t]*)/g, '');	// leading whitespace
     c = c.replace(/[ \t]*$/g, '');	// trailing whitespace
     component = (
-      <Text style={s.codespan}>{c}</Text>
+      <Text> <Text style={s.codespan}>{c}</Text></Text>
     )
   })
   return component
@@ -40,7 +41,7 @@ const ParsedText = ({text, username, handleUrlPress}) => {
     {pattern: EMOJI_REGEX, style: s.emoji, renderText: renderEmoji},
     {pattern: THUMBSUP, style: s.emoji, renderText: renderEmoji},
     {pattern: THUMBSDOWN, style: s.emoji, renderText: renderEmoji},
-    {pattern: CODE_REGEX, style: s.codespan, renderText: renderCodespan}
+    {pattern: CODE_REGEX, renderText: renderCodespan}
   ]
 
   return (

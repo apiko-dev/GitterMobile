@@ -1,9 +1,5 @@
-import React, {
-  Component,
-  PropTypes,
-  Alert,
-  View
-} from 'react-native'
+import React, {Component, PropTypes} from 'react';
+import {Alert, View} from 'react-native';
 import {connect} from 'react-redux'
 import DialogAndroid from 'react-native-dialogs'
 
