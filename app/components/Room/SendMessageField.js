@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import {TextInput, Image, View} from 'react-native';
+import {TextInput, Image, View, Text} from 'react-native';
 import Button from '../Button'
 import s from '../../styles/screens/Room/SendMessageFieldStyles'
 
@@ -45,12 +45,7 @@ export default class SendMessageField extends Component {
             value={value}
             keyboardShouldPersistTaps={false}
             underlineColorAndroid="white"
-            onChange={(event) => {
-              this.setState({
-                height: event.nativeEvent.contentSize.height
-              })
-              onChange(event.nativeEvent.text)
-            }}
+            onChange={(event) => onChange(event.nativeEvent.text)}
             placeholder="Type your message here..." />
             <Text
              ref="hidden"
