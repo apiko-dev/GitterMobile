@@ -16,7 +16,7 @@ const RoomUsers = ({ids, entities, onPress, userCount, onAllUsersPress, onAddPre
       content.push(
         <TouchableOpacity
           onPress={() => onPress(id, entities[id].username)}
-          id={id}>
+          key={id}>
           <View
             key={id}
             style={s.itemContainer}>
@@ -31,7 +31,7 @@ const RoomUsers = ({ids, entities, onPress, userCount, onAllUsersPress, onAddPre
     content = ids.map(id => (
       <TouchableOpacity
         onPress={() => onPress(id, entities[id].username)}
-        id={id}>
+        key={id}>
         <View
           key={id}
           style={s.itemContainer}>

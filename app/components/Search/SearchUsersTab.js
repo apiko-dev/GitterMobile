@@ -32,6 +32,7 @@ const SearchUsersTab = ({isLoadingUsers, usersResult, value, onPress}) => {
 
   const content = usersResult.map(item => (
     <SearchUserItem
+      key={item.id}
       {...item}
       onPress={onPress} />
   ))

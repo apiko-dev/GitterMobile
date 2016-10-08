@@ -10,7 +10,7 @@ const TextITem = ({
 }) => (
   <Button
     onPress={onPress}
-    styles={s.button}>
+    style={s.button}>
     <View style={s.container}>
       <Text style={s.text}>{text}</Text>
     </View>

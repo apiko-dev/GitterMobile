@@ -1,15 +1,16 @@
 import React, {PropTypes} from 'react';
-import {TouchableNativeFeedback, Image, View} from 'react-native';
+import {Image, View} from 'react-native';
 import s from '../../styles/screens/Room/StatusMessageStyles'
 import Parser from 'react-native-parsed-text'
 import Emoji from '../Emoji'
+import Button from '../Button'
 
 const EMOJI_REGEX = /:([a-z0-9A-Z_-]+):/
-const THUMBSUP = /:\+1:/g
-const THUMBSDOWN = /:\-1:/g
+const THUMBSUP = /:\+1:/
+const THUMBSDOWN = /:\-1:/
 
 const renderEmoji = (matchingString, matches) => {
-  const name = matches[0].replace(/:/g, '')
+  const name = matches[0].replace(/:/, '')
   return (
     <Emoji name={name} />
   )
@@ -24,31 +25,29 @@ const StatusMessage = ({onPress, onLongPress, text, handleUrlPress, backgroundCo
   ]
 
   return (
-    <TouchableNativeFeedback
+    <Button
+      style={[s.container, {backgroundColor}]}
       onPress={() => onPress()}
       onLayout={e => onLayout(e)}
       onLongPress={() => onLongPress()}>
-      <View
-        style={[s.container, {backgroundColor}]}>
-        <View style={{
-          width: 30
-        }} />
-        <View style={s.content}>
-          <View>
-            <Parser
-              style={s.text}
-              parse={patterns}>
-              {text}
-            </Parser>
-          </View>
-        </View>
-        <View style={s.readStatus}>
-          <Image
-            style={[s.readStatusIcon, {opacity}]}
-            source={require('image!ic_done_black_24dp')} />
+      <View style={{
+        width: 30
+      }} />
+      <View style={s.content}>
+        <View>
+          <Parser
+            style={s.text}
+            parse={patterns}>
+            {text}
+          </Parser>
         </View>
       </View>
-    </TouchableNativeFeedback>
+      <View style={s.readStatus}>
+        <Image
+          style={[s.readStatusIcon, {opacity}]}
+          source={require('image!ic_done_black_24dp')} />
+      </View>
+    </Button>
   )
 }
 

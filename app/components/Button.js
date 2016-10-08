@@ -12,7 +12,8 @@ const Button = ({
   onLayout = noop,
   children,
   rippleColor,
-  style
+  style,
+  background
 }) => {
   const version = DeviceInfo.getSystemVersion()
 
@@ -33,7 +34,7 @@ const Button = ({
         onLongPress={onLongPress}
         onLayout={onLayout}
         onPress={onPress}
-        background={TouchableNativeFeedback.Ripple(rippleColor, false)}>
+        background={background ? TouchableNativeFeedback[background]() : TouchableNativeFeedback.Ripple(rippleColor, false)}>
         <View style={style}>
           {Children.map(children, child => child)}
         </View>
@@ -46,14 +47,14 @@ Button.defaultProps = {
   onPress: noop,
   onLongPress: noop,
   onLayout: noop,
-  rippleColor: '#FFF',
+  rippleColor: '#f0eef0',
   // style: s.button
 }
 
 Button.propTypes = {
   onPress: PropTypes.func,
-  children: React.PropTypes.element.isRequired,
-  style: PropTypes.oneOf([PropTypes.object, PropTypes.array]),
+  children: PropTypes.any,
+  style: PropTypes.any,
   onLongPress: PropTypes.func,
   onLayout: PropTypes.func,
   rippleColor: PropTypes.string

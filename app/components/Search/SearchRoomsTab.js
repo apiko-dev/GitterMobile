@@ -32,6 +32,7 @@ const SearchRoomsTab = ({isLoadingRooms, roomsResult, value, onPress}) => {
 
   const content = roomsResult.map(item => (
     <SearchRoomItem
+      key={item.id}
       {...item}
       onPress={onPress} />
   ))

@@ -8,6 +8,7 @@ import Button from '../Button'
 const RoomUserItem = ({onUserItemPress, id, username, displayName, avatarUrlSmall, onAddPress, noButton}) => {
   return (
     <Button
+      key={id}
       onPress={() => onUserItemPress(id, username)}
       style={s.button}>
       <Avatar

@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
-import {TouchableNativeFeedback, View, Text} from 'react-native';
+import {View, Text} from 'react-native';
+import Button from './Button'
 import s from '../styles/components/FailedToLoadStyles'
 
 const FailedToLoad = ({onRetry, message}) => {
@@ -8,12 +9,11 @@ const FailedToLoad = ({onRetry, message}) => {
       <Text style={s.heading}>
         {message}
       </Text>
-      <TouchableNativeFeedback
+      <Button
+        style={s.button}
         onPress={() => onRetry()}>
-        <View style={s.button}>
-          <Text>Retry</Text>
-        </View>
-      </TouchableNativeFeedback>
+        <Text>Retry</Text>
+      </Button>
     </View>
   )
 }

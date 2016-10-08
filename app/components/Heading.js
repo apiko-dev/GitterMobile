@@ -27,7 +27,7 @@ Heading.defaultProps = {
 Heading.propTypes = {
   text: PropTypes.string.isRequired,
   color: PropTypes.string,
-  styles: PropTypes.object
+  styles: PropTypes.any
 }
 
 export default Heading

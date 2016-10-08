@@ -16,6 +16,7 @@ export default class RoomUsersList extends Component {
 
     return (
       <RoomUserItem
+        key={rowData.id}
         onItemPress={onItemPress}
         onUserItemPress={onUserItemPress}
         {...rowData} />

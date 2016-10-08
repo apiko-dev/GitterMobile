@@ -1,5 +1,6 @@
 import React, {Component, PropTypes} from 'react';
-import {TextInput, TouchableNativeFeedback, Image, View} from 'react-native';
+import {TextInput, Image, View} from 'react-native';
+import Button from '../Button'
 import s from '../../styles/screens/Room/SendMessageFieldStyles'
 
 export default class SendMessageField extends Component {
@@ -52,15 +53,14 @@ export default class SendMessageField extends Component {
             }}
             placeholder="Type your message here..." />
         </View>
-        <TouchableNativeFeedback
-          background={TouchableNativeFeedback.SelectableBackgroundBorderless()}
-          onPress={() => this.sendMessage()}>
-          <View style={s.button}>
-            <Image
-              source={require('image!ic_send_black_24dp')}
-              style={[s.sendIcon, {opacity: !value.trim() ? 0.2 : 1}]}/>
-          </View>
-        </TouchableNativeFeedback>
+        <Button
+          background="SelectableBackgroundBorderless"
+          onPress={() => this.sendMessage()}
+          style={s.button}>
+          <Image
+            source={require('image!ic_send_black_24dp')}
+            style={[s.sendIcon, {opacity: !value.trim() ? 0.2 : 1}]}/>
+        </Button>
       </View>
 
     )

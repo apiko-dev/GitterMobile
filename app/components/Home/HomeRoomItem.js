@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
-import {View, Text, TouchableNativeFeedback} from 'react-native';
+import {View, Text} from 'react-native';
+import Button from '../Button'
 import s from '../../styles/screens/Home/HomeRoomItemStyles'
 import s2 from '../../styles/screens/Home/HomeRoomItemMy'
 
@@ -13,20 +14,19 @@ export const HomeRoomItem = ({id, name, userCount, oneToOne, onPress, ...props})
     ? createGhAvatarLink(props.user.username, 200)
     : createGhAvatarLink(name.split('/')[0], 200)
   return (
-    <TouchableNativeFeedback
+    <Button
+      key={id}
       onPress={() => onPress(id)}
-      background={TouchableNativeFeedback.Ripple('#ECECEC', false)}>
-      <View style={s.container}>
-        <Avatar
-          src={src}
-          size={50} />
+      style={s.container}>
+      <Avatar
+        src={src}
+        size={50} />
 
-        <View style={s.infoContainer}>
-          <Text style={s.name}>{name}</Text>
-          <Text style={s.userCount}>{userCount} people</Text>
-        </View>
+      <View style={s.infoContainer}>
+        <Text style={s.name}>{name}</Text>
+        <Text style={s.userCount}>{userCount} people</Text>
       </View>
-    </TouchableNativeFeedback>
+    </Button>
 
   )
 }
@@ -40,28 +40,27 @@ export const HomeRoomItemMy = ({
     : createGhAvatarLink(name.split('/')[0], 200)
 
   return (
-    <TouchableNativeFeedback
-      onPress={() => onPress(id)}
-      background={TouchableNativeFeedback.Ripple('#ECECEC', false)}>
-      <View style={s2.container} key={id}>
-        <Avatar
-          src={src}
-          size={50} />
+    <Button
+      style={s2.container}
+      key={id}
+      onPress={() => onPress(id)}>
+      <Avatar
+        src={src}
+        size={50} />
 
-        <View style={s2.headingContainer}>
-          <Text style={s2.heading}>{name}</Text>
-          <Text style={s2.userCount}>{userCount} people</Text>
-        </View>
-
-        {(!!unreadItems || !!mentions || !!lurk) &&
-          <View style={s2.unread}>
-            <UnreadBadge
-              unreadItems={unreadItems}
-              mentions={mentions}
-              lurk={lurk} />
-          </View>}
+      <View style={s2.headingContainer}>
+        <Text style={s2.heading}>{name}</Text>
+        <Text style={s2.userCount}>{userCount} people</Text>
       </View>
-    </TouchableNativeFeedback>
+
+      {(!!unreadItems || !!mentions || !!lurk) &&
+        <View style={s2.unread}>
+          <UnreadBadge
+            unreadItems={unreadItems}
+            mentions={mentions}
+            lurk={lurk} />
+      </View>}
+    </Button>
   )
 }
 
