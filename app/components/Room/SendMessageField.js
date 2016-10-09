@@ -10,10 +10,37 @@ export default class SendMessageField extends Component {
     this.sendMessage = this.sendMessage.bind(this)
     this.focus = this.focus.bind(this)
     this.blur = this.blur.bind(this)
+    this.handleChangeSize = this.handleChangeSize.bind(this)
+    this.handleChangeText = this.handleChangeText.bind(this)
 
     this.state = {
-      height: 56
+      height: 56,
+      value: ''
     }
+  }
+
+  componentWillMount() {
+    this.setState({value: this.props.value})
+  }
+
+  componentWillReceiveProps({value}) {
+    if (!this.state.value.length) {
+      this.setState({value})
+    }
+  }
+
+  // componentDidMount() {
+  //   setTimeout(() => this.setState({height: }))
+  // }
+
+  handleChangeSize(e) {
+    this.setState({height: e.nativeEvent.layout.height + 30})
+  }
+
+  handleChangeText(value) {
+    const {onChange} = this.props
+    this.setState({value})
+    onChange(value)
   }
 
   focus() {
@@ -30,29 +57,29 @@ export default class SendMessageField extends Component {
       return
     }
     onSending()
-    this.setState({height: 56})
+    this.setState({height: 56, value: ''})
   }
 
   render() {
-    const {value, onChange} = this.props
+    const {value, height} = this.state
     return (
       <View style={s.container}>
         <View style={s.innerContainer}>
           <TextInput
             ref="textInput"
             multiline
-            style={[s.textInput, {height: this.state.height > 90 ? 90 : Math.max(56, this.state.height)}]}
+            style={[s.textInput, {height: height > 90 ? 90 : Math.max(56, height)}]}
             value={value}
             keyboardShouldPersistTaps={false}
             underlineColorAndroid="white"
-            onChange={(event) => onChange(event.nativeEvent.text)}
+            onChangeText={this.handleChangeText}
             placeholder="Type your message here..." />
             <Text
-             ref="hidden"
-             onLayout={e => this.setState({height:  e.nativeEvent.layout.height})}
-             style={s.hidden}>
-             {value}
-            </Text>
+              ref="hidden"
+              onLayout={this.handleChangeSize}
+              style={s.hidden}>
+               {value}
+             </Text>
         </View>
         <Button
           background="SelectableBackgroundBorderless"
