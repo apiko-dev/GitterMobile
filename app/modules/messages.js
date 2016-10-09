@@ -306,14 +306,14 @@ export function readMessages(roomId, changedRows) {
 
     dispatch({type: READ_MESSAGES, roomId, visibleAndUnread})
 
-    try {
-      await Api.readMessages(
-        token, id, roomId, visibleAndUnread.map(item => listView.data[item].id)
-      )
-      dispatch({type: READ_MESSAGES_OK, roomId, visibleAndUnread})
-    } catch (error) {
-      dispatch({type: READ_MESSAGES_ERROR, error: error.message, roomId, visibleAndUnread})
-    }
+    // try {
+    //   await Api.readMessages(
+    //     token, id, roomId, visibleAndUnread.map(item => listView.data[item].id)
+    //   )
+    //   dispatch({type: READ_MESSAGES_OK, roomId, visibleAndUnread})
+    // } catch (error) {
+    //   dispatch({type: READ_MESSAGES_ERROR, error: error.message, roomId, visibleAndUnread})
+    // }
   }
 }
 

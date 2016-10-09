@@ -32,6 +32,9 @@ import {
   clearError as clearMessagesError,
   readMessages
 } from '../modules/messages'
+import {
+  unsubscribeToChatMessages
+} from '../modules/realtime'
 import {changeRoomInfoDrawerState} from '../modules/ui'
 import * as Navigation from '../modules/navigation'
 
@@ -100,6 +103,11 @@ class Room extends Component {
         dispatch(getRoomMessagesIfNeeded(roomId))
       }
     })
+  }
+
+  componentWillUnmount() {
+    const {dispatch, route: {roomId}} = this.props
+    // dispatch(unsubscribeToChatMessages(roomId))
   }
 
   onEndReached() {
@@ -359,8 +367,6 @@ class Room extends Component {
 
   handleChangeVisibleRows(visibleRows, changedRows) {
     const {dispatch, route: {roomId}} = this.props
-    console.log('VISIBLE', visibleRows)
-    console.log('CHANGED', changedRows)
 
     this.readMessages = Object.assign({}, this.readMessages, changedRows.s1)
 

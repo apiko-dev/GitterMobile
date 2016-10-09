@@ -18,6 +18,9 @@ export const SUBSCRIBE_TO_ROOM_EVENTS = 'realtime/SUBSCRIBE_TO_ROOM_EVENTS'
 export const UNSUBSCRIBE_TO_ROOM_EVENTS = 'realtime/UNSUBSCRIBE_TO_ROOM_EVENTS'
 export const SUBSCRIBE_TO_READ_BY = 'realtime/SUBSCRIBE_TO_READ_BY'
 export const UNSUBSCRIBE_FROM_READ_BY = 'realtime/UNSUBSCRIBE_FROM_READ_BY'
+export const PUSH_SUBSCRIPTION = 'realtime/PUSH_SUBSCRIPTION'
+export const DELETE_SUBSCRIPTION = 'realtime/DELETE_SUBSCRIPTION'
+export const SUBSCRIBED_TO_CHANNELS = 'realtime/SUBSCRIBED_TO_CHANNELS'
 
 
 /**
@@ -26,15 +29,14 @@ export const UNSUBSCRIBE_FROM_READ_BY = 'realtime/UNSUBSCRIBE_FROM_READ_BY'
 
 export function setupFaye() {
   return async (dispatch, getState) => {
-    console.warn('RECONNECT TO FAYE')
+    console.log('RECONNECT TO FAYE')
     FayeGitter.setAccessToken(getState().auth.token)
     FayeGitter.create()
     FayeGitter.logger()
     try {
       const result = await FayeGitter.connect()
       dispatch({type: FAYE_CONNECT, payload: result})
-      console.warn('CONNECTED')
-      dispatch(subscribeToRooms())
+      // dispatch(subscribeToChannels())
     } catch (err) {
       console.log(err) // eslint-disable-line no-console
     }
@@ -44,8 +46,9 @@ export function setupFaye() {
 export function checkFayeConnection() {
   return async (dispatch, getState) => {
     try {
-      const {fayeConnected} = getState().realtime
-      if (!fayeConnected) {
+      const connectionStatus = await FayeGitter.checkConnectionStatus()
+      console.log('CONNECTION_STATUS', connectionStatus)
+      if (!connectionStatus) {
         await dispatch(setupFaye())
       }
     } catch (error) {
@@ -61,11 +64,12 @@ export function checkFayeConnection() {
 export function onNetStatusChangeFaye(status) {
   return async (dispatch, getState) => {
     const {fayeConnected} = getState().app
-    if (!status && fayeConnected) {
+    const connectionStatus = await FayeGitter.checkConnectionStatus()
+    if (!status && connectionStatus) {
       dispatch({type: FAYE_CONNECT, payload: status})
     }
     try {
-      if (status && !fayeConnected) {
+      if (status && !connectionStatus) {
         await dispatch(setupFaye())
       }
     } catch (error) {
@@ -81,16 +85,21 @@ export function onNetStatusChangeFaye(status) {
 export function setupFayeEvents() {
   return (dispatch, getState) => {
     DeviceEventEmitter
+      .addListener('FayeGitter:Connected', log => {
+        console.log('CONNECTED')
+        dispatch(subscribeToChannels())
+      })
+    DeviceEventEmitter
       .addListener('FayeGitter:onDisconnected', log => {
-        console.warn(log) // eslint-disable-line no-console
+        console.log(log) // eslint-disable-line no-console
         dispatch(setupFaye())
       })
 
     DeviceEventEmitter
       .addListener('FayeGitter:onFailedToCreate', log => {
-        console.warn(log) // eslint-disable-line no-console
-        const {netStatus} = getState().app
-        if (netStatus === true) {
+        console.log(log) // eslint-disable-line no-console
+        const {online} = getState().app
+        if (online === true) {
           dispatch(setupFaye())
         }
       })
@@ -103,16 +112,17 @@ export function setupFayeEvents() {
         dispatch(parseSnapshotEvent(event))
       })
     DeviceEventEmitter
-      .addListener('FayeGitter:SubscribtionFailed', log => console.warn(log)) // eslint-disable-line no-console
+      .addListener('FayeGitter:SubscribtionFailed', log => console.log(log)) // eslint-disable-line no-console
     DeviceEventEmitter
-      .addListener('FayeGitter:Subscribed', log => console.warn('SUBSCRIBED', log)) // eslint-disable-line no-console
+      .addListener('FayeGitter:Subscribed', log => console.log('SUBSCRIBED', log)) // eslint-disable-line no-console
     DeviceEventEmitter
-      .addListener('FayeGitter:Unsubscribed', log => console.warn('UNSUBSCRIBED', log)) // eslint-disable-line no-console
+      .addListener('FayeGitter:Unsubscribed', log => console.log('UNSUBSCRIBED', log)) // eslint-disable-line no-console
   }
 }
 
 export function removeFayeEvents() {
   return (dispatch) => {
+    DeviceEventEmitter.removeEventListener('FayeGitter:Connected')
     DeviceEventEmitter.removeEventListener('FayeGitter:onDisconnected')
     DeviceEventEmitter.removeEventListener('FayeGitter:onFailedToCreate')
     DeviceEventEmitter.removeEventListener('FayeGitter:Message')
@@ -204,8 +214,10 @@ export function subscribeToRooms() {
   return async (dispatch, getState) => {
     await checkFayeConnection()
     const {id} = getState().viewer.user
-    FayeGitter.subscribe(`/api/v1/user/${id}/rooms`)
+    const subscription = `/api/v1/user/${id}/rooms`
+    FayeGitter.subscribe(subscription)
     dispatch({type: ROOMS_SUBSCRIBED})
+    dispatch(pushSubscription(subscription))
   }
 }
 
@@ -216,8 +228,10 @@ export function subscribeToRooms() {
 export function subscribeToChatMessages(roomId) {
   return async dispatch => {
     await checkFayeConnection()
-    FayeGitter.subscribe(`/api/v1/rooms/${roomId}/chatMessages`)
+    const subscription = `/api/v1/rooms/${roomId}/chatMessages`
+    FayeGitter.subscribe(subscription)
     dispatch({type: SUBSCRIBE_TO_CHAT_MESSAGES, roomId})
+    dispatch(pushSubscription(subscription))
   }
 }
 
@@ -228,8 +242,10 @@ export function subscribeToChatMessages(roomId) {
 export function unsubscribeToChatMessages(roomId) {
   return async (dispatch) => {
     await checkFayeConnection()
-    FayeGitter.unsubscribe(`/api/v1/rooms/${roomId}/chatMessages`)
+    const subscription = `/api/v1/rooms/${roomId}/chatMessages`
+    FayeGitter.unsubscribe(subscription)
     dispatch({type: UNSUBSCRIBE_TO_CHAT_MESSAGES, roomId})
+    dispatch(deleteSubscription(subscription))
   }
 }
 
@@ -237,8 +253,10 @@ export function unsubscribeToChatMessages(roomId) {
 export function subscribeToRoomEvents(roomId) {
   return async dispatch => {
     await checkFayeConnection()
-    FayeGitter.subscribe(`/api/v1/rooms/${roomId}/events`)
+    const subscription = `/api/v1/rooms/${roomId}/events`
+    FayeGitter.subscribe(subscription)
     dispatch({type: SUBSCRIBE_TO_ROOM_EVENTS, roomId})
+    dispatch(pushSubscription(subscription))
   }
 }
 
@@ -248,17 +266,21 @@ export function subscribeToRoomEvents(roomId) {
 
 export function unsubscribeToRoomEvents(roomId) {
   return async (dispatch) => {
-    await checkFayeConnection
-    FayeGitter.unsubscribe(`/api/v1/rooms/${roomId}/events`)
+    await checkFayeConnection()
+    const subscription = `/api/v1/rooms/${roomId}/events`
+    FayeGitter.unsubscribe(subscription)
     dispatch({type: UNSUBSCRIBE_TO_ROOM_EVENTS, roomId})
+    dispatch(deleteSubscription(subscription))
   }
 }
 
 export function subscribeToReadBy(roomId, messageId) {
   return async dispatch => {
     await checkFayeConnection()
-    FayeGitter.subscribe(`/api/v1/rooms/${roomId}/chatMessages/${messageId}/readBy`)
+    const subscription = `/api/v1/rooms/${roomId}/chatMessages/${messageId}/readBy`
+    FayeGitter.subscribe(subscription)
     dispatch({type: SUBSCRIBE_TO_READ_BY, roomId})
+    dispatch(pushSubscription(subscription))
   }
 }
 
@@ -269,8 +291,42 @@ export function subscribeToReadBy(roomId, messageId) {
 export function unsubscribeFromReadBy(roomId, messageId) {
   return async (dispatch) => {
     await checkFayeConnection()
-    FayeGitter.unsubscribe(`/api/v1/rooms/${roomId}/chatMessages/${messageId}/readBy`)
+    const subscription = `/api/v1/rooms/${roomId}/chatMessages/${messageId}/readBy`
+    FayeGitter.unsubscribe(subscription)
     dispatch({type: UNSUBSCRIBE_FROM_READ_BY, roomId})
+    dispatch(deleteSubscription(subscription))
+  }
+}
+
+export function pushSubscription(subscription) {
+  return (dispatch, getState) => {
+    const {subscriptions} = getState().realtime
+    if (!subscriptions.find(item => item === subscription)) {
+      dispatch({type: PUSH_SUBSCRIPTION, subscription})
+      console.log('PUSH_SUBSCRIPTION', subscription)
+    }
+  }
+}
+
+export function deleteSubscription(subscription) {
+  return (dispatch, getState) => {
+    const {subscriptions} = getState().realtime
+    if (!!subscriptions.find(item => item === subscription)) {
+      dispatch({type: DELETE_SUBSCRIPTION, subscription})
+      console.log('DELETE_SUBSCRIPTION', subscription)
+    }
+  }
+}
+
+export function subscribeToChannels() {
+  return (dispatch, getState) => {
+    const {subscriptions} = getState().realtime
+    if (subscriptions.length === 0) {
+      dispatch(subscribeToRooms())
+    } else {
+      subscriptions.forEach(subscription => FayeGitter.subscribe(subscription))
+      dispatch({type: SUBSCRIBED_TO_CHANNELS, subscriptions})
+    }
   }
 }
 
@@ -281,7 +337,8 @@ export function unsubscribeFromReadBy(roomId, messageId) {
 const initialState = {
   fayeConnected: false,
   roomsSubscribed: false,
-  roomMessagesSubscription: ''
+  roomMessagesSubscription: '',
+  subscriptions: []
 }
 
 export default function realtime(state = initialState, action) {
@@ -300,6 +357,16 @@ export default function realtime(state = initialState, action) {
   case SUBSCRIBE_TO_CHAT_MESSAGES:
     return {...state,
       roomMessagesSubscription: action.payload
+    }
+
+  case PUSH_SUBSCRIPTION:
+    return {...state,
+      subscriptions: state.subscriptions.concat(action.subscription)
+    }
+
+  case DELETE_SUBSCRIPTION:
+    return {...state,
+      subscriptions: state.subscriptions.filter(subscription => action.subscription !== subscription)
     }
 
   default:
