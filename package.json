@@ -18,7 +18,7 @@
     "android": "node node_modules/react-native/local-cli/cli.js run-android",
     "lint": "node node_modules/eslint/bin/eslint -c .eslintrc ./",
     "release": "cd android && ./gradlew assembleRelease",
-    "run-release": "node node_modules/react-native/local-cli/cli.js run-android --variant=release"
+    "android-release": "node node_modules/react-native/local-cli/cli.js run-android --variant=release"
   },
   "dependencies": {
     "lodash": "^4.2.1",
