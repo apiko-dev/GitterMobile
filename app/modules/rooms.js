@@ -149,12 +149,12 @@ export function updateRoomState(json) {
 export function joinRoom(roomId) {
   return async (dispatch, getState) => {
     const {token} = getState().auth
-    const room = getState().rooms.rooms[roomId]
+    const {id} = getState().viewer.user
 
     dispatch({type: JOIN_ROOM, roomId})
 
     try {
-      const payload = await Api.joinRoom(token, room.uri)
+      const payload = await Api.joinRoom(token, id, roomId)
       dispatch({type: JOIN_ROOM_OK, payload})
     } catch (error) {
       dispatch({type: JOIN_ROOM_FAILED, error})
