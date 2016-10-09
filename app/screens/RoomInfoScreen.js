@@ -56,6 +56,7 @@ class RoomInfoScreen extends Component {
   componentWillUnmount() {
     const {dispatch, route: {roomId}} = this.props
     dispatch(unsubscribeToRoomEvents(roomId))
+    console.warn('UNMOUNTED')
   }
 
   handleUserPress(userId, username) {

@@ -179,7 +179,7 @@ function callApi(endpoint, token, options = {method: 'get'}) {
     }
   })
   .then(res => {
-    console.log(res)
+    // console.log(res)
     return res.text()
   })
   .then(text => {

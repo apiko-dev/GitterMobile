@@ -61,7 +61,7 @@ export function init() {
       await dispatch(getSuggestedRooms())
       // dispatch(Navigation.resetTo({name: 'roomUsers', roomId: '56a41e0fe610378809bde160'}))
     } catch (error) {
-      dispatch({ type: INITIALIZED, error })
+      dispatch({ type: INITIALIZED, error: error.message })
       dispatch(Navigation.goAndReplace({name: 'login'}))
     }
   }

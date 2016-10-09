@@ -298,8 +298,6 @@ export function readMessages(roomId, changedRows) {
       .filter(rowId => (changedRows[rowId] === true))
       .filter(rowId => (listView.data[rowId].unread === true))
 
-    console.log('UNREAD', visibleAndUnread)
-
     if (!visibleAndUnread.length) {
       return
     }
