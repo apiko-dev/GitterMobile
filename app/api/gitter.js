@@ -41,6 +41,16 @@ export function sendMessage(token, roomId, text) {
   })
 }
 
+export function sendStatusMessage(token, roomId, text) {
+  return callApi(`rooms/${roomId}/chatMessages`, token, {
+    method: 'POST',
+    body: JSON.stringify({
+      text,
+      status: true
+    })
+  })
+}
+
 export function joinRoom(token, uri) {
   return callApi(`rooms`, token, {
     method: 'POST',

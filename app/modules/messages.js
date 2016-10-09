@@ -1,6 +1,6 @@
 import * as Api from '../api/gitter'
 import normalize from '../utils/normalize'
-import createMessage from '../utils/createMessage'
+import {createMessage, createStatusMessage} from '../utils/createMessage'
 import _ from 'lodash'
 
 /**
@@ -197,6 +197,27 @@ export function sendMessage(roomId, text) {
 
     try {
       const payload = await Api.sendMessage(token, roomId, text)
+      dispatch({type: SEND_MESSAGE_RECEIVED, message, roomId, payload})
+    } catch (error) {
+      dispatch({type: SEND_MESSAGE_FAILED, error, message, roomId})
+    }
+  }
+}
+
+/**
+ * Send messages
+ */
+
+export function sendStatusMessage(roomId, rawText) {
+  return async (dispatch, getState) => {
+    const {token} = getState().auth
+    const {user} = getState().viewer
+    const text = rawText.replace('/me', `@${user.username}`)
+    const message = createStatusMessage(user, text)
+    dispatch({type: SEND_MESSAGE, roomId, message})
+
+    try {
+      const payload = await Api.sendStatusMessage(token, roomId, text)
       dispatch({type: SEND_MESSAGE_RECEIVED, message, roomId, payload})
     } catch (error) {
       dispatch({type: SEND_MESSAGE_FAILED, error, message, roomId})

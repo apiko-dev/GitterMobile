@@ -30,7 +30,8 @@ import {
   updateMessage,
   deleteFailedMessage,
   clearError as clearMessagesError,
-  readMessages
+  readMessages,
+  sendStatusMessage
 } from '../modules/messages'
 import {
   unsubscribeToChatMessages
@@ -46,6 +47,8 @@ import SendMessageField from '../components/Room/SendMessageField'
 import JoinRoomField from '../components/Room/JoinRoomField'
 import LoadingMoreSnack from '../components/LoadingMoreSnack'
 import FailedToLoad from '../components/FailedToLoad'
+
+const COMMAND_REGEX = /\/\S+/
 
 class Room extends Component {
   constructor(props) {
@@ -75,6 +78,7 @@ class Room extends Component {
     this.handleChangeVisibleRows = this.handleChangeVisibleRows.bind(this)
     this.handleReadMessages = _.debounce(this.handleReadMessages.bind(this), 250)
     this.handleNotificationSettingsChange = this.handleNotificationSettingsChange.bind(this)
+    this.handleSendingMessage = this.handleSendingMessage.bind(this)
 
     this.state = {
       textInputValue: '',
@@ -119,11 +123,10 @@ class Room extends Component {
   }
 
   onSending() {
-    const {dispatch, route: {roomId}} = this.props
     if (this.state.editing) {
       this.onEndEdit()
     } else {
-      dispatch(sendMessage(roomId, this.state.textInputValue))
+      this.handleSendingMessage(this.state.textInputValue)
       this.setState({textInputValue: ''})
     }
   }
@@ -269,6 +272,49 @@ class Room extends Component {
     const {dispatch, route: {roomId}} = this.props
     dispatch(clearMessagesError())
     dispatch(getRoomMessages(roomId))
+  }
+
+  handleSendingMessage(text) {
+    const {dispatch, route: {roomId}} = this.props
+
+    const matches = text.match(COMMAND_REGEX)
+
+    if (matches) {
+      switch (matches[0]) {
+      case '/me':
+        dispatch(sendStatusMessage(roomId, text))
+        break
+
+      case '/notify-all':
+        dispatch(changeNotificationSettings(roomId, 0))
+        break
+
+      case '/notify-announcements':
+        dispatch(changeNotificationSettings(roomId, 1))
+        break
+
+      case '/notify-mute':
+        dispatch(changeNotificationSettings(roomId, 2))
+        break
+
+      case '/mark-all-read':
+        dispatch(markAllAsRead(roomId))
+        break
+
+      case '/fav':
+        dispatch(changeFavoriteStatus(roomId))
+        break
+
+      case '/leave':
+        this.leaveRoom()
+        break
+      default:
+        dispatch(sendMessage(roomId, text))
+        break
+      }
+    } else {
+      dispatch(sendMessage(roomId, text))
+    }
   }
 
   handleDialogPress(index, text, message, rowId, id, failed, messageText) {
