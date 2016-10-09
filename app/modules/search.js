@@ -15,6 +15,9 @@ export const CLEAR_SEARCH = 'search/CLEAR_SEARCH'
 export const SEARCH_ROOM_USERS = 'search/SEARCH_ROOM_USERS'
 export const SEARCH_ROOM_USERS_OK = 'search/SEARCH_ROOM_USERS_OK'
 export const SEARCH_ROOM_USERS_FAILED = 'search/SEARCH_ROOM_USERS_FAILED'
+export const SEARCH_ROOM_MESSAGES = 'search/SEARCH_ROOM_MESSAGES'
+export const SEARCH_ROOM_MESSAGES_OK = 'search/SEARCH_ROOM_MESSAGES_OK'
+export const SEARCH_ROOM_MESSAGES_FAILED = 'search/SEARCH_ROOM_MESSAGES_FAILED'
 
 /**
  *  Actions
@@ -81,6 +84,20 @@ export function searchRoomUsers(roomId, query) {
   }
 }
 
+export function searchRoomMessages(roomId, query) {
+  return async (dispatch, getState) => {
+    const {token} = getState().auth
+    dispatch({type: SEARCH_ROOM_MESSAGES, roomId, query})
+
+    try {
+      const payload = await Api.searchRoomMessages(token, roomId, query)
+      dispatch({type: SEARCH_ROOM_MESSAGES_OK, payload})
+    } catch (error) {
+      dispatch({type: SEARCH_ROOM_MESSAGES_FAILED, error})
+    }
+  }
+}
+
 /**
  * Reducer
  */
@@ -89,10 +106,12 @@ const initialState = {
   isLoadingUsers: false,
   isLoadingRooms: false,
   isLoadingRoomUser: false,
+  isLoadingRoomMessages: false,
   inputValue: '',
   usersResult: [],
   roomsResult: [],
   roomUsersResult: [],
+  roomMessagesResult: [],
   error: false,
   errors: {}
 }
@@ -138,6 +157,17 @@ export default function search(state = initialState, action) {
     return {...state,
       isLoadingRoomUser: false,
       roomUsersResult: action.payload
+    }
+
+  case SEARCH_ROOM_MESSAGES:
+    return {...state,
+      isLoadingRoomMessages: true
+    }
+
+  case SEARCH_ROOM_MESSAGES_OK:
+    return {...state,
+      isLoadingRoomMessages: false,
+      roomMessagesResult: action.payload || []
     }
 
   case SEARCH_ROOM_USERS_FAILED:

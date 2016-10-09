@@ -52,8 +52,11 @@ class Message extends Component {
   }
 
   renderMessage() {
-    const {messages, route: {messageId}, viewer} = this.props
-    const message = messages[messageId]
+    const {messages, route: {messageId, fromSearch}, viewer, roomMessagesResult} = this.props
+    const message = fromSearch
+      ? roomMessagesResult.find(item => item.id === messageId)
+      : messages[messageId]
+
     return (
       <Msg
         username={viewer.username}
@@ -93,14 +96,16 @@ Message.propTypes = {
   route: PropTypes.object,
   messages: PropTypes.object,
   readBy: PropTypes.object,
-  viewer: PropTypes.object
+  viewer: PropTypes.object,
+  roomMessagesResult: PropTypes.array
 }
 
 function mapStateToProps(state) {
   return {
     messages: state.messages.entities,
     readBy: state.readBy.byMessage,
-    viewer: state.viewer.user
+    viewer: state.viewer.user,
+    roomMessagesResult: state.search.roomMessagesResult
   }
 }
 

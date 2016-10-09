@@ -160,6 +160,10 @@ export function readMessages(token, userId, roomId, chat) {
   })
 }
 
+export function searchRoomMessages(token, roomId, query) {
+  return callApi(`rooms/${roomId}/chatMessages?q=${query}&limit=30`, token)
+}
+
 /**
  * Private functions
  */

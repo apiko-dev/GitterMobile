@@ -301,20 +301,15 @@ class Room extends Component {
 
   handleToolbarActionSelected(index) {
     const {dispatch, route: {roomId}} = this.props
-    if (index === 0) {
-      return this.roomInfoDrawer.openDrawer()
-    }
-    if (index === 1) {
-      return dispatch(changeFavoriteStatus(roomId))
-    }
-    if (index === 2) {
-      return dispatch(markAllAsRead(roomId))
-    }
-    if (index === 3) {
-      return this.handleNotificationSettingsChange()
-    }
-    if (index === 4) {
-      return this.leaveRoom()
+    switch (index) {
+    case 0: return dispatch(Navigation.goTo({name: 'searchMessages', roomId}))
+    case 1: return this.roomInfoDrawer.openDrawer()
+    case 2: return dispatch(changeFavoriteStatus(roomId))
+    case 3: return dispatch(markAllAsRead(roomId))
+    case 4: return this.handleNotificationSettingsChange()
+    case 5: return this.leaveRoom()
+    default:
+      break
     }
   }
 
@@ -450,6 +445,11 @@ class Room extends Component {
     if (!!room && room.roomMember) {
       if (room.hasOwnProperty('favourite')) {
         actions = [{
+          title: 'Search',
+          icon: require('image!ic_search_white_24dp'),
+          show: 'always'
+        },
+        {
           title: 'Open room info',
           icon: require('image!ic_info_outline_white_24dp'),
           show: 'never'
@@ -472,6 +472,11 @@ class Room extends Component {
         }]
       } else {
         actions = [{
+          title: 'Search',
+          icon: require('image!ic_search_white_24dp'),
+          show: 'always'
+        },
+        {
           title: 'Open room info',
           icon: require('image!ic_info_outline_white_24dp'),
           show: 'never'
