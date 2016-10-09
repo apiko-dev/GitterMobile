@@ -26,12 +26,14 @@ export const UNSUBSCRIBE_FROM_READ_BY = 'realtime/UNSUBSCRIBE_FROM_READ_BY'
 
 export function setupFaye() {
   return async (dispatch, getState) => {
+    console.warn('RECONNECT TO FAYE')
     FayeGitter.setAccessToken(getState().auth.token)
     FayeGitter.create()
     FayeGitter.logger()
     try {
       const result = await FayeGitter.connect()
       dispatch({type: FAYE_CONNECT, payload: result})
+      console.warn('CONNECTED')
       dispatch(subscribeToRooms())
     } catch (err) {
       console.log(err) // eslint-disable-line no-console
@@ -67,7 +69,7 @@ export function onNetStatusChangeFaye(status) {
         await dispatch(setupFaye())
       }
     } catch (error) {
-      console.log(error)
+      console.wanr(error.message)
     }
   }
 }
@@ -103,9 +105,9 @@ export function setupFayeEvents() {
     DeviceEventEmitter
       .addListener('FayeGitter:SubscribtionFailed', log => console.warn(log)) // eslint-disable-line no-console
     DeviceEventEmitter
-      .addListener('FayeGitter:Subscribed', log => console.log('SUBSCRIBED', log)) // eslint-disable-line no-console
+      .addListener('FayeGitter:Subscribed', log => console.warn('SUBSCRIBED', log)) // eslint-disable-line no-console
     DeviceEventEmitter
-      .addListener('FayeGitter:Unsubscribed', log => console.log(log)) // eslint-disable-line no-console
+      .addListener('FayeGitter:Unsubscribed', log => console.warn('UNSUBSCRIBED', log)) // eslint-disable-line no-console
   }
 }
 
