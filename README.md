@@ -14,6 +14,7 @@ Go to the [releases page](https://github.com/terrysahaidak/GitterMobile/releases
 ![Room screen](screenshots/room.png "Room screen")
 ![Room info screen](screenshots/room_info_screen.png "Room info screen")
 ![Drawer](screenshots/drawer.png "Drawer")
+![Message](screenshots/message.png "Message")
 
 ## Features
 See [Roadmap](https://github.com/terrysahaidak/project/issues/5).
