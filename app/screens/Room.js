@@ -1,6 +1,7 @@
 import React, {Component, PropTypes} from 'react';
-import {InteractionManager, DrawerLayoutAndroid, ToolbarAndroid, ToastAndroid, Clipboard, Alert, ListView, View} from 'react-native';
+import {InteractionManager, ToolbarAndroid, ToastAndroid, Clipboard, Alert, ListView, View} from 'react-native';
 import {connect} from 'react-redux'
+import DrawerLayout from 'react-native-drawer-layout'
 import moment from 'moment'
 import BottomSheet from '../../libs/react-native-android-bottom-sheet'
 import DialogAndroid from 'react-native-dialogs'
@@ -650,13 +651,13 @@ class Room extends Component {
 
     return (
       <View style={s.container}>
-        <DrawerLayoutAndroid
+        <DrawerLayout
           ref={component => this.roomInfoDrawer = component}
           style={{backgroundColor: 'white'}}
           drawerWidth={300}
           onDrawerOpen={() => dispatch(changeRoomInfoDrawerState('open'))}
           onDrawerClose={() => dispatch(changeRoomInfoDrawerState('close'))}
-          drawerPosition={DrawerLayoutAndroid.positions.Right}
+          drawerPosition={DrawerLayout.positions.Right}
           renderNavigationView={this.renderRoomInfo}
           keyboardDismissMode="on-drag">
             {this.renderToolbar()}
@@ -664,7 +665,7 @@ class Room extends Component {
             {isLoadingMessages ? this.renderLoading() : this.renderListView()}
             {getMessagesError || isLoadingMessages || _.has(listView, 'data') &&
               listView.data.length === 0 ? null : this.renderBottom()}
-          </DrawerLayoutAndroid>
+        </DrawerLayout>
       </View>
     )
   }

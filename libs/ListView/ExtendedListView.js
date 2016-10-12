@@ -33,6 +33,7 @@
 
 var ListViewDataSource = require('ListViewDataSource');
 var React = require('React');
+var ReactNative = require('react/lib/ReactNative');
 var RCTScrollViewManager = require('NativeModules').ScrollViewManager;
 var ScrollView = require('ScrollView');
 var ScrollResponder = require('ScrollResponder');
@@ -490,7 +491,7 @@ var ListView = React.createClass({
     // every platform
     RCTScrollViewManager && RCTScrollViewManager.calculateChildFrames &&
       RCTScrollViewManager.calculateChildFrames(
-        React.findNodeHandle(scrollComponent),
+        ReactNative.findNodeHandle(scrollComponent),
         this._updateVisibleRows,
       );
   },
