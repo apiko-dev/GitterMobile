@@ -27,6 +27,7 @@
     "react-native": "^0.34.1",
     "react-native-device-info": "^0.9.5",
     "react-native-dialogs": "0.0.19",
+    "react-native-drawer-layout": "^1.1.0",
     "react-native-invertible-scroll-view": "^1.0.0",
     "react-native-parsed-text": "0.0.16",
     "react-native-scrollable-tab-view": "^0.6.0",

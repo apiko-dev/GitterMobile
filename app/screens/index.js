@@ -1,8 +1,11 @@
 import React, {Component, PropTypes} from 'react';
-import {DrawerLayoutAndroid, BackAndroid, Navigator} from 'react-native';
+import {BackAndroid, Navigator} from 'react-native';
 import _ from 'lodash'
-import {init} from '../modules/app'
 import {connect} from 'react-redux'
+
+import DrawerLayout from 'react-native-drawer-layout'
+
+import {init} from '../modules/app'
 import * as Navigation from '../modules/navigation'
 import {selectRoom} from '../modules/rooms'
 import {changeRoomInfoDrawerState} from '../modules/ui'
@@ -212,13 +215,13 @@ class App extends Component {
         : 'locked-closed'
 
     return (
-      <DrawerLayoutAndroid
+      <DrawerLayout
         ref="drawer"
         drawerLockMode={drawerLockMode}
         statusBarBackgroundColor={colors.darkRed}
         style={{backgroundColor: 'white'}}
         drawerWidth={300}
-        drawerPosition={DrawerLayoutAndroid.positions.Left}
+        drawerPosition={DrawerLayout.positions.Left}
         renderNavigationView={this.renderDrawer.bind(this)}
         onDrawerOpen={() => this.setState({isDrawerOpen: true})}
         onDrawerClose={() => this.setState({isDrawerOpen: false})}
@@ -229,7 +232,7 @@ class App extends Component {
           initialRoute={navigation.init}
           configureScene={this.configureScene}
           renderScene={this.renderScene}/>
-      </DrawerLayoutAndroid>
+      </DrawerLayout>
     )
   }
 }
