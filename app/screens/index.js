@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import {BackAndroid, Navigator} from 'react-native';
+import {BackAndroid, Navigator, StatusBar} from 'react-native';
 import _ from 'lodash'
 import {connect} from 'react-redux'
 
