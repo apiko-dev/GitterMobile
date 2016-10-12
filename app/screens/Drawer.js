@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import {Alert, View} from 'react-native';
+import {Alert, View, Platform, ActionSheetIOS} from 'react-native';
 import {connect} from 'react-redux'
 import DialogAndroid from 'react-native-dialogs'
 
@@ -14,6 +14,7 @@ import Loading from '../components/Loading'
 
 import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault
+const iOS = Platform.OS === 'ios'
 
 class Drawer extends Component {
   constructor(props) {
@@ -35,19 +36,31 @@ class Drawer extends Component {
 
   onLongRoomPress(id) {
     const {rooms} = this.props
-    const dialog = new DialogAndroid()
 
-    const options = {
-      title: rooms[id].name,
-      items: [
+    if (iOS) {
+      const options = [
         'Mark as read',
-        'Leave this room'
-      ],
-      itemsCallback: (index, text) => this.handleDialogPress(index, text, id)
-    }
+        'Leave this room',
+        'Close'
+      ]
+      ActionSheetIOS.showActionSheetWithOptions({
+        title: rooms[id].name,
+        options,
+        cancelButtonIndex: 2
+      }, index => this.handleDialogPress(index, options[index], id))
+    } else {
+      const dialog = new DialogAndroid()
 
-    dialog.set(options)
-    dialog.show()
+      dialog.set({
+        title: rooms[id].name,
+        items: [
+          'Mark as read',
+          'Leave this room'
+        ],
+        itemsCallback: (index, text) => this.handleDialogPress(index, text, id)
+      })
+      dialog.show()
+    }
   }
 
   onLeave(id) {
