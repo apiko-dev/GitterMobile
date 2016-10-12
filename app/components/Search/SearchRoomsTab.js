@@ -1,9 +1,5 @@
-import React, {
-  PropTypes,
-  View,
-  Text,
-  ScrollView
-} from 'react-native'
+import React, {PropTypes} from 'react';
+import {View, Text, ScrollView} from 'react-native';
 import s from '../../styles/screens/Search/SearchTabStyles.js'
 import {THEMES} from '../../constants'
 import Loading from '../Loading'
@@ -36,6 +32,7 @@ const SearchRoomsTab = ({isLoadingRooms, roomsResult, value, onPress}) => {
 
   const content = roomsResult.map(item => (
     <SearchRoomItem
+      key={item.id}
       {...item}
       onPress={onPress} />
   ))

@@ -1,6 +1,8 @@
-import {StyleSheet} from 'react-native'
+import {StyleSheet, Platform} from 'react-native'
 import {THEMES} from '../../constants'
 const {colors} = THEMES.gitterDefault
+
+const iOS = Platform.OS === 'ios'
 
 const styles = StyleSheet.create({
   mention: {
@@ -20,6 +22,10 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 14
+  },
+  codespan: {
+    fontFamily: iOS ? 'Courier New' : 'monospace',
+    color: 'green'
   }
 })
 

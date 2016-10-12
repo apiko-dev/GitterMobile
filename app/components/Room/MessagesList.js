@@ -1,13 +1,10 @@
-import React, {
-  Component,
-  PropTypes,
-  ListView,
-  View
-} from 'react-native'
+import React, {Component, PropTypes} from 'react';
+import {View} from 'react-native';
 import moment from 'moment'
 import InvertibleScrollView from 'react-native-invertible-scroll-view'
 import Message from './Message'
 import HistoryBegin from './HistoryBegin'
+import ListView from '../../../libs/ListView/ExtendedListView'
 
 export default class MessagesList extends Component {
   constructor(props) {
@@ -15,6 +12,9 @@ export default class MessagesList extends Component {
 
     this.renderRow = this.renderRow.bind(this)
     this.isCollapsed = this.isCollapsed.bind(this)
+    this.handleOnLayout = this.handleOnLayout.bind(this)
+
+    this.childHeights = {}
   }
 
   isCollapsed(rowData, rowId) {
@@ -44,8 +44,13 @@ export default class MessagesList extends Component {
     return false
   }
 
+  handleOnLayout(e, rowId) {
+    this.childHeights[parseInt(rowId)] = e.nativeEvent.layout.height
+    // debugger
+  }
+
   renderRow(rowData, rowId) {
-    const {onResendingMessage, onLongPress, onUsernamePress, onUserAvatarPress} = this.props
+    const {onPress, onLongPress, onUsernamePress, onUserAvatarPress} = this.props
     if (!!rowData.hasNoMore) {
       return (
         <HistoryBegin />
@@ -56,7 +61,8 @@ export default class MessagesList extends Component {
 
     return (
       <Message
-        onResendingMessage={onResendingMessage}
+        onLayout={(e) => this.handleOnLayout(e, rowId)}
+        onPress={onPress}
         rowId={rowId}
         isCollapsed={isCollapsed}
         onLongPress={onLongPress}
@@ -67,15 +73,19 @@ export default class MessagesList extends Component {
   }
 
   render() {
-    const {listViewData} = this.props
+    const {listViewData, onChangeVisibleRows} = this.props
 
     if (!listViewData) {
       return <View style={{flex: 1}} />
     }
 
+    // debugger
+
     return (
       <ListView
         ref="listView"
+        childSizes={this.childHeights}
+        onChangeVisibleRows={(a, b) => onChangeVisibleRows(a, b)}
         renderScrollComponent={props => <InvertibleScrollView {...props} inverted />}
         dataSource={listViewData.dataSource}
         onEndReached={this.props.onEndReached}
@@ -89,11 +99,12 @@ export default class MessagesList extends Component {
 }
 
 MessagesList.propTypes = {
-  onResendingMessage: PropTypes.func,
+  onPress: PropTypes.func,
   listViewData: PropTypes.object,
   dispatch: PropTypes.func,
   onEndReached: PropTypes.func,
   onLongPress: PropTypes.func,
   onUsernamePress: PropTypes.func,
-  onUserAvatarPress: PropTypes.func
+  onUserAvatarPress: PropTypes.func,
+  onChangeVisibleRows: PropTypes.func
 }

@@ -1,9 +1,5 @@
-import React, {
-  PropTypes,
-  ProgressBarAndroid,
-  View,
-  Text
-} from 'react-native'
+import React, {PropTypes} from 'react';
+import {ProgressBarAndroid, View, Text} from 'react-native';
 import s from '../styles/components/RoomSnackStyles'
 import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault

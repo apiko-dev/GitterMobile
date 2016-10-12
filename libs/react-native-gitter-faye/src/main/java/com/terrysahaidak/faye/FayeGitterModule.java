@@ -18,6 +18,7 @@ import com.facebook.react.modules.core.DeviceEventManagerModule;
 public class FayeGitterModule extends ReactContextBaseJavaModule {
     private static String accessToken;
     private static AsyncGitterFayeClient client;
+    private static Boolean connectStatus = false;
 
     public FayeGitterModule(ReactApplicationContext reactContext) {
       super(reactContext);
@@ -57,12 +58,14 @@ public class FayeGitterModule extends ReactContextBaseJavaModule {
           @Override
           public void onDisconnected() {
             sendEvent("FayeGitter:onDisconnected", "Disconected");
+            connectStatus = false;
           }
         },
         new FailListener() {
           @Override
           public void onFailed(Exception ex) {
             sendEvent("FayeGitter:onFailedToCreate", "Failed to create client: " + ex.getMessage());
+            connectStatus = false;
           }
         }
       );
@@ -74,53 +77,60 @@ public class FayeGitterModule extends ReactContextBaseJavaModule {
         @Override
         public void onConnected() {
           promise.resolve(true);
+          connectStatus = true;
+          sendEvent("FayeGitter:Connected", "CONNECTED");
         }
       });
     }
 
     @ReactMethod
     public void subscribe(String channelName) {
-      this.client.subscribe(channelName, new ChannelListener() {
-        @Override
-        public void onMessage(String channel, JsonObject message) {
-          System.out.println(message);
-          WritableMap params = new WritableNativeMap();
-          params.putString("channel", channel);
-          params.putString("json", message.toString());
-          sendEvent("FayeGitter:Message", params);
-        }
+      if (connectStatus) {
+        this.client.subscribe(channelName, new ChannelListener() {
+          @Override
+          public void onMessage(String channel, JsonObject message) {
+            System.out.println(message);
+            WritableMap params = new WritableNativeMap();
+            params.putString("channel", channel);
+            params.putString("json", message.toString());
+            sendEvent("FayeGitter:Message", params);
+          }
 
-        @Override
-        public void onFailed(String channel, Exception ex) {
-          WritableMap params = new WritableNativeMap();
-          params.putString("channel", channel);
-          params.putString("Exception", ex.getMessage());
-          sendEvent("FayeGitter:SubscribtionFailed", params);
-        }
-        @Override
-        public void onSubscribed(String channel) {
-          WritableMap params = new WritableNativeMap();
-          params.putString("channel", channel);
-          sendEvent("FayeGitter:Subscribed", params);
-        }
+          @Override
+          public void onFailed(String channel, Exception ex) {
+            WritableMap params = new WritableNativeMap();
+            params.putString("channel", channel);
+            params.putString("Exception", ex.getMessage());
+            sendEvent("FayeGitter:SubscribtionFailed", params);
+          }
+          @Override
+          public void onSubscribed(String channel) {
+            WritableMap params = new WritableNativeMap();
+            params.putString("channel", channel);
+            sendEvent("FayeGitter:Subscribed", params);
+          }
 
-        @Override
-        public void onUnSubscribed(String channel) {
-          WritableMap params = new WritableNativeMap();
-          params.putString("channel", channel);
-          sendEvent("FayeGitter:Unsubscribed", params);
-        }
-      });
+          @Override
+          public void onUnSubscribed(String channel) {
+            WritableMap params = new WritableNativeMap();
+            params.putString("channel", channel);
+            sendEvent("FayeGitter:Unsubscribed", params);
+          }
+        });
+      }
     }
 
     @ReactMethod
     public void unsubscribe(String channel) {
-      this.client.unSubscribe(channel);
+      if (connectStatus) {
+        this.client.unSubscribe(channel);
+      }
     }
 
     @ReactMethod
     public void disconnect() {
       this.client.disconnect();
+      connectStatus = false;
     }
 
     @ReactMethod
@@ -134,5 +144,10 @@ public class FayeGitterModule extends ReactContextBaseJavaModule {
           sendEvent("FayeGitter:log", params);
         }
       });
+    }
+
+    @ReactMethod
+    public void checkConnectionStatus(Promise promise) {
+      promise.resolve(connectStatus);
     }
 }

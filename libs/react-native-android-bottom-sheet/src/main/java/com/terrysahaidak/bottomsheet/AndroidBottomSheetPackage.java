@@ -14,18 +14,15 @@ import java.util.List;
 
 public class AndroidBottomSheetPackage implements ReactPackage {
 
-    Activity activity;
-
-    public AndroidBottomSheetPackage(Activity activity) {
+    public AndroidBottomSheetPackage() {
         super();
-        this.activity = activity;
     }
 
     @Override
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
         List<NativeModule> modules = new ArrayList<>();
 
-        modules.add(new AndroidBottomSheet(reactContext, activity));
+        modules.add(new AndroidBottomSheet(reactContext));
 
         return modules;
     }

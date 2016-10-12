@@ -1,6 +1,6 @@
 import * as Api from '../api/gitter'
 import normalize from '../utils/normalize'
-import createMessage from '../utils/createMessage'
+import {createMessage, createStatusMessage} from '../utils/createMessage'
 import _ from 'lodash'
 
 /**
@@ -21,12 +21,21 @@ export const SEND_MESSAGE = 'messages/SEND_MESSAGE'
 export const SEND_MESSAGE_RECEIVED = 'messages/SEND_MESSAGE_RECEIVED'
 export const SEND_MESSAGE_FAILED = 'messages/SEND_MESSAGE_FAILED'
 export const RESEND_MESSAGE = 'messages/RESEND_MESSAGE'
+export const RESEND_MESSAGE_OK = 'messages/RESEND_MESSAGE_OK'
 export const UPDATE_MESSAGE = 'messages/UPDATE_MESSAGE'
 export const UPDATE_MESSAGE_OK = 'messages/UPDATE_MESSAGE_OK'
 export const UPDATE_MESSAGE_FAILED = 'messages/UPDATE_MESSAGE_FAILED'
 export const CLEAR_ERROR = 'messages/CLEAR_ERROR'
 export const GETTING_MORE_MESSAGES = 'messages/GETTING_MORE_MESSAGES'
 export const GETTING_MORE_MESSAGES_OK = 'messages/GETTING_MORE_MESSAGES_OK'
+export const DELETE_MESSAGE = 'messages/DELETE_MESSAGE'
+export const SINGLE_MESSAGE = 'messages/SINGLE_MESSAGE'
+export const SINGLE_MESSAGE_OK = 'messages/SINGLE_MESSAGE_OK'
+export const SINGLE_MESSAGE_ERROR = 'messages/SINGLE_MESSAGE_ERROR'
+export const RECEIVE_ROOM_MESSAGES_SNAPSHOT = 'messages/RECEIVE_ROOM_MESSAGES_SNAPSHOT'
+export const READ_MESSAGES = 'messages/READ_MESSAGES'
+export const READ_MESSAGES_OK = 'messages/READ_MESSAGES_OK'
+export const READ_MESSAGES_ERROR = 'messages/READ_MESSAGES_ERROR'
 
 
 /**
@@ -138,6 +147,22 @@ export function getRoomMessagesIfNeeded(roomId) {
   }
 }
 
+export function receiveRoomMessagesSnapshot(roomId, snapshot) {
+  return (dispatch, getState) => {
+    const listView = getState().messages.listView[roomId]
+    if (!listView.data.length | !snapshot.length) {
+      return
+    }
+
+    const index = _.findIndex(snapshot, listView.data[0])
+    if (index === -1 | index === 29) {
+      return
+    }
+
+    dispatch({type: RECEIVE_ROOM_MESSAGES_SNAPSHOT, roomId, index, snapshot})
+  }
+}
+
 /**
  * Appending new messages at the begining of list
  */
@@ -180,6 +205,27 @@ export function sendMessage(roomId, text) {
 }
 
 /**
+ * Send messages
+ */
+
+export function sendStatusMessage(roomId, rawText) {
+  return async (dispatch, getState) => {
+    const {token} = getState().auth
+    const {user} = getState().viewer
+    const text = rawText.replace('/me', `@${user.username}`)
+    const message = createStatusMessage(user, text)
+    dispatch({type: SEND_MESSAGE, roomId, message})
+
+    try {
+      const payload = await Api.sendStatusMessage(token, roomId, text)
+      dispatch({type: SEND_MESSAGE_RECEIVED, message, roomId, payload})
+    } catch (error) {
+      dispatch({type: SEND_MESSAGE_FAILED, error, message, roomId})
+    }
+  }
+}
+
+/**
  * Resend messages
  */
 
@@ -210,7 +256,8 @@ export function resendMessage(roomId, rowId, text) {
 
     try {
       const payload = await Api.sendMessage(token, roomId, text)
-      dispatch({type: SEND_MESSAGE_RECEIVED, message, roomId, payload})
+      dispatch({type: DELETE_MESSAGE, rowId, roomId})
+      dispatch({type: RESEND_MESSAGE_OK, roomId, payload})
     } catch (error) {
       dispatch({type: SEND_MESSAGE_FAILED, error, message, roomId})
     }
@@ -240,6 +287,55 @@ export function clearError() {
   }
 }
 
+export function deleteFailedMessage(rowId, roomId) {
+  return {
+    type: DELETE_MESSAGE,
+    rowId,
+    roomId
+  }
+}
+
+export function getSingleMessage(roomId, messageId) {
+  return async (dispatch, getState) => {
+    const {token} = getState().auth
+    dispatch({type: SINGLE_MESSAGE, roomId, messageId})
+
+    try {
+      const payload = await Api.getMessage(token, roomId, messageId)
+      dispatch({type: SINGLE_MESSAGE_OK, roomId, messageId, payload})
+    } catch (error) {
+      dispatch({type: SINGLE_MESSAGE_ERROR, error, messageId, roomId})
+    }
+  }
+}
+
+export function readMessages(roomId, changedRows) {
+  return async (dispatch, getState) => {
+    const {token} = getState().auth
+    const {id} = getState().viewer.user
+    const listView = getState().messages.listView[roomId]
+
+    const visibleAndUnread = Object.keys(changedRows)
+      .filter(rowId => (changedRows[rowId] === true))
+      .filter(rowId => (listView.data[rowId].unread === true))
+
+    if (!visibleAndUnread.length) {
+      return
+    }
+
+    dispatch({type: READ_MESSAGES, roomId, visibleAndUnread})
+
+    try {
+      await Api.readMessages(
+        token, id, roomId, visibleAndUnread.map(item => listView.data[item].id)
+      )
+      dispatch({type: READ_MESSAGES_OK, roomId, visibleAndUnread})
+    } catch (error) {
+      dispatch({type: READ_MESSAGES_ERROR, error: error.message, roomId, visibleAndUnread})
+    }
+  }
+}
+
 
 /**
  * Reducer
@@ -260,7 +356,9 @@ const initialState = {
   },
   hasNoMore: {
     // [id]: bool
-  }
+  },
+  isLoadingMessage: false,
+  messages: {}
 }
 
 export default function messages(state = initialState, action) {
@@ -342,6 +440,35 @@ export default function messages(state = initialState, action) {
   case ROOM_MESSAGES_APPEND: {
     const {payload, roomId} = action
     const {ids, entities} = normalize(payload)
+    const byRoom = state.byRoom[roomId]
+
+    const rowIds = [].concat(state.listView[roomId].rowIds)
+    const data = [].concat(state.listView[roomId].data)
+    // we need to reverse our messages array to display it inverted
+    const reversedIds = [].concat(ids).reverse()
+    for (let i = 0; i < reversedIds.length; i++) {
+      data.push(entities[reversedIds[i]])
+      rowIds.unshift(data.length - 1)
+    }
+    return {...state,
+      isLoadingMore: false,
+      byRoom: {...state.byRoom,
+        [roomId]: byRoom.concat(ids)
+      },
+      entities: _.merge({}, state.entities, entities),
+      listView: {...state.listView,
+        [roomId]: {
+          dataSource: state.listView[roomId].dataSource.cloneWithRows(data, rowIds),
+          data,
+          rowIds
+        }
+      }
+    }
+  }
+
+  case RECEIVE_ROOM_MESSAGES_SNAPSHOT: {
+    const {snapshot, index, roomId} = action
+    const {ids, entities} = normalize(snapshot.slice(index))
     const byRoom = state.byRoom[roomId]
 
     const rowIds = [].concat(state.listView[roomId].rowIds)
@@ -481,6 +608,31 @@ export default function messages(state = initialState, action) {
     }
   }
 
+  case RESEND_MESSAGE_OK: {
+    const {roomId, payload} = action
+    const {ids, entities} = normalize([payload])
+    const byRoom = state.byRoom[roomId]
+    const rowIds = [].concat(state.listView[roomId].rowIds)
+    const data = [].concat(state.listView[roomId].data)
+
+    data.push(payload)
+    rowIds.unshift(data.length - 1)
+
+    return {...state,
+      byRoom: {...state.byRoom,
+        [roomId]: byRoom.concat(ids)
+      },
+      entities: _.merge({}, state.entities, entities),
+      listView: {...state.listView,
+        [roomId]: {
+          dataSource: state.listView[roomId].dataSource.cloneWithRows(data, rowIds),
+          data,
+          rowIds
+        }
+      }
+    }
+  }
+
   case SEND_MESSAGE_FAILED: {
     const {message, roomId, error} = action
 
@@ -500,9 +652,7 @@ export default function messages(state = initialState, action) {
           data,
           rowIds
         }
-      },
-      error: true,
-      errors: error
+      }
     }
   }
 
@@ -513,6 +663,23 @@ export default function messages(state = initialState, action) {
     const newMessage = _.merge({}, message)
 
     data[rowId] = newMessage
+
+    return {...state,
+      listView: {...state.listView,
+        [roomId]: {
+          dataSource: state.listView[roomId].dataSource.cloneWithRows(data, rowIds),
+          data,
+          rowIds
+        }
+      }
+    }
+  }
+
+  case DELETE_MESSAGE: {
+    const {roomId, rowId} = action
+    const rowIds = [].concat(state.listView[roomId].rowIds).filter(id => id !== rowId)
+    const data = [].concat(state.listView[roomId].data)
+    data.splice(rowId, 1)
 
     return {...state,
       listView: {...state.listView,
@@ -550,6 +717,26 @@ export default function messages(state = initialState, action) {
     }
   }
 
+  case READ_MESSAGES_OK: {
+    const {roomId, visibleAndUnread} = action
+
+    const rowIds = [].concat(state.listView[roomId].rowIds)
+    const data = [].concat(state.listView[roomId].data)
+
+    visibleAndUnread.forEach(rowId => data[rowId] = Object.assign({}, data[rowId], {unread: false}))
+
+    return {...state,
+      listView: {...state.listView,
+        [roomId]: {
+          dataSource: state.listView[roomId].dataSource.cloneWithRows(data, rowIds),
+          data,
+          rowIds
+        }
+      }
+    }
+  }
+
+
   case CLEAR_ERROR: {
     return {...state,
       error: false,
@@ -557,11 +744,26 @@ export default function messages(state = initialState, action) {
     }
   }
 
+  case SINGLE_MESSAGE:
+    return {...state,
+      isLoadingMessage: true
+    }
+
+  case SINGLE_MESSAGE_OK:
+    return {...state,
+      isLoadingMessage: false,
+      messages: {...state.messages,
+        [action.messageId]: action.payload
+      }
+    }
+
+  case SINGLE_MESSAGE_ERROR:
   case ROOM_MESSAGES_BEFORE_FAILED:
   case ROOM_MESSAGES_FAILED:
     return {...state,
       isLoading: false,
       isLoadingMore: false,
+      isLoadingMessage: false,
       error: true,
       errors: action.error
     }

@@ -1,28 +1,23 @@
-import React, {
-  PropTypes,
-  View,
-  Text,
-  TouchableNativeFeedback
-} from 'react-native'
+import React, {PropTypes} from 'react';
+import {View, Text} from 'react-native';
+import Button from '../Button'
 import s from '../../styles/screens/Home/HomeRoomItemStyles'
 import Avatar from '../Avatar'
 
 const SearchUserItem = ({id, username, displayName, avatarUrlMedium, onPress}) => {
   return (
-    <TouchableNativeFeedback
+    <Button
       onPress={() => onPress(id, username)}
-      background={TouchableNativeFeedback.Ripple('#ECECEC', false)}>
-      <View style={s.container}>
-        <Avatar
-          src={avatarUrlMedium}
-          size={50} />
+      style={s.container}>
+      <Avatar
+        src={avatarUrlMedium}
+        size={50} />
 
-        <View style={s.infoContainer}>
-          <Text style={s.name}>{displayName}</Text>
-          <Text style={s.userCount}>@{username}</Text>
-        </View>
+      <View style={s.infoContainer}>
+        <Text style={s.name}>{displayName}</Text>
+        <Text style={s.userCount}>@{username}</Text>
       </View>
-    </TouchableNativeFeedback>
+    </Button>
 
   )
 }
@@ -30,7 +25,7 @@ const SearchUserItem = ({id, username, displayName, avatarUrlMedium, onPress}) =
 SearchUserItem.propTypes = {
   displayName: PropTypes.string,
   username: PropTypes.string,
-  id: PropTypes.string,
+  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   avatarUrlMedium: PropTypes.string,
   onPress: PropTypes.func
 }

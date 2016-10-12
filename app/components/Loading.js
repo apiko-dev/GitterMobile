@@ -1,8 +1,5 @@
-import React, {
-  PropTypes,
-  ProgressBarAndroid,
-  View
-} from 'react-native'
+import React, {PropTypes} from 'react';
+import {ActivityIndicator, View} from 'react-native';
 import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault
 
@@ -16,8 +13,9 @@ const Loading = ({size, height, color}) => {
     }}>
       <View
         style={{height, width: height}}>
-        <ProgressBarAndroid
-          styleAttr={size}
+        <ActivityIndicator
+          animating
+          size={size}
           color={color || colors.raspberry}/>
       </View>
     </View>
@@ -31,7 +29,7 @@ Loading.propTypes = {
 }
 
 Loading.defaultProps = {
-  size: 'LargeInverse',
+  size: 'large',
   height: 50
 }
 

@@ -1,12 +1,6 @@
-import React, {
-  Component,
-  PropTypes,
-  TouchableNativeFeedback,
-  Text,
-  Image,
-  View,
-  ToastAndroid
-} from 'react-native'
+import React, {Component, PropTypes} from 'react';
+import {Text, Image, View, ToastAndroid} from 'react-native';
+import Button from '../components/Button'
 import s from '../styles/screens/Login/LoginScreenStyles'
 import {connect} from 'react-redux'
 import * as Navigation from '../modules/navigation'
@@ -29,26 +23,22 @@ class LoginScreen extends Component {
           copy/paste authentication token.
         </Text>
         <View style={s.buttonGroup}>
-          <TouchableNativeFeedback
-            background={TouchableNativeFeedback.Ripple(colors.raspberry, false)}
-            onPress={() => ToastAndroid.show('Login by WebView not supported yet', ToastAndroid.SHORT)}>
-            <View style={[s.buttonStyle, {backgroundColor: colors.darkRed}]}>
-              <Text pointerEvents="none"
-                style={s.buttonText}>
-                Login by WebView
-              </Text>
-          </View>
-          </TouchableNativeFeedback>
-          <TouchableNativeFeedback
-            background={TouchableNativeFeedback.Ripple(colors.raspberry, false)}
+          <Button
+            style={[s.buttonStyle, {backgroundColor: colors.darkRed}]}
+            onPress={() => ToastAndroid.show('Login by WebView is not supported yet', ToastAndroid.SHORT)}>
+            <Text pointerEvents="none"
+              style={s.buttonText}>
+              Login by WebView
+            </Text>
+          </Button>
+          <Button
+            style={[s.buttonStyle, {backgroundColor: colors.darkRed}]}
             onPress={() => dispatch(Navigation.goTo({name: 'loginByToken'}))}>
-            <View style={[s.buttonStyle, {backgroundColor: colors.darkRed}]}>
-              <Text pointerEvents="none"
-                style={s.buttonText}>
-                Login by Token
-              </Text>
-            </View>
-          </TouchableNativeFeedback>
+            <Text pointerEvents="none"
+              style={s.buttonText}>
+              Login by Token
+            </Text>
+          </Button>
         </View>
       </Image>
     )

@@ -1,10 +1,5 @@
-import React, {
-  PropTypes,
-  Component,
-  ScrollView,
-  Linking,
-  View
-} from 'react-native'
+import React, {Component, PropTypes} from 'react';
+import {ScrollView, Linking, View, Text} from 'react-native';
 import {connect} from 'react-redux'
 import s from '../styles/screens/RoomInfo/RoomInfoScreenStyles'
 import {THEMES} from '../constants'
@@ -14,6 +9,7 @@ import _ from 'lodash'
 import * as Navigation from '../modules/navigation'
 import {clearRoomInfoError, getRoomInfo} from '../modules/roomInfo'
 import {roomUsers} from '../modules/users'
+import {unsubscribeToRoomEvents} from '../modules/realtime'
 
 import Loading from '../components/Loading'
 import FailedToLoad from '../components/FailedToLoad'
@@ -21,6 +17,7 @@ import RoomInfo from '../components/RoomInfo/RoomInfo'
 import RepoInfo from '../components/RoomInfo/RepoInfo'
 import UserInfo from '../components/RoomInfo/UserInfo'
 import RoomUsers from '../components/RoomInfo/RoomUsers'
+import Activity from '../components/RoomInfo/Activity'
 
 
 class RoomInfoScreen extends Component {
@@ -33,6 +30,7 @@ class RoomInfoScreen extends Component {
     this.handleUrlPress = this.handleUrlPress.bind(this)
     this.handleStatItemPress = this.handleStatItemPress.bind(this)
     this.handleAddPress = this.handleAddPress.bind(this)
+    this.renderActivity = this.renderActivity.bind(this)
   }
 
   componentDidMount() {
@@ -53,6 +51,12 @@ class RoomInfoScreen extends Component {
     if (!!room && roomInfoDrawerState === 'open' && !users[roomId]) {
       dispatch(roomUsers(roomId))
     }
+  }
+
+  componentWillUnmount() {
+    const {dispatch, route: {roomId}} = this.props
+    dispatch(unsubscribeToRoomEvents(roomId))
+    console.warn('UNMOUNTED')
   }
 
   handleUserPress(userId, username) {
@@ -123,6 +127,16 @@ class RoomInfoScreen extends Component {
     )
   }
 
+  renderActivity() {
+    const {route: {roomId}, activity} = this.props
+    const data = activity[roomId]
+    return (
+      <Activity
+        onUrlPress={this.handleUrlPress}
+        data={data} />
+    )
+  }
+
 
   render() {
     const {users, rooms, roomInfo, route: {roomId}, isError} = this.props
@@ -150,6 +164,7 @@ class RoomInfoScreen extends Component {
         <ScrollView>
           {this.renderInfo()}
           {this.renderUsers()}
+          {this.renderActivity()}
         </ScrollView>
       </View>
     )
@@ -164,7 +179,8 @@ RoomInfoScreen.propTypes = {
   rooms: PropTypes.object,
   roomInfoDrawerState: PropTypes.string,
   isError: PropTypes.bool,
-  users: PropTypes.object
+  users: PropTypes.object,
+  activity: PropTypes.object
 }
 
 function mapStateToProps(state) {
@@ -173,7 +189,8 @@ function mapStateToProps(state) {
     rooms: state.rooms.rooms,
     roomInfoDrawerState: state.ui.roomInfoDrawerState,
     isError: state.roomInfo.isError,
-    users: state.users.byRoom
+    users: state.users.byRoom,
+    activity: state.activity.byRoom
   }
 }
 

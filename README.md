@@ -2,7 +2,7 @@
 
 [![Join the chat at https://gitter.im/terrysahaidak/GitterMobile](https://badges.gitter.im/terrysahaidak/GitterMobile.svg)](https://gitter.im/terrysahaidak/GitterMobile?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-> Unofficial [Gitter.im](https://gitter.im) client for mobile devices (currently only for android).
+> Unofficial [Gitter.im](https://gitter.im) client for iOS and Android.
 
 ## Download
 Go to the [releases page](https://github.com/terrysahaidak/GitterMobile/releases) to download the latest available apk.
@@ -14,6 +14,7 @@ Go to the [releases page](https://github.com/terrysahaidak/GitterMobile/releases
 ![Room screen](screenshots/room.png "Room screen")
 ![Room info screen](screenshots/room_info_screen.png "Room info screen")
 ![Drawer](screenshots/drawer.png "Drawer")
+![Message](screenshots/message.png "Message")
 
 ## Features
 See [Roadmap](https://github.com/terrysahaidak/project/issues/5).
@@ -26,13 +27,9 @@ See [Roadmap](https://github.com/terrysahaidak/project/issues/5).
 Once you have downloaded or cloned this repository, run `npm install` inside the directory, then read usage.
 
 ## Usage
-- [Setting up React Native for Android](https://facebook.github.io/react-native/docs/android-setup.html#content)
-- [Running app on Android Device](https://facebook.github.io/react-native/docs/running-on-device-android.html#content)
-
-## Need help
-- Mark visible messages as read once you have navigated to room. See [#17](https://github.com/terrysahaidak/project/issues/17)
-- Use Faye client as an android service. See [#6](https://github.com/terrysahaidak/project/issues/6)
-- Better design
+- [Setting up React Native](https://facebook.github.io/react-native/docs/getting-started.html)
+- [Running app on Android Device](https://facebook.github.io/react-native/docs/running-on-device-android.html)
+- [Running app on iOS Device](https://facebook.github.io/react-native/docs/running-on-device-ios.html)
 
 ## License
 All the code available under the MIT + Apache 2.0. licenses. See [LICENSE](LICENSE).

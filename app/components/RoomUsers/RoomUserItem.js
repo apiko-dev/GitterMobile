@@ -1,8 +1,5 @@
-import React, {
-  PropTypes,
-  View,
-  Text
-} from 'react-native'
+import React, {PropTypes} from 'react';
+import {View, Text} from 'react-native';
 import s from '../../styles/screens/RoomUsers/RoomUserItemStyles'
 
 import Avatar from '../Avatar'
@@ -12,7 +9,7 @@ const RoomUserItem = ({onUserItemPress, id, username, displayName, avatarUrlSmal
   return (
     <Button
       onPress={() => onUserItemPress(id, username)}
-      styles={s.button}>
+      style={s.button}>
       <Avatar
         size={42}
         src={avatarUrlSmall} />
@@ -26,7 +23,7 @@ const RoomUserItem = ({onUserItemPress, id, username, displayName, avatarUrlSmal
 
 RoomUserItem.propTypes = {
   onUserItemPress: PropTypes.func,
-  id: PropTypes.string,
+  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   username: PropTypes.string,
   displayName: PropTypes.string,
   avatarUrlSmall: PropTypes.string

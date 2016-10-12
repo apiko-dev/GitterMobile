@@ -14,11 +14,8 @@ import com.facebook.react.bridge.ReadableMap;
 
 class AndroidBottomSheet extends ReactContextBaseJavaModule {
 
-    Activity activity;
-
-    public AndroidBottomSheet(ReactApplicationContext reactContext, Activity activity) {
+    public AndroidBottomSheet(ReactApplicationContext reactContext) {
         super(reactContext);
-        this.activity = activity;
     }
 
     @Override
@@ -31,7 +28,7 @@ class AndroidBottomSheet extends ReactContextBaseJavaModule {
         final ReadableArray itemsArray = options.getArray("items");
         final String title = options.getString("title");
 
-        BottomSheet.Builder builder = new BottomSheet.Builder(this.activity).title(title);
+        BottomSheet.Builder builder = new BottomSheet.Builder(getCurrentActivity()).title(title);
 
         // create options
         Integer size = itemsArray.size();
@@ -54,7 +51,7 @@ class AndroidBottomSheet extends ReactContextBaseJavaModule {
         String url = options.getString("url");
         String message = options.getString("message");
 
-        BottomSheet.Builder builder = new BottomSheet.Builder(this.activity);
+        BottomSheet.Builder builder = new BottomSheet.Builder(getCurrentActivity());
         final Intent shareIntent = new Intent(Intent.ACTION_SEND);
 
         failureCallback.invoke("not support this method");

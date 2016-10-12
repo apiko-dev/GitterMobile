@@ -1,15 +1,11 @@
-import React, {
-  Component,
-  PropTypes,
-  Alert,
-  View
-} from 'react-native'
+import React, {Component, PropTypes} from 'react';
+import {Alert, View, Platform, ActionSheetIOS} from 'react-native';
 import {connect} from 'react-redux'
 import DialogAndroid from 'react-native-dialogs'
 
 import {logOut} from '../modules/auth'
 import * as Navigation from '../modules/navigation'
-import {selectRoom, leaveRoom, markAllAsRead} from '../modules/rooms'
+import {selectRoom, leaveRoom, markAllAsRead, refreshRooms} from '../modules/rooms'
 
 import s from '../styles/screens/Drawer/DrawerStyles'
 import DrawerUserInfo from '../components/Drawer/DrawerUserInfo'
@@ -18,6 +14,7 @@ import Loading from '../components/Loading'
 
 import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault
+const iOS = Platform.OS === 'ios'
 
 class Drawer extends Component {
   constructor(props) {
@@ -25,8 +22,10 @@ class Drawer extends Component {
     this.onRoomPress = this.onRoomPress.bind(this)
     this.onLongRoomPress = this.onLongRoomPress.bind(this)
     this.onLeave = this.onLeave.bind(this)
-    this.logOut = this.logOut.bind(this)
+    this.handleSettingsPress = this.handleSettingsPress.bind(this)
     this.handleDialogPress = this.handleDialogPress.bind(this)
+    this.handleSearchPress = this.handleSearchPress.bind(this)
+    this.handleRefresh = this.handleRefresh.bind(this)
   }
 
   onRoomPress(id) {
@@ -37,19 +36,31 @@ class Drawer extends Component {
 
   onLongRoomPress(id) {
     const {rooms} = this.props
-    const dialog = new DialogAndroid()
 
-    const options = {
-      title: rooms[id].name,
-      items: [
+    if (iOS) {
+      const options = [
         'Mark as read',
-        'Leave this room'
-      ],
-      itemsCallback: (index, text) => this.handleDialogPress(index, text, id)
-    }
+        'Leave this room',
+        'Close'
+      ]
+      ActionSheetIOS.showActionSheetWithOptions({
+        title: rooms[id].name,
+        options,
+        cancelButtonIndex: 2
+      }, index => this.handleDialogPress(index, options[index], id))
+    } else {
+      const dialog = new DialogAndroid()
 
-    dialog.set(options)
-    dialog.show()
+      dialog.set({
+        title: rooms[id].name,
+        items: [
+          'Mark as read',
+          'Leave this room'
+        ],
+        itemsCallback: (index, text) => this.handleDialogPress(index, text, id)
+      })
+      dialog.show()
+    }
   }
 
   onLeave(id) {
@@ -64,20 +75,14 @@ class Drawer extends Component {
     )
   }
 
-  onLogOut() {
-    Alert.alert(
-      'Logout',
-      'Are you sure?',
-      [
-        {text: 'No', onPress: () => console.log('Cancel Pressed!')},
-        {text: 'Yes', onPress: () => this.logOut()}
-      ]
-    )
+  handleSettingsPress() {
+    const {navigateTo} = this.props
+    navigateTo({name: 'settings'})
   }
 
-  logOut() {
-    const {dispatch} = this.props
-    dispatch(logOut())
+  handleSearchPress() {
+    const {navigateTo} = this.props
+    navigateTo({name: 'search'})
   }
 
   handleDialogPress(index, text, id) {
@@ -94,16 +99,26 @@ class Drawer extends Component {
     }
   }
 
+  handleRefresh() {
+    const {dispatch} = this.props
+    dispatch(refreshRooms())
+  }
+
   render() {
-    const {user, ids} = this.props
+    const {user, ids, isLoadingRooms} = this.props
 
     return (
       <View style={s.container}>
-        <DrawerUserInfo {...user} onLogOut={this.onLogOut.bind(this)}/>
+        <DrawerUserInfo
+          {...user}
+          onSettingsPress={this.handleSettingsPress.bind(this)}
+          onSearchPress={this.handleSearchPress} />
         {ids.length === 0
           ? <Loading color={colors.brand} />
           : <ChannelList
               {...this.props}
+              isLoadingRooms={isLoadingRooms}
+              onRefresh={this.handleRefresh}
               onLongRoomPress={this.onLongRoomPress.bind(this)}
               onRoomPress={this.onRoomPress.bind(this)} />
         }

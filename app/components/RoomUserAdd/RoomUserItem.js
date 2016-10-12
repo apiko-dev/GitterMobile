@@ -1,9 +1,5 @@
-import React, {
-  PropTypes,
-  Image,
-  View,
-  Text
-} from 'react-native'
+import React, {PropTypes} from 'react';
+import {Image, View, Text} from 'react-native';
 import s from '../../styles/screens/RoomUserAdd/RoomUserItemStyles'
 
 import Avatar from '../Avatar'
@@ -12,8 +8,9 @@ import Button from '../Button'
 const RoomUserItem = ({onUserItemPress, id, username, displayName, avatarUrlSmall, onAddPress, noButton}) => {
   return (
     <Button
+      key={id}
       onPress={() => onUserItemPress(id, username)}
-      styles={s.button}>
+      style={s.button}>
       <Avatar
         size={42}
         src={avatarUrlSmall} />
@@ -24,7 +21,7 @@ const RoomUserItem = ({onUserItemPress, id, username, displayName, avatarUrlSmal
       {!noButton && (
         <Button
           onPress={() => onAddPress(username)}
-          styles={s.addIcon}>
+          style={s.addIcon}>
           <Image
             style={s.icon}
             source={require('image!ic_person_add_black_24dp')} />

@@ -1,8 +1,5 @@
-import React, {
-  PropTypes,
-  View,
-  Text
-} from 'react-native'
+import React, {PropTypes} from 'react';
+import {View, Text} from 'react-native';
 import s from '../../styles/screens/RoomInfo/RepoInfoStyles'
 
 import Avatar from '../Avatar'
@@ -11,7 +8,7 @@ import Heading from '../Heading'
 import Button from '../Button'
 import ParsedText from '../ParsedText'
 
-const RepoInfo = ({name, owner, description, open_issues_count,
+const RepoInfo = ({name, owner, description, open_issues_count, subscribers_count,
   stargazers_count, watchers_count, html_url, handleUrlPress, onStatItemPress}) => {
   return (
     <View style={s.container}>
@@ -42,7 +39,7 @@ const RepoInfo = ({name, owner, description, open_issues_count,
     <View style={s.itemContainer}>
       <View style={s.statContainer}>
         <Button
-          styles={s.button}
+          style={s.button}
           onPress={() => onStatItemPress(html_url, 'issues')}>
           <View style={s.statItemContainer}>
             <Text style={s.statTop}>{open_issues_count}</Text>
@@ -50,19 +47,19 @@ const RepoInfo = ({name, owner, description, open_issues_count,
           </View>
         </Button>
         <Button
-          styles={s.button}
+          style={s.button}
           onPress={() => onStatItemPress(html_url, 'watchers')}>
           <View style={s.statItemContainer}>
-            <Text style={s.statTop}>{watchers_count}</Text>
+            <Text style={s.statTop}>{subscribers_count}</Text>
             <Text style={s.statBotoom}>watchers</Text>
           </View>
         </Button>
         <Button
-          styles={s.button}
+          style={s.button}
           onPress={() => onStatItemPress(html_url, 'stargazers')}>
           <View style={s.statItemContainer}>
             <Text style={s.statTop}>{stargazers_count}</Text>
-            <Text style={s.statBotoom}>star</Text>
+            <Text style={s.statBotoom}>stars</Text>
           </View>
         </Button>
       </View>
@@ -79,6 +76,7 @@ RepoInfo.propTypes = {
   open_issues_count: PropTypes.number,
   stargazers_count: PropTypes.number,
   watchers_count: PropTypes.number,
+  subscribers_count: PropTypes.number,
   html_url: PropTypes.string,
   handleUrlPress: PropTypes.func,
   onStatItemPress: PropTypes.func

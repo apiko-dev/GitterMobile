@@ -1,11 +1,6 @@
-import React, {
-  PropTypes,
-  Component,
-  TouchableNativeFeedback,
-  View,
-  Text,
-  Image
-} from 'react-native'
+import React, {Component, PropTypes} from 'react';
+import {View, Text, Image} from 'react-native';
+import Button from '../components/Button'
 import {connect} from 'react-redux'
 import s from '../styles/screens/NoInternetScreenStyles'
 import * as Navigation from '../modules/navigation'
@@ -35,16 +30,14 @@ class NoInternetScreen extends Component {
           No internet connection.
         </Text>
 
-        <TouchableNativeFeedback
-          background={TouchableNativeFeedback.Ripple(colors.raspberry, false)}
+        <Button
+          style={[s.buttonStyle, {backgroundColor: colors.darkRed}]}
           onPress={() => this.handleRetry()}>
-          <View style={[s.buttonStyle, {backgroundColor: colors.darkRed}]}>
-            <Text pointerEvents="none"
-              style={s.buttonText}>
-              Retry
-            </Text>
-          </View>
-        </TouchableNativeFeedback>
+          <Text pointerEvents="none"
+            style={s.buttonText}>
+            Retry
+          </Text>
+        </Button>
       </Image>
     )
   }
