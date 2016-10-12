@@ -1,5 +1,6 @@
 import React, {Component, PropTypes} from 'react';
-import {InteractionManager, ToolbarAndroid, ToastAndroid, Clipboard, Alert, ListView, View} from 'react-native';
+import {InteractionManager, ToastAndroid, Clipboard, Alert, ListView, View, Platform} from 'react-native';
+import Toolbar from '../components/Toolbar'
 import {connect} from 'react-redux'
 import DrawerLayout from 'react-native-drawer-layout'
 import moment from 'moment'
@@ -50,6 +51,7 @@ import LoadingMoreSnack from '../components/LoadingMoreSnack'
 import FailedToLoad from '../components/FailedToLoad'
 
 const COMMAND_REGEX = /\/\S+/
+const iOS = Platform.OS === 'ios'
 
 class Room extends Component {
   constructor(props) {
@@ -80,6 +82,7 @@ class Room extends Component {
     this.handleReadMessages = _.debounce(this.handleReadMessages.bind(this), 250)
     this.handleNotificationSettingsChange = this.handleNotificationSettingsChange.bind(this)
     this.handleSendingMessage = this.handleSendingMessage.bind(this)
+    this.onNavigateBack = this.onNavigateBack.bind(this)
 
     this.state = {
       textInputValue: '',
@@ -113,6 +116,11 @@ class Room extends Component {
   componentWillUnmount() {
     const {dispatch, route: {roomId}} = this.props
     // dispatch(unsubscribeToChatMessages(roomId))
+  }
+
+  onNavigateBack() {
+    const {dispatch} = this.props
+    dispatch(Navigation.goBack())
   }
 
   onEndReached() {
@@ -532,7 +540,7 @@ class Room extends Component {
         {
           title: 'Open room info',
           icon: require('image!ic_info_outline_white_24dp'),
-          show: 'never'
+          show: ''
         },
         {
           title: 'Add to favorite',
@@ -554,9 +562,9 @@ class Room extends Component {
     }
 
     return (
-      <ToolbarAndroid
-        navIcon={require('image!ic_menu_white_24dp')}
-        onIconClicked={this.props.onMenuTap}
+      <Toolbar
+        navIcon={iOS ? require('image!ic_arrow_back_white_24dp') : require('image!ic_menu_white_24dp')}
+        onIconClicked={iOS ? this.onNavigateBack : this.props.onMenuTap}
         actions={actions}
         onActionSelected={this.handleToolbarActionSelected}
         overflowIcon={require('image!ic_more_vert_white_24dp')}

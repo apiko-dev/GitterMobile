@@ -1,11 +1,12 @@
 import React, {Component, PropTypes} from 'react';
-import {ToolbarAndroid, ScrollView, View, Alert} from 'react-native';
+import {ScrollView, View, Alert} from 'react-native';
 import {connect} from 'react-redux'
 
 import s from '../styles/screens/Settings'
 import * as Navigation from '../modules/navigation'
 import {logOut} from '../modules/auth'
 
+import Toolbar from '../components/Toolbar'
 import Group from '../components/Settings/Group'
 import TextItem from '../components/Settings/TextItem'
 
@@ -42,7 +43,7 @@ class Settings extends Component {
 
   renderToolbar() {
     return (
-      <ToolbarAndroid
+      <Toolbar
         navIcon={require('image!ic_arrow_back_white_24dp')}
         onIconClicked={this.navigateBack}
         title="Settings"

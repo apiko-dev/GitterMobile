@@ -1,11 +1,12 @@
 import React, {Component, PropTypes} from 'react';
-import {ToolbarAndroid, ScrollView, Text, View} from 'react-native';
+import {ScrollView, Text, View} from 'react-native';
 import {connect} from 'react-redux'
 import s from '../styles/screens/Home/HomeScreenStyles'
 import * as Navigation from '../modules/navigation'
 
 import {HomeRoomItem, HomeRoomItemMy} from '../components/Home/HomeRoomItem'
 import Loading from '../components/Loading'
+import Toolbar from '../components/Toolbar'
 
 import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault
@@ -113,7 +114,7 @@ class HomeScreen extends Component {
       {title: 'Search', icon: require('image!ic_search_white_24dp'), show: 'always'}
     ]
     return (
-      <ToolbarAndroid
+      <Toolbar
         actions={actions}
         navIcon={require('image!ic_menu_white_24dp')}
         onIconClicked={this.props.onMenuTap}

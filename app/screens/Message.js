@@ -1,7 +1,9 @@
 import React, {Component, PropTypes} from 'react';
-import {ToolbarAndroid, View, ScrollView} from 'react-native';
+import {View, ScrollView} from 'react-native';
 import {connect} from 'react-redux'
 import s from '../styles/screens/Message/MessageScreen'
+
+import Toolbar from '../components/Toolbar'
 
 import {subscribeToReadBy, unsubscribeFromReadBy} from '../modules/realtime'
 import * as Navigation from '../modules/navigation'
@@ -42,7 +44,7 @@ class Message extends Component {
 
   renderToolbar() {
     return (
-      <ToolbarAndroid
+      <Toolbar
         navIcon={require('image!ic_arrow_back_white_24dp')}
         onIconClicked={this.navigateBack}
         title="Message"

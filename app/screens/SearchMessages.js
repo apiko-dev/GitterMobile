@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import {ToolbarAndroid, TextInput, View, Text, Clipboard, ToastAndroid} from 'react-native';
+import {TextInput, View, Text, Clipboard, ToastAndroid} from 'react-native';
 import {connect} from 'react-redux'
 import _ from 'lodash'
 import * as Navigation from '../modules/navigation'
@@ -8,6 +8,8 @@ import s from '../styles/screens/SearchMessages'
 import {THEMES} from '../constants'
 import {quoteLink} from '../utils/links'
 import moment from 'moment'
+
+import Toolbar from '../components/Toolbar'
 
 import Loading from '../components/Loading'
 import MessagesList from '../components/SearchMessages/MessagesList'
@@ -135,7 +137,7 @@ class SearchScreen extends Component {
       : []
 
     return (
-      <ToolbarAndroid
+      <Toolbar
         navIcon={require('image!ic_arrow_back_white_24dp')}
         onIconClicked={this.navigateBack}
         actions={actions}
@@ -152,7 +154,7 @@ class SearchScreen extends Component {
             onChange={this.handleInputChange}
             placeholder="Type your search query..." />
         </View>
-      </ToolbarAndroid>
+      </Toolbar>
     )
   }
 
