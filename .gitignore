@@ -21,16 +21,22 @@ DerivedData
 *.ipa
 *.xcuserstate
 project.xcworkspace
+ios/Pods
 
 # Android/IJ
 #
 .idea
 .gradle
 local.properties
-*.keystore
+android/app/*.keystore
 
 # node.js
 #
 node_modules/
 npm-debug.log
-ios/Pods
+
+# BUCK
+buck-out/
+\.buckd/
+android/app/libs
+android/keystores/debug.keystore

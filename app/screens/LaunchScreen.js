@@ -1,8 +1,5 @@
-import React, {
-  Component,
-  Text,
-  Image
-} from 'react-native'
+import React, {Component} from 'react';
+import {Text, Image} from 'react-native';
 import s from '../styles/screens/LaunchScreenStyles'
 
 

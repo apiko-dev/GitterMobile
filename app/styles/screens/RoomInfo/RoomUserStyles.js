@@ -4,10 +4,10 @@ const {colors} = THEMES.gitterDefault
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    // flex: 1
   },
   usersContainer: {
-    flex: 1,
+    // flex: 1,
     padding: 16,
     alignItems: 'center',
     flexWrap: 'wrap',
@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     margin: 2
   },
   buttonsGroup: {
-    flex: 1,
+    // flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginLeft: 16,
@@ -28,6 +28,8 @@ const styles = StyleSheet.create({
     width: 128,
     height: 32,
     elevation: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: colors.blue
   },
   primaryButton: {

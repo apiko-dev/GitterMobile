@@ -1,13 +1,5 @@
-import React, {
-  Component,
-  PropTypes,
-  TouchableNativeFeedback,
-  TouchableOpacity,
-  Linking,
-  Image,
-  View,
-  Text
-} from 'react-native'
+import React, {Component, PropTypes} from 'react';
+import {TouchableOpacity, Linking, Image, View, Text} from 'react-native';
 import s from '../../styles/screens/Room/MessageStyles'
 import {connect} from 'react-redux'
 import _ from 'lodash'
@@ -16,6 +8,7 @@ import ParsedText from '../ParsedText'
 
 import Avatar from '../Avatar'
 import StatusMessage from './StatusMessage'
+import Button from '../Button'
 
 class Message extends Component {
   constructor(props) {
@@ -35,15 +28,14 @@ class Message extends Component {
   }
 
   onMessagePress() {
-    const {onResendingMessage, text, rowId} = this.props
-    if (!!this.props.failed && this.props.failed === true) {
-      onResendingMessage(rowId, text)
-    }
+    const {id, onPress, text, rowId} = this.props
+    const failed = !!this.props.failed && this.props.failed === true
+    onPress(id, rowId, text, failed)
   }
 
   onLongPress() {
-    const {id, rowId, onLongPress} = this.props
-    onLongPress(rowId, id)
+    const {id, onLongPress} = this.props
+    onLongPress(id)
   }
 
   handleUrlPress(url) {
@@ -89,16 +81,26 @@ class Message extends Component {
   }
 
   render() {
-    const {fromUser, sending, failed, readBy, isCollapsed,
-      text, status, onUsernamePress, onUserAvatarPress, sent} = this.props
+    const {fromUser, sending, failed, readBy, isCollapsed, unread, username,
+      text, status, onUsernamePress, onUserAvatarPress, sent, onLayout} = this.props
     const opacity = sending === true ? 0.4 : 1
 
-    const backgroundColor = failed === true ? 'rgba(255, 0, 0, 0.2)' : 'transparent'
-    const readStatusOpacity = readBy === 0 || ['sending...', 'failed'].indexOf(sent) !== -1 ? 0 : 0.6
+    let backgroundColor
+
+    if (failed === true) {
+      backgroundColor = 'rgba(255, 0, 0, 0.2)'
+    } else if (fromUser.username !== username && unread === true) {
+      backgroundColor = 'rgba(213,245,226,.8)'
+    } else {
+      backgroundColor = 'transparent'
+    }
+
+    const readStatusOpacity = readBy === 0 || ['sending...', 'failed'].indexOf(sent) !== -1 ? 0 : 0.1
 
     if (!!status) {
       return (
         <StatusMessage
+          onLayout={onLayout}
           text={text}
           onLongPress={this.onLongPress.bind(this)}
           onPress={this.onMessagePress.bind(this)}
@@ -110,46 +112,15 @@ class Message extends Component {
 
     if (isCollapsed) {
       return (
-        <TouchableNativeFeedback
+        <Button
+          style={[s.container, {opacity, backgroundColor}]}
           onPress={() => this.onMessagePress()}
+          onLayout={e => onLayout(e)}
           onLongPress={() => this.onLongPress()}>
-          <View style={[s.container, {opacity, backgroundColor}]}>
-            <View style={{
-              width: 30
-            }} />
-            <View style={s.content}>
-              <View style={s.bottom}>
-                {this.renderMessageText()}
-              </View>
-            </View>
-            <View style={s.readStatus}>
-              <Image
-                style={[s.readStatusIcon, {opacity: readStatusOpacity}]}
-                source={require('image!ic_done_black_24dp')} />
-            </View>
-          </View>
-        </TouchableNativeFeedback>
-      )
-    }
-
-    return (
-      <TouchableNativeFeedback
-        onPress={() => this.onMessagePress()}
-        onLongPress={() => this.onLongPress()}>
-        <View style={[s.container, {opacity, backgroundColor}]}>
-          <TouchableOpacity
-            onPress={() => onUserAvatarPress(fromUser.id, fromUser.username)}>
-              <Avatar src={fromUser.avatarUrlSmall} size={30} />
-          </TouchableOpacity>
+          <View style={{
+            width: 30
+          }} />
           <View style={s.content}>
-            <View style={s.top}>
-              <Text
-                style={s.username}
-                onPress={() => onUsernamePress(fromUser.username)}>{fromUser.username}</Text>
-              <Text style={s.date}>
-                {this.renderDate()}
-              </Text>
-            </View>
             <View style={s.bottom}>
               {this.renderMessageText()}
             </View>
@@ -159,15 +130,55 @@ class Message extends Component {
               style={[s.readStatusIcon, {opacity: readStatusOpacity}]}
               source={require('image!ic_done_black_24dp')} />
           </View>
+        </Button>
+      )
+    }
+
+    return (
+      <View
+        onLayout={e => onLayout(e)}>
+      <Button
+        onPress={() => this.onMessagePress()}
+        onLongPress={() => this.onLongPress()}
+        style={[s.container, {opacity, backgroundColor}]}>
+        <TouchableOpacity
+          onPress={() => onUserAvatarPress(fromUser.id, fromUser.username)}>
+          <Avatar src={fromUser.avatarUrlSmall} size={30} />
+        </TouchableOpacity>
+        <View style={s.content}>
+          <View style={s.top}>
+            <Text
+              style={s.username}
+              onPress={() => onUsernamePress(fromUser.username)}>{fromUser.username}</Text>
+            <Text style={s.date}>
+              {this.renderDate()}
+            </Text>
+          </View>
+          <View style={s.bottom}>
+            {this.renderMessageText()}
+          </View>
         </View>
-      </TouchableNativeFeedback>
+        <View style={s.readStatus}>
+          <Image
+            style={[s.readStatusIcon, {opacity: readStatusOpacity}]}
+            source={require('image!ic_done_black_24dp')} />
+        </View>
+      </Button>
+    </View>
     )
   }
 }
 
+const noop = () => {}
+
 Message.defaultProps = {
   sending: false,
-  failed: false
+  failed: false,
+  onLayout: noop,
+  onLongPress: noop,
+  onPress: noop,
+  onUsernamePress: noop,
+  onUserAvatarPress: noop
 }
 
 Message.propTypes = {
@@ -180,7 +191,7 @@ Message.propTypes = {
   sending: PropTypes.bool,
   failed: PropTypes.bool,
   dispatch: PropTypes.func,
-  onResendingMessage: PropTypes.func,
+  onPress: PropTypes.func,
   onLongPress: PropTypes.func,
   onUsernamePress: PropTypes.func,
   onUserAvatarPress: PropTypes.func,

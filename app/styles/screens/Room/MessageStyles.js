@@ -19,7 +19,7 @@ const style = StyleSheet.create({
   top: {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    // justifyContent: 'space-between'
   },
   username: {
     fontWeight: 'bold'
@@ -35,6 +35,7 @@ const style = StyleSheet.create({
     opacity: 0.8
   },
   date: {
+    marginLeft: 4,
     fontSize: 14
   },
   url: {

@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     elevation: 4
   },
   tabsContainer: {
-    flex: 1
+    // flex: 1
   },
   tabs: {
     elevation: 4

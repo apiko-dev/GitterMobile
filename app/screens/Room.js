@@ -1,18 +1,10 @@
-import React, {
-  Component,
-  PropTypes,
-  InteractionManager,
-  DrawerLayoutAndroid,
-  ToolbarAndroid,
-  ToastAndroid,
-  Clipboard,
-  Alert,
-  ListView,
-  View
-} from 'react-native'
+import React, {Component, PropTypes} from 'react';
+import {InteractionManager, ToastAndroid, Clipboard, Alert, ListView, View, Platform} from 'react-native';
+import Toolbar from '../components/Toolbar'
 import {connect} from 'react-redux'
+import DrawerLayout from 'react-native-drawer-layout'
 import moment from 'moment'
-import BottomSheet from '../../libs/react-native-android-bottom-sheet'
+import BottomSheet from '../../libs/react-native-android-bottom-sheet/index'
 import _ from 'lodash'
 import s from '../styles/screens/Room/RoomStyles'
 import {THEMES} from '../constants'
@@ -25,7 +17,9 @@ import {
   joinRoom,
   changeFavoriteStatus,
   leaveRoom,
-  markAllAsRead
+  markAllAsRead,
+  getNotificationSettings,
+  changeNotificationSettings
 } from '../modules/rooms'
 import {
   getRoomMessages,
@@ -35,8 +29,14 @@ import {
   sendMessage,
   resendMessage,
   updateMessage,
-  clearError as clearMessagesError
+  deleteFailedMessage,
+  clearError as clearMessagesError,
+  readMessages,
+  sendStatusMessage
 } from '../modules/messages'
+import {
+  unsubscribeToChatMessages
+} from '../modules/realtime'
 import {changeRoomInfoDrawerState} from '../modules/ui'
 import * as Navigation from '../modules/navigation'
 
@@ -46,20 +46,23 @@ import Loading from '../components/Loading'
 import MessagesList from '../components/Room/MessagesList'
 import SendMessageField from '../components/Room/SendMessageField'
 import JoinRoomField from '../components/Room/JoinRoomField'
-import LoadginMoreSnack from '../components/LoadingMoreSnack'
+import LoadingMoreSnack from '../components/LoadingMoreSnack'
 import FailedToLoad from '../components/FailedToLoad'
+
+const COMMAND_REGEX = /\/\S+/
+const iOS = Platform.OS === 'ios'
 
 class Room extends Component {
   constructor(props) {
     super(props)
     this.roomInfoDrawer = null
+    this.readMessages = {}
 
     this.renderToolbar = this.renderToolbar.bind(this)
     this.renderListView = this.renderListView.bind(this)
     this.prepareDataSources = this.prepareDataSources.bind(this)
     this.onEndReached = this.onEndReached.bind(this)
     this.onSending = this.onSending.bind(this)
-    this.onResendingMessage = this.onResendingMessage.bind(this)
     this.onJoinRoom = this.onJoinRoom.bind(this)
     this.onMessageLongPress = this.onMessageLongPress.bind(this)
     this.onTextFieldChange = this.onTextFieldChange.bind(this)
@@ -72,6 +75,12 @@ class Room extends Component {
     this.handleDialogPress = this.handleDialogPress.bind(this)
     this.handleQuotePress = this.handleQuotePress.bind(this)
     this.handleQuoteWithLinkPress = this.handleQuoteWithLinkPress.bind(this)
+    this.onMessagePress = this.onMessagePress.bind(this)
+    this.onResendingMessage = this.onResendingMessage.bind(this)
+    this.handleChangeVisibleRows = this.handleChangeVisibleRows.bind(this)
+    this.handleReadMessages = _.debounce(this.handleReadMessages.bind(this), 250)
+    this.handleSendingMessage = this.handleSendingMessage.bind(this)
+    this.onNavigateBack = this.onNavigateBack.bind(this)
 
     this.state = {
       textInputValue: '',
@@ -93,12 +102,23 @@ class Room extends Component {
       if (!rooms[roomId]) {
         dispatch(getRoom(roomId))
       }
+      dispatch(getNotificationSettings(roomId))
       if (!listViewData[roomId]) {
         dispatch(getRoomMessages(roomId))
       } else {
         dispatch(getRoomMessagesIfNeeded(roomId))
       }
     })
+  }
+
+  componentWillUnmount() {
+    const {dispatch, route: {roomId}} = this.props
+    // dispatch(unsubscribeToChatMessages(roomId))
+  }
+
+  onNavigateBack() {
+    const {dispatch} = this.props
+    dispatch(Navigation.goBack())
   }
 
   onEndReached() {
@@ -110,11 +130,10 @@ class Room extends Component {
   }
 
   onSending() {
-    const {dispatch, route: {roomId}} = this.props
     if (this.state.editing) {
       this.onEndEdit()
     } else {
-      dispatch(sendMessage(roomId, this.state.textInputValue))
+      this.handleSendingMessage(this.state.textInputValue)
       this.setState({textInputValue: ''})
     }
   }
@@ -136,28 +155,53 @@ class Room extends Component {
     )
   }
 
-  onMessageLongPress(rowId, id) {
-    const {currentUser, entities} = this.props
+  onMessagePress(id, rowId, messageText, failed) {
+    const {currentUser, entities, rooms, route: {roomId}} = this.props
     const message = entities[id]
-    const experied = moment(message.sent).add(5, 'm')
+    let options
 
-    const options = {
-      title: !!message.editedAt && !message.text ? 'This message was deleted' : message.text,
-      items: [
-        'Copy text',
-        'Reply',
-        'Quote',
-        'Quote with link'
-      ]
-    }
-
-    if (currentUser.username === message.fromUser.username &&
+    if (failed) {
+      options = {
+        title: messageText,
+        items: [
+          'Retry',
+          'Copy text',
+          'Delete'
+        ]
+      }
+    } else if (!rooms[roomId].roomMember) {
+      options = {
+        title: !!message.editedAt && !message.text ? 'This message was deleted' : message.text,
+        items: [
+          'Copy text',
+          'Quote with link'
+        ]
+      }
+    } else {
+      options = {
+        title: !!message.editedAt && !message.text ? 'This message was deleted' : message.text,
+        items: [
+          'Copy text',
+          'Reply',
+          'Quote',
+          'Quote with link'
+        ]
+      }
+      const experied = moment(message.sent).add(5, 'm')
+      if (currentUser.username === message.fromUser.username &&
         moment().isBefore(experied) && !!message.text) {
-      options.items.push('Edit', 'Delete')
+        options.items.push('Edit', 'Delete')
+      }
     }
+
     // TODO: Use BottomSheet/ActionSheet instead of Alert
-    BottomSheet.showBotttomSheetWithOptions(options, (index, text) =>
-      this.handleDialogPress(index, text, message, rowId, id))
+    BottomSheet.showBotttomSheetWithOptions(options, (index, itemText) =>
+      this.handleDialogPress(index, itemText, message, rowId, id, failed, messageText))
+  }
+
+  onMessageLongPress(messageId) {
+    const {dispatch, route: {roomId}} = this.props
+    dispatch(Navigation.goTo({name: 'message', messageId, roomId}))
   }
 
   onDelete(rowId, id) {
@@ -172,6 +216,11 @@ class Room extends Component {
 
     const text = ''
     dispatch(updateMessage(roomId, id, text))
+  }
+
+  onDeleteFailedMsg(rowId) {
+    const {dispatch, route: {roomId}} = this.props
+    dispatch(deleteFailedMessage(rowId, roomId))
   }
 
   onEdit(rowId, id) {
@@ -232,16 +281,67 @@ class Room extends Component {
     dispatch(getRoomMessages(roomId))
   }
 
-  handleDialogPress(index, text, message, rowId, id) {
+  handleSendingMessage(text) {
+    const {dispatch, route: {roomId}} = this.props
+
+    const matches = text.match(COMMAND_REGEX)
+
+    if (matches) {
+      switch (matches[0]) {
+      case '/me':
+        dispatch(sendStatusMessage(roomId, text))
+        break
+
+      case '/notify-all':
+        dispatch(changeNotificationSettings(roomId, 0))
+        break
+
+      case '/notify-announcements':
+        dispatch(changeNotificationSettings(roomId, 1))
+        break
+
+      case '/notify-mute':
+        dispatch(changeNotificationSettings(roomId, 2))
+        break
+
+      case '/mark-all-read':
+        dispatch(markAllAsRead(roomId))
+        break
+
+      case '/fav':
+        dispatch(changeFavoriteStatus(roomId))
+        break
+
+      case '/leave':
+        this.leaveRoom()
+        break
+      default:
+        dispatch(sendMessage(roomId, text))
+        break
+      }
+    } else {
+      dispatch(sendMessage(roomId, text))
+    }
+  }
+
+  handleDialogPress(index, text, message, rowId, id, failed, messageText) {
     switch (text) {
     case 'Copy text':
-      this.handleCopyToClipboard(message.text)
+      if (failed) {
+        this.handleCopyToClipboard(messageText)
+      } else {
+        this.handleCopyToClipboard(message.text)
+      }
       break
     case 'Edit':
       this.onEdit(rowId, id)
       break
     case 'Delete':
-      this.onDelete(rowId, id)
+      if (failed) {
+        this.onDeleteFailedMsg(rowId)
+      } else {
+        this.onDelete(rowId, id)
+      }
       break
     case 'Quote':
       this.handleQuotePress(message)
@@ -252,6 +352,9 @@ class Room extends Component {
     case 'Reply':
       this.handleUsernamePress(message.fromUser.username)
       break
+    case 'Retry':
+      this.onResendingMessage(rowId, messageText)
+      break
     default:
       break
     }
@@ -259,17 +362,15 @@ class Room extends Component {
 
   handleToolbarActionSelected(index) {
     const {dispatch, route: {roomId}} = this.props
-    if (index === 0) {
-      this.roomInfoDrawer.openDrawer()
-    }
-    if (index === 1) {
-      dispatch(changeFavoriteStatus(roomId))
-    }
-    if (index === 2) {
-      dispatch(markAllAsRead(roomId))
-    }
-    if (index === 3) {
-      this.leaveRoom()
+    switch (index) {
+    case 0: return dispatch(Navigation.goTo({name: 'searchMessages', roomId}))
+    case 1: return this.roomInfoDrawer.openDrawer()
+    case 2: return dispatch(changeFavoriteStatus(roomId))
+    case 3: return dispatch(markAllAsRead(roomId))
+    case 4: return dispatch(Navigation.goTo({name: 'roomSettings', roomId}))
+    case 5: return this.leaveRoom()
+    default:
+      break
     }
   }
 
@@ -304,11 +405,35 @@ class Room extends Component {
     const room = rooms[route.roomId]
     const time = moment(message.sent).format('YYYY MMM D, HH:mm')
     const link = quoteLink(time, room.url, message.id)
+
+    if (!rooms[route.roomId].roomMember) {
+      Clipboard.setString(link)
+      ToastAndroid.show('Copied quote link', ToastAndroid.SHORT)
+      return
+    }
     const {textInputValue} = this.state
     this.setState({
       textInputValue: !!textInputValue ? `${textInputValue}\n${link} ` : `${link} `
     })
     this.refs.sendMessageField.focus()
+  }
+
+  handleChangeVisibleRows(visibleRows, changedRows) {
+    const {dispatch, route: {roomId}} = this.props
+
+    this.readMessages = Object.assign({}, this.readMessages, changedRows.s1)
+
+    this.handleReadMessages()
+  }
+
+  handleReadMessages() {
+    const {dispatch, route: {roomId}} = this.props
+    if (!Object.keys(this.readMessages).length) {
+      return
+    }
+    dispatch(readMessages(roomId, this.readMessages))
+
+    this.readMessages = {}
   }
 
   leaveRoom() {
@@ -326,7 +451,15 @@ class Room extends Component {
   prepareDataSources() {
     const {listViewData, route: {roomId}, dispatch} = this.props
     if (!listViewData[roomId]) {
-      const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => !_.isEqual(r1, r2)})
+      const ds = new ListView.DataSource({rowHasChanged: (row1, row2) => {
+        return row1 !== row2
+        //   return true
+        // } else if (r1.text === r2.text) {
+        //   return false
+        // } else {
+          // return true
+        // }
+      }})
       dispatch(prepareListView(roomId, ds.cloneWithRows([])))
     }
   }
@@ -340,6 +473,11 @@ class Room extends Component {
     if (!!room && room.roomMember) {
       if (room.hasOwnProperty('favourite')) {
         actions = [{
+          title: 'Search',
+          icon: require('image!ic_search_white_24dp'),
+          show: 'always'
+        },
+        {
           title: 'Open room info',
           icon: require('image!ic_info_outline_white_24dp'),
           show: 'never'
@@ -353,14 +491,23 @@ class Room extends Component {
           show: 'never'
         },
         {
+          title: 'Settings',
+          show: 'never'
+        },
+        {
           title: 'Leave room',
           show: 'never'
         }]
       } else {
         actions = [{
+          title: 'Search',
+          icon: require('image!ic_search_white_24dp'),
+          show: 'always'
+        },
+        {
           title: 'Open room info',
           icon: require('image!ic_info_outline_white_24dp'),
-          show: 'never'
+          show: ''
         },
         {
           title: 'Add to favorite',
@@ -371,6 +518,10 @@ class Room extends Component {
           show: 'never'
         },
         {
+          title: 'Settings',
+          show: 'never'
+        },
+        {
           title: 'Leave room',
           show: 'never'
         }]
@@ -378,9 +529,9 @@ class Room extends Component {
     }
 
     return (
-      <ToolbarAndroid
-        navIcon={require('image!ic_menu_white_24dp')}
-        onIconClicked={this.props.onMenuTap}
+      <Toolbar
+        navIcon={iOS ? require('image!ic_arrow_back_white_24dp') : require('image!ic_menu_white_24dp')}
+        onIconClicked={iOS ? this.onNavigateBack : this.props.onMenuTap}
         actions={actions}
         onActionSelected={this.handleToolbarActionSelected}
         overflowIcon={require('image!ic_more_vert_white_24dp')}
@@ -409,7 +560,7 @@ class Room extends Component {
 
   renderLoadingMore() {
     return (
-      <LoadginMoreSnack loading/>
+      <LoadingMoreSnack loading/>
     )
   }
 
@@ -430,8 +581,9 @@ class Room extends Component {
     }
     return (
       <MessagesList
+        onChangeVisibleRows={this.handleChangeVisibleRows}
         listViewData={listViewData[roomId]}
-        onResendingMessage={this.onResendingMessage.bind(this)}
+        onPress={this.onMessagePress.bind(this)}
         onLongPress={this.onMessageLongPress.bind(this)}
         onUsernamePress={this.handleUsernamePress.bind(this)}
         onUserAvatarPress={this.handleUserAvatarPress.bind(this)}
@@ -474,13 +626,13 @@ class Room extends Component {
 
     return (
       <View style={s.container}>
-        <DrawerLayoutAndroid
+        <DrawerLayout
           ref={component => this.roomInfoDrawer = component}
           style={{backgroundColor: 'white'}}
           drawerWidth={300}
           onDrawerOpen={() => dispatch(changeRoomInfoDrawerState('open'))}
           onDrawerClose={() => dispatch(changeRoomInfoDrawerState('close'))}
-          drawerPosition={DrawerLayoutAndroid.positions.Right}
+          drawerPosition={DrawerLayout.positions.Right}
           renderNavigationView={this.renderRoomInfo}
           keyboardDismissMode="on-drag">
             {this.renderToolbar()}
@@ -488,7 +640,7 @@ class Room extends Component {
             {isLoadingMessages ? this.renderLoading() : this.renderListView()}
             {getMessagesError || isLoadingMessages || _.has(listView, 'data') &&
               listView.data.length === 0 ? null : this.renderBottom()}
-          </DrawerLayoutAndroid>
+        </DrawerLayout>
       </View>
     )
   }
@@ -508,12 +660,13 @@ Room.propTypes = {
   hasNoMore: PropTypes.object,
   currentUser: PropTypes.object,
   getMessagesError: PropTypes.bool,
-  roomInfoDrawerState: PropTypes.string
+  roomInfoDrawerState: PropTypes.string,
+  notifications: PropTypes.object
 }
 
 function mapStateToProps(state) {
   const {listView, isLoading, isLoadingMore, byRoom, hasNoMore, entities} = state.messages
-  const {activeRoom, rooms} = state.rooms
+  const {activeRoom, rooms, notifications} = state.rooms
   const {roomInfoDrawerState} = state.ui
   return {
     activeRoom,
@@ -526,7 +679,8 @@ function mapStateToProps(state) {
     byRoom,
     hasNoMore,
     currentUser: state.viewer.user,
-    roomInfoDrawerState
+    roomInfoDrawerState,
+    notifications
   }
 }
 

@@ -4,7 +4,7 @@ import {ToastAndroid} from 'react-native'
 import normalize from '../utils/normalize'
 import {LOGOUT} from './auth'
 import * as Navigation from './navigation'
-import {subscribeToChatMessages, unsubscribeToChatMessages} from './realtime'
+import {subscribeToChatMessages, unsubscribeToChatMessages, checkFayeConnection} from './realtime'
 
 
 /**
@@ -28,7 +28,7 @@ export const JOIN_ROOM_FAILED = 'rooms/JOIN_ROOM_FAILED'
 export const JOIN_USER_ROOM = 'rooms/JOIN_USER_ROOM'
 export const JOIN_USER_ROOM_OK = 'rooms/JOIN_USER_ROOM_OK'
 export const JOIN_USER_ROOM_FAILED = 'rooms/JOIN_USER_ROOM_FAILED'
-const LEAVE_ROOM = 'rooms/LEAVE_ROOM'
+export const LEAVE_ROOM = 'rooms/LEAVE_ROOM'
 export const LEAVE_ROOM_OK = 'rooms/LEAVE_ROOM_OK'
 export const LEAVE_ROOM_FAILED = 'rooms/LEAVE_ROOM_FAILED'
 export const MARK_ALL_AS_READ = 'rooms/MARK_ALL_AS_READ'
@@ -40,6 +40,12 @@ export const ADD_USER_TO_ROOM = 'rooms/ADD_USER_TO_ROOM'
 export const ADD_USER_TO_ROOM_OK = 'rooms/ADD_USER_TO_ROOM_OK'
 export const ADD_USER_TO_ROOM_ERROR = 'rooms/ADD_USER_TO_ROOM_ERROR'
 export const HIDE_ROOM = 'rooms/HIDE_ROOM'
+export const RECEIVE_ROOMS_SNAPSHOT = 'rooms/RECEIVE_ROOMS_SNAPSHOT'
+export const GET_NOTIFICATION_SETTINGS = 'rooms/GET_NOTIFICATION_SETTINGS'
+export const GET_NOTIFICATION_SETTINGS_OK = 'rooms/GET_NOTIFICATION_SETTINGS_OK'
+export const GET_NOTIFICATION_SETTINGS_ERROR = 'rooms/GET_NOTIFICATION_SETTINGS_ERROR'
+export const CHANGE_NOTIFICATION_SETTINGS_OK = 'rooms/CHANGE_NOTIFICATION_SETTINGS_OK'
+export const CHANGE_NOTIFICATION_SETTINGS_ERROR = 'rooms/CHANGE_NOTIFICATION_SETTINGS_ERROR'
 
 /**
  * Action Creators
@@ -62,6 +68,13 @@ export function getRooms() {
   }
 }
 
+export function receiveRoomsSnapshot(payload) {
+  return {
+    type: RECEIVE_ROOMS_SNAPSHOT,
+    payload
+  }
+}
+
 /**
  * Return room by id
  */
@@ -72,6 +85,7 @@ export function getRoom(id) {
     dispatch({type: ROOM})
     try {
       const payload = await Api.room(token, id)
+
       dispatch({type: ROOM_RECEIVED, payload})
     } catch (error) {
       dispatch({type: ROOM_FAILED, error})
@@ -135,12 +149,12 @@ export function updateRoomState(json) {
 export function joinRoom(roomId) {
   return async (dispatch, getState) => {
     const {token} = getState().auth
-    const room = getState().rooms.rooms[roomId]
+    const {id} = getState().viewer.user
 
     dispatch({type: JOIN_ROOM, roomId})
 
     try {
-      const payload = await Api.joinRoom(token, room.uri)
+      const payload = await Api.joinRoom(token, id, roomId)
       dispatch({type: JOIN_ROOM_OK, payload})
     } catch (error) {
       dispatch({type: JOIN_ROOM_FAILED, error})
@@ -185,7 +199,7 @@ export function leaveRoom(roomId, userId) {
         if (!!payload.success && payload.success === true) {
           dispatch({type: LEAVE_ROOM_OK, roomId, userId})
         } else {
-          dispatch({type: LEAVE_ROOM_FAILED, error: `User ${newUserId} can't leave room ${roomId}`})
+          dispatch({type: LEAVE_ROOM_FAILED, error: `User ${newUserId} cant leave room ${roomId}`})
         }
       }
     } catch (error) {
@@ -211,7 +225,7 @@ export function markAllAsRead(roomId) {
       if (!!payload.success && payload.success === true) {
         dispatch({type: MARK_ALL_AS_READ_OK, roomId})
       } else {
-        dispatch({type: MARK_ALL_AS_READ_FAILED, error: `Can't mark all room ${roomId} messages as read`})
+        dispatch({type: MARK_ALL_AS_READ_FAILED, error: `Cant mark all room ${roomId} messages as read`})
       }
     } catch (error) {
       dispatch({type: MARK_ALL_AS_READ_FAILED, error})
@@ -230,10 +244,10 @@ export function changeFavoriteStatus(roomId) {
     const room = getState().rooms.rooms[roomId]
     const status = room.hasOwnProperty('favourite') ? false : true
     try {
-      const payload = await Api.changeFavoriteStatus(token, id, roomId, status)
-      dispatch({type: CHANGE_FAVORITE_STATUS_OK, roomId, payload})
+      await Api.changeFavoriteStatus(token, id, roomId, status)
+      dispatch({type: CHANGE_FAVORITE_STATUS_OK, roomId, status})
     } catch (error) {
-      dispatch({type: CHANGE_FAVORITE_STATUS_FAILED, roomId, error})
+      dispatch({type: CHANGE_FAVORITE_STATUS_FAILED, roomId, error: error.message})
     }
   }
 }
@@ -250,11 +264,49 @@ export function addUserToRoom(roomId, username) {
         ToastAndroid.show(`User ${username} was added.`, ToastAndroid.SHORT)
       } else {
         dispatch({type: ADD_USER_TO_ROOM_ERROR, error: payload})
-        ToastAndroid.show(`User ${username} wasn't added.`, ToastAndroid.SHORT)
+        ToastAndroid.show(`User ${username} wasnt added.`, ToastAndroid.SHORT)
       }
     } catch (error) {
       dispatch({type: ADD_USER_TO_ROOM_ERROR, error})
     }
+  }
+}
+
+export function getNotificationSettings(roomId) {
+  return async (dispatch, getState) => {
+    const {token} = getState().auth
+    const {id} = getState().viewer.user
+
+    dispatch({type: GET_NOTIFICATION_SETTINGS, roomId})
+
+    try {
+      const payload = await Api.getNotificationSettings(token, id, roomId)
+      dispatch({type: GET_NOTIFICATION_SETTINGS_OK, roomId, payload})
+    } catch (error) {
+      dispatch({type: GET_NOTIFICATION_SETTINGS_ERROR, error: error.message})
+    }
+  }
+}
+
+export function changeNotificationSettings(roomId, index) {
+  return async (dispatch, getState) => {
+    const {token} = getState().auth
+    const {id} = getState().viewer.user
+    const modes = ['all', 'announcement', 'mute']
+
+    try {
+      const payload = await Api.changeNotificationSettings(token, id, roomId, modes[index])
+      dispatch({type: CHANGE_NOTIFICATION_SETTINGS_OK, roomId, payload})
+    } catch (error) {
+      dispatch({type: CHANGE_NOTIFICATION_SETTINGS_ERROR, error: error.message})
+    }
+  }
+}
+
+export function refreshRooms() {
+  return async (dispatch, getState) => {
+    dispatch(getRooms())
+    await checkFayeConnection()
   }
 }
 
@@ -269,7 +321,8 @@ const initialState = {
   suggestedRooms: [],
   activeRoom: '',
   error: false,
-  errors: {}
+  errors: {},
+  notifications: {}
 }
 
 export default function rooms(state = initialState, action) {
@@ -282,6 +335,7 @@ export default function rooms(state = initialState, action) {
     }
   }
 
+  case RECEIVE_ROOMS_SNAPSHOT:
   case CURRENT_USER_ROOMS_RECEIVED: {
     const sorted = action.payload
       .filter(item => item.hasOwnProperty('lastAccessTime') && item.lastAccessTime !== null)
@@ -289,8 +343,8 @@ export default function rooms(state = initialState, action) {
     const {ids, entities} = normalize(sorted)
     return {...state,
       isLoading: false,
-      ids: state.ids.concat(ids),
-      rooms: _.merge({}, state.rooms, entities)
+      ids,
+      rooms: entities
     }
   }
 
@@ -371,10 +425,17 @@ export default function rooms(state = initialState, action) {
   }
 
   case CHANGE_FAVORITE_STATUS_OK: {
-    const {roomId, payload} = action
+    const {roomId, status} = action
+    const newRoom = Object.assign({}, state.rooms[roomId])
+
+    if (status) {
+      newRoom.favourite = true
+    } else {
+      newRoom.hasOwnProperty('favourite') && delete newRoom.favourite
+    }
     return {...state,
       rooms: {...state.rooms,
-        [roomId]: payload
+        [roomId]: newRoom
       }
     }
   }
@@ -383,6 +444,16 @@ export default function rooms(state = initialState, action) {
     return initialState
   }
 
+  case CHANGE_NOTIFICATION_SETTINGS_OK:
+  case GET_NOTIFICATION_SETTINGS_OK:
+    return {...state,
+      notifications: {...state.notifications,
+        [action.roomId]: action.payload
+      }
+    }
+
+  case CHANGE_NOTIFICATION_SETTINGS_ERROR:
+  case GET_NOTIFICATION_SETTINGS_ERROR:
   case JOIN_USER_ROOM_FAILED:
   case CHANGE_FAVORITE_STATUS_FAILED:
   case MARK_ALL_AS_READ_FAILED:

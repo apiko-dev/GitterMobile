@@ -1,22 +1,9 @@
-import React, {
-  PropTypes,
-  Image,
-  Text
-} from 'react-native'
+import React, {PropTypes} from 'react';
+import {Image, Text} from 'react-native';
 import {emoji} from '../images/emoji'
 
 const Emoji = ({name, styles}) => {
-  let newName = null
-
-  if (name === '+1') {
-    newName = 'plus_1'
-  } else if (name === '-1') {
-    newName = 'minus1'
-  } else {
-    newName = name
-  }
-
-  const source = emoji[newName]
+  const source = emoji[name]
 
   if (!source) {
     return (

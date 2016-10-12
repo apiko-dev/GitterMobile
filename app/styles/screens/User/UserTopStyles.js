@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   displayNameWapper: {
-    flex: 1,
+    // flex: 1,
     paddingHorizontal: 30,
     alignItems: 'center',
     justifyContent: 'center',
@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     fontSize: 18
   },
   github: {
-    height: 50,
+    // height: 50,
     paddingHorizontal: 15,
     flexDirection: 'row',
     alignItems: 'center'

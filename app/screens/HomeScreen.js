@@ -1,17 +1,12 @@
-import React, {
-  Component,
-  PropTypes,
-  ToolbarAndroid,
-  ScrollView,
-  Text,
-  View
-} from 'react-native'
+import React, {Component, PropTypes} from 'react';
+import {ScrollView, Text, View} from 'react-native';
 import {connect} from 'react-redux'
 import s from '../styles/screens/Home/HomeScreenStyles'
 import * as Navigation from '../modules/navigation'
 
-import HomeRoomItem from '../components/Home/HomeRoomItem'
+import {HomeRoomItem, HomeRoomItemMy} from '../components/Home/HomeRoomItem'
 import Loading from '../components/Loading'
+import Toolbar from '../components/Toolbar'
 
 import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault
@@ -62,7 +57,7 @@ class HomeScreen extends Component {
       <View style={s.roomItem}>
         <Text style={s.bottomSectionHeading}>Favorites</Text>
         {favorites.map(favorite => (
-          <HomeRoomItem
+          <HomeRoomItemMy
             onPress={this.onRoomPress.bind(this)}
             key={favorite.id}{...favorite} />
         ))}
@@ -95,8 +90,10 @@ class HomeScreen extends Component {
 
     if (isLoadingRooms || isLoadingViewer || !suggested) {
       return (
-        <Loading
-          color={colors.brand}/>
+        <View style={s.loadingWrap}>
+          <Loading
+            color={colors.brand}/>
+        </View>
       )
     }
 
@@ -117,7 +114,7 @@ class HomeScreen extends Component {
       {title: 'Search', icon: require('image!ic_search_white_24dp'), show: 'always'}
     ]
     return (
-      <ToolbarAndroid
+      <Toolbar
         actions={actions}
         navIcon={require('image!ic_menu_white_24dp')}
         onIconClicked={this.props.onMenuTap}

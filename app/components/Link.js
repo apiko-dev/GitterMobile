@@ -1,9 +1,5 @@
-import React, {
-  Component,
-  PropTypes,
-  Text,
-  Linking
-} from 'react-native'
+import React, {Component, PropTypes} from 'react';
+import {Text, Linking} from 'react-native';
 import s from '../styles/components/LinkStyles'
 import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault

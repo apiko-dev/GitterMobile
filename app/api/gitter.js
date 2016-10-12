@@ -41,7 +41,26 @@ export function sendMessage(token, roomId, text) {
   })
 }
 
-export function joinRoom(token, uri) {
+export function sendStatusMessage(token, roomId, text) {
+  return callApi(`rooms/${roomId}/chatMessages`, token, {
+    method: 'POST',
+    body: JSON.stringify({
+      text,
+      status: true
+    })
+  })
+}
+
+export function joinRoom(token, userId, roomId) {
+  return callApi(`user/${userId}/rooms`, token, {
+    method: 'POST',
+    body: JSON.stringify({
+      id: roomId
+    })
+  })
+}
+
+export function roomInfo(token, uri) {
   return callApi(`rooms`, token, {
     method: 'POST',
     body: JSON.stringify({
@@ -55,6 +74,19 @@ export function changeFavoriteStatus(token, userId, roomId, status) {
     method: 'PUT',
     body: JSON.stringify({
       favourite: status
+    })
+  })
+}
+
+export function getNotificationSettings(token, userId, roomId) {
+  return callApi(`user/${userId}/rooms/${roomId}/settings/notifications`, token)
+}
+
+export function changeNotificationSettings(token, userId, roomId, mode) {
+  return callApi(`user/${userId}/rooms/${roomId}/settings/notifications`, token, {
+    method: 'PUT',
+    body: JSON.stringify({
+      mode
     })
   })
 }
@@ -134,6 +166,22 @@ export function addUserToRoom(token, roomId, username) {
   })
 }
 
+export function getMessage(token, roomId, messageId) {
+  return callApi(`rooms/${roomId}/chatMessages/${messageId}`, token)
+}
+
+export function readMessages(token, userId, roomId, chat) {
+  return callApi(`user/${userId}/rooms/${roomId}/unreadItems`, token, {
+    method: 'post',
+    body: JSON.stringify({
+      chat
+    })
+  })
+}
+
+export function searchRoomMessages(token, roomId, query) {
+  return callApi(`rooms/${roomId}/chatMessages?q=${query}&limit=30`, token)
+}
 
 /**
  * Private functions
@@ -150,7 +198,7 @@ function callApi(endpoint, token, options = {method: 'get'}) {
     }
   })
   .then(res => {
-    console.log(res)
+    // console.log(res)
     return res.text()
   })
   .then(text => {

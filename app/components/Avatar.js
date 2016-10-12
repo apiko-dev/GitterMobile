@@ -1,7 +1,5 @@
-import React, {
-  Image,
-  PropTypes
-} from 'react-native'
+import React, {PropTypes} from 'react';
+import {Image} from 'react-native';
 
 
 const Avatar = ({src, size}) => {

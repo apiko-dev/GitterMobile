@@ -1,12 +1,11 @@
-import React, {
-  PropTypes,
-  TouchableNativeFeedback,
-  View,
-  Text
-} from 'react-native'
+import React, {PropTypes} from 'react';
+import {View, Text} from 'react-native';
+import s from '../../styles/screens/Drawer/ChannelListItemStyles'
+
 import Avatar from '../Avatar'
 import UnreadBadge from '../UnreadBadge'
-import s from '../../styles/screens/Drawer/ChannelListItemStyles'
+import Button from '../Button'
+
 import {createGhAvatarLink} from '../../utils/links'
 import {THEMES} from '../../constants'
 const {colors} = THEMES.gitterDefault
@@ -24,29 +23,27 @@ const ChannelListItem = ({
     : {backgroundColor: colors.white}
 
   return (
-    <TouchableNativeFeedback
-      onPress={onRoomPress.bind(this, id)}
-      onLongPress={onLongRoomPress.bind(this, id)}>
-      <View style={[s.container,
+    <Button
+      onPress={() => onRoomPress(id)}
+      onLongPress={() => onLongRoomPress(id)}
+      style={[s.container,
         {backgroundColor: itemStyles.backgroundColor}
       ]}
-        key={id}>
+      key={id}>
+      <Avatar
+        src={src}
+        size={30} />
 
-        <Avatar
-          src={src}
-          size={30} />
-
-        <View style={s.headingContainer}>
-          <Text style={[s.heading, {color: itemStyles.color}]}>{name}</Text>
-        </View>
-
-        {(!!unreadItems || !!mentions || !!lurk) &&
-          <UnreadBadge
-            unreadItems={unreadItems}
-            mentions={mentions}
-            lurk={lurk} />}
+      <View style={s.headingContainer}>
+        <Text style={[s.heading, {color: itemStyles.color}]}>{name}</Text>
       </View>
-    </TouchableNativeFeedback>
+
+      {(!!unreadItems || !!mentions || !!lurk) &&
+        <UnreadBadge
+          unreadItems={unreadItems}
+          mentions={mentions}
+          lurk={lurk} />}
+    </Button>
   )
 }
 

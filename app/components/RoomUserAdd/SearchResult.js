@@ -1,9 +1,5 @@
-import React, {
-  PropTypes,
-  View,
-  Text,
-  ScrollView
-} from 'react-native'
+import React, {PropTypes} from 'react';
+import {View, Text, ScrollView} from 'react-native';
 import s from '../../styles/screens/RoomUserAdd/SearchResultStyles'
 
 import RoomUserItem from './RoomUserItem'

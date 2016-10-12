@@ -1,8 +1,17 @@
-import React, {PropTypes, ScrollView, Text} from 'react-native'
+import React, {PropTypes} from 'react';
+import {ScrollView, Text, RefreshControl} from 'react-native';
 import {categorize} from '../../utils/sortRoomsByType'
 import ChannelListSection from './ChannelListSection'
 
-const ChannelList = ({ids, rooms, activeRoom, onRoomPress, onLongRoomPress}) => {
+const ChannelList = ({
+  ids,
+  rooms,
+  activeRoom,
+  onRoomPress,
+  onLongRoomPress,
+  isLoadingRooms,
+  onRefresh
+}) => {
   if (!ids || !rooms) {
     // TODO: Add tips how to add room
     return <Text>Nothing to display</Text>
@@ -12,7 +21,12 @@ const ChannelList = ({ids, rooms, activeRoom, onRoomPress, onLongRoomPress}) => 
 
   // TODO: Use ListView instead to reduce performance issues
   return (
-    <ScrollView>
+    <ScrollView
+      refreshControl={
+        <RefreshControl
+          refreshing={isLoadingRooms}
+          onRefresh={onRefresh} />
+      }>
       {!!favorites.length &&
         <ChannelListSection
           name="Favorites"

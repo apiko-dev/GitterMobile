@@ -1,12 +1,5 @@
-import React, {
-  Component,
-  PropTypes,
-  InteractionManager,
-  ToolbarAndroid,
-  Linking,
-  ScrollView,
-  View
-} from 'react-native'
+import React, {Component, PropTypes} from 'react';
+import {InteractionManager, Linking, ScrollView, View} from 'react-native';
 import {connect} from 'react-redux'
 import ScrollableTabView from 'react-native-scrollable-tab-view'
 import s from '../styles/screens/User/UserScreenStyles'
@@ -16,6 +9,7 @@ import {getUser, chatPrivately} from '../modules/users'
 import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault
 
+import Toolbar from '../components/Toolbar'
 import Loading from '../components/Loading'
 import UserTop from '../components/User/UserTop'
 import UserInfo from '../components/User/UserInfo'
@@ -71,7 +65,7 @@ class UserScreen extends Component {
   renderToolbar() {
     const {route} = this.props
     return (
-      <ToolbarAndroid
+      <Toolbar
         navIcon={require('image!ic_arrow_back_white_24dp')}
         onIconClicked={this.navigateBack}
         title="User"

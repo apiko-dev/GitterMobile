@@ -28,6 +28,14 @@ const style = StyleSheet.create({
   sendIcon: {
     width: 30,
     height: 30
+  },
+  hidden: {
+    position: 'absolute',
+    top: 10000,  // way off screen
+    left: 10000, // way off screen
+    backgroundColor: 'transparent',
+    borderColor: 'transparent',
+    color: 'transparent',
   }
 })
 
