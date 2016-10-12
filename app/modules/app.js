@@ -115,10 +115,10 @@ export function checkNewReleases() {
       if (payload[0].name !== global.CURRENT_VERSION) {
         Alert.alert(
           'New version available',
-          'Do you wanna download new version?',
+          'Do you want to visit releases page?',
           [
             {text: 'Later', onPress: () => console.log('Later Pressed!')},
-            {text: 'Yes', onPress: () => Linking.openURL(payload[0].assets[0].browser_download_url)}
+            {text: 'Yes', onPress: () => Linking.openURL(payload[0].html_url)}
           ]
         )
       }
