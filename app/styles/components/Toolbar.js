@@ -27,18 +27,18 @@ const styles = StyleSheet.create({
   iconButton: {
     backgroundColor: colors.raspberry,
     paddingHorizontal: 8,
-    height: 44,
+    height: 35,
     flexDirection: 'row',
     alignItems: 'center',
-    width: 44,
-    justifyContent: 'flex-start'
+    width: 35,
+    justifyContent: 'center'
   },
   showIcon: {
     // padding
   },
   icon: {
-    width: 30,
-    height: 30
+    width: 25,
+    height: 25
   },
   addContainer: {
     // paddingHorizontal: 8,
