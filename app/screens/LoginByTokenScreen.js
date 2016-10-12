@@ -44,7 +44,8 @@ class LoginByTokenScreen extends Component {
             value={this.state.token}
             placeholder="Paste token here..."
             style={s.textfield}
-            placeholderTextColor="white"
+            underlineColorAndroid="white"
+            placeholderTextColor="black"
             onChange={(e) => this.setState({token: e.nativeEvent.text})} />
           <Button
             rippleColor={colors.raspberry}
