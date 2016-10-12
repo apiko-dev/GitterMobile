@@ -6,15 +6,19 @@ const {colors} = THEMES.gitterDefault
 const styles = StyleSheet.create({
   container: {
     ...backgroundImage,
-    justifyContent: 'space-around',
-    alignItems: 'center'
+    flex: 1,
+    // justifyContent: 'space-around',
+    // alignItems: 'center',
+    // padding: 16
   },
   logo: {
+    marginTop: 40,
     fontSize: 40,
-    color: 'white'
+    color: 'white',
+    textAlign: 'center'
   },
   hero: {
-    marginTop: 20,
+    marginTop: 40,
     marginHorizontal: 20,
     fontSize: 24,
     color: 'white',
@@ -29,6 +33,7 @@ const styles = StyleSheet.create({
     width: 150,
     height: 40,
     borderRadius: 2,
+    alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 2
@@ -38,8 +43,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   textfield: {
-    width: 250,
-    height: 40
+    marginVertical: 10,
+    marginHorizontal: 20,
+    // width: 250,
+    height: 40,
+    backgroundColor: 'white',
+    borderRadius: 5,
+    paddingLeft: 8
   }
 })
 

@@ -1,4 +1,4 @@
-import FayeGitter from '../../libs/react-native-gitter-faye'
+import FayeGitter from '../../libs/react-native-gitter-faye/index'
 import {DeviceEventEmitter} from 'react-native'
 import {updateRoomState, receiveRoomsSnapshot} from './rooms'
 import {appendMessages, updateMessageRealtime, receiveRoomMessagesSnapshot} from './messages'

@@ -1,9 +1,10 @@
 import React, {Component, PropTypes} from 'react';
-import {InteractionManager, DrawerLayoutAndroid, ToolbarAndroid, ToastAndroid, Clipboard, Alert, ListView, View} from 'react-native';
+import {InteractionManager, ToastAndroid, Clipboard, Alert, ListView, View, Platform} from 'react-native';
+import Toolbar from '../components/Toolbar'
 import {connect} from 'react-redux'
+import DrawerLayout from 'react-native-drawer-layout'
 import moment from 'moment'
-import BottomSheet from '../../libs/react-native-android-bottom-sheet'
-import DialogAndroid from 'react-native-dialogs'
+import BottomSheet from '../../libs/react-native-android-bottom-sheet/index'
 import _ from 'lodash'
 import s from '../styles/screens/Room/RoomStyles'
 import {THEMES} from '../constants'
@@ -49,6 +50,7 @@ import LoadingMoreSnack from '../components/LoadingMoreSnack'
 import FailedToLoad from '../components/FailedToLoad'
 
 const COMMAND_REGEX = /\/\S+/
+const iOS = Platform.OS === 'ios'
 
 class Room extends Component {
   constructor(props) {
@@ -77,8 +79,8 @@ class Room extends Component {
     this.onResendingMessage = this.onResendingMessage.bind(this)
     this.handleChangeVisibleRows = this.handleChangeVisibleRows.bind(this)
     this.handleReadMessages = _.debounce(this.handleReadMessages.bind(this), 250)
-    this.handleNotificationSettingsChange = this.handleNotificationSettingsChange.bind(this)
     this.handleSendingMessage = this.handleSendingMessage.bind(this)
+    this.onNavigateBack = this.onNavigateBack.bind(this)
 
     this.state = {
       textInputValue: '',
@@ -112,6 +114,11 @@ class Room extends Component {
   componentWillUnmount() {
     const {dispatch, route: {roomId}} = this.props
     // dispatch(unsubscribeToChatMessages(roomId))
+  }
+
+  onNavigateBack() {
+    const {dispatch} = this.props
+    dispatch(Navigation.goBack())
   }
 
   onEndReached() {
@@ -360,7 +367,7 @@ class Room extends Component {
     case 1: return this.roomInfoDrawer.openDrawer()
     case 2: return dispatch(changeFavoriteStatus(roomId))
     case 3: return dispatch(markAllAsRead(roomId))
-    case 4: return this.handleNotificationSettingsChange()
+    case 4: return dispatch(Navigation.goTo({name: 'roomSettings', roomId}))
     case 5: return this.leaveRoom()
     default:
       break
@@ -429,37 +436,6 @@ class Room extends Component {
     this.readMessages = {}
   }
 
-  handleNotificationSettingsChange() {
-    const {dispatch, route: {roomId}, notifications} = this.props
-    const roomNotif = notifications[roomId]
-
-    if (!roomNotif) {
-      return
-    }
-
-    const items = [
-      'All: Notify me for all messages',
-      'Announcements: Notify for mentions and announcements',
-      "Mute: Notify me only when I'm directly mentioned"
-    ]
-
-    const selectedIndex = roomNotif.mode === 'all' ? 0 : roomNotif.mode === 'announcement' ? 1 : 2
-
-    const dialog = new DialogAndroid()
-
-    const options = {
-      title: 'Notifications setting',
-      items,
-      positiveText: 'Change',
-      negativeText: 'Cancle',
-      selectedIndex,
-      itemsCallbackSingleChoice: (index, text) => dispatch(changeNotificationSettings(roomId, index))
-    }
-
-    dialog.set(options)
-    dialog.show()
-  }
-
   leaveRoom() {
     const {dispatch, route: {roomId}} = this.props
     Alert.alert(
@@ -515,7 +491,7 @@ class Room extends Component {
           show: 'never'
         },
         {
-          title: 'Change notification settings',
+          title: 'Settings',
           show: 'never'
         },
         {
@@ -531,7 +507,7 @@ class Room extends Component {
         {
           title: 'Open room info',
           icon: require('image!ic_info_outline_white_24dp'),
-          show: 'never'
+          show: ''
         },
         {
           title: 'Add to favorite',
@@ -542,7 +518,7 @@ class Room extends Component {
           show: 'never'
         },
         {
-          title: 'Change notification settings',
+          title: 'Settings',
           show: 'never'
         },
         {
@@ -553,9 +529,9 @@ class Room extends Component {
     }
 
     return (
-      <ToolbarAndroid
-        navIcon={require('image!ic_menu_white_24dp')}
-        onIconClicked={this.props.onMenuTap}
+      <Toolbar
+        navIcon={iOS ? require('image!ic_arrow_back_white_24dp') : require('image!ic_menu_white_24dp')}
+        onIconClicked={iOS ? this.onNavigateBack : this.props.onMenuTap}
         actions={actions}
         onActionSelected={this.handleToolbarActionSelected}
         overflowIcon={require('image!ic_more_vert_white_24dp')}
@@ -650,13 +626,13 @@ class Room extends Component {
 
     return (
       <View style={s.container}>
-        <DrawerLayoutAndroid
+        <DrawerLayout
           ref={component => this.roomInfoDrawer = component}
           style={{backgroundColor: 'white'}}
           drawerWidth={300}
           onDrawerOpen={() => dispatch(changeRoomInfoDrawerState('open'))}
           onDrawerClose={() => dispatch(changeRoomInfoDrawerState('close'))}
-          drawerPosition={DrawerLayoutAndroid.positions.Right}
+          drawerPosition={DrawerLayout.positions.Right}
           renderNavigationView={this.renderRoomInfo}
           keyboardDismissMode="on-drag">
             {this.renderToolbar()}
@@ -664,7 +640,7 @@ class Room extends Component {
             {isLoadingMessages ? this.renderLoading() : this.renderListView()}
             {getMessagesError || isLoadingMessages || _.has(listView, 'data') &&
               listView.data.length === 0 ? null : this.renderBottom()}
-          </DrawerLayoutAndroid>
+        </DrawerLayout>
       </View>
     )
   }

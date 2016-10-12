@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
   topContainer: {
     paddingLeft: 16,
     paddingRight: 8,
-    paddingTop: 8 + STATUS_BAR_HEIGHT,
+    paddingTop: 8 + STATUS_BAR_HEIGHT || 24,
     alignSelf: 'stretch',
     flexDirection: 'row',
     justifyContent: 'center',

@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import {ToolbarAndroid, ToastAndroid, TextInput, View} from 'react-native';
+import {ToastAndroid, TextInput, View} from 'react-native';
 import {connect} from 'react-redux'
 import _ from 'lodash'
 import ScrollableTabView from 'react-native-scrollable-tab-view';
@@ -7,6 +7,9 @@ import * as Navigation from '../modules/navigation'
 import {setInputValue, searchUsers, searchRooms, clearSearch} from '../modules/search'
 import s from '../styles/screens/Search/SearchScreenStyles'
 import {THEMES} from '../constants'
+
+import Toolbar from '../components/Toolbar'
+
 import SearchUsersTab from '../components/Search/SearchUsersTab'
 import SearchRoomsTab from '../components/Search/SearchRoomsTab'
 
@@ -114,7 +117,7 @@ class SearchScreen extends Component {
       : []
 
     return (
-      <ToolbarAndroid
+      <Toolbar
         navIcon={require('image!ic_arrow_back_white_24dp')}
         onIconClicked={this.navigateBack}
         actions={actions}
@@ -131,7 +134,7 @@ class SearchScreen extends Component {
             onChange={this.handleInputChange}
             placeholder="Type your search query..." />
         </View>
-      </ToolbarAndroid>
+      </Toolbar>
     )
   }
 

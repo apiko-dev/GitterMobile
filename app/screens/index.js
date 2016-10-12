@@ -1,8 +1,11 @@
 import React, {Component, PropTypes} from 'react';
-import {DrawerLayoutAndroid, BackAndroid, Navigator} from 'react-native';
+import {BackAndroid, Navigator, StatusBar} from 'react-native';
 import _ from 'lodash'
-import {init} from '../modules/app'
 import {connect} from 'react-redux'
+
+import DrawerLayout from 'react-native-drawer-layout'
+
+import {init} from '../modules/app'
 import * as Navigation from '../modules/navigation'
 import {selectRoom} from '../modules/rooms'
 import {changeRoomInfoDrawerState} from '../modules/ui'
@@ -21,6 +24,7 @@ import RoomUserAddScreen from './RoomUserAddScreen'
 import Message from './Message'
 import Settings from './Settings'
 import SearchMessages from './SearchMessages'
+import RoomSettings from './RoomSettings'
 
 import {THEMES} from '../constants'
 const {colors} = THEMES.gitterDefault
@@ -189,6 +193,12 @@ class App extends Component {
           route={route} />
       )
 
+    case 'roomSettings':
+      return (
+        <RoomSettings
+          route={route} />
+      )
+
     default:
       return null
     }
@@ -212,13 +222,13 @@ class App extends Component {
         : 'locked-closed'
 
     return (
-      <DrawerLayoutAndroid
+      <DrawerLayout
         ref="drawer"
         drawerLockMode={drawerLockMode}
         statusBarBackgroundColor={colors.darkRed}
         style={{backgroundColor: 'white'}}
         drawerWidth={300}
-        drawerPosition={DrawerLayoutAndroid.positions.Left}
+        drawerPosition={DrawerLayout.positions.Left}
         renderNavigationView={this.renderDrawer.bind(this)}
         onDrawerOpen={() => this.setState({isDrawerOpen: true})}
         onDrawerClose={() => this.setState({isDrawerOpen: false})}
@@ -229,7 +239,7 @@ class App extends Component {
           initialRoute={navigation.init}
           configureScene={this.configureScene}
           renderScene={this.renderScene}/>
-      </DrawerLayoutAndroid>
+      </DrawerLayout>
     )
   }
 }
