@@ -7,7 +7,3 @@ target 'gittermobile' do
     pod 'MZFayeClient', '1.0.3'
 end
 
-target 'gittermobileTests' do
-
-end
-

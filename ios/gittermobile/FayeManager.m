@@ -28,8 +28,12 @@ RCT_EXPORT_METHOD(setAccessToken:(NSString *)accessToken)
 
 RCT_EXPORT_METHOD(create)
 {
-  self.fayeClient = [[MZFayeClient alloc] initWithURL:nil];
+  NSURL *url = [NSURL URLWithString:@"https://ws.gitter.im/faye"];
+  self.fayeClient = [[MZFayeClient alloc] initWithURL:url];
   self.fayeClient.delegate = self;
+  if (self.accessToken) {
+    [self.fayeClient setExtension:@{@"token": self.accessToken} forChannel:@"/meta/handshake"];
+  }
 }
 
 RCT_REMAP_METHOD(connect,
@@ -58,8 +62,7 @@ RCT_EXPORT_METHOD(subscribe:(NSString *)channelName)
   [self.fayeClient subscribeToChannel:channelName success:^{
     [weakSelf.bridge.eventDispatcher sendAppEventWithName:@"FayeGitter:Subscribed" body:@{@"channel": channelName}];
   } failure:^(NSError *error) {
-    [weakSelf.bridge.eventDispatcher sendAppEventWithName:@"FayeGitter:SubscribtionFailed" body:@{@"channel": channelName,
-                                                                                                  @"Exception": error}];
+    [weakSelf.bridge.eventDispatcher sendAppEventWithName:@"FayeGitter:SubscribtionFailed" body:@{@"channel": channelName, @"Exception": error.localizedDescription}];
   } receivedMessage:^(NSDictionary *message) {
     [weakSelf.bridge.eventDispatcher sendAppEventWithName:@"FayeGitter:Message" body:@{@"channel": channelName,
                                                                                        @"json": message}];
