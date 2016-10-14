@@ -1,6 +1,6 @@
 import React, {Component, PropTypes} from 'react';
-import {InteractionManager, ToastAndroid, Clipboard, Alert, ListView, View, Platform, Dimensions, Modal} from 'react-native';
-import Image from 'react-native-transformable-image'
+import {InteractionManager, ToastAndroid, Clipboard, Alert, ListView, View, Platform, Dimensions} from 'react-native';
+
 import Toolbar from '../components/Toolbar'
 import {connect} from 'react-redux'
 import DrawerLayout from 'react-native-drawer-layout'
@@ -50,6 +50,7 @@ import SendMessageField from '../components/Room/SendMessageField'
 import JoinRoomField from '../components/Room/JoinRoomField'
 import LoadingMoreSnack from '../components/LoadingMoreSnack'
 import FailedToLoad from '../components/FailedToLoad'
+import ImageModal from '../components/Room/ImageModal'
 
 const COMMAND_REGEX = /\/\S+/
 const iOS = Platform.OS === 'ios'
@@ -508,19 +509,15 @@ class Room extends Component {
 
   renderModal() {
     const {width, height} = Dimensions.get('window')
+    const {showImageModal, imageModalUrl} = this.state
     return (
-      <Modal
-        animationType="none"
-        transparent
-        visible={this.state.showImageModal}>
-        <View
-          style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-          <Image
-            style={{width, height, backgroundColor: 'black'}}
-            source={{uri: this.state.imageModalUrl}} />
-        </View>
-      </Modal>
-    );
+      <ImageModal
+        onRequestClose={() => this.setState({showImageModal: false, imageModalUrl: ''})}
+        visible={showImageModal}
+        imageModalUrl={imageModalUrl}
+        width={width}
+        height={height} />
+    )
   }
 
   renderToolbar() {
