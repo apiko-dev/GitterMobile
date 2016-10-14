@@ -1,0 +1,636 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0269B3CD7CEAC1935D2EEAA72F3EF529 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E78BD94FD1FD62F3DD5B48636E5A2AC /* Foundation.framework */; };
+		09E5B61582B44AC94AA43E445E53FB73 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 490B3B8FB691529410A1860C7062E96E /* CFNetwork.framework */; };
+		1E1B9951FC0484DB7042982D15467675 /* MZFayeMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = BCF16AB7C320B7E130127725E011E54C /* MZFayeMessage.m */; };
+		2A9A30AE3126FB539F21115272EE292F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E78BD94FD1FD62F3DD5B48636E5A2AC /* Foundation.framework */; };
+		3385B0BB48F63D326AC771FC3EC94C59 /* SRWebSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F629DCBD4E3FA52D3BA62AB1243E4F3 /* SRWebSocket.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		47EB106677FBFF389494888B0A3A9DA7 /* SocketRocket-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 129481DA5063731A4110FD4195C0C8B6 /* SocketRocket-dummy.m */; };
+		7BF1B43FEE24205E584AB9E16EF4E013 /* SRWebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 4442E60D648181A798C81B9CE24F35E6 /* SRWebSocket.m */; };
+		7D68EC9E004F493800C6814CB474F15B /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA4D3734675281FA4E42F3083F170D5E /* QuartzCore.framework */; };
+		8A6DC09948B8F34435815EBC4AEB2FCD /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9ADB3750B761EFA73476BC891C2A747 /* Security.framework */; };
+		9B2998D89523087DE316A8621401E3A5 /* SocketRocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 59E5EFE506751574EF9A92FAAC674895 /* SocketRocket.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A8D4B42893C39517335AB2BA051536AA /* MZFayeClient-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 9603013C1B4776764533E961002F628C /* MZFayeClient-dummy.m */; };
+		BFB7B49FC456B692B5F0EA8A9EFD4BA3 /* MZFayeClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 26F332ED055885619E4DFAD0F97F9704 /* MZFayeClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C86654A765A62920530F035D0B6C9F56 /* MZFayeMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 55CE4E318896C03AC7D8DB794273E3E0 /* MZFayeMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CD93C0F0CDFA7789EBB7ED8C7CDA4DBB /* MZFayeClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 5207DB6FFB499D6E97FF911A67BD49D8 /* MZFayeClient.m */; };
+		E8E0807CBE52146A149563513DA21427 /* Pods-gittermobile-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 141A187FF630C8BC0174DC54A065AFC5 /* Pods-gittermobile-dummy.m */; };
+		F46830B140015D3FE85D7C7706B57F50 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E78BD94FD1FD62F3DD5B48636E5A2AC /* Foundation.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		017868E2E5E35CAA8AAB58357628F6FD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2A633239C9814524EE6FACCA67D477F2;
+			remoteInfo = SocketRocket;
+		};
+		1F962B559F562434F09AE085121B984F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2A633239C9814524EE6FACCA67D477F2;
+			remoteInfo = SocketRocket;
+		};
+		4FAB6069044649E5AFEEB2212D4D6DE2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 30D6A056F89877CD3B3110FA218ED1B5;
+			remoteInfo = MZFayeClient;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		129481DA5063731A4110FD4195C0C8B6 /* SocketRocket-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "SocketRocket-dummy.m"; sourceTree = "<group>"; };
+		141A187FF630C8BC0174DC54A065AFC5 /* Pods-gittermobile-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-gittermobile-dummy.m"; sourceTree = "<group>"; };
+		1812A06B463F0C87CE36D361157D3D4B /* MZFayeClient-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "MZFayeClient-prefix.pch"; sourceTree = "<group>"; };
+		26F332ED055885619E4DFAD0F97F9704 /* MZFayeClient.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MZFayeClient.h; path = MZFayeClient/MZFayeClient.h; sourceTree = "<group>"; };
+		32A6EA5BF6A19E8B547F43B84CA06588 /* Pods-gittermobile-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-gittermobile-resources.sh"; sourceTree = "<group>"; };
+		4442E60D648181A798C81B9CE24F35E6 /* SRWebSocket.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SRWebSocket.m; path = SocketRocket/SRWebSocket.m; sourceTree = "<group>"; };
+		490B3B8FB691529410A1860C7062E96E /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/CFNetwork.framework; sourceTree = DEVELOPER_DIR; };
+		5207DB6FFB499D6E97FF911A67BD49D8 /* MZFayeClient.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MZFayeClient.m; path = MZFayeClient/MZFayeClient.m; sourceTree = "<group>"; };
+		54CB73F37B4B2FE749A060FC580C0CA8 /* libSocketRocket.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSocketRocket.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		55CE4E318896C03AC7D8DB794273E3E0 /* MZFayeMessage.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = MZFayeMessage.h; path = MZFayeClient/MZFayeMessage.h; sourceTree = "<group>"; };
+		59E5EFE506751574EF9A92FAAC674895 /* SocketRocket.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SocketRocket.h; path = SocketRocket/SocketRocket.h; sourceTree = "<group>"; };
+		6E78BD94FD1FD62F3DD5B48636E5A2AC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		7291D7C5293437E1147958ABC3038AF0 /* libMZFayeClient.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMZFayeClient.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		7B9847E496CE5B12092CD95E912C9312 /* MZFayeClient.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = MZFayeClient.xcconfig; sourceTree = "<group>"; };
+		7F629DCBD4E3FA52D3BA62AB1243E4F3 /* SRWebSocket.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SRWebSocket.h; path = SocketRocket/SRWebSocket.h; sourceTree = "<group>"; };
+		875FB1C9B4B09041BC5EC1C8A835B3AB /* Pods-gittermobile-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-gittermobile-acknowledgements.markdown"; sourceTree = "<group>"; };
+		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9603013C1B4776764533E961002F628C /* MZFayeClient-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "MZFayeClient-dummy.m"; sourceTree = "<group>"; };
+		9ABCA2B536B627F2D75558E8B3F87778 /* SocketRocket-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SocketRocket-prefix.pch"; sourceTree = "<group>"; };
+		9DC49144CC6667F9D729F4E09BC6B3BF /* Pods-gittermobile-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-gittermobile-acknowledgements.plist"; sourceTree = "<group>"; };
+		BCF16AB7C320B7E130127725E011E54C /* MZFayeMessage.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MZFayeMessage.m; path = MZFayeClient/MZFayeMessage.m; sourceTree = "<group>"; };
+		C2AD4E32A52E64146A70AB8F9090CF38 /* Pods-gittermobile.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-gittermobile.debug.xcconfig"; sourceTree = "<group>"; };
+		C479D20462F9319C71A5A55C3686D374 /* SocketRocket.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SocketRocket.xcconfig; sourceTree = "<group>"; };
+		DA4D3734675281FA4E42F3083F170D5E /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = DEVELOPER_DIR; };
+		DEB7618870F8F5D75AEADFDCDFCBB404 /* libPods-gittermobile.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-gittermobile.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E850169C968081E24D20AB4CA012C378 /* Pods-gittermobile.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-gittermobile.release.xcconfig"; sourceTree = "<group>"; };
+		EA485177D32F3AB3DBBF9F1505DDDFC0 /* Pods-gittermobile-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-gittermobile-frameworks.sh"; sourceTree = "<group>"; };
+		F9ADB3750B761EFA73476BC891C2A747 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/Security.framework; sourceTree = DEVELOPER_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		0E36E581CEF4738862BCE48C97076EA8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0269B3CD7CEAC1935D2EEAA72F3EF529 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		43F54B07622533378E8BFE8BD885AF07 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2A9A30AE3126FB539F21115272EE292F /* Foundation.framework in Frameworks */,
+				7D68EC9E004F493800C6814CB474F15B /* QuartzCore.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		76109103276E30126EE05A9A58E2584C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				09E5B61582B44AC94AA43E445E53FB73 /* CFNetwork.framework in Frameworks */,
+				F46830B140015D3FE85D7C7706B57F50 /* Foundation.framework in Frameworks */,
+				8A6DC09948B8F34435815EBC4AEB2FCD /* Security.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		14B8B9B15ECBE87983FF987239AB2D7B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C377378CC470F26313B11E5AF47662B5 /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		1C89C14180E9BD8419F9040A86D20B10 /* MZFayeClient */ = {
+			isa = PBXGroup;
+			children = (
+				26F332ED055885619E4DFAD0F97F9704 /* MZFayeClient.h */,
+				5207DB6FFB499D6E97FF911A67BD49D8 /* MZFayeClient.m */,
+				55CE4E318896C03AC7D8DB794273E3E0 /* MZFayeMessage.h */,
+				BCF16AB7C320B7E130127725E011E54C /* MZFayeMessage.m */,
+				7629D194E16EDA888DB075A15BC99497 /* Support Files */,
+			);
+			path = MZFayeClient;
+			sourceTree = "<group>";
+		};
+		24AE5DF3BB2B3855F7CBA32DDB376BA3 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				1C89C14180E9BD8419F9040A86D20B10 /* MZFayeClient */,
+				92D4230F7C06AD12323FF658C4DEB1D7 /* SocketRocket */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		3CE7C12C0E44FD3A915CDB826E64C756 /* Pods-gittermobile */ = {
+			isa = PBXGroup;
+			children = (
+				875FB1C9B4B09041BC5EC1C8A835B3AB /* Pods-gittermobile-acknowledgements.markdown */,
+				9DC49144CC6667F9D729F4E09BC6B3BF /* Pods-gittermobile-acknowledgements.plist */,
+				141A187FF630C8BC0174DC54A065AFC5 /* Pods-gittermobile-dummy.m */,
+				EA485177D32F3AB3DBBF9F1505DDDFC0 /* Pods-gittermobile-frameworks.sh */,
+				32A6EA5BF6A19E8B547F43B84CA06588 /* Pods-gittermobile-resources.sh */,
+				C2AD4E32A52E64146A70AB8F9090CF38 /* Pods-gittermobile.debug.xcconfig */,
+				E850169C968081E24D20AB4CA012C378 /* Pods-gittermobile.release.xcconfig */,
+			);
+			name = "Pods-gittermobile";
+			path = "Target Support Files/Pods-gittermobile";
+			sourceTree = "<group>";
+		};
+		503B37D345E37D1E6F0B023E97432367 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				C479D20462F9319C71A5A55C3686D374 /* SocketRocket.xcconfig */,
+				129481DA5063731A4110FD4195C0C8B6 /* SocketRocket-dummy.m */,
+				9ABCA2B536B627F2D75558E8B3F87778 /* SocketRocket-prefix.pch */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/SocketRocket";
+			sourceTree = "<group>";
+		};
+		69A21FCC04645541106E0CB650C8667E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				7291D7C5293437E1147958ABC3038AF0 /* libMZFayeClient.a */,
+				DEB7618870F8F5D75AEADFDCDFCBB404 /* libPods-gittermobile.a */,
+				54CB73F37B4B2FE749A060FC580C0CA8 /* libSocketRocket.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		732A8F766733AED6FDA2BB51E76AAF86 /* Targets Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				3CE7C12C0E44FD3A915CDB826E64C756 /* Pods-gittermobile */,
+			);
+			name = "Targets Support Files";
+			sourceTree = "<group>";
+		};
+		7629D194E16EDA888DB075A15BC99497 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				7B9847E496CE5B12092CD95E912C9312 /* MZFayeClient.xcconfig */,
+				9603013C1B4776764533E961002F628C /* MZFayeClient-dummy.m */,
+				1812A06B463F0C87CE36D361157D3D4B /* MZFayeClient-prefix.pch */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/MZFayeClient";
+			sourceTree = "<group>";
+		};
+		7DB346D0F39D3F0E887471402A8071AB = {
+			isa = PBXGroup;
+			children = (
+				93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */,
+				14B8B9B15ECBE87983FF987239AB2D7B /* Frameworks */,
+				24AE5DF3BB2B3855F7CBA32DDB376BA3 /* Pods */,
+				69A21FCC04645541106E0CB650C8667E /* Products */,
+				732A8F766733AED6FDA2BB51E76AAF86 /* Targets Support Files */,
+			);
+			sourceTree = "<group>";
+		};
+		92D4230F7C06AD12323FF658C4DEB1D7 /* SocketRocket */ = {
+			isa = PBXGroup;
+			children = (
+				59E5EFE506751574EF9A92FAAC674895 /* SocketRocket.h */,
+				7F629DCBD4E3FA52D3BA62AB1243E4F3 /* SRWebSocket.h */,
+				4442E60D648181A798C81B9CE24F35E6 /* SRWebSocket.m */,
+				503B37D345E37D1E6F0B023E97432367 /* Support Files */,
+			);
+			path = SocketRocket;
+			sourceTree = "<group>";
+		};
+		C377378CC470F26313B11E5AF47662B5 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				490B3B8FB691529410A1860C7062E96E /* CFNetwork.framework */,
+				6E78BD94FD1FD62F3DD5B48636E5A2AC /* Foundation.framework */,
+				DA4D3734675281FA4E42F3083F170D5E /* QuartzCore.framework */,
+				F9ADB3750B761EFA73476BC891C2A747 /* Security.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		59853A833D64EB3DED303101D4266C26 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9B2998D89523087DE316A8621401E3A5 /* SocketRocket.h in Headers */,
+				3385B0BB48F63D326AC771FC3EC94C59 /* SRWebSocket.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AD0A4B0E8CA11C89745BDF55CACE2FB9 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BFB7B49FC456B692B5F0EA8A9EFD4BA3 /* MZFayeClient.h in Headers */,
+				C86654A765A62920530F035D0B6C9F56 /* MZFayeMessage.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		2A633239C9814524EE6FACCA67D477F2 /* SocketRocket */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8A61569DA96A36BD959E61D7246038CC /* Build configuration list for PBXNativeTarget "SocketRocket" */;
+			buildPhases = (
+				424853B36B8FC61F82E9476AA1556A01 /* Sources */,
+				76109103276E30126EE05A9A58E2584C /* Frameworks */,
+				59853A833D64EB3DED303101D4266C26 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SocketRocket;
+			productName = SocketRocket;
+			productReference = 54CB73F37B4B2FE749A060FC580C0CA8 /* libSocketRocket.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		30D6A056F89877CD3B3110FA218ED1B5 /* MZFayeClient */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FBFFDD4F63B245DF005BB1AF6FEA518C /* Build configuration list for PBXNativeTarget "MZFayeClient" */;
+			buildPhases = (
+				9D03655EDB23BF0DDFD39909D46A039E /* Sources */,
+				43F54B07622533378E8BFE8BD885AF07 /* Frameworks */,
+				AD0A4B0E8CA11C89745BDF55CACE2FB9 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B42168FC43C5C547152FBE1AEB21599E /* PBXTargetDependency */,
+			);
+			name = MZFayeClient;
+			productName = MZFayeClient;
+			productReference = 7291D7C5293437E1147958ABC3038AF0 /* libMZFayeClient.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		B10F7E51241B0AD17EEDDD76184ECC85 /* Pods-gittermobile */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3C820887D03B69CF785A385B518A9149 /* Build configuration list for PBXNativeTarget "Pods-gittermobile" */;
+			buildPhases = (
+				CD2BB99B1E0AA4DC8B6CC7F21A233FF7 /* Sources */,
+				0E36E581CEF4738862BCE48C97076EA8 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				05B402B5D674561A877D10D4D8499471 /* PBXTargetDependency */,
+				68DB4E8E126C553C77731AFE7F7BAA07 /* PBXTargetDependency */,
+			);
+			name = "Pods-gittermobile";
+			productName = "Pods-gittermobile";
+			productReference = DEB7618870F8F5D75AEADFDCDFCBB404 /* libPods-gittermobile.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D41D8CD98F00B204E9800998ECF8427E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0730;
+				LastUpgradeCheck = 0700;
+			};
+			buildConfigurationList = 2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 7DB346D0F39D3F0E887471402A8071AB;
+			productRefGroup = 69A21FCC04645541106E0CB650C8667E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				30D6A056F89877CD3B3110FA218ED1B5 /* MZFayeClient */,
+				B10F7E51241B0AD17EEDDD76184ECC85 /* Pods-gittermobile */,
+				2A633239C9814524EE6FACCA67D477F2 /* SocketRocket */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		424853B36B8FC61F82E9476AA1556A01 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				47EB106677FBFF389494888B0A3A9DA7 /* SocketRocket-dummy.m in Sources */,
+				7BF1B43FEE24205E584AB9E16EF4E013 /* SRWebSocket.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9D03655EDB23BF0DDFD39909D46A039E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A8D4B42893C39517335AB2BA051536AA /* MZFayeClient-dummy.m in Sources */,
+				CD93C0F0CDFA7789EBB7ED8C7CDA4DBB /* MZFayeClient.m in Sources */,
+				1E1B9951FC0484DB7042982D15467675 /* MZFayeMessage.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CD2BB99B1E0AA4DC8B6CC7F21A233FF7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E8E0807CBE52146A149563513DA21427 /* Pods-gittermobile-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		05B402B5D674561A877D10D4D8499471 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = MZFayeClient;
+			target = 30D6A056F89877CD3B3110FA218ED1B5 /* MZFayeClient */;
+			targetProxy = 4FAB6069044649E5AFEEB2212D4D6DE2 /* PBXContainerItemProxy */;
+		};
+		68DB4E8E126C553C77731AFE7F7BAA07 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = SocketRocket;
+			target = 2A633239C9814524EE6FACCA67D477F2 /* SocketRocket */;
+			targetProxy = 017868E2E5E35CAA8AAB58357628F6FD /* PBXContainerItemProxy */;
+		};
+		B42168FC43C5C547152FBE1AEB21599E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = SocketRocket;
+			target = 2A633239C9814524EE6FACCA67D477F2 /* SocketRocket */;
+			targetProxy = 1F962B559F562434F09AE085121B984F /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		2739BB230E89216BB3A268A7B32D42E2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7B9847E496CE5B12092CD95E912C9312 /* MZFayeClient.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREFIX_HEADER = "Target Support Files/MZFayeClient/MZFayeClient-prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		31F17C308DC5D547E106CA6524E05DA3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C2AD4E32A52E64146A70AB8F9090CF38 /* Pods-gittermobile.debug.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MACH_O_TYPE = staticlib;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		3F6F74FB715EE12A2720B1BA15D25258 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7B9847E496CE5B12092CD95E912C9312 /* MZFayeClient.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREFIX_HEADER = "Target Support Files/MZFayeClient/MZFayeClient-prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		40D86425E97DD1CCEABC88FB052A6912 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E850169C968081E24D20AB4CA012C378 /* Pods-gittermobile.release.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MACH_O_TYPE = staticlib;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		47BEF9D903506B003EA5C2B249729489 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_DEBUG=1",
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				ONLY_ACTIVE_ARCH = YES;
+				STRIP_INSTALLED_PRODUCT = NO;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Debug;
+		};
+		714178E9625A291BECD77242783C7CDE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C479D20462F9319C71A5A55C3686D374 /* SocketRocket.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREFIX_HEADER = "Target Support Files/SocketRocket/SocketRocket-prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		AAF678CED40D3499169D10F63CA0719E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_RELEASE=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				STRIP_INSTALLED_PRODUCT = NO;
+				SYMROOT = "${SRCROOT}/../build";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		EFCD5AD9CF37F1A0620B3645A686955D /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C479D20462F9319C71A5A55C3686D374 /* SocketRocket.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREFIX_HEADER = "Target Support Files/SocketRocket/SocketRocket-prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PRIVATE_HEADERS_FOLDER_PATH = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PUBLIC_HEADERS_FOLDER_PATH = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				47BEF9D903506B003EA5C2B249729489 /* Debug */,
+				AAF678CED40D3499169D10F63CA0719E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3C820887D03B69CF785A385B518A9149 /* Build configuration list for PBXNativeTarget "Pods-gittermobile" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				31F17C308DC5D547E106CA6524E05DA3 /* Debug */,
+				40D86425E97DD1CCEABC88FB052A6912 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8A61569DA96A36BD959E61D7246038CC /* Build configuration list for PBXNativeTarget "SocketRocket" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				714178E9625A291BECD77242783C7CDE /* Debug */,
+				EFCD5AD9CF37F1A0620B3645A686955D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FBFFDD4F63B245DF005BB1AF6FEA518C /* Build configuration list for PBXNativeTarget "MZFayeClient" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2739BB230E89216BB3A268A7B32D42E2 /* Debug */,
+				3F6F74FB715EE12A2720B1BA15D25258 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
+}

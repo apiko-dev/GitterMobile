@@ -1,0 +1,8 @@
+GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
+HEADER_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/MZFayeClient" "${PODS_ROOT}/Headers/Public/SocketRocket"
+LIBRARY_SEARCH_PATHS = $(inherited) "$PODS_CONFIGURATION_BUILD_DIR/MZFayeClient" "$PODS_CONFIGURATION_BUILD_DIR/SocketRocket"
+OTHER_CFLAGS = $(inherited) -isystem "${PODS_ROOT}/Headers/Public" -isystem "${PODS_ROOT}/Headers/Public/MZFayeClient" -isystem "${PODS_ROOT}/Headers/Public/SocketRocket"
+OTHER_LDFLAGS = $(inherited) -ObjC -l"MZFayeClient" -l"SocketRocket" -l"icucore" -framework "CFNetwork" -framework "QuartzCore" -framework "Security"
+PODS_BUILD_DIR = $BUILD_DIR
+PODS_CONFIGURATION_BUILD_DIR = $PODS_BUILD_DIR/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)
+PODS_ROOT = ${SRCROOT}/Pods
