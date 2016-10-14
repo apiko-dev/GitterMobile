@@ -6,6 +6,7 @@ import DialogAndroid from 'react-native-dialogs'
 import {logOut} from '../modules/auth'
 import * as Navigation from '../modules/navigation'
 import {selectRoom, leaveRoom, markAllAsRead, refreshRooms} from '../modules/rooms'
+import {toggleDrawerSectionState} from '../modules/ui'
 
 import s from '../styles/screens/Drawer/DrawerStyles'
 import DrawerUserInfo from '../components/Drawer/DrawerUserInfo'
@@ -26,6 +27,7 @@ class Drawer extends Component {
     this.handleDialogPress = this.handleDialogPress.bind(this)
     this.handleSearchPress = this.handleSearchPress.bind(this)
     this.handleRefresh = this.handleRefresh.bind(this)
+    this.handleToggleCollapsed = this.handleToggleCollapsed.bind(this)
   }
 
   onRoomPress(id) {
@@ -75,6 +77,11 @@ class Drawer extends Component {
     )
   }
 
+  handleToggleCollapsed(sectionName, oldState) {
+    const {dispatch} = this.props
+    dispatch(toggleDrawerSectionState(sectionName, oldState))
+  }
+
   handleSettingsPress() {
     const {navigateTo} = this.props
     navigateTo({name: 'settings'})
@@ -105,7 +112,7 @@ class Drawer extends Component {
   }
 
   render() {
-    const {user, ids, isLoadingRooms} = this.props
+    const {user, ids, isLoadingRooms, sectionsState} = this.props
 
     return (
       <View style={s.container}>
@@ -117,6 +124,8 @@ class Drawer extends Component {
           ? <Loading color={colors.brand} />
           : <ChannelList
               {...this.props}
+              onToggleCollapsed={this.handleToggleCollapsed}
+              sectionsState={sectionsState}
               isLoadingRooms={isLoadingRooms}
               onRefresh={this.handleRefresh}
               onLongRoomPress={this.onLongRoomPress.bind(this)}
@@ -135,7 +144,8 @@ Drawer.propTypes = {
   user: PropTypes.object,
   ids: PropTypes.array,
   rooms: PropTypes.object,
-  activeRoom: PropTypes.string
+  activeRoom: PropTypes.string,
+  sectionsState: PropTypes.object
 }
 
 Drawer.defaultProps = {
@@ -143,14 +153,15 @@ Drawer.defaultProps = {
   isLoadingRooms: true
 }
 
-function mapStateToProps(state) {
+function mapStateToProps({viewer, rooms, ui}) {
   return {
-    isLoadingUser: state.viewer.isLoading,
-    isLoadingRooms: state.rooms.isLoading,
-    user: state.viewer.user,
-    ids: state.rooms.ids,
-    rooms: state.rooms.rooms,
-    activeRoom: state.rooms.activeRoom
+    isLoadingUser: viewer.isLoading,
+    isLoadingRooms: rooms.isLoading,
+    user: viewer.user,
+    ids: rooms.ids,
+    rooms: rooms.rooms,
+    activeRoom: rooms.activeRoom,
+    sectionsState: ui.sectionsState
   }
 }
 
