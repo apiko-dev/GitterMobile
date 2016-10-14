@@ -1,0 +1,15 @@
+PODS:
+  - MZFayeClient (1.0.3):
+    - SocketRocket
+  - SocketRocket (0.5.1)
+
+DEPENDENCIES:
+  - MZFayeClient (= 1.0.3)
+
+SPEC CHECKSUMS:
+  MZFayeClient: ac3defb0026d26f025444eeb021117be9cab4642
+  SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
+
+PODFILE CHECKSUM: 17a3661a6462fcac5ecd841199fcfdbf24f13bcc
+
+COCOAPODS: 1.0.1
