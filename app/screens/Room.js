@@ -1,5 +1,6 @@
 import React, {Component, PropTypes} from 'react';
-import {InteractionManager, ToastAndroid, Clipboard, Alert, ListView, View, Platform} from 'react-native';
+import {InteractionManager, ToastAndroid, Clipboard, Alert, ListView, View, Platform, Dimensions, Modal} from 'react-native';
+import Image from 'react-native-transformable-image'
 import Toolbar from '../components/Toolbar'
 import {connect} from 'react-redux'
 import DrawerLayout from 'react-native-drawer-layout'
@@ -84,11 +85,14 @@ class Room extends Component {
     this.onNavigateBack = this.onNavigateBack.bind(this)
     this.handleSharingRoom = this.handleSharingRoom.bind(this)
     this.handleSharingMessage = this.handleSharingMessage.bind(this)
+    this.handleShowImageModal = this.handleShowImageModal.bind(this)
 
     this.state = {
       textInputValue: '',
       editing: false,
-      editMessage: {}
+      editMessage: {},
+      showImageModal: false,
+      imageModalUrl: ''
     }
   }
 
@@ -466,6 +470,13 @@ class Room extends Component {
     })
   }
 
+  handleShowImageModal(source) {
+    this.setState({
+      showImageModal: true,
+      imageModalUrl: source
+    })
+  }
+
   leaveRoom() {
     const {dispatch, route: {roomId}} = this.props
     Alert.alert(
@@ -492,6 +503,24 @@ class Room extends Component {
       }})
       dispatch(prepareListView(roomId, ds.cloneWithRows([])))
     }
+  }
+
+
+  renderModal() {
+    const {width, height} = Dimensions.get('window')
+    return (
+      <Modal
+        animationType="none"
+        transparent
+        visible={this.state.showImageModal}>
+        <View
+          style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <Image
+            style={{width, height, backgroundColor: 'black'}}
+            source={{uri: this.state.imageModalUrl}} />
+        </View>
+      </Modal>
+    );
   }
 
   renderToolbar() {
@@ -619,6 +648,7 @@ class Room extends Component {
     }
     return (
       <MessagesList
+        onShowImageModal={this.handleShowImageModal}
         onChangeVisibleRows={this.handleChangeVisibleRows}
         listViewData={listViewData[roomId]}
         onPress={this.onMessagePress.bind(this)}
@@ -664,6 +694,7 @@ class Room extends Component {
 
     return (
       <View style={s.container}>
+        {this.renderModal()}
         <DrawerLayout
           ref={component => this.roomInfoDrawer = component}
           style={{backgroundColor: 'white'}}

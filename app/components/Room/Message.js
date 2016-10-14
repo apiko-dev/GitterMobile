@@ -17,6 +17,7 @@ class Message extends Component {
     this.onMessagePress = this.onMessagePress.bind(this)
     this.renderMessageText = this.renderMessageText.bind(this)
     this.renderDate = this.renderDate.bind(this)
+    this.handleImagePress = this.handleImagePress.bind(this)
   }
 
   shouldComponentUpdate(nextProps) {
@@ -40,6 +41,12 @@ class Message extends Component {
 
   handleUrlPress(url) {
     Linking.openURL(url)
+  }
+
+  handleImagePress(link) {
+    const IMAGE_REGEX = /!\[(.*?)]\s?\([ \t]*()<?(\S+?)>?(?: =([*\d]+[A-Za-z%]{0,4})x([*\d]+[A-Za-z%]{0,4}))?[ \t]*(?:(['"])(.*?)\6[ \t]*)?\)/g
+    const matches = IMAGE_REGEX.exec(link)
+    this.props.showImageModal(matches[3])
   }
 
   renderDate() {
@@ -76,7 +83,8 @@ class Message extends Component {
       <ParsedText
         text={text}
         username={username}
-        handleUrlPress={this.handleUrlPress} />
+        handleUrlPress={this.handleUrlPress}
+        handleImagePress={this.handleImagePress} />
     )
   }
 
@@ -197,7 +205,8 @@ Message.propTypes = {
   onUserAvatarPress: PropTypes.func,
   username: PropTypes.string,
   isCollapsed: PropTypes.bool,
-  status: PropTypes.bool
+  status: PropTypes.bool,
+  showImageModal: PropTypes.func
 }
 
 function mapStateToProps(state) {
