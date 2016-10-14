@@ -507,7 +507,7 @@ class Room extends Component {
         {
           title: 'Open room info',
           icon: require('image!ic_info_outline_white_24dp'),
-          show: ''
+          show: 'never'
         },
         {
           title: 'Add to favorite',
