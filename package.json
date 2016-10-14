@@ -31,6 +31,7 @@
     "react-native-invertible-scroll-view": "^1.0.0",
     "react-native-parsed-text": "0.0.16",
     "react-native-scrollable-tab-view": "^0.6.0",
+    "react-native-share": "^1.0.16",
     "react-native-vector-icons": "^2.1.0",
     "react-redux": "^4.3.0",
     "redux": "^3.2.1",
