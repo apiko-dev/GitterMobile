@@ -21,6 +21,17 @@
 
 RCT_EXPORT_MODULE()
 
+- (NSArray<NSString *> *)supportedEvents {
+  return @[@"FayeGitter:Connected",
+           @"FayeGitter:onDisconnected",
+           @"FayeGitter:onFailedToCreate",
+           @"FayeGitter:Message",
+           @"FayeGitter:log",
+           @"FayeGitter:SubscribtionFailed",
+           @"FayeGitter:Subscribed",
+           @"FayeGitter:Unsubscribed"];
+}
+
 RCT_EXPORT_METHOD(setAccessToken:(NSString *)accessToken)
 {
   _accessToken = [accessToken copy];
@@ -37,10 +48,12 @@ RCT_EXPORT_METHOD(create)
 }
 
 RCT_REMAP_METHOD(connect,
-                 resolver:(RCTPromiseResolveBlock)resolve
+                 connect:(RCTPromiseResolveBlock)resolve
                  rejecter:(RCTPromiseRejectBlock)reject)
 {
+  __weak typeof(self) weakSelf = self;
   [self.fayeClient connect:^{
+    [weakSelf sendEventWithName:@"FayeGitter:Connected" body:@"Connected"];
     resolve(@(YES));
   } failure:^(NSError *error) {
     reject(@"FailedToConnect", @"Failed to connect", error);
@@ -60,25 +73,31 @@ RCT_EXPORT_METHOD(subscribe:(NSString *)channelName)
 {
   __weak typeof(self) weakSelf = self;
   [self.fayeClient subscribeToChannel:channelName success:^{
-    [weakSelf.bridge.eventDispatcher sendAppEventWithName:@"FayeGitter:Subscribed" body:@{@"channel": channelName}];
+    [weakSelf sendEventWithName:@"FayeGitter:Subscribed" body:@{@"channel": channelName}];
   } failure:^(NSError *error) {
-    [weakSelf.bridge.eventDispatcher sendAppEventWithName:@"FayeGitter:SubscribtionFailed" body:@{@"channel": channelName, @"Exception": error.localizedDescription}];
+    [weakSelf sendEventWithName:@"FayeGitter:SubscribtionFailed" body:@{@"channel": channelName, @"Exception": error.localizedDescription}];
   } receivedMessage:^(NSDictionary *message) {
-    [weakSelf.bridge.eventDispatcher sendAppEventWithName:@"FayeGitter:Message" body:@{@"channel": channelName,
-                                                                                       @"json": message}];
+    [weakSelf sendEventWithName:@"FayeGitter:Message" body:@{@"channel": channelName, @"json": message}];
   }];
+}
+
+RCT_REMAP_METHOD(checkConnectionStatus,
+                 checkConnectionStatus:(RCTPromiseResolveBlock)resolve
+                 rejecter:(RCTPromiseRejectBlock)reject)
+{
+  resolve(@(self.fayeClient.isConnected));
 }
 
 #pragma mark - MZFayeClientDelegate
 
 - (void)fayeClient:(MZFayeClient *)client didDisconnectWithError:(NSError *)error
 {
-  [self.bridge.eventDispatcher sendAppEventWithName:@"FayeGitter:onDisconnected" body:@"Disconnected"];
+  [self sendEventWithName:@"FayeGitter:onDisconnected" body:@"Disconnected"];
 }
 
 - (void)fayeClient:(MZFayeClient *)client didUnsubscribeFromChannel:(NSString *)channel
 {
-  [self.bridge.eventDispatcher sendAppEventWithName:@"FayeGitter:Unsubscribed" body:@{@"channel": channel}];
+  [self sendEventWithName:@"FayeGitter:Unsubscribed" body:@{@"channel": channel}];
 }
 
 @end

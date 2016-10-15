@@ -8,7 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import "RCTBridgeModule.h"
+#import "RCTEventEmitter.h"
 
-@interface FayeManager : NSObject<RCTBridgeModule>
+@interface FayeManager : RCTEventEmitter<RCTBridgeModule>
 
 @end
