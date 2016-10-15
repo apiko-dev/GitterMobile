@@ -80,6 +80,11 @@ RCT_EXPORT_METHOD(subscribe:(NSString *)channelName)
   }];
 }
 
+RCT_EXPORT_METHOD(unsubscribe:(NSString *)channelName)
+{
+  [self.fayeClient unsubscribeFromChannel:channelName success:nil failure:nil];
+}
+
 RCT_REMAP_METHOD(checkConnectionStatus,
                  checkConnectionStatus:(RCTPromiseResolveBlock)resolve
                  rejecter:(RCTPromiseRejectBlock)reject)
