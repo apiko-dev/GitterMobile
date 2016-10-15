@@ -32,7 +32,7 @@ export function setupFaye() {
     console.log('RECONNECT TO FAYE')
     FayeGitter.setAccessToken(getState().auth.token)
     FayeGitter.create()
-    FayeGitter.logger()
+    // FayeGitter.logger()
     try {
       const result = await FayeGitter.connect()
       dispatch({type: FAYE_CONNECT, payload: result})
@@ -73,7 +73,7 @@ export function onNetStatusChangeFaye(status) {
         await dispatch(setupFaye())
       }
     } catch (error) {
-      console.wanr(error.message)
+      console.warn(error.message)
     }
   }
 }
