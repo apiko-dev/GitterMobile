@@ -17,8 +17,6 @@
 
 @implementation FayeManager
 
-@synthesize bridge;
-
 RCT_EXPORT_MODULE()
 
 - (NSArray<NSString *> *)supportedEvents {
