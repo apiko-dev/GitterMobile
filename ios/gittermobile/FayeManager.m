@@ -75,7 +75,8 @@ RCT_EXPORT_METHOD(subscribe:(NSString *)channelName)
   } failure:^(NSError *error) {
     [weakSelf sendEventWithName:@"FayeGitter:SubscribtionFailed" body:@{@"channel": channelName, @"Exception": error.localizedDescription}];
   } receivedMessage:^(NSDictionary *message) {
-    [weakSelf sendEventWithName:@"FayeGitter:Message" body:@{@"channel": channelName, @"json": message}];
+    NSString *jsonString = [self stringFromDictionary:message];
+    [weakSelf sendEventWithName:@"FayeGitter:Message" body:@{@"channel": channelName, @"json": jsonString}];
   }];
 }
 
@@ -96,6 +97,14 @@ RCT_REMAP_METHOD(checkConnectionStatus,
 - (void)fayeClient:(MZFayeClient *)client didUnsubscribeFromChannel:(NSString *)channel
 {
   [self sendEventWithName:@"FayeGitter:Unsubscribed" body:@{@"channel": channel}];
+}
+
+#pragma mark - Private
+
+- (NSString *)stringFromDictionary:(NSDictionary *)dictionary
+{
+  NSData *data = [NSJSONSerialization dataWithJSONObject:dictionary options:kNilOptions error:nil];
+  return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 }
 
 @end
