@@ -41,7 +41,7 @@ RCT_EXPORT_METHOD(create)
   self.fayeClient = [[MZFayeClient alloc] initWithURL:url];
   self.fayeClient.delegate = self;
   if (self.accessToken) {
-    [self.fayeClient setExtension:@{@"token": self.accessToken} forChannel:@"/meta/handshake"];
+    [self.fayeClient setExtension:@{@"token": self.accessToken} forChannel:MZFayeClientBayeuxChannelHandshake];
   }
 }
 
