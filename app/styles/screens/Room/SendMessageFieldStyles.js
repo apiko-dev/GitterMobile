@@ -8,16 +8,21 @@ const style = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: padding,
+    paddingLeft: padding,
+    // marginVertical: 4,
     backgroundColor: 'white',
-    elevation: 8
+    elevation: 8,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(0, 0, 0, 0.1)'
   },
   innerContainer: {
     flex: 1
   },
   textInput: {
+    paddingVertical: 4,
     backgroundColor: 'white',
-    fontSize: 14
+    fontSize: 14,
+    textAlignVertical: 'center'
   },
   button: {
     height: button,

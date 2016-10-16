@@ -14,7 +14,7 @@ export default class SendMessageField extends Component {
     this.handleChangeText = this.handleChangeText.bind(this)
 
     this.state = {
-      height: 56,
+      height: 46,
       value: ''
     }
   }
@@ -34,7 +34,7 @@ export default class SendMessageField extends Component {
   // }
 
   handleChangeSize(e) {
-    this.setState({height: e.nativeEvent.layout.height + 30})
+    this.setState({height: e.nativeEvent.layout.height})
   }
 
   handleChangeText(value) {
@@ -57,7 +57,7 @@ export default class SendMessageField extends Component {
       return
     }
     onSending()
-    this.setState({height: 56, value: ''})
+    this.setState({height: 46, value: ''})
   }
 
   render() {
@@ -68,7 +68,7 @@ export default class SendMessageField extends Component {
           <TextInput
             ref="textInput"
             multiline
-            style={[s.textInput, {height: height > 90 ? 90 : Math.max(56, height)}]}
+            style={[s.textInput, {height: height > 90 ? 90 : Math.max(46, height)}]}
             value={value}
             keyboardShouldPersistTaps={false}
             underlineColorAndroid="white"
