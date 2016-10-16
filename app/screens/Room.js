@@ -566,6 +566,9 @@ class Room extends Component {
       }
     }
 
+    var roomName = !!room ? room.name : ''
+    roomName = roomName.split('/').reverse()[0]
+
     return (
       <Toolbar
         navIcon={iOS ? require('image!ic_arrow_back_white_24dp') : require('image!ic_menu_white_24dp')}
@@ -573,7 +576,7 @@ class Room extends Component {
         actions={actions}
         onActionSelected={this.handleToolbarActionSelected}
         overflowIcon={require('image!ic_more_vert_white_24dp')}
-        title={!!room ? room.name : ''}
+        title={roomName}
         titleColor="white"
         style={s.toolbar} />
     )
