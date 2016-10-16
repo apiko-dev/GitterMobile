@@ -4,22 +4,22 @@ PODS:
   - SocketRocket (0.5.1)
 
 DEPENDENCIES:
-  - MZFayeClient (from `https://github.com/iThinker/MZFayeClient.git`, commit `af451d3`)
+  - MZFayeClient (from `https://github.com/iThinker/MZFayeClient.git`, commit `19bee59`)
 
 EXTERNAL SOURCES:
   MZFayeClient:
-    :commit: af451d3
+    :commit: 19bee59
     :git: https://github.com/iThinker/MZFayeClient.git
 
 CHECKOUT OPTIONS:
   MZFayeClient:
-    :commit: af451d3
+    :commit: 19bee59
     :git: https://github.com/iThinker/MZFayeClient.git
 
 SPEC CHECKSUMS:
   MZFayeClient: ac3defb0026d26f025444eeb021117be9cab4642
   SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
 
-PODFILE CHECKSUM: d035e5c4039b336d74d3b97e4a2f55db2d9ad8f5
+PODFILE CHECKSUM: 57675d155ec247641c8bc56bab2af83edb1e66f6
 
 COCOAPODS: 1.0.1

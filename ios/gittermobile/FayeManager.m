@@ -17,6 +17,8 @@
 
 @implementation FayeManager
 
+static NSString * const ExtensionKey = @"ext";
+
 RCT_EXPORT_MODULE()
 
 - (NSArray<NSString *> *)supportedEvents {
@@ -27,7 +29,8 @@ RCT_EXPORT_MODULE()
            @"FayeGitter:log",
            @"FayeGitter:SubscribtionFailed",
            @"FayeGitter:Subscribed",
-           @"FayeGitter:Unsubscribed"];
+           @"FayeGitter:Unsubscribed",
+           ];
 }
 
 RCT_EXPORT_METHOD(setAccessToken:(NSString *)accessToken)
@@ -50,7 +53,7 @@ RCT_REMAP_METHOD(connect,
                  rejecter:(RCTPromiseRejectBlock)reject)
 {
   __weak typeof(self) weakSelf = self;
-  [self.fayeClient connect:^{
+  [self.fayeClient connect:^(NSDictionary *extension) {
     [weakSelf sendEventWithName:@"FayeGitter:Connected" body:@"Connected"];
     resolve(@(YES));
   } failure:^(NSError *error) {
@@ -60,8 +63,9 @@ RCT_REMAP_METHOD(connect,
 
 RCT_EXPORT_METHOD(disconnect)
 {
-  [self.fayeClient disconnect:^{
-    
+  __weak typeof(self) weakSelf = self;
+  [self.fayeClient disconnect:^(NSDictionary *extension) {
+    [weakSelf sendEventWithName:@"FayeGitter:onDisconnected" body:@"Disconnected"];
   } failure:^(NSError *error) {
     
   }];
@@ -70,19 +74,26 @@ RCT_EXPORT_METHOD(disconnect)
 RCT_EXPORT_METHOD(subscribe:(NSString *)channelName)
 {
   __weak typeof(self) weakSelf = self;
-  [self.fayeClient subscribeToChannel:channelName success:^{
-    [weakSelf sendEventWithName:@"FayeGitter:Subscribed" body:@{@"channel": channelName}];
+  [self.fayeClient subscribeToChannel:channelName success:^(NSDictionary *extension) {
+    [weakSelf sendEventWithName:@"FayeGitter:Subscribed" body:@{@"channel": channelName,
+                                                                ExtensionKey: [weakSelf extensionStringOrNull:extension]}];
   } failure:^(NSError *error) {
     [weakSelf sendEventWithName:@"FayeGitter:SubscribtionFailed" body:@{@"channel": channelName, @"Exception": error.localizedDescription}];
-  } receivedMessage:^(NSDictionary *message) {
+  } receivedMessage:^(NSDictionary *message, NSDictionary *extension) {
     NSString *jsonString = [self stringFromDictionary:message];
-    [weakSelf sendEventWithName:@"FayeGitter:Message" body:@{@"channel": channelName, @"json": jsonString}];
+    [weakSelf sendEventWithName:@"FayeGitter:Message" body:@{@"channel": channelName,
+                                                             @"json": jsonString,
+                                                             ExtensionKey: [weakSelf extensionStringOrNull:extension]}];
   }];
 }
 
 RCT_EXPORT_METHOD(unsubscribe:(NSString *)channelName)
 {
-  [self.fayeClient unsubscribeFromChannel:channelName success:nil failure:nil];
+  __weak typeof(self) weakSelf = self;
+  [self.fayeClient unsubscribeFromChannel:channelName success:^(NSDictionary *extension) {
+    [weakSelf sendEventWithName:@"FayeGitter:Unsubscribed" body:@{@"channel": channelName,
+                                                                  ExtensionKey: [weakSelf extensionStringOrNull:extension]}];
+  } failure:nil];
 }
 
 RCT_REMAP_METHOD(checkConnectionStatus,
@@ -92,6 +103,11 @@ RCT_REMAP_METHOD(checkConnectionStatus,
   resolve(@(self.fayeClient.isConnected));
 }
 
+RCT_EXPORT_METHOD(logger)
+{
+  NSLog(@"You shall not log!");
+}
+
 #pragma mark - MZFayeClientDelegate
 
 - (void)fayeClient:(MZFayeClient *)client didDisconnectWithError:(NSError *)error
@@ -99,12 +115,22 @@ RCT_REMAP_METHOD(checkConnectionStatus,
   [self sendEventWithName:@"FayeGitter:onDisconnected" body:@"Disconnected"];
 }
 
-- (void)fayeClient:(MZFayeClient *)client didUnsubscribeFromChannel:(NSString *)channel
+- (void)fayeClient:(MZFayeClient *)client didUnsubscribeFromChannel:(NSString *)channel extension:(NSDictionary *)extension
 {
-  [self sendEventWithName:@"FayeGitter:Unsubscribed" body:@{@"channel": channel}];
+  [self sendEventWithName:@"FayeGitter:Unsubscribed" body:@{@"channel": channel,
+                                                            ExtensionKey: [self extensionStringOrNull:extension]}];
 }
 
 #pragma mark - Private
+
+- (id)extensionStringOrNull:(NSDictionary *)extension {
+  if (extension) {
+    return [self stringFromDictionary:extension];
+  }
+  else {
+    return [NSNull null];
+  }
+}
 
 - (NSString *)stringFromDictionary:(NSDictionary *)dictionary
 {
