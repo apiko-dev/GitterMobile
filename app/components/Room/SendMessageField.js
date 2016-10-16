@@ -62,6 +62,7 @@ export default class SendMessageField extends Component {
 
   render() {
     const {value, height} = this.state
+    const {emojis, onRightAddIconPress} = this.props
     return (
       <View style={s.container}>
         <View style={s.innerContainer}>
@@ -81,14 +82,24 @@ export default class SendMessageField extends Component {
                {value}
              </Text>
         </View>
-        <Button
-          background="SelectableBackgroundBorderless"
-          onPress={() => this.sendMessage()}
-          style={s.button}>
-          <Image
-            source={require('image!ic_send_black_24dp')}
-            style={[s.sendIcon, {opacity: !value.trim() ? 0.2 : 1}]}/>
-        </Button>
+        <View style={s.rightButtons}>
+          <Button
+            background="SelectableBackgroundBorderless"
+            onPress={() => onRightAddIconPress()}
+            style={[s.button, s.left]}>
+            <Image
+              source={emojis ? require('image!ic_keyboard_black_24dp') : require('image!ic_insert_emoticon_black_24dp')}
+              style={s.sendIcon} />
+          </Button>
+          <Button
+            background="SelectableBackgroundBorderless"
+            onPress={() => this.sendMessage()}
+            style={s.button}>
+            <Image
+              source={require('image!ic_send_black_24dp')}
+              style={[s.sendIcon, {opacity: !value.trim() ? 0.4 : 0.8}]}/>
+          </Button>
+        </View>
       </View>
 
     )
@@ -98,5 +109,7 @@ export default class SendMessageField extends Component {
 SendMessageField.propTypes = {
   onSending: PropTypes.func,
   value: PropTypes.string,
-  onChange: PropTypes.func
+  onChange: PropTypes.func,
+  emojis: PropTypes.bool,
+  onRightAddIconPress: PropTypes.func
 }

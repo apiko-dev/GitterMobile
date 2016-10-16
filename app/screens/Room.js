@@ -84,11 +84,13 @@ class Room extends Component {
     this.onNavigateBack = this.onNavigateBack.bind(this)
     this.handleSharingRoom = this.handleSharingRoom.bind(this)
     this.handleSharingMessage = this.handleSharingMessage.bind(this)
+    this.handleToggleEmojis = this.handleToggleEmojis.bind(this)
 
     this.state = {
       textInputValue: '',
       editing: false,
-      editMessage: {}
+      editMessage: {},
+      showEmojiBar: false
     }
   }
 
@@ -466,6 +468,10 @@ class Room extends Component {
     })
   }
 
+  handleToggleEmojis() {
+    this.setState({showEmojiBar: !this.state.showEmojiBar})
+  }
+
   leaveRoom() {
     const {dispatch, route: {roomId}} = this.props
     Alert.alert(
@@ -589,6 +595,8 @@ class Room extends Component {
     }
     return (
       <SendMessageField
+        emojis={this.state.showEmojiBar}
+        onRightAddIconPress={this.handleToggleEmojis}
         ref="sendMessageField"
         onSending={this.onSending.bind(this)}
         onChange={this.onTextFieldChange.bind(this)}
