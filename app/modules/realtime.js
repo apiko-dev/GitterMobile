@@ -1,5 +1,5 @@
 import FayeGitter from '../../libs/react-native-gitter-faye/index'
-import {DeviceEventEmitter} from 'react-native'
+import {DeviceEventEmitter, NativeEventEmitter, Platform} from 'react-native'
 import {updateRoomState, receiveRoomsSnapshot} from './rooms'
 import {appendMessages, updateMessageRealtime, receiveRoomMessagesSnapshot} from './messages'
 import {receiveRoomEventsSnapshot} from './activity'
@@ -9,6 +9,7 @@ import {receiveReadBySnapshot} from './readBy'
  * Constants
  */
 
+export const FAYE_CONNECTING = 'realtime/FAYE_CONNECTING'
 export const FAYE_CONNECT = 'realtime/FAYE_CONNECT'
 export const ROOMS_SUBSCRIBED = 'realtime/ROOMS_SUBSCRIBED'
 export const ROOMS_UNSUBSCRIBED = 'realtime/ROOMS_UNSUBSCRIBED'
@@ -34,6 +35,7 @@ export function setupFaye() {
     FayeGitter.create()
     // FayeGitter.logger()
     try {
+      dispatch({type: FAYE_CONNECTING})
       const result = await FayeGitter.connect()
       dispatch({type: FAYE_CONNECT, payload: result})
       // dispatch(subscribeToChannels())
@@ -63,7 +65,10 @@ export function checkFayeConnection() {
 
 export function onNetStatusChangeFaye(status) {
   return async (dispatch, getState) => {
-    const {fayeConnected} = getState().app
+    const {isFayeConnecting} = getState().app
+    if (isFayeConnecting) {
+      return
+    }
     const connectionStatus = await FayeGitter.checkConnectionStatus()
     if (!status && connectionStatus) {
       dispatch({type: FAYE_CONNECT, payload: status})
@@ -84,18 +89,19 @@ export function onNetStatusChangeFaye(status) {
 
 export function setupFayeEvents() {
   return (dispatch, getState) => {
-    DeviceEventEmitter
+    const EventEmitter = Platform.OS === 'ios' ? new NativeEventEmitter(FayeGitter) : DeviceEventEmitter
+    EventEmitter
       .addListener('FayeGitter:Connected', log => {
         console.log('CONNECTED')
         dispatch(subscribeToChannels())
       })
-    DeviceEventEmitter
+    EventEmitter
       .addListener('FayeGitter:onDisconnected', log => {
         console.log(log) // eslint-disable-line no-console
         dispatch(setupFaye())
       })
 
-    DeviceEventEmitter
+    EventEmitter
       .addListener('FayeGitter:onFailedToCreate', log => {
         console.log(log) // eslint-disable-line no-console
         const {online} = getState().app
@@ -103,19 +109,19 @@ export function setupFayeEvents() {
           dispatch(setupFaye())
         }
       })
-    DeviceEventEmitter
+    EventEmitter
       .addListener('FayeGitter:Message', event => {
         dispatch(parseEvent(event))
       })
-    DeviceEventEmitter
+    EventEmitter
       .addListener('FayeGitter:log', event => {
         dispatch(parseSnapshotEvent(event))
       })
-    DeviceEventEmitter
+    EventEmitter
       .addListener('FayeGitter:SubscribtionFailed', log => console.log(log)) // eslint-disable-line no-console
-    DeviceEventEmitter
+    EventEmitter
       .addListener('FayeGitter:Subscribed', log => console.log('SUBSCRIBED', log)) // eslint-disable-line no-console
-    DeviceEventEmitter
+    EventEmitter
       .addListener('FayeGitter:Unsubscribed', log => console.log('UNSUBSCRIBED', log)) // eslint-disable-line no-console
   }
 }
@@ -335,6 +341,7 @@ export function subscribeToChannels() {
  */
 
 const initialState = {
+  isFayeConnecting: false,
   fayeConnected: false,
   roomsSubscribed: false,
   roomMessagesSubscription: '',
@@ -343,9 +350,14 @@ const initialState = {
 
 export default function realtime(state = initialState, action) {
   switch (action.type) {
+  case FAYE_CONNECTING:
+    return {...state,
+      isFayeConnecting: true
+    }
   case FAYE_CONNECT:
     return {...state,
-      fayeConnected: action.payload
+      fayeConnected: action.payload,
+      isFayeConnecting: false
     }
 
   case ROOMS_SUBSCRIBED: {
