@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import {InteractionManager, ToastAndroid, Clipboard, Alert, ListView, View, Platform} from 'react-native';
+import {InteractionManager, ToastAndroid, Clipboard, Alert, ListView, View, Platform, Keyboard} from 'react-native';
 import Toolbar from '../components/Toolbar'
 import {connect} from 'react-redux'
 import DrawerLayout from 'react-native-drawer-layout'
@@ -469,7 +469,15 @@ class Room extends Component {
   }
 
   handleToggleEmojis() {
-    this.setState({showEmojiBar: !this.state.showEmojiBar})
+    const {showEmojiBar} = this.state
+
+    if (!showEmojiBar) {
+      // TODO(terrysahaidak) waiting 0.36 to be released
+      Keyboard.dismiss()
+    } else {
+      this.refs.sendMessageField.focus()
+    }
+    this.setState({showEmojiBar: !showEmojiBar})
   }
 
   leaveRoom() {
