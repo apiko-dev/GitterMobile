@@ -120,7 +120,14 @@ export function setupFayeEvents() {
     EventEmitter
       .addListener('FayeGitter:SubscribtionFailed', log => console.log(log)) // eslint-disable-line no-console
     EventEmitter
-      .addListener('FayeGitter:Subscribed', log => console.log('SUBSCRIBED', log)) // eslint-disable-line no-console
+      .addListener('FayeGitter:Subscribed', event => {
+        console.log('SUBSCRIBED', event) // eslint-disable-line no-console
+        const channel = event.channel
+        const snapshot = JSON.parse(event.ext).snapshot
+        if (channel != undefined && snapshot != undefined) {
+          dispatch(parseSnapshotForChannel(channel, snapshot))
+        }
+      })
     EventEmitter
       .addListener('FayeGitter:Unsubscribed', log => console.log('UNSUBSCRIBED', log)) // eslint-disable-line no-console
   }
@@ -181,8 +188,16 @@ export function parseSnapshotEvent(event) {
       return
     }
 
-    const sbs = message.subscription
+    const channel = message.subscription
+    const snapshot = message.ext.snapshot
+    if (channel != undefined && snapshot != undefined) {
+      dispatch(parseSnapshotForChannel(channel, snapshot))
+    }
+  }
+}
 
+export function parseSnapshotForChannel(channel, snapshot) {
+  return dispatch => {
     const roomsRegx = /\/api\/v1\/user\/[a-f\d]{24}\/rooms/
     const messagesRegx = /\/api\/v1\/rooms\/[a-f\d]{24}\/chatMessages/
     const messagesRegxIds = /\/api\/v1\/rooms\/([a-f\d]{24})\/chatMessages/
@@ -191,23 +206,23 @@ export function parseSnapshotEvent(event) {
     const readByRegx = /\/api\/v1\/rooms\/[a-f\d]{24}\/chatMessages\/[a-f\d]{24}\/readBy/
     const readByRegxIds = /\/api\/v1\/rooms\/([a-f\d]{24})\/chatMessages\/([a-f\d]{24})\/readBy/
 
-    if (sbs.match(roomsRegx)) {
-      dispatch(receiveRoomsSnapshot(message.ext.snapshot))
+    if (channel.match(roomsRegx)) {
+      dispatch(receiveRoomsSnapshot(snapshot))
     }
 
-    if (sbs.match(messagesRegx)) {
-      const id = sbs.match(messagesRegxIds)[1]
-      dispatch(receiveRoomMessagesSnapshot(id, message.ext.snapshot))
+    if (channel.match(messagesRegx)) {
+      const id = channel.match(messagesRegxIds)[1]
+      dispatch(receiveRoomMessagesSnapshot(id, snapshot))
     }
 
-    if (sbs.match(eventsRegx)) {
-      const id = sbs.match(eventsRegxIds)[1]
-      dispatch(receiveRoomEventsSnapshot(id, message.ext.snapshot))
+    if (channel.match(eventsRegx)) {
+      const id = channel.match(eventsRegxIds)[1]
+      dispatch(receiveRoomEventsSnapshot(id, snapshot))
     }
-    //
-    if (sbs.match(readByRegx)) {
-      const messageId = sbs.match(readByRegxIds)[2]
-      dispatch(receiveReadBySnapshot(messageId, message.ext.snapshot))
+    
+    if (channel.match(readByRegx)) {
+      const messageId = channel.match(readByRegxIds)[2]
+      dispatch(receiveReadBySnapshot(messageId, snapshot))
     }
   }
 }
