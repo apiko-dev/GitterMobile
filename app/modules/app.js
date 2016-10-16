@@ -1,6 +1,7 @@
 import {getItem} from '../utils/storage'
 import {getCurrentUser} from './viewer'
 import {getRooms, getSuggestedRooms} from './rooms'
+import {initializeUi} from './ui'
 import {NetInfo, AppState} from 'react-native'
 import {
   setupFayeEvents,
@@ -46,6 +47,7 @@ export function init() {
 
       // getting base current user's information
       await dispatch(getCurrentUser())
+      await dispatch(initializeUi())
       await Promise.all([
         dispatch(getRooms()),
         dispatch(setupFaye()),

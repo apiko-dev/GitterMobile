@@ -1,15 +1,32 @@
 import React, {PropTypes} from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, Image} from 'react-native';
 import s from '../../styles/screens/Drawer/ChannelListSectionStyles'
 import ChannelListItem from './ChannelListItem'
 import Heading from '../Heading'
+import Button from '../Button'
 
-const ChannelListSection = ({name, items, onRoomPress, activeRoom, onLongRoomPress}) => {
+const ChannelListSection = ({
+  name,
+  items,
+  onRoomPress,
+  activeRoom,
+  onLongRoomPress,
+  onToggleCollapsed,
+  sectionsState
+}) => {
+  const image = sectionsState[name] ? require('image!ic_expand_more_black_24dp') : require('image!ic_expand_less_black_24dp')
   return (
     <View>
-      <Heading text={name} styles={s.heading}/>
+      <Button
+        style={s.sectionHeader}
+        onPress={() => onToggleCollapsed(name, sectionsState[name])}>
+        <Heading text={name} styles={s.heading}/>
+        <Image
+          source={image}
+          style={s.icon} />
+      </Button>
       <View style={s.itemSection}>
-        {items && items.map(item => (
+        {!sectionsState[name] && items && items.map(item => (
           <ChannelListItem
             key={item.id}
             {...item}
@@ -28,7 +45,9 @@ ChannelListSection.propTypes = {
   items: PropTypes.array,
   onRoomPress: PropTypes.func,
   activeRoom: PropTypes.string,
-  onLongRoomPress: PropTypes.func
+  onLongRoomPress: PropTypes.func,
+  collapsed: PropTypes.bool,
+  sectionsState: PropTypes.object
 }
 
 export default ChannelListSection

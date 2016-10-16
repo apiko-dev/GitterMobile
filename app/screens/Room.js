@@ -5,6 +5,7 @@ import {connect} from 'react-redux'
 import DrawerLayout from 'react-native-drawer-layout'
 import moment from 'moment'
 import BottomSheet from '../../libs/react-native-android-bottom-sheet/index'
+import Share from 'react-native-share'
 import _ from 'lodash'
 import s from '../styles/screens/Room/RoomStyles'
 import {THEMES} from '../constants'
@@ -81,6 +82,8 @@ class Room extends Component {
     this.handleReadMessages = _.debounce(this.handleReadMessages.bind(this), 250)
     this.handleSendingMessage = this.handleSendingMessage.bind(this)
     this.onNavigateBack = this.onNavigateBack.bind(this)
+    this.handleSharingRoom = this.handleSharingRoom.bind(this)
+    this.handleSharingMessage = this.handleSharingMessage.bind(this)
 
     this.state = {
       textInputValue: '',
@@ -174,7 +177,8 @@ class Room extends Component {
         title: !!message.editedAt && !message.text ? 'This message was deleted' : message.text,
         items: [
           'Copy text',
-          'Quote with link'
+          'Quote with link',
+          'Share'
         ]
       }
     } else {
@@ -184,7 +188,8 @@ class Room extends Component {
           'Copy text',
           'Reply',
           'Quote',
-          'Quote with link'
+          'Quote with link',
+          'Share'
         ]
       }
       const experied = moment(message.sent).add(5, 'm')
@@ -355,6 +360,10 @@ class Room extends Component {
     case 'Retry':
       this.onResendingMessage(rowId, messageText)
       break
+
+    case 'Share':
+      this.handleSharingMessage(message)
+      break
     default:
       break
     }
@@ -369,6 +378,7 @@ class Room extends Component {
     case 3: return dispatch(markAllAsRead(roomId))
     case 4: return dispatch(Navigation.goTo({name: 'roomSettings', roomId}))
     case 5: return this.leaveRoom()
+    case 6: return this.handleSharingRoom(roomId)
     default:
       break
     }
@@ -436,6 +446,26 @@ class Room extends Component {
     this.readMessages = {}
   }
 
+  handleSharingRoom(roomId) {
+    const {rooms} = this.props
+    const room = rooms[roomId]
+    Share.open({
+      url: `https://gitter.im${room.url}`,
+      message: `Check out ${room.name} room`
+    })
+  }
+
+  handleSharingMessage({sent, fromUser, id}) {
+    const {rooms, route} = this.props
+    const room = rooms[route.roomId]
+    const time = moment(sent).format('YYYY MMM D, HH:mm')
+
+    Share.open({
+      url: `https://gitter.im${room.url}?at=${id}`,
+      message: `Check out ${fromUser.username} message in ${room.name} room at ${time}`
+    })
+  }
+
   leaveRoom() {
     const {dispatch, route: {roomId}} = this.props
     Alert.alert(
@@ -497,6 +527,10 @@ class Room extends Component {
         {
           title: 'Leave room',
           show: 'never'
+        },
+        {
+          title: 'Share room',
+          show: 'never'
         }]
       } else {
         actions = [{
@@ -507,7 +541,7 @@ class Room extends Component {
         {
           title: 'Open room info',
           icon: require('image!ic_info_outline_white_24dp'),
-          show: ''
+          show: 'never'
         },
         {
           title: 'Add to favorite',
@@ -523,6 +557,10 @@ class Room extends Component {
         },
         {
           title: 'Leave room',
+          show: 'never'
+        },
+        {
+          title: 'Share room',
           show: 'never'
         }]
       }

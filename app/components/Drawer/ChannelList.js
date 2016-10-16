@@ -10,7 +10,9 @@ const ChannelList = ({
   onRoomPress,
   onLongRoomPress,
   isLoadingRooms,
-  onRefresh
+  onRefresh,
+  sectionsState,
+  onToggleCollapsed
 }) => {
   if (!ids || !rooms) {
     // TODO: Add tips how to add room
@@ -29,6 +31,8 @@ const ChannelList = ({
       }>
       {!!favorites.length &&
         <ChannelListSection
+          onToggleCollapsed={onToggleCollapsed}
+          sectionsState={sectionsState}
           name="Favorites"
           items={favorites}
           activeRoom={activeRoom}
@@ -37,6 +41,8 @@ const ChannelList = ({
       }
       {!!unread.length &&
         <ChannelListSection
+          onToggleCollapsed={onToggleCollapsed}
+          sectionsState={sectionsState}
           name="Unread"
           items={unread}
           activeRoom={activeRoom}
@@ -45,6 +51,8 @@ const ChannelList = ({
       }
       {!!channels.length &&
         <ChannelListSection
+          onToggleCollapsed={onToggleCollapsed}
+          sectionsState={sectionsState}
           name="Channels"
           items={channels}
           activeRoom={activeRoom}
@@ -53,6 +61,8 @@ const ChannelList = ({
       }
       {!!orgs.length &&
         <ChannelListSection
+          onToggleCollapsed={onToggleCollapsed}
+          sectionsState={sectionsState}
           name="Organizations"
           items={orgs}
           activeRoom={activeRoom}
@@ -67,7 +77,9 @@ ChannelList.propTypes = {
   ids: PropTypes.array,
   onLongRoomPress: PropTypes.func,
   rooms: PropTypes.object,
-  onRoomPress: PropTypes.func
+  onRoomPress: PropTypes.func,
+  sectionsState: PropTypes.object,
+  onToggleCollapsed: PropTypes.func
 }
 
 export default ChannelList
