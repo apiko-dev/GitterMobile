@@ -24,16 +24,17 @@
 		140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		1D59EF1EE3034C5AB5B555CF /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 28705FE33DB7471E81A4BF58 /* EvilIcons.ttf */; };
-		34F5D9E3372F4BEC83DC834C /* libRNShare.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E0B65CC42494514BF86062C /* libRNShare.a */; };
 		5C0225685B504AD88AD52CD0 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4DF14AC97F2E48F0A5564A15 /* Zocial.ttf */; };
-		640086E6439D2F31463BAD1B /* libPods-gittermobile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A091D7BC5A41921ECC645146 /* libPods-gittermobile.a */; };
 		660C52986D134F47B39191A2 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1E0A4A6943AE4918B2B20C10 /* Foundation.ttf */; };
-		6A8048BBF9BA47968B6D705C /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1627C53B308D4F7FAF965375 /* libRNDeviceInfo.a */; };
 		6C78AD8DDD244FD6A6D14016 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4292E464594142F98EEA589C /* MaterialIcons.ttf */; };
 		78C8C04753164039BDD64B84 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B4B7007860D64F8197CB1D2C /* Entypo.ttf */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
-		8DCB6E7E76E74C5998FBBC19 /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 53385C357FA1483389313F9A /* libRNVectorIcons.a */; };
 		9C4277F8ADEA4A7CAEB45DAE /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 065EFF2DC9EB446E84D0679C /* Octicons.ttf */; };
+		BF9086AF1DB3DB0200301A91 /* libRNShare.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DE4388FE1DB11A5E00A93841 /* libRNShare.a */; };
+		BF9086B01DB3DB0A00301A91 /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DE0D150A1DAE4357005DD9C2 /* libRNVectorIcons.a */; };
+		BF9086B11DB3DB0E00301A91 /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DE0D15051DAE4357005DD9C2 /* libRNDeviceInfo.a */; };
+		BFF6491A86B2D4884129D40D /* libPods-gittermobile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FBB71EB5DA14A7E3539498F2 /* libPods-gittermobile.a */; };
+		E99A95AA1CDABD1D003FE502 /* FayeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E99A95A91CDABD1D003FE502 /* FayeManager.m */; };
 		EF327E1CB60D440886F3DA69 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 351A5094AA8149B18BFB016C /* Ionicons.ttf */; };
 /* End PBXBuildFile section */
 
@@ -151,7 +152,6 @@
 		06425067ED594780A2A9E26A /* RNVectorIcons.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNVectorIcons.xcodeproj; path = "../node_modules/react-native-vector-icons/RNVectorIcons.xcodeproj"; sourceTree = "<group>"; };
 		065EFF2DC9EB446E84D0679C /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		0DD2B7CA1FBB4AB1B79D9BD9 /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNDeviceInfo.xcodeproj; path = "../node_modules/react-native-device-info/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; };
-		0EBBCF39A32ECC715AD34612 /* Pods-gittermobile.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-gittermobile.debug.xcconfig"; path = "Pods/Target Support Files/Pods-gittermobile/Pods-gittermobile.debug.xcconfig"; sourceTree = "<group>"; };
 		10A82C2A6D4543E795604988 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
 		139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWebSocket.xcodeproj; path = "../node_modules/react-native/Libraries/WebSocket/RCTWebSocket.xcodeproj"; sourceTree = "<group>"; };
@@ -163,21 +163,20 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = gittermobile/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = gittermobile/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
-		1627C53B308D4F7FAF965375 /* libRNDeviceInfo.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNDeviceInfo.a; sourceTree = "<group>"; };
 		1E0A4A6943AE4918B2B20C10 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		238461DCEF334AF992D3BF0F /* RNShare.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNShare.xcodeproj; path = "../node_modules/react-native-share/ios/RNShare.xcodeproj"; sourceTree = "<group>"; };
 		28705FE33DB7471E81A4BF58 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
-		2FBFCFF409EC6CED8B8B07A2 /* libPods-gittermobileTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-gittermobileTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		351A5094AA8149B18BFB016C /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		4292E464594142F98EEA589C /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		4DF14AC97F2E48F0A5564A15 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
-		53385C357FA1483389313F9A /* libRNVectorIcons.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNVectorIcons.a; sourceTree = "<group>"; };
-		6E0B65CC42494514BF86062C /* libRNShare.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNShare.a; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
-		A091D7BC5A41921ECC645146 /* libPods-gittermobile.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-gittermobile.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A82EC679D6602BB373D7A54E /* Pods-gittermobile.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-gittermobile.debug.xcconfig"; path = "Pods/Target Support Files/Pods-gittermobile/Pods-gittermobile.debug.xcconfig"; sourceTree = "<group>"; };
 		B4B7007860D64F8197CB1D2C /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
-		CC9260D13287A913C9835FA0 /* Pods-gittermobile.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-gittermobile.release.xcconfig"; path = "Pods/Target Support Files/Pods-gittermobile/Pods-gittermobile.release.xcconfig"; sourceTree = "<group>"; };
+		D8D2ED55C0EBF4D0C3C0D5E8 /* Pods-gittermobile.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-gittermobile.release.xcconfig"; path = "Pods/Target Support Files/Pods-gittermobile/Pods-gittermobile.release.xcconfig"; sourceTree = "<group>"; };
+		E99A95A81CDABD1D003FE502 /* FayeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FayeManager.h; path = gittermobile/FayeManager.h; sourceTree = "<group>"; };
+		E99A95A91CDABD1D003FE502 /* FayeManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FayeManager.m; path = gittermobile/FayeManager.m; sourceTree = "<group>"; };
+		FBB71EB5DA14A7E3539498F2 /* libPods-gittermobile.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-gittermobile.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -193,6 +192,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BF9086B11DB3DB0E00301A91 /* libRNDeviceInfo.a in Frameworks */,
+				BF9086B01DB3DB0A00301A91 /* libRNVectorIcons.a in Frameworks */,
+				BF9086AF1DB3DB0200301A91 /* libRNShare.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
 				00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */,
 				00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */,
@@ -203,10 +205,7 @@
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
-				6A8048BBF9BA47968B6D705C /* libRNDeviceInfo.a in Frameworks */,
-				8DCB6E7E76E74C5998FBBC19 /* libRNVectorIcons.a in Frameworks */,
-				640086E6439D2F31463BAD1B /* libPods-gittermobile.a in Frameworks */,
-				34F5D9E3372F4BEC83DC834C /* libRNShare.a in Frameworks */,
+				BFF6491A86B2D4884129D40D /* libPods-gittermobile.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -289,6 +288,7 @@
 		13B07FAE1A68108700A75B9A /* gittermobile */ = {
 			isa = PBXGroup;
 			children = (
+				E99A959C1CDABC4D003FE502 /* Modules */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -367,8 +367,8 @@
 				00E356EF1AD99517003FC87E /* gittermobileTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				20AE07A476A44F949FA5EC46 /* Resources */,
-				D1B33887858F21D04CAE0EA7 /* Pods */,
-				E0D491B279592D1A86B6D011 /* Frameworks */,
+				F7E8D3CD07264E714B3BAC9F /* Pods */,
+				F7C4353CC2368A9C07C4C4BD /* Frameworks */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -381,15 +381,6 @@
 				00E356EE1AD99517003FC87E /* gittermobileTests.xctest */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		D1B33887858F21D04CAE0EA7 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				0EBBCF39A32ECC715AD34612 /* Pods-gittermobile.debug.xcconfig */,
-				CC9260D13287A913C9835FA0 /* Pods-gittermobile.release.xcconfig */,
-			);
-			name = Pods;
 			sourceTree = "<group>";
 		};
 		DE0D14F71DAE4357005DD9C2 /* Products */ = {
@@ -416,13 +407,38 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		E0D491B279592D1A86B6D011 /* Frameworks */ = {
+		E99A959C1CDABC4D003FE502 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
-				A091D7BC5A41921ECC645146 /* libPods-gittermobile.a */,
-				2FBFCFF409EC6CED8B8B07A2 /* libPods-gittermobileTests.a */,
+				E99A95A71CDABC53003FE502 /* Faye */,
+			);
+			name = Modules;
+			sourceTree = "<group>";
+		};
+		E99A95A71CDABC53003FE502 /* Faye */ = {
+			isa = PBXGroup;
+			children = (
+				E99A95A81CDABD1D003FE502 /* FayeManager.h */,
+				E99A95A91CDABD1D003FE502 /* FayeManager.m */,
+			);
+			name = Faye;
+			sourceTree = "<group>";
+		};
+		F7C4353CC2368A9C07C4C4BD /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FBB71EB5DA14A7E3539498F2 /* libPods-gittermobile.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F7E8D3CD07264E714B3BAC9F /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				A82EC679D6602BB373D7A54E /* Pods-gittermobile.debug.xcconfig */,
+				D8D2ED55C0EBF4D0C3C0D5E8 /* Pods-gittermobile.release.xcconfig */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -450,13 +466,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "gittermobile" */;
 			buildPhases = (
-				7F21B9F597A6B7420A66C6A6 /* [CP] Check Pods Manifest.lock */,
+				2AF65EF5035D5E8320C93E79 /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				424E7EAA617080B5214A7E41 /* [CP] Embed Pods Frameworks */,
-				5F812E7C3646474090A140D5 /* [CP] Copy Pods Resources */,
+				7BC4BED586624315B4DEBEDD /* [CP] Embed Pods Frameworks */,
+				D566101987E3F7D0796D3410 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -691,7 +707,22 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/packager/react-native-xcode.sh";
 		};
-		424E7EAA617080B5214A7E41 /* [CP] Embed Pods Frameworks */ = {
+		2AF65EF5035D5E8320C93E79 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		7BC4BED586624315B4DEBEDD /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -706,7 +737,7 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-gittermobile/Pods-gittermobile-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		5F812E7C3646474090A140D5 /* [CP] Copy Pods Resources */ = {
+		D566101987E3F7D0796D3410 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -719,21 +750,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-gittermobile/Pods-gittermobile-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		7F21B9F597A6B7420A66C6A6 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -751,6 +767,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E99A95AA1CDABD1D003FE502 /* FayeManager.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
@@ -822,7 +839,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0EBBCF39A32ECC715AD34612 /* Pods-gittermobile.debug.xcconfig */;
+			baseConfigurationReference = A82EC679D6602BB373D7A54E /* Pods-gittermobile.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;
@@ -849,7 +866,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = CC9260D13287A913C9835FA0 /* Pods-gittermobile.release.xcconfig */;
+			baseConfigurationReference = D8D2ED55C0EBF4D0C3C0D5E8 /* Pods-gittermobile.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;

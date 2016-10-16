@@ -1,3 +1,5 @@
+import { NativeModules } from 'react-native'
+
 const noop = () => {}
 const trueNoop = Promise.resolve(true)
 
@@ -11,4 +13,4 @@ const FayeGitter = {
   unsubscribe: noop
 }
 
-export default FayeGitter
+export default NativeModules.FayeManager

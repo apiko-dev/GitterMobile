@@ -13,7 +13,7 @@ self.client = [[MZFayeClient alloc] initWithURL:[NSURL URLWithString:@"ws://loca
 
 [self.client subscribeToChannel:@"/server" success:^{
     NSLog(@"Subscribed successfully to 'server' channel!");
-} failure:^(NSError *) {
+} failure:^(NSError *error) {
     NSLog(@"Error subscribing to 'server' channel: %@", error.userInfo);
 } receivedMessage:^(NSDictionary *message) {
     NSLog(@"Message on 'server' channel: %@", message);
@@ -26,10 +26,10 @@ self.client = [[MZFayeClient alloc] initWithURL:[NSURL URLWithString:@"ws://loca
 [self.client connect:^{
     [self.client sendMessage:@{@"text": @"hello!"} toChannel:@"/server" success:^{
         NSLog(@"Message sent successfully.");
-    } failure:^(NSError *)error {
+    } failure:^(NSError *error) {
         NSLog(@"Error sending message: %@", error.userInfo);
     }];
-} failure:^(NSError *) {
+} failure:^(NSError *error) {
     NSLog(@"Error connecting: %@", error.userInfo);
 }];
 ```

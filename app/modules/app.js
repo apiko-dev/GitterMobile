@@ -51,8 +51,8 @@ export function init() {
       await Promise.all([
         dispatch(getRooms()),
         dispatch(setupFaye()),
-        dispatch(setupNetStatusListener())
       ])
+      await dispatch(setupNetStatusListener())
       await dispatch(checkNewReleases())
       dispatch(Navigation.resetTo({name: 'home'}))
 

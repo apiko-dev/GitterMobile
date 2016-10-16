@@ -1,5 +1,5 @@
 import FayeGitter from '../../libs/react-native-gitter-faye/index'
-import {DeviceEventEmitter} from 'react-native'
+import {DeviceEventEmitter, NativeEventEmitter, Platform} from 'react-native'
 import {updateRoomState, receiveRoomsSnapshot} from './rooms'
 import {appendMessages, updateMessageRealtime, receiveRoomMessagesSnapshot} from './messages'
 import {receiveRoomEventsSnapshot} from './activity'
@@ -9,6 +9,7 @@ import {receiveReadBySnapshot} from './readBy'
  * Constants
  */
 
+export const FAYE_CONNECTING = 'realtime/FAYE_CONNECTING'
 export const FAYE_CONNECT = 'realtime/FAYE_CONNECT'
 export const ROOMS_SUBSCRIBED = 'realtime/ROOMS_SUBSCRIBED'
 export const ROOMS_UNSUBSCRIBED = 'realtime/ROOMS_UNSUBSCRIBED'
@@ -22,6 +23,14 @@ export const PUSH_SUBSCRIPTION = 'realtime/PUSH_SUBSCRIPTION'
 export const DELETE_SUBSCRIPTION = 'realtime/DELETE_SUBSCRIPTION'
 export const SUBSCRIBED_TO_CHANNELS = 'realtime/SUBSCRIBED_TO_CHANNELS'
 
+const roomsRegx = /\/api\/v1\/user\/[a-f\d]{24}\/rooms/
+const messagesRegx = /\/api\/v1\/rooms\/[a-f\d]{24}\/chatMessages/
+const messagesRegxIds = /\/api\/v1\/rooms\/([a-f\d]{24})\/chatMessages/
+const eventsRegx = /\/api\/v1\/rooms\/[a-f\d]{24}\/events/
+const eventsRegxIds = /\/api\/v1\/rooms\/([a-f\d]{24})\/events/
+const readByRegx = /\/api\/v1\/rooms\/[a-f\d]{24}\/chatMessages\/[a-f\d]{24}\/readBy/
+const readByRegxIds = /\/api\/v1\/rooms\/([a-f\d]{24})\/chatMessages\/([a-f\d]{24})\/readBy/
+
 
 /**
  * Actions
@@ -34,6 +43,7 @@ export function setupFaye() {
     FayeGitter.create()
     FayeGitter.logger()
     try {
+      dispatch({type: FAYE_CONNECTING})
       const result = await FayeGitter.connect()
       dispatch({type: FAYE_CONNECT, payload: result})
       // dispatch(subscribeToChannels())
@@ -63,7 +73,10 @@ export function checkFayeConnection() {
 
 export function onNetStatusChangeFaye(status) {
   return async (dispatch, getState) => {
-    const {fayeConnected} = getState().app
+    const {isFayeConnecting} = getState().app
+    if (isFayeConnecting) {
+      return
+    }
     const connectionStatus = await FayeGitter.checkConnectionStatus()
     if (!status && connectionStatus) {
       dispatch({type: FAYE_CONNECT, payload: status})
@@ -73,7 +86,7 @@ export function onNetStatusChangeFaye(status) {
         await dispatch(setupFaye())
       }
     } catch (error) {
-      console.wanr(error.message)
+      console.warn(error.message)
     }
   }
 }
@@ -84,18 +97,19 @@ export function onNetStatusChangeFaye(status) {
 
 export function setupFayeEvents() {
   return (dispatch, getState) => {
-    DeviceEventEmitter
+    const EventEmitter = Platform.OS === 'ios' ? new NativeEventEmitter(FayeGitter) : DeviceEventEmitter
+    EventEmitter
       .addListener('FayeGitter:Connected', log => {
         console.log('CONNECTED')
         dispatch(subscribeToChannels())
       })
-    DeviceEventEmitter
+    EventEmitter
       .addListener('FayeGitter:onDisconnected', log => {
         console.log(log) // eslint-disable-line no-console
         dispatch(setupFaye())
       })
 
-    DeviceEventEmitter
+    EventEmitter
       .addListener('FayeGitter:onFailedToCreate', log => {
         console.log(log) // eslint-disable-line no-console
         const {online} = getState().app
@@ -103,19 +117,32 @@ export function setupFayeEvents() {
           dispatch(setupFaye())
         }
       })
-    DeviceEventEmitter
+    EventEmitter
       .addListener('FayeGitter:Message', event => {
         dispatch(parseEvent(event))
       })
-    DeviceEventEmitter
+    EventEmitter
       .addListener('FayeGitter:log', event => {
         dispatch(parseSnapshotEvent(event))
       })
-    DeviceEventEmitter
+    EventEmitter
       .addListener('FayeGitter:SubscribtionFailed', log => console.log(log)) // eslint-disable-line no-console
-    DeviceEventEmitter
-      .addListener('FayeGitter:Subscribed', log => console.log('SUBSCRIBED', log)) // eslint-disable-line no-console
-    DeviceEventEmitter
+    EventEmitter
+      .addListener('FayeGitter:Subscribed', event => {
+        console.log('SUBSCRIBED', event) // eslint-disable-line no-console
+        if (Platform.OS === 'ios') {
+          try {
+            const {channel, ext} = event
+            const snapshot = JSON.parse(ext).snapshot
+            if (typeof channel !== 'undefined' && typeof snapshot !== 'undefined') {
+              dispatch(parseSnapshotForChannel(channel, snapshot))
+            }
+          } catch (error) {
+            console.warn(error.message)
+          }
+        }
+      })
+    EventEmitter
       .addListener('FayeGitter:Unsubscribed', log => console.log('UNSUBSCRIBED', log)) // eslint-disable-line no-console
   }
 }
@@ -175,33 +202,31 @@ export function parseSnapshotEvent(event) {
       return
     }
 
-    const sbs = message.subscription
+    if (message.hasOwnProperty('ext') && message.ext.hasOwnProperty('snapshot')) {
+      dispatch(parseSnapshotForChannel(message.subscription, message.ext.snapshot))
+    }
+  }
+}
 
-    const roomsRegx = /\/api\/v1\/user\/[a-f\d]{24}\/rooms/
-    const messagesRegx = /\/api\/v1\/rooms\/[a-f\d]{24}\/chatMessages/
-    const messagesRegxIds = /\/api\/v1\/rooms\/([a-f\d]{24})\/chatMessages/
-    const eventsRegx = /\/api\/v1\/rooms\/[a-f\d]{24}\/events/
-    const eventsRegxIds = /\/api\/v1\/rooms\/([a-f\d]{24})\/events/
-    const readByRegx = /\/api\/v1\/rooms\/[a-f\d]{24}\/chatMessages\/[a-f\d]{24}\/readBy/
-    const readByRegxIds = /\/api\/v1\/rooms\/([a-f\d]{24})\/chatMessages\/([a-f\d]{24})\/readBy/
-
-    if (sbs.match(roomsRegx)) {
-      dispatch(receiveRoomsSnapshot(message.ext.snapshot))
+export function parseSnapshotForChannel(channel, snapshot) {
+  return dispatch => {
+    if (channel.match(roomsRegx)) {
+      dispatch(receiveRoomsSnapshot(snapshot))
     }
 
-    if (sbs.match(messagesRegx)) {
-      const id = sbs.match(messagesRegxIds)[1]
-      dispatch(receiveRoomMessagesSnapshot(id, message.ext.snapshot))
+    if (channel.match(messagesRegx)) {
+      const id = channel.match(messagesRegxIds)[1]
+      dispatch(receiveRoomMessagesSnapshot(id, snapshot))
     }
 
-    if (sbs.match(eventsRegx)) {
-      const id = sbs.match(eventsRegxIds)[1]
-      dispatch(receiveRoomEventsSnapshot(id, message.ext.snapshot))
+    if (channel.match(eventsRegx)) {
+      const id = channel.match(eventsRegxIds)[1]
+      dispatch(receiveRoomEventsSnapshot(id, snapshot))
     }
-    //
-    if (sbs.match(readByRegx)) {
-      const messageId = sbs.match(readByRegxIds)[2]
-      dispatch(receiveReadBySnapshot(messageId, message.ext.snapshot))
+
+    if (channel.match(readByRegx)) {
+      const messageId = channel.match(readByRegxIds)[2]
+      dispatch(receiveReadBySnapshot(messageId, snapshot))
     }
   }
 }
@@ -335,6 +360,7 @@ export function subscribeToChannels() {
  */
 
 const initialState = {
+  isFayeConnecting: false,
   fayeConnected: false,
   roomsSubscribed: false,
   roomMessagesSubscription: '',
@@ -343,9 +369,14 @@ const initialState = {
 
 export default function realtime(state = initialState, action) {
   switch (action.type) {
+  case FAYE_CONNECTING:
+    return {...state,
+      isFayeConnecting: true
+    }
   case FAYE_CONNECT:
     return {...state,
-      fayeConnected: action.payload
+      fayeConnected: action.payload,
+      isFayeConnecting: false
     }
 
   case ROOMS_SUBSCRIBED: {

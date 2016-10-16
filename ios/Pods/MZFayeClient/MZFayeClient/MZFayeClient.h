@@ -51,22 +51,22 @@ typedef NS_ENUM(NSInteger, MZFayeClientError) {
 extern NSTimeInterval const MZFayeClientDefaultRetryInterval;
 extern NSInteger      const MZFayeClientDefaultMaximumAttempts;
 
-typedef void(^MZFayeClientSubscriptionHandler)(NSDictionary *message);
+typedef void(^MZFayeClientSubscriptionHandler)(NSDictionary *message, NSDictionary *extension);
 
-typedef void (^MZFayeClientSuccessHandler)();
+typedef void (^MZFayeClientSuccessHandler)(NSDictionary *extension);
 typedef void (^MZFayeClientFailureHandler)(NSError *error);
 
 @protocol MZFayeClientDelegate <NSObject>
 @optional
 
-- (void)fayeClient:(MZFayeClient *)client didConnectToURL:(NSURL *)url;
+- (void)fayeClient:(MZFayeClient *)client didConnectToURL:(NSURL *)url extension:(NSDictionary *)extension;
 - (void)fayeClient:(MZFayeClient *)client didDisconnectWithError:(NSError *)error;
-- (void)fayeClient:(MZFayeClient *)client didUnsubscribeFromChannel:(NSString *)channel;
-- (void)fayeClient:(MZFayeClient *)client didSubscribeToChannel:(NSString *)channel;
+- (void)fayeClient:(MZFayeClient *)client didUnsubscribeFromChannel:(NSString *)channel extension:(NSDictionary *)extension;
+- (void)fayeClient:(MZFayeClient *)client didSubscribeToChannel:(NSString *)channel extension:(NSDictionary *)extension;
 - (void)fayeClient:(MZFayeClient *)client didFailWithError:(NSError *)error;
 - (void)fayeClient:(MZFayeClient *)client didFailDeserializeMessage:(NSDictionary *)message
          withError:(NSError *)error;
-- (void)fayeClient:(MZFayeClient *)client didReceiveMessage:(NSDictionary *)messageData fromChannel:(NSString *)channel;
+- (void)fayeClient:(MZFayeClient *)client didReceiveMessage:(NSDictionary *)messageData fromChannel:(NSString *)channel extension:(NSDictionary *)extension;
 
 @end
 
