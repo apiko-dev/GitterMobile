@@ -23,6 +23,14 @@ export const PUSH_SUBSCRIPTION = 'realtime/PUSH_SUBSCRIPTION'
 export const DELETE_SUBSCRIPTION = 'realtime/DELETE_SUBSCRIPTION'
 export const SUBSCRIBED_TO_CHANNELS = 'realtime/SUBSCRIBED_TO_CHANNELS'
 
+const roomsRegx = /\/api\/v1\/user\/[a-f\d]{24}\/rooms/
+const messagesRegx = /\/api\/v1\/rooms\/[a-f\d]{24}\/chatMessages/
+const messagesRegxIds = /\/api\/v1\/rooms\/([a-f\d]{24})\/chatMessages/
+const eventsRegx = /\/api\/v1\/rooms\/[a-f\d]{24}\/events/
+const eventsRegxIds = /\/api\/v1\/rooms\/([a-f\d]{24})\/events/
+const readByRegx = /\/api\/v1\/rooms\/[a-f\d]{24}\/chatMessages\/[a-f\d]{24}\/readBy/
+const readByRegxIds = /\/api\/v1\/rooms\/([a-f\d]{24})\/chatMessages\/([a-f\d]{24})\/readBy/
+
 
 /**
  * Actions
@@ -33,7 +41,7 @@ export function setupFaye() {
     console.log('RECONNECT TO FAYE')
     FayeGitter.setAccessToken(getState().auth.token)
     FayeGitter.create()
-    // FayeGitter.logger()
+    FayeGitter.logger()
     try {
       dispatch({type: FAYE_CONNECTING})
       const result = await FayeGitter.connect()
@@ -122,10 +130,16 @@ export function setupFayeEvents() {
     EventEmitter
       .addListener('FayeGitter:Subscribed', event => {
         console.log('SUBSCRIBED', event) // eslint-disable-line no-console
-        const channel = event.channel
-        const snapshot = JSON.parse(event.ext).snapshot
-        if (channel != undefined && snapshot != undefined) {
-          dispatch(parseSnapshotForChannel(channel, snapshot))
+        if (Platform.OS === 'ios') {
+          try {
+            const {channel, ext} = event
+            const snapshot = JSON.parse(ext).snapshot
+            if (typeof channel !== 'undefined' && typeof snapshot !== 'undefined') {
+              dispatch(parseSnapshotForChannel(channel, snapshot))
+            }
+          } catch (error) {
+            console.warn(error.message)
+          }
         }
       })
     EventEmitter
@@ -188,24 +202,14 @@ export function parseSnapshotEvent(event) {
       return
     }
 
-    const channel = message.subscription
-    const snapshot = message.ext.snapshot
-    if (channel != undefined && snapshot != undefined) {
-      dispatch(parseSnapshotForChannel(channel, snapshot))
+    if (message.hasOwnProperty('ext') && message.ext.hasOwnProperty('snapshot')) {
+      dispatch(parseSnapshotForChannel(message.subscription, message.ext.snapshot))
     }
   }
 }
 
 export function parseSnapshotForChannel(channel, snapshot) {
   return dispatch => {
-    const roomsRegx = /\/api\/v1\/user\/[a-f\d]{24}\/rooms/
-    const messagesRegx = /\/api\/v1\/rooms\/[a-f\d]{24}\/chatMessages/
-    const messagesRegxIds = /\/api\/v1\/rooms\/([a-f\d]{24})\/chatMessages/
-    const eventsRegx = /\/api\/v1\/rooms\/[a-f\d]{24}\/events/
-    const eventsRegxIds = /\/api\/v1\/rooms\/([a-f\d]{24})\/events/
-    const readByRegx = /\/api\/v1\/rooms\/[a-f\d]{24}\/chatMessages\/[a-f\d]{24}\/readBy/
-    const readByRegxIds = /\/api\/v1\/rooms\/([a-f\d]{24})\/chatMessages\/([a-f\d]{24})\/readBy/
-
     if (channel.match(roomsRegx)) {
       dispatch(receiveRoomsSnapshot(snapshot))
     }
@@ -219,7 +223,7 @@ export function parseSnapshotForChannel(channel, snapshot) {
       const id = channel.match(eventsRegxIds)[1]
       dispatch(receiveRoomEventsSnapshot(id, snapshot))
     }
-    
+
     if (channel.match(readByRegx)) {
       const messageId = channel.match(readByRegxIds)[2]
       dispatch(receiveReadBySnapshot(messageId, snapshot))
