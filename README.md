@@ -31,5 +31,6 @@ Once you have downloaded or cloned this repository, run `npm install` inside the
 - [Running app on Android Device](https://facebook.github.io/react-native/docs/running-on-device-android.html)
 - [Running app on iOS Device](https://facebook.github.io/react-native/docs/running-on-device-ios.html)
 To run GitterMobile on iOS you need to open `ios/gittermobile.xcworkspace` instead of ios/gittermobile.xcodeproj` in Xcode.
+
 ## License
 All the code available under the MIT + Apache 2.0. licenses. See [LICENSE](LICENSE).
