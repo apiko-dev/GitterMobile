@@ -4,6 +4,6 @@
 # use_frameworks!
 
 target 'gittermobile' do
-    pod 'MZFayeClient',:git => 'https://github.com/iThinker/MZFayeClient.git', :commit => 'e7e3139'
+    pod 'MZFayeClient',:git => 'https://github.com/m1entus/MZFayeClient.git', :commit => '6a88a1'
 end
 
