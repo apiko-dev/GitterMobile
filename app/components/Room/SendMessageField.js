@@ -14,7 +14,7 @@ export default class SendMessageField extends Component {
     this.handleChangeText = this.handleChangeText.bind(this)
 
     this.state = {
-      height: 56,
+      height: 46,
       value: ''
     }
   }
@@ -34,7 +34,7 @@ export default class SendMessageField extends Component {
   // }
 
   handleChangeSize(e) {
-    this.setState({height: e.nativeEvent.layout.height + 30})
+    this.setState({height: e.nativeEvent.layout.height})
   }
 
   handleChangeText(value) {
@@ -57,18 +57,19 @@ export default class SendMessageField extends Component {
       return
     }
     onSending()
-    this.setState({height: 56, value: ''})
+    this.setState({height: 46, value: ''})
   }
 
   render() {
     const {value, height} = this.state
+    const {emojis, onRightAddIconPress} = this.props
     return (
       <View style={s.container}>
         <View style={s.innerContainer}>
           <TextInput
             ref="textInput"
             multiline
-            style={[s.textInput, {height: height > 90 ? 90 : Math.max(56, height)}]}
+            style={[s.textInput, {height: height > 90 ? 90 : Math.max(46, height)}]}
             value={value}
             keyboardShouldPersistTaps={false}
             underlineColorAndroid="white"
@@ -81,14 +82,24 @@ export default class SendMessageField extends Component {
                {value}
              </Text>
         </View>
-        <Button
-          background="SelectableBackgroundBorderless"
-          onPress={() => this.sendMessage()}
-          style={s.button}>
-          <Image
-            source={require('image!ic_send_black_24dp')}
-            style={[s.sendIcon, {opacity: !value.trim() ? 0.2 : 1}]}/>
-        </Button>
+        <View style={s.rightButtons}>
+          <Button
+            background="SelectableBackgroundBorderless"
+            onPress={() => onRightAddIconPress()}
+            style={[s.button, s.left]}>
+            <Image
+              source={emojis ? require('image!ic_keyboard_black_24dp') : require('image!ic_insert_emoticon_black_24dp')}
+              style={s.sendIcon} />
+          </Button>
+          <Button
+            background="SelectableBackgroundBorderless"
+            onPress={() => this.sendMessage()}
+            style={s.button}>
+            <Image
+              source={require('image!ic_send_black_24dp')}
+              style={[s.sendIcon, {opacity: !value.trim() ? 0.4 : 0.8}]}/>
+          </Button>
+        </View>
       </View>
 
     )
@@ -98,5 +109,7 @@ export default class SendMessageField extends Component {
 SendMessageField.propTypes = {
   onSending: PropTypes.func,
   value: PropTypes.string,
-  onChange: PropTypes.func
+  onChange: PropTypes.func,
+  emojis: PropTypes.bool,
+  onRightAddIconPress: PropTypes.func
 }

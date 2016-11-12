@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import {InteractionManager, ToastAndroid, Clipboard, Alert, ListView, View, Platform} from 'react-native';
+import {InteractionManager, ToastAndroid, Clipboard, Alert, ListView, View, Platform, Keyboard} from 'react-native';
 import Toolbar from '../components/Toolbar'
 import {connect} from 'react-redux'
 import DrawerLayout from 'react-native-drawer-layout'
@@ -84,11 +84,13 @@ class Room extends Component {
     this.onNavigateBack = this.onNavigateBack.bind(this)
     this.handleSharingRoom = this.handleSharingRoom.bind(this)
     this.handleSharingMessage = this.handleSharingMessage.bind(this)
+    this.handleToggleEmojis = this.handleToggleEmojis.bind(this)
 
     this.state = {
       textInputValue: '',
       editing: false,
-      editMessage: {}
+      editMessage: {},
+      showEmojiBar: false
     }
   }
 
@@ -466,6 +468,18 @@ class Room extends Component {
     })
   }
 
+  handleToggleEmojis() {
+    const {showEmojiBar} = this.state
+
+    if (!showEmojiBar) {
+      // TODO(terrysahaidak) waiting 0.36 to be released
+      Keyboard.dismiss()
+    } else {
+      this.refs.sendMessageField.focus()
+    }
+    this.setState({showEmojiBar: !showEmojiBar})
+  }
+
   leaveRoom() {
     const {dispatch, route: {roomId}} = this.props
     Alert.alert(
@@ -592,6 +606,8 @@ class Room extends Component {
     }
     return (
       <SendMessageField
+        emojis={this.state.showEmojiBar}
+        onRightAddIconPress={this.handleToggleEmojis}
         ref="sendMessageField"
         onSending={this.onSending.bind(this)}
         onChange={this.onTextFieldChange.bind(this)}
