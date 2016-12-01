@@ -10,12 +10,18 @@ const EMOJI_REGEX = /:([a-z0-9A-Z_-]+):/
 const THUMBSUP = /:\+1:/
 const THUMBSDOWN = /:\-1:/
 const CODE_REGEX = /(^|[^\\])(`+)([^\r]*?[^`])\2(?!`)/m
+const IMAGE_REGEX = /!\[(.*?)]\s?\([ \t]*()<?(\S+?)>?(?: =([*\d]+[A-Za-z%]{0,4})x([*\d]+[A-Za-z%]{0,4}))?[ \t]*(?:(['"])(.*?)\6[ \t]*)?\)/g
 
 const renderEmoji = (matchingString, matches) => {
   const name = matches[0].replace(/:/g, '')
   return (
     <Emoji name={name} />
   )
+}
+
+const renderImage = (matchingString, matches) => {
+  console.log(matchingString, matches)
+  return <Text style={{color: 'red'}}>{`IMAGE ${matches[1]} IMAGE`}</Text>
 }
 
 const renderCodespan = (matchingString, matches) => {
@@ -32,8 +38,14 @@ const renderCodespan = (matchingString, matches) => {
   return component
 }
 
-const ParsedText = ({text, username, handleUrlPress}) => {
+const ParsedText = ({
+  text,
+  username,
+  handleUrlPress,
+  handleImagePress
+}) => {
   const patterns = [
+    {pattern: IMAGE_REGEX, renderText: renderImage, onPress: handleImagePress},
     {type: 'url', style: s.url, onPress: handleUrlPress},
     {pattern: new RegExp(`@${username}`), style: s.selfMention},
     {pattern: MENTION_REGEX, style: s.mention},
@@ -41,7 +53,7 @@ const ParsedText = ({text, username, handleUrlPress}) => {
     {pattern: EMOJI_REGEX, style: s.emoji, renderText: renderEmoji},
     {pattern: THUMBSUP, style: s.emoji, renderText: renderEmoji},
     {pattern: THUMBSDOWN, style: s.emoji, renderText: renderEmoji},
-    {pattern: CODE_REGEX, renderText: renderCodespan}
+    {pattern: CODE_REGEX, renderText: renderCodespan},
   ]
 
   return (
@@ -55,7 +67,8 @@ const ParsedText = ({text, username, handleUrlPress}) => {
 
 ParsedText.propTypes = {
   text: PropTypes.string,
-  handleUrlPress: PropTypes.func
+  handleUrlPress: PropTypes.func,
+  handleImagePress: PropTypes.func
 }
 
 export default ParsedText

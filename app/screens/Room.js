@@ -1,5 +1,6 @@
 import React, {Component, PropTypes} from 'react';
-import {InteractionManager, ToastAndroid, Clipboard, Alert, ListView, View, Platform} from 'react-native';
+import {InteractionManager, ToastAndroid, Clipboard, Alert, ListView, View, Platform, Dimensions} from 'react-native';
+
 import Toolbar from '../components/Toolbar'
 import {connect} from 'react-redux'
 import DrawerLayout from 'react-native-drawer-layout'
@@ -49,6 +50,7 @@ import SendMessageField from '../components/Room/SendMessageField'
 import JoinRoomField from '../components/Room/JoinRoomField'
 import LoadingMoreSnack from '../components/LoadingMoreSnack'
 import FailedToLoad from '../components/FailedToLoad'
+import ImageModal from '../components/Room/ImageModal'
 
 const COMMAND_REGEX = /\/\S+/
 const iOS = Platform.OS === 'ios'
@@ -84,11 +86,14 @@ class Room extends Component {
     this.onNavigateBack = this.onNavigateBack.bind(this)
     this.handleSharingRoom = this.handleSharingRoom.bind(this)
     this.handleSharingMessage = this.handleSharingMessage.bind(this)
+    this.handleShowImageModal = this.handleShowImageModal.bind(this)
 
     this.state = {
       textInputValue: '',
       editing: false,
-      editMessage: {}
+      editMessage: {},
+      showImageModal: false,
+      imageModalUrl: ''
     }
   }
 
@@ -466,6 +471,13 @@ class Room extends Component {
     })
   }
 
+  handleShowImageModal(source) {
+    this.setState({
+      showImageModal: true,
+      imageModalUrl: source
+    })
+  }
+
   leaveRoom() {
     const {dispatch, route: {roomId}} = this.props
     Alert.alert(
@@ -492,6 +504,20 @@ class Room extends Component {
       }})
       dispatch(prepareListView(roomId, ds.cloneWithRows([])))
     }
+  }
+
+
+  renderModal() {
+    const {width, height} = Dimensions.get('window')
+    const {showImageModal, imageModalUrl} = this.state
+    return (
+      <ImageModal
+        onRequestClose={() => this.setState({showImageModal: false, imageModalUrl: ''})}
+        visible={showImageModal}
+        imageModalUrl={imageModalUrl}
+        width={width}
+        height={height} />
+    )
   }
 
   renderToolbar() {
@@ -622,6 +648,7 @@ class Room extends Component {
     }
     return (
       <MessagesList
+        onShowImageModal={this.handleShowImageModal}
         onChangeVisibleRows={this.handleChangeVisibleRows}
         listViewData={listViewData[roomId]}
         onPress={this.onMessagePress.bind(this)}
@@ -667,6 +694,7 @@ class Room extends Component {
 
     return (
       <View style={s.container}>
+        {this.renderModal()}
         <DrawerLayout
           ref={component => this.roomInfoDrawer = component}
           style={{backgroundColor: 'white'}}
