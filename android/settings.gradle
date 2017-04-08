@@ -1,12 +1,3 @@
 rootProject.name = 'gittermobile'
 
-include ':app', ':react-native-android-bottom-sheet', ':react-native-gitter-faye', ':react-native-dialogs'
-project(':react-native-android-bottom-sheet').projectDir = new File(rootProject.projectDir, '../libs/react-native-android-bottom-sheet')
-project(':react-native-gitter-faye').projectDir = new File(rootProject.projectDir, '../libs/react-native-gitter-faye')
-project(':react-native-dialogs').projectDir = file('../node_modules/react-native-dialogs/android')
-include ':react-native-vector-icons'
-project(':react-native-vector-icons').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-vector-icons/android')
-include ':react-native-device-info'
-project(':react-native-device-info').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-device-info/android')
-include ':react-native-share'
-project(':react-native-share').projectDir = new File(rootProject.projectDir, 	'../node_modules/react-native-share/android')
+include ':app'
