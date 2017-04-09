@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import {BackAndroid, Navigator, StatusBar} from 'react-native';
+import {BackAndroid, Navigator, View} from 'react-native';
 import _ from 'lodash'
 import {connect} from 'react-redux'
 
@@ -241,6 +241,7 @@ class App extends Component {
           renderScene={this.renderScene}/>
       </DrawerLayout>
     )
+    // return <View />
   }
 }
 

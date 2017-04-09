@@ -16,11 +16,11 @@
 #define TIMEOUT_SECONDS 600
 #define TEXT_TO_LOOK_FOR @"Welcome to React Native!"
 
-@interface gittermobileTests : XCTestCase
+@interface GitterMobileTests : XCTestCase
 
 @end
 
-@implementation gittermobileTests
+@implementation GitterMobileTests
 
 - (BOOL)findSubviewInView:(UIView *)view matching:(BOOL(^)(UIView *view))test
 {
