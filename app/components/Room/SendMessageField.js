@@ -86,7 +86,7 @@ export default class SendMessageField extends Component {
           onPress={() => this.sendMessage()}
           style={s.button}>
           <Image
-            source={require('image!ic_send_black_24dp')}
+            source={require('../../images/icons/ic_send_black_24dp.png')}
             style={[s.sendIcon, {opacity: !value.trim() ? 0.2 : 1}]}/>
         </Button>
       </View>

@@ -504,12 +504,12 @@ class Room extends Component {
       if (room.hasOwnProperty('favourite')) {
         actions = [{
           title: 'Search',
-          icon: require('image!ic_search_white_24dp'),
+          icon: require('../images/icons/ic_search_white_24dp.png'),
           show: 'always'
         },
         {
           title: 'Open room info',
-          icon: require('image!ic_info_outline_white_24dp'),
+          icon: require('../images/icons/ic_info_outline_white_24dp.png'),
           show: 'never'
         },
         {
@@ -535,12 +535,12 @@ class Room extends Component {
       } else {
         actions = [{
           title: 'Search',
-          icon: require('image!ic_search_white_24dp'),
+          icon: require('../images/icons/ic_search_white_24dp.png'),
           show: 'always'
         },
         {
           title: 'Open room info',
-          icon: require('image!ic_info_outline_white_24dp'),
+          icon: require('../images/icons/ic_info_outline_white_24dp.png'),
           show: 'never'
         },
         {
@@ -571,11 +571,11 @@ class Room extends Component {
 
     return (
       <Toolbar
-        navIcon={iOS ? require('image!ic_arrow_back_white_24dp') : require('image!ic_menu_white_24dp')}
+        navIcon={iOS ? require('../images/icons/ic_arrow_back_white_24dp.png') : require('../images/icons/ic_menu_white_24dp.png')}
         onIconClicked={iOS ? this.onNavigateBack : this.props.onMenuTap}
         actions={actions}
         onActionSelected={this.handleToolbarActionSelected}
-        overflowIcon={require('image!ic_more_vert_white_24dp')}
+        overflowIcon={require('../images/icons/ic_more_vert_white_24dp.png')}
         title={roomName}
         titleColor="white"
         style={s.toolbar} />

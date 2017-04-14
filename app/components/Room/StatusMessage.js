@@ -45,7 +45,7 @@ const StatusMessage = ({onPress, onLongPress, text, handleUrlPress, backgroundCo
       <View style={s.readStatus}>
         <Image
           style={[s.readStatusIcon, {opacity}]}
-          source={require('image!ic_done_black_24dp')} />
+          source={require('../../images/icons/ic_done_black_24dp.png')} />
       </View>
     </Button>
   )

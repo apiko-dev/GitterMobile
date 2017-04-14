@@ -111,12 +111,12 @@ class HomeScreen extends Component {
 
   renderToolbar() {
     const actions = [
-      {title: 'Search', icon: require('image!ic_search_white_24dp'), show: 'always'}
+      {title: 'Search', icon: require('../images/icons/ic_search_white_24dp.png'), show: 'always'}
     ]
     return (
       <Toolbar
         actions={actions}
-        navIcon={require('image!ic_menu_white_24dp')}
+        navIcon={require('../images/icons/ic_menu_white_24dp.png')}
         onIconClicked={this.props.onMenuTap}
         onActionSelected={this.handleActionPress}
         title="Home"

@@ -24,7 +24,7 @@ const RoomUserItem = ({onUserItemPress, id, username, displayName, avatarUrlSmal
           style={s.addIcon}>
           <Image
             style={s.icon}
-            source={require('image!ic_person_add_black_24dp')} />
+            source={require('../../images/icons/ic_person_add_black_24dp.png')} />
         </Button>
       )}
     </Button>

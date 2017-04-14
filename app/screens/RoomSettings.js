@@ -64,7 +64,7 @@ class RoomSettings extends Component {
   renderToolbar() {
     return (
       <Toolbar
-        navIcon={require('image!ic_arrow_back_white_24dp')}
+        navIcon={require('../images/icons/ic_arrow_back_white_24dp.png')}
         onIconClicked={this.navigateBack}
         title="Message"
         titleColor="white"

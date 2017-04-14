@@ -11,7 +11,7 @@ const UserInfo = ({id, company, location, email, profile, has_gitter_login,
       {!!location && (
         <View style={s.item}>
           <Image
-            source={require('image!ic_location_on_black_24dp')}
+            source={require('../../images/icons/ic_location_on_black_24dp.png')}
             style={s.icon} />
           <View style={s.textWrapper}>
             <Text style={s.text}>{location}</Text>
@@ -21,7 +21,7 @@ const UserInfo = ({id, company, location, email, profile, has_gitter_login,
       {!!company && (
         <View style={s.item}>
           <Image
-            source={require('image!ic_business_black_24dp')}
+            source={require('../../images/icons/ic_business_black_24dp.png')}
             style={s.icon} />
           <View style={s.textWrapper}>
             <Text style={s.text}>{company}</Text>
@@ -34,7 +34,7 @@ const UserInfo = ({id, company, location, email, profile, has_gitter_login,
             style={s.button}
             onPress={() => onEmailPress(email)}>
             <Image
-              source={require('image!ic_email_black_24dp')}
+              source={require('../../images/icons/ic_email_black_24dp.png')}
               style={s.icon} />
             <Text style={s.text}>Send e-mail</Text>
           </Button>
@@ -46,7 +46,7 @@ const UserInfo = ({id, company, location, email, profile, has_gitter_login,
             style={s.button}
             onPress={() => onGithubPress(profile)}>
             <Image
-              source={require('image!ic_github_24dp')}
+              source={require('../../images/icons/ic_github_24dp.png')}
               style={s.icon} />
             <Text style={s.text}>Github profile</Text>
           </Button>
@@ -58,7 +58,7 @@ const UserInfo = ({id, company, location, email, profile, has_gitter_login,
             style={[s.button, s.chatPrivately]}
             onPress={() => onChatPrivatelyPress(id)}>
             <Image
-              source={require('image!ic_textsms_black_24dp')}
+              source={require('../../images/icons/ic_textsms_black_24dp.png')}
               style={s.icon} />
             <Text style={s.text}>Chat privately</Text>
           </Button>

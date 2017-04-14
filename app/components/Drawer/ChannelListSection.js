@@ -14,7 +14,7 @@ const ChannelListSection = ({
   onToggleCollapsed,
   sectionsState
 }) => {
-  const image = sectionsState[name] ? require('image!ic_expand_more_black_24dp') : require('image!ic_expand_less_black_24dp')
+  const image = sectionsState[name] ? require('../../images/icons/ic_expand_more_black_24dp.png') : require('../../images/icons/ic_expand_less_black_24dp.png')
   return (
     <View>
       <Button

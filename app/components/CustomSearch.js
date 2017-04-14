@@ -28,7 +28,7 @@ class CustomSearch extends Component {
           onPress={() => onBackPress()}>
           <Image
             style={s.buttonIcon}
-            source={require('image!ic_arrow_back_black_24dp')} />
+            source={require('../images/icons/ic_arrow_back_black_24dp.png')} />
         </Button>
         <View style={s.innerContainer}>
           <TextInput
@@ -47,7 +47,7 @@ class CustomSearch extends Component {
             onPress={() => onClearPress()}>
             <Image
               style={s.buttonIcon}
-              source={require('image!ic_close_black_24dp')} />
+              source={require('../images/icons/ic_close_black_24dp.png')} />
           </Button>
         )}
       </View>
