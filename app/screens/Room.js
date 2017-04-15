@@ -510,7 +510,7 @@ class Room extends Component {
         },
         {
           title: 'Open room info',
-          iconName: 'info_outline',
+          iconName: 'info-outline',
           show: 'never',
           iconColor: 'white'
         },
@@ -543,7 +543,7 @@ class Room extends Component {
         },
         {
           title: 'Open room info',
-          iconName: 'info_outline',
+          iconName: 'info-outline',
           show: 'never',
           iconColor: 'white'
         },

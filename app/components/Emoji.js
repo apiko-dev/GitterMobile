@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
-import {Image, Text} from 'react-native';
+import {Image, Text, PixelRatio, Platform} from 'react-native';
 import {emoji} from '../images/emoji'
+const iOS = Platform.OS === 'ios'
 
 const Emoji = ({name, styles}) => {
   const source = emoji[name]
@@ -15,7 +16,7 @@ const Emoji = ({name, styles}) => {
     <Text style={styles.wrapper}>
       <Image
         style={styles.image}
-        source={source} />
+        source={{uri: `https://gitter.im/_s/l/images/emoji/${source}.png`}} />
     </Text>
   )
 }
@@ -25,10 +26,12 @@ Emoji.defaultProps = {
     wrapper: {
       fontSize: 14
     },
-    image: {
-      height: 20,
-      width: 20
-    }
+    image: iOS
+      ? { height: 20, width: 20 }
+      : {
+        height: PixelRatio.getPixelSizeForLayoutSize(20),
+        width: PixelRatio.getPixelSizeForLayoutSize(20)
+      }
   }
 }
 
