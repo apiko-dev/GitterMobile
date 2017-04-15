@@ -3,7 +3,6 @@
 # Uncomment this line if you're using Swift
 # use_frameworks!
 
-target 'gittermobile' do
-    pod 'MZFayeClient',:git => 'https://github.com/m1entus/MZFayeClient.git', :commit => '6a88a1'
+target 'GitterMobile' do
+    pod 'MZFayeClient', :git => 'https://github.com/m1entus/MZFayeClient.git', :commit => '6a88a1'
 end
-

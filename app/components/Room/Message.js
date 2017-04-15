@@ -5,6 +5,7 @@ import {connect} from 'react-redux'
 import _ from 'lodash'
 import moment from 'moment'
 import ParsedText from '../ParsedText'
+import Icon from 'react-native-vector-icons/MaterialIcons'
 
 import Avatar from '../Avatar'
 import StatusMessage from './StatusMessage'
@@ -126,9 +127,11 @@ class Message extends Component {
             </View>
           </View>
           <View style={s.readStatus}>
-            <Image
-              style={[s.readStatusIcon, {opacity: readStatusOpacity}]}
-              source={require('image!ic_done_black_24dp')} />
+            <Icon
+              style={{opacity: readStatusOpacity}}
+              name="done"
+              color="black"
+              size={15} />
           </View>
         </Button>
       )
@@ -159,9 +162,11 @@ class Message extends Component {
           </View>
         </View>
         <View style={s.readStatus}>
-          <Image
-            style={[s.readStatusIcon, {opacity: readStatusOpacity}]}
-            source={require('image!ic_done_black_24dp')} />
+          <Icon
+            style={{opacity: readStatusOpacity}}
+            name="done"
+            color="black"
+            size={15} />
         </View>
       </Button>
     </View>

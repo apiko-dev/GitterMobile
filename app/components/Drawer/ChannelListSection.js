@@ -4,6 +4,7 @@ import s from '../../styles/screens/Drawer/ChannelListSectionStyles'
 import ChannelListItem from './ChannelListItem'
 import Heading from '../Heading'
 import Button from '../Button'
+import Icon from 'react-native-vector-icons/MaterialIcons'
 
 const ChannelListSection = ({
   name,
@@ -14,16 +15,17 @@ const ChannelListSection = ({
   onToggleCollapsed,
   sectionsState
 }) => {
-  const image = sectionsState[name] ? require('image!ic_expand_more_black_24dp') : require('image!ic_expand_less_black_24dp')
+  const icon = sectionsState[name] ? 'expand-more' : 'expand-less'
   return (
     <View>
       <Button
         style={s.sectionHeader}
         onPress={() => onToggleCollapsed(name, sectionsState[name])}>
         <Heading text={name} styles={s.heading}/>
-        <Image
-          source={image}
-          style={s.icon} />
+        <Icon
+          name={icon}
+          color="black"
+          size={16} />
       </Button>
       <View style={s.itemSection}>
         {!sectionsState[name] && items && items.map(item => (

@@ -1,10 +1,9 @@
 import React, {Component, PropTypes} from 'react';
-import {View} from 'react-native';
+import {View, ListView} from 'react-native';
 import moment from 'moment'
 import InvertibleScrollView from 'react-native-invertible-scroll-view'
 import Message from './Message'
 import HistoryBegin from './HistoryBegin'
-import ListView from '../../../libs/ListView/ExtendedListView'
 
 export default class MessagesList extends Component {
   constructor(props) {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0620"
+   LastUpgradeVersion = "0820"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "NO"
@@ -29,8 +29,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "gittermobile.app"
-               BlueprintName = "gittermobile"
+               BuildableName = "GitterMobile.app"
+               BlueprintName = "GitterMobile"
                ReferencedContainer = "container:gittermobile.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -43,8 +43,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "gittermobileTests.xctest"
-               BlueprintName = "gittermobileTests"
+               BuildableName = "GitterMobileTests.xctest"
+               BlueprintName = "GitterMobileTests"
                ReferencedContainer = "container:gittermobile.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -61,8 +61,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "gittermobileTests.xctest"
-               BlueprintName = "gittermobileTests"
+               BuildableName = "GitterMobileTests.xctest"
+               BlueprintName = "GitterMobileTests"
                ReferencedContainer = "container:gittermobile.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -71,8 +71,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "gittermobile.app"
-            BlueprintName = "gittermobile"
+            BuildableName = "GitterMobile.app"
+            BlueprintName = "GitterMobile"
             ReferencedContainer = "container:gittermobile.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -94,8 +94,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "gittermobile.app"
-            BlueprintName = "gittermobile"
+            BuildableName = "GitterMobile.app"
+            BlueprintName = "GitterMobile"
             ReferencedContainer = "container:gittermobile.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -113,8 +113,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "gittermobile.app"
-            BlueprintName = "gittermobile"
+            BuildableName = "GitterMobile.app"
+            BlueprintName = "GitterMobile"
             ReferencedContainer = "container:gittermobile.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
