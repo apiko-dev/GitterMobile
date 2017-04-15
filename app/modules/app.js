@@ -29,6 +29,7 @@ export function init() {
   return async (dispatch, getState) => {
     dispatch(setupAppStatusListener())
     try {
+      debugger
       // checking internet connection
       const netStatus = await NetInfo.fetch()
       if (netStatus === 'none' || netStatus === 'NONE') {
