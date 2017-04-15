@@ -4,6 +4,7 @@ import s from '../../styles/screens/Room/StatusMessageStyles'
 import Parser from 'react-native-parsed-text'
 import Emoji from '../Emoji'
 import Button from '../Button'
+import Icon from 'react-native-vector-icons/MaterialIcons'
 
 const EMOJI_REGEX = /:([a-z0-9A-Z_-]+):/
 const THUMBSUP = /:\+1:/
@@ -43,9 +44,11 @@ const StatusMessage = ({onPress, onLongPress, text, handleUrlPress, backgroundCo
         </View>
       </View>
       <View style={s.readStatus}>
-        <Image
-          style={[s.readStatusIcon, {opacity}]}
-          source={require('../../images/icons/ic_done_black_24dp.png')} />
+        <Icon
+          style={{opacity}}
+          name="done"
+          color="black"
+          size={15} />
       </View>
     </Button>
   )

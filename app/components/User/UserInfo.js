@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import {View, Image, Text} from 'react-native';
 import s from '../../styles/screens/User/UserInfoStyles'
 import Button from '../Button'
-
+import Icon from 'react-native-vector-icons/MaterialIcons'
 
 const UserInfo = ({id, company, location, email, profile, has_gitter_login,
   onGithubPress, onEmailPress, onChatPrivatelyPress, currentUserId}) => {
@@ -10,9 +10,11 @@ const UserInfo = ({id, company, location, email, profile, has_gitter_login,
     <View style={s.container}>
       {!!location && (
         <View style={s.item}>
-          <Image
-            source={require('../../images/icons/ic_location_on_black_24dp.png')}
-            style={s.icon} />
+          <Icon
+            style={s.icon}
+            name="location-on"
+            color="black"
+            size={28} />
           <View style={s.textWrapper}>
             <Text style={s.text}>{location}</Text>
           </View>
@@ -20,9 +22,11 @@ const UserInfo = ({id, company, location, email, profile, has_gitter_login,
       )}
       {!!company && (
         <View style={s.item}>
-          <Image
-            source={require('../../images/icons/ic_business_black_24dp.png')}
-            style={s.icon} />
+          <Icon
+            style={s.icon}
+            name="business"
+            color="black"
+            size={28} />
           <View style={s.textWrapper}>
             <Text style={s.text}>{company}</Text>
           </View>
@@ -33,9 +37,11 @@ const UserInfo = ({id, company, location, email, profile, has_gitter_login,
           <Button
             style={s.button}
             onPress={() => onEmailPress(email)}>
-            <Image
-              source={require('../../images/icons/ic_email_black_24dp.png')}
-              style={s.icon} />
+            <Icon
+              style={s.icon}
+              name="email"
+              color="black"
+              size={28} />
             <Text style={s.text}>Send e-mail</Text>
           </Button>
         </View>
@@ -45,9 +51,11 @@ const UserInfo = ({id, company, location, email, profile, has_gitter_login,
           <Button
             style={s.button}
             onPress={() => onGithubPress(profile)}>
-            <Image
-              source={require('../../images/icons/ic_github_24dp.png')}
-              style={s.icon} />
+            <Icon
+              style={s.icon}
+              name="github"
+              color="black"
+              size={28} />
             <Text style={s.text}>Github profile</Text>
           </Button>
         </View>
@@ -57,9 +65,11 @@ const UserInfo = ({id, company, location, email, profile, has_gitter_login,
           <Button
             style={[s.button, s.chatPrivately]}
             onPress={() => onChatPrivatelyPress(id)}>
-            <Image
-              source={require('../../images/icons/ic_textsms_black_24dp.png')}
-              style={s.icon} />
+            <Icon
+              style={s.icon}
+              name="textsms"
+              color="black"
+              size={28} />
             <Text style={s.text}>Chat privately</Text>
           </Button>
         </View>

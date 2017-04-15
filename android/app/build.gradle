@@ -80,6 +80,8 @@ def enableSeparateBuildPerCPUArchitecture = false
 /**
  * Run Proguard to shrink the Java bytecode in release builds.
  */
+/*apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"*/
+
 def enableProguardInReleaseBuilds = false
 
 android {

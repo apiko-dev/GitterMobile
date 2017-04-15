@@ -133,12 +133,13 @@ class SearchScreen extends Component {
   renderToolbar() {
     const {value} = this.state
     const actions = !!value
-      ? [{title: 'Clear', icon: require('../images/icons/ic_close_white_24dp.png'), show: 'always'}]
+      ? [{title: 'Clear', iconName: 'close_white', iconColor: 'white', show: 'always'}]
       : []
 
     return (
       <Toolbar
-        navIcon={require('../images/icons/ic_arrow_back_white_24dp.png')}
+        navIconName="arrow-back"
+        iconColor="white"
         onIconClicked={this.navigateBack}
         actions={actions}
         onActionSelected={this.handleActionPress}

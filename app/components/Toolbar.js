@@ -1,5 +1,6 @@
 import React, {PropTypes, Component} from 'react';
-import {View, Text, Platform, ToolbarAndroid, Image, ActionSheetIOS} from 'react-native';
+import {View, Text, Platform, Image, ActionSheetIOS} from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons'
 
 import s from '../styles/components/Toolbar'
 
@@ -48,38 +49,40 @@ class Toolbar extends Component {
     )
   }
 
-  renderIcon(index, icon, onPress) {
+  renderIcon(index, {iconName, iconColor}, onPress) {
     return (
       <Button
         onPress={() => onPress(index)}
         style={[s.iconButton, s.showIcon]}>
-        <Image
-          style={s.icon}
-          source={icon} />
+        <Icon
+          name={iconName}
+          color={iconColor}
+          size={25} />
       </Button>
     )
   }
 
   renderNavIcon() {
-    const {onIconClicked, navIcon} = this.props
+    const {onIconClicked, navIconName, iconColor} = this.props
     return (
       <Button onPress={onIconClicked} style={s.iconButton}>
-        <Image
-          style={s.icon}
-          source={navIcon} />
+        <Icon
+          name={navIconName}
+          color={iconColor}
+          size={25} />
       </Button>
     )
   }
 
   renderRight() {
-    const {actions, onActionSelected, overflowIcon} = this.props
+    const {actions, onActionSelected, overflowIconName} = this.props
 
     if (!actions) {
       return <View style={s.iconButton} />
     }
     const icons = actions.map((item, index) => {
       if (item.show === 'always') {
-        return this.renderIcon(index, item.icon, onActionSelected)
+        return this.renderIcon(index, item, onActionSelected)
       }
     })
 
@@ -90,9 +93,10 @@ class Toolbar extends Component {
         {icons}
         {showOverflowIcon && (
           <Button onPress={this.handleOverflowClick} style={s.iconButton}>
-            <Image
-              style={s.icon}
-              source={overflowIcon} />
+            <Icon
+              name={overflowIconName}
+              color="black"
+              size={25} />
           </Button>
         )}
       </View>
@@ -145,7 +149,7 @@ class Toolbar extends Component {
 
 Toolbar.propTypes = {
   title: PropTypes.string,
-  navIcon: PropTypes.element,
+  navIconName: PropTypes.string,
   onNavIconPress: PropTypes.func,
   additionalIcon: PropTypes.element,
   additionalIconTitle: PropTypes.string,
@@ -154,4 +158,4 @@ Toolbar.propTypes = {
   style: PropTypes.object
 }
 
-export default Platform.OS === 'ios' ? Toolbar : ToolbarAndroid
+export default Platform.OS === 'ios' ? Toolbar : Icon.ToolbarAndroid

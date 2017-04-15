@@ -45,7 +45,8 @@ class Message extends Component {
   renderToolbar() {
     return (
       <Toolbar
-        navIcon={require('../images/icons/ic_arrow_back_white_24dp.png')}
+        navIconName="arrow-back"
+        iconColor="white"
         onIconClicked={this.navigateBack}
         title="Message"
         titleColor="white"

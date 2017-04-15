@@ -1,0 +1,25 @@
+PODS:
+  - MZFayeClient (1.0.3):
+    - SocketRocket
+  - SocketRocket (0.5.1)
+
+DEPENDENCIES:
+  - MZFayeClient (from `https://github.com/m1entus/MZFayeClient.git`, commit `6a88a1`)
+
+EXTERNAL SOURCES:
+  MZFayeClient:
+    :commit: 6a88a1
+    :git: https://github.com/m1entus/MZFayeClient.git
+
+CHECKOUT OPTIONS:
+  MZFayeClient:
+    :commit: 6a88a1
+    :git: https://github.com/m1entus/MZFayeClient.git
+
+SPEC CHECKSUMS:
+  MZFayeClient: ac3defb0026d26f025444eeb021117be9cab4642
+  SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
+
+PODFILE CHECKSUM: 943ae513e18e7ab74182d57137d9874ad2a96422
+
+COCOAPODS: 1.2.1

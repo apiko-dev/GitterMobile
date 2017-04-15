@@ -13,8 +13,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   icon: {
-    height: 28,
-    width: 28,
     marginRight: 8
   },
   button: {
