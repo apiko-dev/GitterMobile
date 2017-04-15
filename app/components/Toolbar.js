@@ -57,7 +57,7 @@ class Toolbar extends Component {
         <Icon
           name={iconName}
           color={iconColor}
-          size={25} />
+          size={26} />
       </Button>
     )
   }
@@ -69,13 +69,13 @@ class Toolbar extends Component {
         <Icon
           name={navIconName}
           color={iconColor}
-          size={25} />
+          size={26} />
       </Button>
     )
   }
 
   renderRight() {
-    const {actions, onActionSelected, overflowIconName} = this.props
+    const {actions, onActionSelected, overflowIconName, iconColor} = this.props
 
     if (!actions) {
       return <View style={s.iconButton} />
@@ -95,7 +95,7 @@ class Toolbar extends Component {
           <Button onPress={this.handleOverflowClick} style={s.iconButton}>
             <Icon
               name={overflowIconName}
-              color="black"
+              color={iconColor}
               size={25} />
           </Button>
         )}

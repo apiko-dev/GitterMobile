@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import {InteractionManager, ToastAndroid, Clipboard, Alert, ListView, View, Platform} from 'react-native';
+import {InteractionManager, ToastAndroid, Clipboard, Alert, ListView, View, Platform, KeyboardAvoidingView} from 'react-native';
 import Toolbar from '../components/Toolbar'
 import {connect} from 'react-redux'
 import DrawerLayout from 'react-native-drawer-layout'
@@ -575,7 +575,7 @@ class Room extends Component {
 
     return (
       <Toolbar
-        navIconName={iOS ? 'arrow_back' : 'menu'}
+        navIconName={iOS ? 'arrow-back' : 'menu'}
         iconColor="white"
         onIconClicked={iOS ? this.onNavigateBack : this.props.onMenuTap}
         actions={actions}
@@ -595,13 +595,22 @@ class Room extends Component {
           onPress={this.onJoinRoom.bind(this)} />
       )
     }
-    return (
+
+    const field = (
       <SendMessageField
         ref="sendMessageField"
         onSending={this.onSending.bind(this)}
         onChange={this.onTextFieldChange.bind(this)}
         value={this.state.textInputValue} />
     )
+    return iOS
+      ? (
+        <KeyboardAvoidingView
+          behavior="padding">
+          {field}
+        </KeyboardAvoidingView>
+      )
+      : field
   }
 
   renderLoadingMore() {
@@ -681,11 +690,13 @@ class Room extends Component {
           drawerPosition={DrawerLayout.positions.Right}
           renderNavigationView={this.renderRoomInfo}
           keyboardDismissMode="on-drag">
-            {this.renderToolbar()}
-            {isLoadingMore ? this.renderLoadingMore() : null}
-            {isLoadingMessages ? this.renderLoading() : this.renderListView()}
-            {getMessagesError || isLoadingMessages || _.has(listView, 'data') &&
-              listView.data.length === 0 ? null : this.renderBottom()}
+
+              {this.renderToolbar()}
+              {isLoadingMore ? this.renderLoadingMore() : null}
+              {isLoadingMessages ? this.renderLoading() : this.renderListView()}
+              {getMessagesError || isLoadingMessages || _.has(listView, 'data') &&
+                listView.data.length === 0 ? null : this.renderBottom()}
+
         </DrawerLayout>
       </View>
     )
