@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "5F21F0E3235FB84632695194147A453A6E6793CF",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "5F21F0E3235FB84632695194147A453A6E6793CF" : 9223372036854775807,
+    "2D744A5E2DBE6045F4BDE5587E93CD9E116BC6F4" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "ED1D968B-5A19-4871-A08D-A2ADAC173F62",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "5F21F0E3235FB84632695194147A453A6E6793CF" : "GitterMobile\/",
+    "2D744A5E2DBE6045F4BDE5587E93CD9E116BC6F4" : "..\/khmarka\/megabank"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "gittermobile",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "ios\/gittermobile.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:khmarka\/mgb.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "2D744A5E2DBE6045F4BDE5587E93CD9E116BC6F4"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:terrysahaidak\/GitterMobile.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "5F21F0E3235FB84632695194147A453A6E6793CF"
+    }
+  ]
+}

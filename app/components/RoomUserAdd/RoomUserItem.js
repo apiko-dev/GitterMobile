@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
-import {Image, View, Text} from 'react-native';
+import {View, Text} from 'react-native';
 import s from '../../styles/screens/RoomUserAdd/RoomUserItemStyles'
+import Icon from 'react-native-vector-icons/MaterialIcons'
 
 import Avatar from '../Avatar'
 import Button from '../Button'
@@ -22,9 +23,11 @@ const RoomUserItem = ({onUserItemPress, id, username, displayName, avatarUrlSmal
         <Button
           onPress={() => onAddPress(username)}
           style={s.addIcon}>
-          <Image
-            style={s.icon}
-            source={require('image!ic_person_add_black_24dp')} />
+          <Icon
+            style={{opacity: 0.6}}
+            name="person-add"
+            color="black"
+            size={30} />
         </Button>
       )}
     </Button>

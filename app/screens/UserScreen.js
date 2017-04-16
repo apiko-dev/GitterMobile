@@ -66,7 +66,8 @@ class UserScreen extends Component {
     const {route} = this.props
     return (
       <Toolbar
-        navIcon={require('image!ic_arrow_back_white_24dp')}
+        navIconName="arrow-back"
+        iconColor="white"
         onIconClicked={this.navigateBack}
         title="User"
         titleColor="white"

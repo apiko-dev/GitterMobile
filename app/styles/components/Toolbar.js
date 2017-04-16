@@ -16,8 +16,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between'
   },
   titleContainer: {
+    // flex: 1,
     // backgroundColor: 'gray',
-    justifyContent: 'center'
+    // justifyContent: 'center',
+    // alignItems: 'center'
   },
   title: {
     fontSize: 16,
@@ -26,15 +28,15 @@ const styles = StyleSheet.create({
   },
   iconButton: {
     backgroundColor: colors.raspberry,
-    paddingHorizontal: 8,
+    // marginHorizontal: 4,
     height: 35,
     flexDirection: 'row',
     alignItems: 'center',
-    width: 35,
+    width: 44,
     justifyContent: 'center'
   },
   showIcon: {
-    // padding
+    // marginRight: 4
   },
   icon: {
     width: 25,
@@ -57,7 +59,7 @@ const styles = StyleSheet.create({
   },
   iconTitle: {
     color: '#FFF',
-    paddingRight: 16,
+    paddingRight: 20,
     fontSize: 20
   },
   childrenContainer: {

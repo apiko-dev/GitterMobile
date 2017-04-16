@@ -8,16 +8,24 @@ const style = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     paddingHorizontal: padding,
     backgroundColor: 'white',
-    elevation: 8
+    elevation: 8,
+    borderTopWidth: 1,
+    borderTopColor: '#f0eef0'
   },
   innerContainer: {
-    flex: 1
+    flex: 1,
+    // alignItems: 'center',
+    justifyContent: 'center'
   },
   textInput: {
     backgroundColor: 'white',
-    fontSize: 14
+    fontSize: 14,
+    paddingTop: 0,
+    paddingBottom: 0,
+    textAlignVertical: 'center'
   },
   button: {
     height: button,

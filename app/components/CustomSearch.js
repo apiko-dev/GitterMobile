@@ -2,6 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import {TextInput, Image, View} from 'react-native';
 import s from '../styles/components/CustomSearchStyles'
 import Button from './Button'
+import Icon from 'react-native-vector-icons/MaterialIcons'
 
 class CustomSearch extends Component {
   constructor(props) {
@@ -26,9 +27,11 @@ class CustomSearch extends Component {
         <Button
           style={s.button}
           onPress={() => onBackPress()}>
-          <Image
-            style={s.buttonIcon}
-            source={require('image!ic_arrow_back_black_24dp')} />
+          <Icon
+            style={{opacity: 0.6}}
+            name="arrow-back"
+            color="black"
+            size={25} />
         </Button>
         <View style={s.innerContainer}>
           <TextInput
@@ -45,9 +48,11 @@ class CustomSearch extends Component {
           <Button
             style={s.button}
             onPress={() => onClearPress()}>
-            <Image
-              style={s.buttonIcon}
-              source={require('image!ic_close_black_24dp')} />
+            <Icon
+              style={{opacity: 0.6}}
+              name="close"
+              color="black"
+              size={25} />
           </Button>
         )}
       </View>

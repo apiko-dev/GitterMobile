@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import {InteractionManager, ToastAndroid, Clipboard, Alert, ListView, View, Platform} from 'react-native';
+import {InteractionManager, ToastAndroid, Clipboard, Alert, ListView, View, Platform, KeyboardAvoidingView} from 'react-native';
 import Toolbar from '../components/Toolbar'
 import {connect} from 'react-redux'
 import DrawerLayout from 'react-native-drawer-layout'
@@ -504,13 +504,15 @@ class Room extends Component {
       if (room.hasOwnProperty('favourite')) {
         actions = [{
           title: 'Search',
-          icon: require('image!ic_search_white_24dp'),
-          show: 'always'
+          iconName: 'search',
+          show: 'always',
+          iconColor: 'white'
         },
         {
           title: 'Open room info',
-          icon: require('image!ic_info_outline_white_24dp'),
-          show: 'never'
+          iconName: 'info-outline',
+          show: 'never',
+          iconColor: 'white'
         },
         {
           title: 'Remove from favorite',
@@ -535,13 +537,15 @@ class Room extends Component {
       } else {
         actions = [{
           title: 'Search',
-          icon: require('image!ic_search_white_24dp'),
-          show: 'always'
+          iconName: 'search',
+          show: 'always',
+          iconColor: 'white'
         },
         {
           title: 'Open room info',
-          icon: require('image!ic_info_outline_white_24dp'),
-          show: 'never'
+          iconName: 'info-outline',
+          show: 'never',
+          iconColor: 'white'
         },
         {
           title: 'Add to favorite',
@@ -566,16 +570,17 @@ class Room extends Component {
       }
     }
 
-    var roomName = !!room ? room.name : ''
+    let roomName = !!room ? room.name : ''
     roomName = roomName.split('/').reverse()[0]
 
     return (
       <Toolbar
-        navIcon={iOS ? require('image!ic_arrow_back_white_24dp') : require('image!ic_menu_white_24dp')}
+        navIconName={iOS ? 'arrow-back' : 'menu'}
+        iconColor="white"
         onIconClicked={iOS ? this.onNavigateBack : this.props.onMenuTap}
         actions={actions}
         onActionSelected={this.handleToolbarActionSelected}
-        overflowIcon={require('image!ic_more_vert_white_24dp')}
+        overflowIconName="more-vert"
         title={roomName}
         titleColor="white"
         style={s.toolbar} />
@@ -590,13 +595,22 @@ class Room extends Component {
           onPress={this.onJoinRoom.bind(this)} />
       )
     }
-    return (
+
+    const field = (
       <SendMessageField
         ref="sendMessageField"
         onSending={this.onSending.bind(this)}
         onChange={this.onTextFieldChange.bind(this)}
         value={this.state.textInputValue} />
     )
+    return iOS
+      ? (
+        <KeyboardAvoidingView
+          behavior="padding">
+          {field}
+        </KeyboardAvoidingView>
+      )
+      : field
   }
 
   renderLoadingMore() {
@@ -676,11 +690,13 @@ class Room extends Component {
           drawerPosition={DrawerLayout.positions.Right}
           renderNavigationView={this.renderRoomInfo}
           keyboardDismissMode="on-drag">
-            {this.renderToolbar()}
-            {isLoadingMore ? this.renderLoadingMore() : null}
-            {isLoadingMessages ? this.renderLoading() : this.renderListView()}
-            {getMessagesError || isLoadingMessages || _.has(listView, 'data') &&
-              listView.data.length === 0 ? null : this.renderBottom()}
+
+              {this.renderToolbar()}
+              {isLoadingMore ? this.renderLoadingMore() : null}
+              {isLoadingMessages ? this.renderLoading() : this.renderListView()}
+              {getMessagesError || isLoadingMessages || _.has(listView, 'data') &&
+                listView.data.length === 0 ? null : this.renderBottom()}
+
         </DrawerLayout>
       </View>
     )

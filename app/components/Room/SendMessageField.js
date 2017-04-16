@@ -2,6 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import {TextInput, Image, View, Text} from 'react-native';
 import Button from '../Button'
 import s from '../../styles/screens/Room/SendMessageFieldStyles'
+import Icon from 'react-native-vector-icons/MaterialIcons'
 
 export default class SendMessageField extends Component {
   constructor(props) {
@@ -85,9 +86,11 @@ export default class SendMessageField extends Component {
           background="SelectableBackgroundBorderless"
           onPress={() => this.sendMessage()}
           style={s.button}>
-          <Image
-            source={require('image!ic_send_black_24dp')}
-            style={[s.sendIcon, {opacity: !value.trim() ? 0.2 : 1}]}/>
+          <Icon
+            style={{opacity: !value.trim() ? 0.2 : 1}}
+            name="send"
+            color="black"
+            size={30} />
         </Button>
       </View>
 
