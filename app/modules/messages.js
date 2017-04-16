@@ -62,6 +62,7 @@ export function getRoomMessages(roomId) {
         }
       }
     } catch (error) {
+      // debugger
       dispatch({type: ROOM_MESSAGES_FAILED, error})
     }
   }

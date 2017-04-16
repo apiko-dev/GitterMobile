@@ -4,6 +4,7 @@ import moment from 'moment'
 import InvertibleScrollView from 'react-native-invertible-scroll-view'
 import Message from './Message'
 import HistoryBegin from './HistoryBegin'
+import InvertedList from '../InvertedList'
 
 export default class MessagesList extends Component {
   constructor(props) {
@@ -81,18 +82,13 @@ export default class MessagesList extends Component {
     // debugger
 
     return (
-      <ListView
-        ref="listView"
-        childSizes={this.childHeights}
-        onChangeVisibleRows={(a, b) => onChangeVisibleRows(a, b)}
-        renderScrollComponent={props => <InvertibleScrollView {...props} inverted />}
-        dataSource={listViewData.dataSource}
+      <InvertedList
+        data={listViewData.rowIds.map(item => listViewData.data[item])}
         onEndReached={this.props.onEndReached}
-        scrollRenderAheadDistance={1000}
-        onEndReachedThreshold={500}
-        pageSize={30}
-        initialListSize={30}
-        renderRow={(rowData, _, rowId) => this.renderRow(rowData, rowId)} />
+        onEndReachedThreshold={1000}
+        windowSize={30}
+        initialNumToRender={30}
+        renderItem={({item, index}) => this.renderRow(item, index)} />
     )
   }
 }
