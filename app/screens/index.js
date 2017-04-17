@@ -1,9 +1,9 @@
 import React, {Component, PropTypes} from 'react';
-import {BackAndroid, Navigator, View} from 'react-native';
+import {BackAndroid, Navigator, View, DrawerLayoutAndroid, Platform} from 'react-native';
 import _ from 'lodash'
 import {connect} from 'react-redux'
 
-import DrawerLayout from 'react-native-drawer-layout'
+import DrawerLayoutJs from 'react-native-drawer-layout'
 
 import {init} from '../modules/app'
 import * as Navigation from '../modules/navigation'
@@ -31,6 +31,7 @@ const {colors} = THEMES.gitterDefault
 
 // this need for passing navigator instance to navigation module
 export let nav
+const DrawerLayout = Platform.OS === 'ios' ? DrawerLayoutJs : DrawerLayoutAndroid
 
 class App extends Component {
   constructor(props) {
