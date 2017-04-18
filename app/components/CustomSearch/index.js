@@ -44,7 +44,7 @@ class CustomSearch extends Component {
             onChange={onChange}
             placeholder="Search" />
         </View>
-        {!!value && value.length !== 0 && (
+        {!!value && value.length !== 0 ? (
           <Button
             style={s.button}
             onPress={() => onClearPress()}>
@@ -54,7 +54,7 @@ class CustomSearch extends Component {
               color="black"
               size={25} />
           </Button>
-        )}
+        ) : (<View style={s.button} />)}
       </View>
     )
   }

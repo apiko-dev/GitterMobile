@@ -60,8 +60,8 @@ class RoomInfoScreen extends Component {
   }
 
   handleUserPress(userId, username) {
-    const {dispatch} = this.props
-    dispatch(Navigation.goTo({name: 'user', userId, username}))
+    const {navigator} = this.props
+    navigator.showModal({screen: 'gm.User', passProps: {userId, username}})
   }
 
   handleUrlPress(url) {
@@ -73,13 +73,13 @@ class RoomInfoScreen extends Component {
   }
 
   handleAddPress() {
-    const {dispatch, route: {roomId}} = this.props
-    dispatch(Navigation.goTo({name: 'addUser', roomId}))
+    const {navigator, route: {roomId}} = this.props
+    navigator.showModal({screen: 'gm.RoomUserAdd', passProps: {roomId}})
   }
 
   handleAllUsersPress() {
-    const {dispatch, route: {roomId}} = this.props
-    dispatch(Navigation.goTo({name: 'roomUsers', roomId}))
+    const {navigator, route: {roomId}} = this.props
+    navigator.showModal({screen: 'gm.RoomUsers', passProps: {roomId}})
   }
 
   refetchData() {

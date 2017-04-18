@@ -241,8 +241,8 @@ class Room extends Component {
   }
 
   onMessageLongPress(messageId) {
-    const {dispatch, route: {roomId}} = this.props
-    dispatch(Navigation.goTo({name: 'message', messageId, roomId}))
+    const {navigator, route: {roomId}} = this.props
+    navigator.showModal({screen: 'gm.Message', passProps: {messageId, roomId}})
   }
 
   onDelete(rowId, id) {
@@ -434,8 +434,8 @@ class Room extends Component {
   }
 
   handleUserAvatarPress(id, username) {
-    const {dispatch} = this.props
-    dispatch(Navigation.goTo({name: 'user', userId: id, username}))
+    const {navigator} = this.props
+    navigator.showModal({screen: 'gm.User', passProps: {userId: id, username}})
   }
 
   handleQuotePress(message) {
@@ -519,12 +519,6 @@ class Room extends Component {
     if (!listViewData[roomId]) {
       const ds = new ListView.DataSource({rowHasChanged: (row1, row2) => {
         return row1 !== row2
-        //   return true
-        // } else if (r1.text === r2.text) {
-        //   return false
-        // } else {
-          // return true
-        // }
       }})
       dispatch(prepareListView(roomId, ds.cloneWithRows([])))
     }
@@ -684,10 +678,11 @@ class Room extends Component {
   }
 
   renderRoomInfo() {
-    const {route} = this.props
+    const {route, navigator} = this.props
     return (
       <RoomInfoScreen
         route={route}
+        navigator={navigator}
         drawer={this.roomInfoDrawer} />
     )
   }
@@ -751,7 +746,8 @@ Room.propTypes = {
   currentUser: PropTypes.object,
   getMessagesError: PropTypes.bool,
   roomInfoDrawerState: PropTypes.string,
-  notifications: PropTypes.object
+  notifications: PropTypes.object,
+  navigator: PropTypes.object
 }
 
 Room.navigatorStyle = {

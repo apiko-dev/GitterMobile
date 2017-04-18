@@ -1,15 +1,14 @@
 import React, {Component, PropTypes} from 'react';
-import {InteractionManager, Linking, ScrollView, View} from 'react-native';
+import {Linking, ScrollView, View} from 'react-native';
 import {connect} from 'react-redux'
 import ScrollableTabView from 'react-native-scrollable-tab-view'
 import s from './styles'
-import * as Navigation from '../../modules/navigation'
 import {getUser, chatPrivately} from '../../modules/users'
 
 import {THEMES} from '../../constants'
 const {colors} = THEMES.gitterDefault
+import navigationStyles from '../../styles/common/navigationStyles'
 
-import Toolbar from '../../components/Toolbar'
 import Loading from '../../components/Loading'
 import UserTop from './UserTop'
 import UserInfo from './UserInfo'
@@ -17,8 +16,7 @@ import UserInfo from './UserInfo'
 class UserScreen extends Component {
   constructor(props) {
     super(props)
-    this.renderToolbar = this.renderToolbar.bind(this)
-    this.navigateBack = this.navigateBack.bind(this)
+
     this.renderTabs = this.renderTabs.bind(this)
     this.renderUserInfoTab = this.renderUserInfoTab.bind(this)
     this.handleTabChange = this.handleTabChange.bind(this)
@@ -29,13 +27,13 @@ class UserScreen extends Component {
     this.state = {
       activeTab: 0
     }
+
+    this.props.navigator.setTitle({title: 'User'})
   }
 
-  componentDidMount() {
-    const {dispatch, route} = this.props
-    InteractionManager.runAfterInteractions(() => {
-      dispatch(getUser(route.username))
-    })
+  componentWillMount() {
+    const {dispatch, username} = this.props
+    dispatch(getUser(username))
   }
 
   handleTabChange({i}) {
@@ -53,26 +51,8 @@ class UserScreen extends Component {
   }
 
   handleChatPrivatelyPress(userId) {
-    const {dispatch} = this.props
-    dispatch(chatPrivately(userId))
-  }
-
-  navigateBack() {
-    const {dispatch} = this.props
-    dispatch(Navigation.goBack())
-  }
-
-  renderToolbar() {
-    // const {route} = this.props
-    return (
-      <Toolbar
-        navIconName="arrow-back"
-        iconColor="white"
-        onIconClicked={this.navigateBack}
-        title="User"
-        titleColor="white"
-        style={s.toolbar} />
-    )
+    const {dispatch, navigator} = this.props
+    dispatch(chatPrivately(userId, navigator))
   }
 
   renderTabs() {
@@ -96,8 +76,7 @@ class UserScreen extends Component {
   }
 
   renderUserInfoTab() {
-    const {isLoadingUsers, users, route, currentUserId} = this.props
-    const user = users[route.userId]
+    const {isLoadingUsers, user, currentUserId} = this.props
     if (isLoadingUsers || !user) {
       return (
         <Loading />
@@ -119,7 +98,6 @@ class UserScreen extends Component {
   render() {
     return (
       <View style={s.container}>
-        {this.renderToolbar()}
         {this.renderUserInfoTab()}
       </View>
     )
@@ -134,15 +112,18 @@ UserScreen.propTypes = {
   currentUserId: PropTypes.string
 }
 
+UserScreen.navigatorStyle = {
+  ...navigationStyles
+}
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
   // const {current} = state.navigation
   const {isLoadingUsers} = state.users
   const {id} = state.viewer.user
   return {
     isLoadingUsers,
     currentUserId: id,
-    // route: current,
+    user: state.users.entities[ownProps.userId],
     users: state.users.entities
   }
 }

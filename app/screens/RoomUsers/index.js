@@ -3,8 +3,8 @@ import {View, ListView} from 'react-native';
 import s from './styles'
 import {connect} from 'react-redux'
 import _ from 'lodash'
+import navigationStyles from '../../styles/common/navigationStyles'
 
-import * as Navigation from '../../modules/navigation'
 import {searchRoomUsers} from '../../modules/search'
 import {prepareListView, roomUsersWithSkip} from '../../modules/users'
 
@@ -36,7 +36,7 @@ class RoomUsersScreen extends Component {
   }
 
   onEndReached() {
-    const {dispatch, route: {roomId}} = this.props
+    const {dispatch, roomId} = this.props
     dispatch(roomUsersWithSkip(roomId))
   }
 
@@ -50,17 +50,17 @@ class RoomUsersScreen extends Component {
   }
 
   handleBackPress() {
-    const {dispatch} = this.props
-    dispatch(Navigation.goBack())
+    const {navigator} = this.props
+    navigator.dismissModal()
   }
 
   handleUserItemPress(id, username) {
-    const {dispatch} = this.props
-    dispatch(Navigation.goTo({name: 'user', userId: id, username}))
+    const {navigator} = this.props
+    navigator.showModal({screen: 'gm.User', passProps: {userId: id, username}})
   }
 
   prepareDataSources() {
-    const {listViewData, route: {roomId}, dispatch} = this.props
+    const {listViewData, roomId, dispatch} = this.props
     if (!listViewData[roomId]) {
       const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => !_.isEqual(r1, r2)})
       dispatch(prepareListView(roomId, ds.cloneWithRows([])))
@@ -68,7 +68,7 @@ class RoomUsersScreen extends Component {
   }
 
   searchRequest(query) {
-    const {dispatch, route: {roomId}} = this.props
+    const {dispatch, roomId} = this.props
 
     if (!query.trim()) {
       return
@@ -99,7 +99,7 @@ class RoomUsersScreen extends Component {
   }
 
   renderUserList() {
-    const {listViewData, route: {roomId}} = this.props
+    const {listViewData, roomId} = this.props
     return (
       <RoomUsersList
         listViewData={listViewData[roomId]}
@@ -123,9 +123,14 @@ class RoomUsersScreen extends Component {
 RoomUsersScreen.propTypes = {
   dispatch: PropTypes.func,
   roomUsersResult: PropTypes.array,
-  route: PropTypes.object,
+  roomId: PropTypes.string,
   isLoading: PropTypes.bool,
   listViewData: PropTypes.object
+}
+
+RoomUsersScreen.navigatorStyle = {
+  ...navigationStyles,
+  navBarHidden: true
 }
 
 function mapStateToProps(state) {

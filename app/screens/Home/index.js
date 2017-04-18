@@ -23,9 +23,9 @@ class HomeScreen extends Component {
     this.props.navigator.setButtons({
       leftButtons: [{
         title: 'Menu',
-        id: 'sideMenu',
-        icon: iconsMap['menu-white'],
-        showAsAction: 'always'
+        id: 'sideMenu'
+        // icon: iconsMap['menu-white'],
+        // showAsAction: 'always'
       }],
       rightButtons: [{
         title: 'Search',

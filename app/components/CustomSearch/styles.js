@@ -3,14 +3,14 @@ const height = 48
 
 const styles = StyleSheet.create({
   container: {
+    borderRadius: 2,
     height,
     flexDirection: 'row',
     alignItems: 'center',
     // justifyContent: 'center',
-    margin: 8,
+    margin: 4,
     backgroundColor: 'white',
-    elevation: 2,
-    borderRadius: 2
+    elevation: 2
   },
   button: {
     elevation: 0,
