@@ -6,26 +6,25 @@ import s from './styles'
 import {THEMES} from '../../constants'
 const {colors} = THEMES.gitterDefault
 
-import Toolbar from '../../components/Toolbar'
 import Button from '../../components/Button'
 
 import {changeNotificationSettings} from '../../modules/rooms'
-import * as Navigation from '../../modules/navigation'
 
 import Section from './Section'
+import navigationStyles from '../../styles/common/navigationStyles'
 
 class RoomSettings extends Component {
   constructor(props) {
     super(props)
 
-    this.renderToolbar = this.renderToolbar.bind(this)
-    this.navigateBack = this.navigateBack.bind(this)
     this.renderNotificationsSection = this.renderNotificationsSection.bind(this)
     this.handlePickerChange = this.handlePickerChange.bind(this)
 
     this.state = {
       pickerState: 0
     }
+
+    this.props.navigator.setTitle({title: 'Room settings'})
   }
 
   componentWillMount() {
@@ -41,10 +40,6 @@ class RoomSettings extends Component {
     this.setState({pickerState})
   }
 
-  componentWillUnmount() {
-
-  }
-
   handlePickerChange(value, index) {
     this.setState({
       pickerState: index
@@ -53,30 +48,13 @@ class RoomSettings extends Component {
 
   handleSaveSettings() {
     const {pickerState} = this.state
-    const {dispatch, route: {roomId}} = this.props
+    const {dispatch, roomId} = this.props
 
     dispatch(changeNotificationSettings(roomId, pickerState))
 
     setTimeout(() => {
       this.navigateBack()
     }, 500)
-  }
-
-  navigateBack() {
-    const {dispatch} = this.props
-    dispatch(Navigation.goBack())
-  }
-
-  renderToolbar() {
-    return (
-      <Toolbar
-        navIconName="arrow-back"
-        iconColor="white"
-        onIconClicked={this.navigateBack}
-        title="Message"
-        titleColor="white"
-        style={s.toolbar} />
-    )
   }
 
   renderNotificationsSection() {
@@ -122,7 +100,6 @@ class RoomSettings extends Component {
   render() {
     return (
       <View style={s.container}>
-        {this.renderToolbar()}
         <ScrollView>
           {this.renderNotificationsSection()}
           {this.renderSaveButton()}
@@ -134,11 +111,15 @@ class RoomSettings extends Component {
 
 RoomSettings.propTypes = {
   dispatch: PropTypes.func,
-  route: PropTypes.object,
+  roomId: PropTypes.string,
   settings: PropTypes.object
 }
 
-function mapStateToProps({rooms}, {route: {roomId}}) {
+RoomSettings.navigatorStyle = {
+  ...navigationStyles
+}
+
+function mapStateToProps({rooms}, {roomId}) {
   return {
     settings: rooms.notifications[roomId]
   }
