@@ -1,5 +1,5 @@
-import React, {Component, PropTypes} from 'react';
-import {DrawerLayoutAndroid, ToastAndroid, Clipboard, Alert, ListView, View, Platform, KeyboardAvoidingView} from 'react-native';
+import React, {Component, PropTypes} from 'react'
+import {Keyboard, DrawerLayoutAndroid, ToastAndroid, Clipboard, Alert, ListView, View, Platform, KeyboardAvoidingView} from 'react-native';
 import {connect} from 'react-redux'
 import Share from 'react-native-share'
 import navigationStyles from '../../styles/common/navigationStyles'
@@ -113,6 +113,7 @@ class Room extends Component {
   componentWillMount() {
     const {navigator, room} = this.props
     navigator.setTitle({title: this.getTitle(room)})
+    Keyboard.dismiss()
   }
 
   componentDidMount() {

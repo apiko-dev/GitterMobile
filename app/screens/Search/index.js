@@ -71,8 +71,8 @@ class SearchScreen extends Component {
       ToastAndroid.show('Room not exist yet', ToastAndroid.SHORT)
       return
     }
-    const {dispatch} = this.props
-    dispatch(Navigation.goTo({name: 'room', roomId: id}))
+    const {navigator} = this.props
+    navigator.push({screen: 'gm.Room', passProps: {roomId: id}})
   }
 
   handleUserItemPress(id, username) {
@@ -80,8 +80,8 @@ class SearchScreen extends Component {
       ToastAndroid.show("User don't have gitter profile", ToastAndroid.SHORT)
       return
     }
-    const {dispatch} = this.props
-    dispatch(Navigation.goTo({name: 'user', userId: id, username}))
+    const {navigator} = this.props
+    navigator.showModal({screen: 'gm.User', passProps: {userId: id, username}})
   }
 
   handleTabChange({i}) {
@@ -115,7 +115,7 @@ class SearchScreen extends Component {
   renderToolbar() {
     const {value} = this.state
     const actions = !!value
-      ? [{title: 'Clear', iconName: 'close_white', iconColor: 'white', show: 'always'}]
+      ? [{title: 'Clear', iconName: 'close', iconColor: 'white', show: 'always'}]
       : []
 
     return (
