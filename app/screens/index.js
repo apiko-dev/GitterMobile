@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import {BackAndroid, Navigator, View, DrawerLayoutAndroid, Platform} from 'react-native';
+import {BackAndroid, Navigator, DrawerLayoutAndroid, Platform} from 'react-native';
 import _ from 'lodash'
 import {connect} from 'react-redux'
 
@@ -8,19 +8,19 @@ import DrawerLayoutJs from 'react-native-drawer-layout'
 import {init} from '../modules/app'
 import * as Navigation from '../modules/navigation'
 import {selectRoom} from '../modules/rooms'
-import {changeRoomInfoDrawerState} from '../modules/ui'
+// import {changeRoomInfoDrawerState} from '../modules/ui'
 
-import LaunchScreen from './LaunchScreen'
-import LoginScreen from './LoginScreen'
-import LoginByTokenScreen from './LoginByTokenScreen'
-import NoInternetScreen from './NoInternetScreen'
-import HomeScreen from './HomeScreen'
-import RoomScreen from './Room'
-import SearchScreen from './SearchScreen'
-import UserScreen from './UserScreen'
+import Launch from './Launch'
+import Login from './Login'
+import LoginByToken from './LoginByToken'
+import NoInternet from './NoInternet'
+import Home from './Home'
+import Room from './Room'
+import Search from './Search'
+import User from './User'
 import Drawer from './Drawer'
-import RoomUsersScreen from './RoomUsersScreen'
-import RoomUserAddScreen from './RoomUserAddScreen'
+import RoomUsers from './RoomUsers'
+import RoomUserAdd from './RoomUserAdd'
 import Message from './Message'
 import Settings from './Settings'
 import SearchMessages from './SearchMessages'
@@ -127,53 +127,53 @@ class App extends Component {
     switch (route.name) {
     case 'launch':
       return (
-        <LaunchScreen />
+        <Launch />
       )
     case 'noInternet':
       return (
-        <NoInternetScreen />
+        <NoInternet />
       )
     case 'login':
       return (
-        <LoginScreen />
+        <Login />
       )
     case 'loginByToken':
       return (
-        <LoginByTokenScreen />
+        <LoginByToken />
       )
     case 'home':
       return (
-        <HomeScreen
+        <Home
           navigateTo={this.navigateTo}
           onMenuTap={this.onMenuTap.bind(this)} />
       )
     case 'room':
       return (
-        <RoomScreen
+        <Room
           route={route}
           navigateTo={this.navigateTo}
           onMenuTap={this.onMenuTap.bind(this)} />
       )
     case 'user':
       return (
-        <UserScreen
+        <User
           route={route} />
       )
 
     case 'search':
       return (
-        <SearchScreen />
+        <Search />
       )
 
     case 'roomUsers':
       return (
-        <RoomUsersScreen
+        <RoomUsers
           route={route} />
       )
 
     case 'addUser':
       return (
-        <RoomUserAddScreen
+        <RoomUserAdd
           route={route} />
       )
 

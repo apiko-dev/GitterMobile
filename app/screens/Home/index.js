@@ -1,0 +1,173 @@
+import React, {Component, PropTypes} from 'react';
+import {ScrollView, Text, View} from 'react-native';
+import {connect} from 'react-redux'
+import s from './styles'
+import * as Navigation from '../../modules/navigation'
+
+import HomeRoomItem from './HomeRoomItem'
+import HomeRoomItemMy from './HomeRoomItemMy'
+import Loading from '../../components/Loading'
+import Toolbar from '../../components/Toolbar'
+
+import {THEMES} from '../../constants'
+const {colors} = THEMES.gitterDefault
+
+
+class HomeScreen extends Component {
+  constructor(props) {
+    super(props)
+    this.renderBottom = this.renderBottom.bind(this)
+    this.renderToolbar = this.renderToolbar.bind(this)
+    this.onRoomPress = this.onRoomPress.bind(this)
+    this.handleActionPress = this.handleActionPress.bind(this)
+  }
+
+  onRoomPress(id) {
+    this.props.navigateTo({name: 'room', roomId: id})
+  }
+
+  handleActionPress(index) {
+    const {dispatch} = this.props
+    if (index === 0) {
+      dispatch(Navigation.goTo({name: 'search'}))
+    }
+  }
+
+  renderOrgs(orgs) {
+    if (orgs.length === 0) {
+      return null
+    }
+    return (
+      <View style={s.roomItem}>
+        <Text style={s.bottomSectionHeading}>Organizations</Text>
+        {orgs.map(org => (
+          <HomeRoomItem
+            onPress={this.onRoomPress.bind(this)}
+            key={org.id}
+            {...org} />
+        ))}
+      </View>
+    )
+  }
+
+  renderFavorite(favorites) {
+    if (favorites.length === 0) {
+      return null
+    }
+    return (
+      <View style={s.roomItem}>
+        <Text style={s.bottomSectionHeading}>Favorites</Text>
+        {favorites.map(favorite => (
+          <HomeRoomItemMy
+            onPress={this.onRoomPress.bind(this)}
+            key={favorite.id}{...favorite} />
+        ))}
+      </View>
+    )
+  }
+
+  renderSuggested(suggested) {
+    if (suggested.length === 0) {
+      return null
+    }
+    return (
+      <View style={s.roomItem}>
+        <Text style={s.bottomSectionHeading}>Suggested rooms</Text>
+        {suggested.map(room => (
+          <HomeRoomItem
+            onPress={this.onRoomPress.bind(this)}
+            key={room.id}
+            id={room.id}
+            name={room.uri}
+            oneToOne={false}
+            {...room} />
+        ))}
+      </View>
+    )
+  }
+
+  renderBottom() {
+    const {isLoadingRooms, isLoadingViewer, rooms, roomsIds, suggested} = this.props
+
+    if (isLoadingRooms || isLoadingViewer || !suggested) {
+      return (
+        <View style={s.loadingWrap}>
+          <Loading
+            color={colors.brand}/>
+        </View>
+      )
+    }
+
+    const favorites = roomsIds.filter(id => rooms[id].hasOwnProperty('favourite')).map(id => rooms[id])
+    const orgs = roomsIds.filter(id => (rooms[id].githubType === 'ORG')).map(id => rooms[id])
+
+    return (
+      <View style={s.bottom}>
+        {this.renderOrgs(orgs)}
+        {this.renderFavorite(favorites)}
+        {this.renderSuggested(suggested)}
+      </View>
+    )
+  }
+
+  renderToolbar() {
+    const actions = [
+      {title: 'Search', iconName: 'search', iconColor: 'white', show: 'always'}
+    ]
+    return (
+      <Toolbar
+        actions={actions}
+        navIconName="menu"
+        iconColor="white"
+        onIconClicked={this.props.onMenuTap}
+        onActionSelected={this.handleActionPress}
+        title="Home"
+        titleColor="white"
+        style={s.toolbar} />
+    )
+  }
+
+
+  render() {
+    return (
+      <View style={s.container}>
+        {this.renderToolbar()}
+        <ScrollView>
+          {this.renderBottom()}
+        </ScrollView>
+      </View>
+    )
+  }
+}
+
+HomeScreen.propTypes = {
+  onMenuTap: PropTypes.func.isRequired,
+  isLoadingRooms: PropTypes.bool,
+  isLoadingViewer: PropTypes.bool,
+  userId: PropTypes.string,
+  rooms: PropTypes.object,
+  roomsIds: PropTypes.array,
+  suggested: PropTypes.array,
+  dispatch: PropTypes.func,
+  navigateTo: PropTypes.func
+}
+
+HomeScreen.defaultProps = {
+  isLoadingRooms: true,
+  isLoadingViewer: true
+}
+
+function mapStateToProps(state) {
+  const {viewer, rooms} = state
+
+  return {
+    isLoadingRooms: rooms.isLoading,
+    isLoadingViewer: viewer.isLoading,
+    userId: viewer.user.id,
+    roomsIds: rooms.ids,
+    rooms: rooms.rooms,
+    suggested: rooms.suggestedRooms
+  }
+}
+
+export default connect(mapStateToProps)(HomeScreen)
