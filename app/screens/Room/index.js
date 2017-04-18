@@ -84,9 +84,10 @@ class Room extends Component {
     this.handleChangeVisibleRows = this.handleChangeVisibleRows.bind(this)
     this.handleReadMessages = _.debounce(this.handleReadMessages.bind(this), 250)
     this.handleSendingMessage = this.handleSendingMessage.bind(this)
-    this.onNavigateBack = this.onNavigateBack.bind(this)
     this.handleSharingRoom = this.handleSharingRoom.bind(this)
     this.handleSharingMessage = this.handleSharingMessage.bind(this)
+
+    this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
 
     this.state = {
       textInputValue: '',
@@ -100,12 +101,6 @@ class Room extends Component {
         id: 'sideMenu',
         icon: iconsMap['menu-white'],
         showAsAction: 'always'
-      }],
-      rightButtons: [{
-        title: 'Search',
-        id: 'search',
-        icon: iconsMap['search-white'],
-        showAsAction: 'always'
       }]
     })
   }
@@ -113,6 +108,9 @@ class Room extends Component {
   componentWillMount() {
     const {navigator, room} = this.props
     navigator.setTitle({title: this.getTitle(room)})
+    this.props.navigator.setButtons({
+      rightButtons: this.getButtons(room)
+    })
     Keyboard.dismiss()
   }
 
@@ -140,25 +138,72 @@ class Room extends Component {
   componentWillReceiveProps({room}) {
     if (room !== this.props.room) {
       this.props.navigator.setTitle({title: this.getTitle(room)})
+      this.props.navigator.setButtons({
+        rightButtons: this.getButtons(room)
+      })
     }
   }
-
-
 
   componentWillUnmount() {
     // const {dispatch, route: {roomId}} = this.props
     // dispatch(unsubscribeToChatMessages(roomId))
   }
 
-  onNavigateBack() {
-    const {dispatch} = this.props
-    dispatch(Navigation.goBack())
-  }
-
   getTitle(room) {
     let title = !!room ? room.name : 'Room'
     title = title.split('/').reverse()[0]
     return title
+  }
+
+  getButtons(room) {
+    let actions = []
+
+    if (!!room) {
+      actions.push({
+        title: 'Open room info',
+        icon: iconsMap['info-outline'],
+        showAsAction: 'always',
+        id: 'roomInfo'
+      })
+    }
+
+    if (!!room && room.roomMember) {
+      actions = actions.concat([{
+        title: 'Search',
+        icon: iconsMap.search,
+        showAsAction: 'always',
+        iconColor: 'white',
+        id: 'search'
+      }, {
+        title: room.hasOwnProperty('favourite') ? 'Remove from favorite' : 'Add to favorite',
+        showAsAction: 'never',
+        id: 'toggleFavorite'
+      }, {
+        title: 'Mark all as read',
+        showAsAction: 'never',
+        id: 'markAsRead'
+      }, {
+        title: 'Settings',
+        showAsAction: 'never',
+        id: 'settings'
+      }, {
+        title: 'Leave room',
+        showAsAction: 'never',
+        id: 'leave'
+      }, {
+        title: 'Share room',
+        showAsAction: 'never',
+        id: 'share'
+      }])
+    }
+
+    return actions
+  }
+
+  onNavigatorEvent(event) {
+    if (event.type === 'NavBarButtonPress') {
+      this.handleToolbarActionSelected(event)
+    }
   }
 
   onEndReached() {
@@ -406,16 +451,16 @@ class Room extends Component {
     }
   }
 
-  handleToolbarActionSelected(index) {
-    const {dispatch, route: {roomId}} = this.props
-    switch (index) {
-    case 0: return dispatch(Navigation.goTo({name: 'searchMessages', roomId}))
-    case 1: return this.roomInfoDrawer.openDrawer()
-    case 2: return dispatch(changeFavoriteStatus(roomId))
-    case 3: return dispatch(markAllAsRead(roomId))
-    case 4: return dispatch(Navigation.goTo({name: 'roomSettings', roomId}))
-    case 5: return this.leaveRoom()
-    case 6: return this.handleSharingRoom(roomId)
+  handleToolbarActionSelected({id}) {
+    const {dispatch, route: {roomId}, navigator} = this.props
+    switch (id) {
+    case 'search': return navigator.showModal({screen: 'ga.SearchMessages', passProps: {roomId}})
+    case 'roomInfo': return this.roomInfoDrawer.openDrawer()
+    case 'toggleFavorite': return dispatch(changeFavoriteStatus(roomId))
+    case 'markAsRead': return dispatch(markAllAsRead(roomId))
+    case 'settings': return navigator.showModal({screen: 'ga.RoomSettings', passProps: {roomId}})
+    case 'leave': return this.leaveRoom()
+    case 'share': return this.handleSharingRoom(roomId)
     default:
       break
     }
@@ -531,91 +576,22 @@ class Room extends Component {
     let actions = []
 
     // TODO: Update one action instead
-    if (!!room && room.roomMember) {
-      if (room.hasOwnProperty('favourite')) {
-        actions = [{
-          title: 'Search',
-          iconName: 'search',
-          show: 'always',
-          iconColor: 'white'
-        },
-        {
-          title: 'Open room info',
-          iconName: 'info-outline',
-          show: 'never',
-          iconColor: 'white'
-        },
-        {
-          title: 'Remove from favorite',
-          show: 'never'
-        },
-        {
-          title: 'Mark all as read',
-          show: 'never'
-        },
-        {
-          title: 'Settings',
-          show: 'never'
-        },
-        {
-          title: 'Leave room',
-          show: 'never'
-        },
-        {
-          title: 'Share room',
-          show: 'never'
-        }]
-      } else {
-        actions = [{
-          title: 'Search',
-          iconName: 'search',
-          show: 'always',
-          iconColor: 'white'
-        },
-        {
-          title: 'Open room info',
-          iconName: 'info-outline',
-          show: 'never',
-          iconColor: 'white'
-        },
-        {
-          title: 'Add to favorite',
-          show: 'never'
-        },
-        {
-          title: 'Mark all as read',
-          show: 'never'
-        },
-        {
-          title: 'Settings',
-          show: 'never'
-        },
-        {
-          title: 'Leave room',
-          show: 'never'
-        },
-        {
-          title: 'Share room',
-          show: 'never'
-        }]
-      }
-    }
 
     let roomName = !!room ? room.name : ''
     roomName = roomName.split('/').reverse()[0]
 
-    return (
-      <Toolbar
-        navIconName={iOS ? 'arrow-back' : 'menu'}
-        iconColor="white"
-        onIconClicked={iOS ? this.onNavigateBack : this.props.onMenuTap}
-        actions={actions}
-        onActionSelected={this.handleToolbarActionSelected}
-        overflowIconName="more-vert"
-        title={roomName}
-        titleColor="white"
-        style={s.toolbar} />
-    )
+    // return (
+    //   <Toolbar
+    //     navIconName={iOS ? 'arrow-back' : 'menu'}
+    //     iconColor="white"
+    //     onIconClicked={iOS ? this.onNavigateBack : this.props.onMenuTap}
+    //     actions={actions}
+    //     onActionSelected={this.handleToolbarActionSelected}
+    //     overflowIconName="more-vert"
+    //     title={roomName}
+    //     titleColor="white"
+    //     style={s.toolbar} />
+    // )
   }
 
   renderBottom() {
@@ -752,7 +728,9 @@ Room.propTypes = {
 }
 
 Room.navigatorStyle = {
-  ...navigationStyles
+  ...navigationStyles,
+  collapsingToolBarImage: iconsMap['more-vert'],
+  collapsingToolBarCollapsedColor: 'white'
 }
 
 function mapStateToProps(state, ownProps) {

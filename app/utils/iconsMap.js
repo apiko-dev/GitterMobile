@@ -1,7 +1,7 @@
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import {icons} from '../constants'
 
-const replaceSuffixPattern = /-(.*)/g;
+const replaceSuffixPattern = /-(white|black)/g;
 
 export const iconsMap = {};
 export const iconsLoaded = new Promise((resolve, reject) => {

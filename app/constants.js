@@ -44,6 +44,8 @@ export const OLD_ANDROID_VERSIONS = ['4.4.4', '4.4.3', '4.4.2', '4.4.1', '4.4', 
 export const icons = {
   'menu': [30, 'black'],
   'menu-white': [30, 'white'],
-  'search': [30, 'black'],
-  'search-white': [30, 'white']
+  'search': [24, 'black'],
+  'search-white': [24, 'white'],
+  'more-vert': [30, 'white'],
+  'info-outline': [24, 'white']
 }
