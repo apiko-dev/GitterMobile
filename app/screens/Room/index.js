@@ -1,9 +1,10 @@
 import React, {Component, PropTypes} from 'react';
-import {InteractionManager, ToastAndroid, Clipboard, Alert, ListView, View, Platform, KeyboardAvoidingView} from 'react-native';
+import {InteractionManager, DrawerLayoutAndroid, ToastAndroid, Clipboard, Alert, ListView, View, Platform, KeyboardAvoidingView} from 'react-native';
 import {connect} from 'react-redux'
 import Share from 'react-native-share'
 import _ from 'lodash'
-import DrawerLayout from 'react-native-drawer-layout'
+import DrawerLayoutJs from 'react-native-drawer-layout'
+const DrawerLayout = Platform.OS === 'ios' ? DrawerLayoutJs : DrawerLayoutAndroid
 import moment from 'moment'
 import BottomSheet from '../../../libs/react-native-android-bottom-sheet/index'
 import Toolbar from '../../components/Toolbar'
