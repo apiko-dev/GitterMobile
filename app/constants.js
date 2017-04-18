@@ -40,3 +40,10 @@ export const THEMES = {
 }
 
 export const OLD_ANDROID_VERSIONS = ['4.4.4', '4.4.3', '4.4.2', '4.4.1', '4.4', '4.3.1', '4.3', '4.2.2', '4.2.1', '4.2', '4.1.2']
+
+export const icons = {
+  'menu': [30, 'black'],
+  'menu-white': [30, 'white'],
+  'search': [30, 'black'],
+  'search-white': [30, 'white']
+}

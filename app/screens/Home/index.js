@@ -3,6 +3,7 @@ import {ScrollView, Text, View} from 'react-native';
 import {connect} from 'react-redux'
 import s from './styles'
 import * as Navigation from '../../modules/navigation'
+import iconMap from '../../utils/iconsMap'
 
 import HomeRoomItem from './HomeRoomItem'
 import HomeRoomItemMy from './HomeRoomItemMy'
@@ -131,13 +132,34 @@ class HomeScreen extends Component {
   render() {
     return (
       <View style={s.container}>
-        {this.renderToolbar()}
         <ScrollView>
           {this.renderBottom()}
         </ScrollView>
       </View>
     )
   }
+}
+
+HomeScreen.navigatorButtons = {
+  leftButtons: [{
+    title: 'Menu',
+    id: 'menu',
+    icon: iconMap.menu
+  }],
+  rightButtons: [{
+    title: 'Search',
+    id: 'search',
+    icon: iconMap.search
+  }]
+}
+
+HomeScreen.navigatorStyle = {
+  navBarBackgroundColor: colors.raspberry,
+  navBarButtonColor: 'white',
+  navBarTextColor: 'white',
+  topBarElevationShadowEnabled: true,
+  statusBarColor: colors.darkRed,
+  statusBarTextColorScheme: 'dark'
 }
 
 HomeScreen.propTypes = {

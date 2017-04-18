@@ -49,4 +49,8 @@ LoginScreen.propTypes = {
   dispatch: PropTypes.func
 }
 
+LoginScreen.navigatorStyle = {
+  navBarHidden: true
+}
+
 export default connect()(LoginScreen)
