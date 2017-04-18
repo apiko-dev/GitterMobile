@@ -149,57 +149,6 @@ class Room extends Component {
     // dispatch(unsubscribeToChatMessages(roomId))
   }
 
-  getTitle(room) {
-    let title = !!room ? room.name : 'Room'
-    title = title.split('/').reverse()[0]
-    return title
-  }
-
-  getButtons(room) {
-    let actions = []
-
-    if (!!room) {
-      actions.push({
-        title: 'Open room info',
-        icon: iconsMap['info-outline'],
-        showAsAction: 'always',
-        id: 'roomInfo'
-      })
-    }
-
-    if (!!room && room.roomMember) {
-      actions = actions.concat([{
-        title: 'Search',
-        icon: iconsMap.search,
-        showAsAction: 'always',
-        iconColor: 'white',
-        id: 'search'
-      }, {
-        title: room.hasOwnProperty('favourite') ? 'Remove from favorite' : 'Add to favorite',
-        showAsAction: 'never',
-        id: 'toggleFavorite'
-      }, {
-        title: 'Mark all as read',
-        showAsAction: 'never',
-        id: 'markAsRead'
-      }, {
-        title: 'Settings',
-        showAsAction: 'never',
-        id: 'settings'
-      }, {
-        title: 'Leave room',
-        showAsAction: 'never',
-        id: 'leave'
-      }, {
-        title: 'Share room',
-        showAsAction: 'never',
-        id: 'share'
-      }])
-    }
-
-    return actions
-  }
-
   onNavigatorEvent(event) {
     if (event.type === 'NavBarButtonPress') {
       this.handleToolbarActionSelected(event)
@@ -368,6 +317,57 @@ class Room extends Component {
     dispatch(getRoomMessages(roomId))
   }
 
+  getTitle(room) {
+    let title = !!room ? room.name : 'Room'
+    title = title.split('/').reverse()[0]
+    return title
+  }
+
+  getButtons(room) {
+    let actions = []
+
+    if (!!room) {
+      actions.push({
+        title: 'Open room info',
+        icon: iconsMap['info-outline'],
+        showAsAction: 'always',
+        id: 'roomInfo'
+      })
+    }
+
+    if (!!room && room.roomMember) {
+      actions = actions.concat([{
+        title: 'Search',
+        icon: iconsMap.search,
+        showAsAction: 'always',
+        iconColor: 'white',
+        id: 'search'
+      }, {
+        title: room.hasOwnProperty('favourite') ? 'Remove from favorite' : 'Add to favorite',
+        showAsAction: 'never',
+        id: 'toggleFavorite'
+      }, {
+        title: 'Mark all as read',
+        showAsAction: 'never',
+        id: 'markAsRead'
+      }, {
+        title: 'Settings',
+        showAsAction: 'never',
+        id: 'settings'
+      }, {
+        title: 'Leave room',
+        showAsAction: 'never',
+        id: 'leave'
+      }, {
+        title: 'Share room',
+        showAsAction: 'never',
+        id: 'share'
+      }])
+    }
+
+    return actions
+  }
+
   handleSendingMessage(text) {
     const {dispatch, route: {roomId}} = this.props
 
@@ -454,11 +454,11 @@ class Room extends Component {
   handleToolbarActionSelected({id}) {
     const {dispatch, route: {roomId}, navigator} = this.props
     switch (id) {
-    case 'search': return navigator.showModal({screen: 'ga.SearchMessages', passProps: {roomId}})
+    case 'search': return navigator.showModal({screen: 'gm.SearchMessages', passProps: {roomId}})
     case 'roomInfo': return this.roomInfoDrawer.openDrawer()
     case 'toggleFavorite': return dispatch(changeFavoriteStatus(roomId))
     case 'markAsRead': return dispatch(markAllAsRead(roomId))
-    case 'settings': return navigator.showModal({screen: 'ga.RoomSettings', passProps: {roomId}})
+    case 'settings': return navigator.showModal({screen: 'gm.RoomSettings', passProps: {roomId}})
     case 'leave': return this.leaveRoom()
     case 'share': return this.handleSharingRoom(roomId)
     default:
