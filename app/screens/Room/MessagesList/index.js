@@ -85,7 +85,12 @@ export default class MessagesList extends Component {
         ref="listView"
         childSizes={this.childHeights}
         onChangeVisibleRows={(a, b) => onChangeVisibleRows(a, b)}
-        renderScrollComponent={props => <InvertibleScrollView {...props} inverted />}
+        renderScrollComponent={props => (
+          <InvertibleScrollView
+            {...props}
+            inverted
+            keyboardShouldPersistTaps="handled" />
+        )}
         dataSource={listViewData.dataSource}
         onEndReached={this.props.onEndReached}
         scrollRenderAheadDistance={1000}
