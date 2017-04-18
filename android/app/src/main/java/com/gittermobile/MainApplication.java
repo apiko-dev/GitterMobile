@@ -17,32 +17,51 @@ import com.aakashns.reactnativedialogs.ReactNativeDialogsPackage;
 import com.terrysahaidak.bottomsheet.AndroidBottomSheetPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import cl.json.RNSharePackage;
+import com.reactnativenavigation.NavigationApplication;
 
-public class MainApplication extends Application implements ReactApplication {
-
-  private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
-    @Override
-    public boolean getUseDeveloperSupport() {
-      return BuildConfig.DEBUG;
-    }
-
-    @Override
-    protected List<ReactPackage> getPackages() {
-      return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),
-          new RNSharePackage(),
-          new VectorIconsPackage(),
-          new ReactNativeDialogsPackage(),
-          new FayeGitterPackage(),
-          new RNDeviceInfo(),
-          new AndroidBottomSheetPackage()
-      );
-    }
-  };
+// public class MainApplication extends Application implements ReactApplication {
+  //
+  // private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
+  //   @Override
+  //   public boolean getUseDeveloperSupport() {
+  //     return BuildConfig.DEBUG;
+  //   }
+  //
+  //   @Override
+  //   protected List<ReactPackage> getPackages() {
+  //     return Arrays.<ReactPackage>asList(
+  //         new MainReactPackage(),
+  //         new RNSharePackage(),
+  //         new VectorIconsPackage(),
+  //         new ReactNativeDialogsPackage(),
+  //         new FayeGitterPackage(),
+  //         new RNDeviceInfo(),
+  //         new AndroidBottomSheetPackage()
+  //     );
+  //   }
+  // };
+  //
+  // @Override
+  // public ReactNativeHost getReactNativeHost() {
+  //   return mReactNativeHost;
+  // }
+public class MainApplication extends NavigationApplication {
+  @Override
+  public boolean isDebug() {
+     // Make sure you are using BuildConfig from your own application
+     return BuildConfig.DEBUG;
+  }
 
   @Override
-  public ReactNativeHost getReactNativeHost() {
-    return mReactNativeHost;
+  public List<ReactPackage> createAdditionalReactPackages() {
+    return Arrays.<ReactPackage>asList(
+      new RNSharePackage(),
+      new VectorIconsPackage(),
+      new ReactNativeDialogsPackage(),
+      new FayeGitterPackage(),
+      new RNDeviceInfo(),
+      new AndroidBottomSheetPackage()
+    );
   }
 
   @Override
