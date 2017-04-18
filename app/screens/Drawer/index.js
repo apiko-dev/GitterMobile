@@ -31,8 +31,9 @@ class Drawer extends Component {
   }
 
   onRoomPress(id) {
-    const {dispatch, navigateTo} = this.props
-    navigateTo({name: 'room', roomId: id})
+    const {dispatch, navigator} = this.props
+    navigator.push({screen: 'gm.Room', passProps: {roomId: id}})
+    navigator.toggleDrawer({side: 'left', animated: true})
     dispatch(selectRoom(id))
   }
 
@@ -83,13 +84,15 @@ class Drawer extends Component {
   }
 
   handleSettingsPress() {
-    const {navigateTo} = this.props
-    navigateTo({name: 'settings'})
+    const {navigator} = this.props
+    navigator.showModal({screen: 'gm.Settings', title: 'Settings', animationType: 'slide-up'})
+    navigator.toggleDrawer({side: 'left', animated: true})
   }
 
   handleSearchPress() {
-    const {navigateTo} = this.props
-    navigateTo({name: 'search'})
+    const {navigator} = this.props
+    navigator.push({screen: 'gm.Search'})
+    navigator.toggleDrawer({side: 'left', animated: true})
   }
 
   handleDialogPress(index, text, id) {
@@ -140,7 +143,7 @@ Drawer.propTypes = {
   dispatch: PropTypes.func.isRequired,
   isLoadingUser: PropTypes.bool,
   isLoadingRooms: PropTypes.bool,
-  navigateTo: PropTypes.func.isRequired,
+  navigator: PropTypes.object.isRequired,
   user: PropTypes.object,
   ids: PropTypes.array,
   rooms: PropTypes.object,

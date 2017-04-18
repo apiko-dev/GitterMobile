@@ -1,15 +1,15 @@
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import {icons} from '../constants'
 
-const replaceSuffixPattern = /--(active|big|small|very-big)/g;
+const replaceSuffixPattern = /-(.*)/g;
 
 export const iconsMap = {};
 export const iconsLoaded = new Promise((resolve, reject) => {
   new Promise.all(
     Object.keys(icons).map(iconName => {
-      const Provider = icons[iconName][2] || MaterialIcons
+      const Provider = MaterialIcons
       return Provider.getImageSource(
-        iconName/* .replace(replaceSuffixPattern, '') */,
+        iconName.replace(replaceSuffixPattern, ''),
         icons[iconName][0],
         icons[iconName][1]
       )

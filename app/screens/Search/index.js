@@ -14,6 +14,7 @@ import SearchUsersTab from './SearchUsersTab'
 import SearchRoomsTab from './SearchRoomsTab'
 
 const {colors} = THEMES.gitterDefault
+import navigationStyles from '../../styles/common/navigationStyles'
 
 class SearchScreen extends Component {
   constructor(props) {
@@ -44,8 +45,9 @@ class SearchScreen extends Component {
   }
 
   navigateBack() {
-    const {dispatch} = this.props
-    dispatch(Navigation.goBack())
+    const {dispatch, navigator} = this.props
+    // dispatch(Navigation.goBack())
+    navigator.pop()
     dispatch(clearSearch())
   }
 
@@ -193,6 +195,11 @@ class SearchScreen extends Component {
       </View>
     )
   }
+}
+
+SearchScreen.navigatorStyle = {
+  ...navigationStyles,
+  navBarHidden: true
 }
 
 SearchScreen.propTypes = {

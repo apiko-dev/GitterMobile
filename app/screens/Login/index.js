@@ -3,14 +3,13 @@ import {Text, Image, View, ToastAndroid} from 'react-native';
 import Button from '../../components/Button'
 import s from './styles'
 import {connect} from 'react-redux'
-import * as Navigation from '../../modules/navigation'
 import {THEMES} from '../../constants'
 const {colors} = THEMES.gitterDefault
 
 
 class LoginScreen extends Component {
   render() {
-    const {dispatch} = this.props
+    const {navigator} = this.props
     return (
       <Image style={s.container}
         source={require('../../images/gitter-background.jpg')}>
@@ -33,7 +32,7 @@ class LoginScreen extends Component {
           </Button>
           <Button
             style={[s.buttonStyle, {backgroundColor: colors.darkRed}]}
-            onPress={() => dispatch(Navigation.goTo({name: 'loginByToken'}))}>
+            onPress={() => navigator.push({screen: 'gm.LoginByToken', animated: true, title: 'Login by token'})}>
             <Text pointerEvents="none"
               style={s.buttonText}>
               Login by Token
@@ -46,11 +45,14 @@ class LoginScreen extends Component {
 }
 
 LoginScreen.propTypes = {
-  dispatch: PropTypes.func
+  dispatch: PropTypes.func,
+  navigator: PropTypes.object
 }
 
 LoginScreen.navigatorStyle = {
-  navBarHidden: true
+  navBarHidden: true,
+  statusBarBlur: true,
+  statusBarColor: colors.darkRed
 }
 
 export default connect()(LoginScreen)

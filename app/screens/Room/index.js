@@ -1,7 +1,8 @@
 import React, {Component, PropTypes} from 'react';
-import {InteractionManager, DrawerLayoutAndroid, ToastAndroid, Clipboard, Alert, ListView, View, Platform, KeyboardAvoidingView} from 'react-native';
+import {DrawerLayoutAndroid, ToastAndroid, Clipboard, Alert, ListView, View, Platform, KeyboardAvoidingView} from 'react-native';
 import {connect} from 'react-redux'
 import Share from 'react-native-share'
+import navigationStyles from '../../styles/common/navigationStyles'
 import _ from 'lodash'
 import DrawerLayoutJs from 'react-native-drawer-layout'
 const DrawerLayout = Platform.OS === 'ios' ? DrawerLayoutJs : DrawerLayoutAndroid
@@ -50,6 +51,7 @@ import SendMessageField from './SendMessageField'
 import JoinRoomField from './JoinRoomField'
 import LoadingMoreSnack from '../../components/LoadingMoreSnack'
 import FailedToLoad from '../../components/FailedToLoad'
+import {iconsMap} from '../../utils/iconsMap'
 
 const COMMAND_REGEX = /\/\S+/
 const iOS = Platform.OS === 'ios'
@@ -91,6 +93,26 @@ class Room extends Component {
       editing: false,
       editMessage: {}
     }
+
+    this.props.navigator.setButtons({
+      leftButtons: [{
+        title: 'Menu',
+        id: 'sideMenu',
+        icon: iconsMap['menu-white'],
+        showAsAction: 'always'
+      }],
+      rightButtons: [{
+        title: 'Search',
+        id: 'search',
+        icon: iconsMap['search-white'],
+        showAsAction: 'always'
+      }]
+    })
+  }
+
+  componentWillMount() {
+    const {navigator, room} = this.props
+    navigator.setTitle({title: this.getTitle(room)})
   }
 
   componentDidMount() {
@@ -98,22 +120,29 @@ class Room extends Component {
     const {activeRoom, rooms, route: { roomId }, dispatch, listViewData} = this.props
     // dispatch(subscribeToChatMessages(roomId))
     dispatch(changeRoomInfoDrawerState('close'))
-    InteractionManager.runAfterInteractions(() => {
-      dispatch(clearMessagesError())
-      if (activeRoom !== roomId) {
-        dispatch(selectRoom(roomId))
-      }
-      if (!rooms[roomId]) {
-        dispatch(getRoom(roomId))
-      }
-      dispatch(getNotificationSettings(roomId))
-      if (!listViewData[roomId]) {
-        dispatch(getRoomMessages(roomId))
-      } else {
-        dispatch(getRoomMessagesIfNeeded(roomId))
-      }
-    })
+
+    dispatch(clearMessagesError())
+    if (activeRoom !== roomId) {
+      dispatch(selectRoom(roomId))
+    }
+    if (!rooms[roomId]) {
+      dispatch(getRoom(roomId))
+    }
+    dispatch(getNotificationSettings(roomId))
+    if (!listViewData[roomId]) {
+      dispatch(getRoomMessages(roomId))
+    } else {
+      dispatch(getRoomMessagesIfNeeded(roomId))
+    }
   }
+
+  componentWillReceiveProps({room}) {
+    if (room !== this.props.room) {
+      this.props.navigator.setTitle({title: this.getTitle(room)})
+    }
+  }
+
+
 
   componentWillUnmount() {
     // const {dispatch, route: {roomId}} = this.props
@@ -123,6 +152,12 @@ class Room extends Component {
   onNavigateBack() {
     const {dispatch} = this.props
     dispatch(Navigation.goBack())
+  }
+
+  getTitle(room) {
+    let title = !!room ? room.name : 'Room'
+    title = title.split('/').reverse()[0]
+    return title
   }
 
   onEndReached() {
@@ -672,7 +707,6 @@ class Room extends Component {
     if (!rooms[route.roomId]) {
       return (
         <View style={s.container}>
-          {this.renderToolbar()}
           {this.renderLoading()}
         </View>
       )
@@ -691,8 +725,6 @@ class Room extends Component {
           drawerPosition={DrawerLayout.positions.Right}
           renderNavigationView={this.renderRoomInfo}
           keyboardDismissMode="on-drag">
-
-              {this.renderToolbar()}
               {isLoadingMore ? this.renderLoadingMore() : null}
               {isLoadingMessages ? this.renderLoading() : this.renderListView()}
               {getMessagesError || isLoadingMessages || _.has(listView, 'data') &&
@@ -722,7 +754,11 @@ Room.propTypes = {
   notifications: PropTypes.object
 }
 
-function mapStateToProps(state) {
+Room.navigatorStyle = {
+  ...navigationStyles
+}
+
+function mapStateToProps(state, ownProps) {
   const {listView, isLoading, isLoadingMore, byRoom, hasNoMore, entities} = state.messages
   const {activeRoom, rooms, notifications} = state.rooms
   const {roomInfoDrawerState} = state.ui
@@ -738,7 +774,9 @@ function mapStateToProps(state) {
     hasNoMore,
     currentUser: state.viewer.user,
     roomInfoDrawerState,
-    notifications
+    notifications,
+    route: {roomId: ownProps.roomId},
+    room: rooms[ownProps.roomId]
   }
 }
 

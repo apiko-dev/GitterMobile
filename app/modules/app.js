@@ -25,21 +25,22 @@ export const CHANGE_APP_STATE = 'app/CHANGE_APP_STATE'
 /**
  * Action Creators
  */
-export function init(startAppWithScreen) {
+export function init(startAppWithScreen, navigator) {
   return async (dispatch, getState) => {
     dispatch(setupAppStatusListener())
+    const navigate = startAppWithScreen ? startAppWithScreen : navigator.resetTo
     try {
       // debugger
       // checking internet connection
       const netStatus = await NetInfo.fetch()
       if (netStatus === 'none' || netStatus === 'NONE') {
-        startAppWithScreen('gm.NoInternet')
+        navigate({screen: 'gm.NoInternet'})
         return
       }
 
       const token = await getItem('token')
       if (!token) {
-        startAppWithScreen('gm.Login')
+        navigate({screen: 'gm.Login'})
         return
       }
 
@@ -55,7 +56,7 @@ export function init(startAppWithScreen) {
       ])
       await dispatch(setupNetStatusListener())
       await dispatch(checkNewReleases())
-      startAppWithScreen('gm.Home')
+      navigate({screen: 'gm.Home'})
 
       // if you need debug room screen, just comment nevigation to 'hone'
       // and uncomment navigation to 'room'
@@ -65,7 +66,7 @@ export function init(startAppWithScreen) {
       // dispatch(Navigation.resetTo({name: 'roomUsers', roomId: '56a41e0fe610378809bde160'}))
     } catch (error) {
       dispatch({ type: INITIALIZED, error: error.message })
-      startAppWithScreen('gm.Login')
+      navigate({screen: 'gm.Login'})
     }
   }
 }

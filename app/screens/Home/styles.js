@@ -1,17 +1,18 @@
-import {StyleSheet} from 'react-native'
+import {StyleSheet, Platform} from 'react-native'
 import {THEMES} from '../../constants'
 const {colors} = THEMES.gitterDefault
+
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
 
-    flex: 1
+    flex: 1,
   },
   scrollContainer: {
-
-    justifyContent: 'center',
-    alignItems: 'center'
+    paddingTop: Platform.OS === 'ios' ? 44 : 56,
+    // justifyContent: 'center',
+    // alignItems: 'center'
   },
   toolbar: {
     height: 56,

@@ -18,7 +18,7 @@ export const LOGOUT = 'auth/LOGOUT'
  * Action Creators
  */
 
-export function loginByToken(token) {
+export function loginByToken(token, navigator) {
   return async dispatch => {
     try {
       dispatch({type: LOGINING})
@@ -26,8 +26,8 @@ export function loginByToken(token) {
       await setItem('token', token)
       dispatch({type: LOGIN_USER_BY_TOKEN, token})
 
-      dispatch(Navigation.resetTo({name: 'launch'}))
-      await dispatch(init())
+      navigator.resetTo({screen: 'gm.Launch'})
+      await dispatch(init(null, navigator))
 
       dispatch({LOGINED_IN_SUCCESS})
     } catch (err) {
