@@ -52,18 +52,18 @@ export function init(startAppWithScreen, navigator) {
       await dispatch(initializeUi())
       await Promise.all([
         dispatch(getRooms()),
-        dispatch(setupFaye())
+        dispatch(setupFaye()),
+        dispatch(setupNetStatusListener())
       ])
-      await dispatch(setupNetStatusListener())
-      await dispatch(checkNewReleases())
-      navigate({screen: 'gm.Home'})
 
+      navigate({screen: 'gm.Home'})
       // if you need debug room screen, just comment nevigation to 'hone'
       // and uncomment navigation to 'room'
       // dispatch(Navigation.resetTo({name: 'user', userId: '52ce7f4eed5ab0b3bf053782', username: 'blia'}))
       // dispatch(Navigation.resetTo({name: 'room', roomId: '54774579db8155e6700d8cc6'}))
       await dispatch(getSuggestedRooms())
       // dispatch(Navigation.resetTo({name: 'roomUsers', roomId: '56a41e0fe610378809bde160'}))
+      await dispatch(checkNewReleases())
     } catch (error) {
       dispatch({ type: INITIALIZED, error: error.message })
       navigate({screen: 'gm.Login'})
