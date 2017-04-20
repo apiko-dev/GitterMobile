@@ -15,57 +15,12 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DzE-qh-PF3">
-                    <rect key="frame" x="-14" y="347" width="212" height="43"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <variation key="heightClass=regular-widthClass=compact" axis="vertical"/>
-                </stackView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="GitterMobile" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oAg-GD-dzP">
                     <rect key="frame" x="109.66666666666669" y="346.66666666666669" width="195" height="43"/>
                     <fontDescription key="fontDescription" type="system" pointSize="36"/>
                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="48Y-Jq-HzC">
-                    <rect key="frame" x="102" y="347" width="212" height="50"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <subviews>
-                        <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tOl-4g-TVl">
-                            <rect key="frame" x="0.0" y="0.0" width="211.66666666666666" height="50"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <subviews>
-                                <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hzQ-8B-Asg">
-                                    <rect key="frame" x="0.0" y="0.0" width="211.66666666666666" height="50"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    <subviews>
-                                        <label autoresizesSubviews="NO" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" preservesSuperviewLayoutMargins="YES" layoutMarginsFollowReadableWidth="YES" text="GitterMobile" textAlignment="center" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" minimumFontSize="18" translatesAutoresizingMaskIntoConstraints="NO" id="kId-c2-rCX">
-                                            <rect key="frame" x="0.0" y="0.0" width="211.66666666666666" height="43"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="36"/>
-                                            <color key="textColor" red="0.99999600648880005" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                    </subviews>
-                                    <variation key="heightClass=regular-widthClass=compact" axis="vertical">
-                                        <mask key="subviews">
-                                            <exclude reference="kId-c2-rCX"/>
-                                        </mask>
-                                    </variation>
-                                </stackView>
-                            </subviews>
-                            <variation key="heightClass=regular-widthClass=compact" axis="vertical">
-                                <mask key="subviews">
-                                    <exclude reference="hzQ-8B-Asg"/>
-                                </mask>
-                            </variation>
-                        </stackView>
-                    </subviews>
-                    <variation key="heightClass=regular-widthClass=compact" axis="vertical">
-                        <mask key="subviews">
-                            <exclude reference="tOl-4g-TVl"/>
-                        </mask>
-                    </variation>
-                </stackView>
             </subviews>
             <color key="backgroundColor" red="0.88628381490707397" green="0.14508253335952759" blue="0.33034217357635498" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <color key="tintColor" red="0.88628381490707397" green="0.14508253335952759" blue="0.33034217357635498" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -86,7 +41,6 @@
             <variation key="heightClass=regular-widthClass=compact">
                 <mask key="subviews">
                     <include reference="oAg-GD-dzP"/>
-                    <exclude reference="48Y-Jq-HzC"/>
                 </mask>
                 <mask key="constraints">
                     <include reference="Cfj-ah-jce"/>

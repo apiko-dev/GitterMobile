@@ -53,10 +53,10 @@ export function init(startAppWithScreen, navigator) {
       await Promise.all([
         dispatch(getRooms()),
         dispatch(setupFaye()),
-        dispatch(setupNetStatusListener())
       ])
 
       navigate({screen: 'gm.Home'})
+      dispatch(setupNetStatusListener())
       // if you need debug room screen, just comment nevigation to 'hone'
       // and uncomment navigation to 'room'
       // dispatch(Navigation.resetTo({name: 'user', userId: '52ce7f4eed5ab0b3bf053782', username: 'blia'}))
