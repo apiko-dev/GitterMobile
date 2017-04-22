@@ -55,7 +55,7 @@ export default class Application {
     this._store.dispatch(init(this.startAppWithScreen))
   }
 
-  startAppWithScreen({screen, passProps = {}}) {
+  startAppWithScreen({screen, passProps}) {
     iconsLoaded
     .then(() =>
       Navigation.startSingleScreenApp({
