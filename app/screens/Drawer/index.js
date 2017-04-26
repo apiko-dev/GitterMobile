@@ -17,6 +17,8 @@ import {THEMES} from '../../constants'
 const {colors} = THEMES.gitterDefault
 const iOS = Platform.OS === 'ios'
 
+import {homeNavigator} from '../Home'
+
 class Drawer extends Component {
   constructor(props) {
     super(props)
@@ -31,10 +33,10 @@ class Drawer extends Component {
   }
 
   onRoomPress(id) {
-    const {dispatch, navigator} = this.props
-    navigator.push({screen: 'gm.Room', passProps: {roomId: id}})
+    const {navigator} = this.props
     navigator.toggleDrawer({side: 'left', animated: true})
-    dispatch(selectRoom(id))
+    // navigator.push({screen: 'gm.Room', passProps: {roomId: id}}) // doesn't work
+    homeNavigator.push({screen: 'gm.Room', passProps: {roomId: id}}) // works
   }
 
   onLongRoomPress(id) {
@@ -85,14 +87,15 @@ class Drawer extends Component {
 
   handleSettingsPress() {
     const {navigator} = this.props
-    navigator.showModal({screen: 'gm.Settings', title: 'Settings', animationType: 'slide-up'})
     navigator.toggleDrawer({side: 'left', animated: true})
+    navigator.showModal({screen: 'gm.Settings', title: 'Settings', animationType: 'slide-up'}) // works
   }
 
   handleSearchPress() {
     const {navigator} = this.props
-    navigator.push({screen: 'gm.Search'})
     navigator.toggleDrawer({side: 'left', animated: true})
+    homeNavigator.push({screen: 'gm.Search'}) // works
+    // navigator.push({screen: 'gm.Search'}) // doesn't work
   }
 
   handleDialogPress(index, text, id) {

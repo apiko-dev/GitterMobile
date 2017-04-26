@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react'
-import {Keyboard, DrawerLayoutAndroid, ToastAndroid, Clipboard, Alert, ListView, View, Platform, KeyboardAvoidingView} from 'react-native';
+import {Keyboard, ActionSheetIOS, DrawerLayoutAndroid, ToastAndroid, Clipboard, Alert, ListView, View, Platform, KeyboardAvoidingView} from 'react-native';
 import {connect} from 'react-redux'
 import Share from 'react-native-share'
 import navigationStyles from '../../styles/common/navigationStyles'
@@ -41,7 +41,6 @@ import {
 //   unsubscribeToChatMessages
 // } from '../../modules/realtime'
 import {changeRoomInfoDrawerState} from '../../modules/ui'
-import * as Navigation from '../../modules/navigation'
 
 import RoomInfoScreen from '../RoomInfo'
 
@@ -95,21 +94,25 @@ class Room extends Component {
       editMessage: {}
     }
 
-    this.props.navigator.setButtons({
-      leftButtons: [{
-        title: 'Menu',
-        id: 'sideMenu',
-        icon: iconsMap['menu-white'],
-        showAsAction: 'always'
-      }]
-    })
+    if (!iOS) {
+      this.props.navigator.setButtons({
+        leftButtons: [{
+          title: 'Menu',
+          id: 'drawerMenu',
+          icon: iconsMap['menu-white'],
+          iconColor: 'white',
+          showAsAction: 'always'
+        }]
+      })
+    }
   }
 
   componentWillMount() {
-    const {navigator, room} = this.props
-    navigator.setTitle({title: this.getTitle(room)})
+    const {navigator, room, title} = this.props
+    this.prepareDataSources()
+    navigator.setTitle({title})
     this.props.navigator.setButtons({
-      rightButtons: this.getButtons(room)
+      rightButtons: this.getButtons(room, iOS)
     })
     Keyboard.dismiss()
   }
@@ -135,11 +138,11 @@ class Room extends Component {
     }
   }
 
-  componentWillReceiveProps({room}) {
+  componentWillReceiveProps({room, title}) {
     if (room !== this.props.room) {
-      this.props.navigator.setTitle({title: this.getTitle(room)})
+      this.props.navigator.setTitle({title})
       this.props.navigator.setButtons({
-        rightButtons: this.getButtons(room)
+        rightButtons: this.getButtons(room, iOS)
       })
     }
   }
@@ -317,55 +320,93 @@ class Room extends Component {
     dispatch(getRoomMessages(roomId))
   }
 
-  getTitle(room) {
-    let title = !!room ? room.name : 'Room'
-    title = title.split('/').reverse()[0]
-    return title
-  }
-
-  getButtons(room) {
+  getButtons(room, onlyFiltered = false) {
     let actions = []
+
+    if (iOS) {
+      actions.push({
+        title: 'More',
+        icon: iconsMap['more-vert'],
+        showAsAction: 'always',
+        iconColor: 'white',
+        id: 'showMoreIos',
+        showInBottomSheet: false
+      })
+    }
+
+    if (!!room && room.roomMember) {
+      const newAction = [{
+        title: 'Mark all as read',
+        showAsAction: 'never',
+        id: 'markAsRead',
+        showInBottomSheet: true
+      }, {
+        title: 'Settings',
+        showAsAction: 'never',
+        id: 'settings',
+        showInBottomSheet: true
+      }, {
+        title: 'Leave room',
+        showAsAction: 'never',
+        id: 'leave',
+        showInBottomSheet: true
+      }, {
+        title: 'Share room',
+        showAsAction: 'never',
+        id: 'share',
+        showInBottomSheet: true
+      }, {
+        title: room.hasOwnProperty('favourite') ? 'Remove from favorite' : 'Add to favorite',
+        showAsAction: 'never',
+        id: 'toggleFavorite',
+        showInBottomSheet: true
+      }, {
+        title: 'Search',
+        icon: iconsMap.search,
+        showAsAction: 'always',
+        iconColor: 'white',
+        id: 'search',
+        showInBottomSheet: true
+      }]
+
+      actions = actions.concat(newAction)
+    }
 
     if (!!room) {
       actions.push({
         title: 'Open room info',
         icon: iconsMap['info-outline'],
         showAsAction: 'always',
-        id: 'roomInfo'
+        id: 'roomInfo',
+        showInBottomSheet: false
       })
     }
 
-    if (!!room && room.roomMember) {
-      actions = actions.concat([{
-        title: 'Search',
-        icon: iconsMap.search,
-        showAsAction: 'always',
-        iconColor: 'white',
-        id: 'search'
-      }, {
-        title: room.hasOwnProperty('favourite') ? 'Remove from favorite' : 'Add to favorite',
-        showAsAction: 'never',
-        id: 'toggleFavorite'
-      }, {
-        title: 'Mark all as read',
-        showAsAction: 'never',
-        id: 'markAsRead'
-      }, {
-        title: 'Settings',
-        showAsAction: 'never',
-        id: 'settings'
-      }, {
-        title: 'Leave room',
-        showAsAction: 'never',
-        id: 'leave'
-      }, {
-        title: 'Share room',
-        showAsAction: 'never',
-        id: 'share'
-      }])
+    return onlyFiltered ? actions.filter(item => item.showInBottomSheet !== true) : actions
+  }
+
+  handleOverflowClick() {
+    const {title, room} = this.props
+    const actions = this.getButtons(room, false)
+
+    const newActions = actions.map(({title, id}, index) => ({
+      index,
+      title,
+      id
+    }))
+
+    const options = {
+      options: newActions.map(i => i.title).concat('Close'),
+      cancelButtonIndex: newActions.length,
+      title
     }
 
-    return actions
+    ActionSheetIOS.showActionSheetWithOptions(
+      options,
+      index => index === newActions.length
+        ? () => {}
+        : this.onNavigatorEvent({type: 'NavBarButtonPress', id: newActions[index].id})
+    )
   }
 
   handleSendingMessage(text) {
@@ -454,6 +495,7 @@ class Room extends Component {
   handleToolbarActionSelected({id}) {
     const {dispatch, route: {roomId}, navigator} = this.props
     switch (id) {
+    case 'drawerMenu': return navigator.toggleDrawer({side: 'left', animated: true})
     case 'search': return navigator.showModal({screen: 'gm.SearchMessages', passProps: {roomId}})
     case 'roomInfo': return this.roomInfoDrawer.openDrawer()
     case 'toggleFavorite': return dispatch(changeFavoriteStatus(roomId))
@@ -461,6 +503,8 @@ class Room extends Component {
     case 'settings': return navigator.showModal({screen: 'gm.RoomSettings', passProps: {roomId}})
     case 'leave': return this.leaveRoom()
     case 'share': return this.handleSharingRoom(roomId)
+    case 'showMoreIos': return this.handleOverflowClick()
+    case 'back': return navigator.pop()
     default:
       break
     }
@@ -737,6 +781,12 @@ function mapStateToProps(state, ownProps) {
   const {listView, isLoading, isLoadingMore, byRoom, hasNoMore, entities} = state.messages
   const {activeRoom, rooms, notifications} = state.rooms
   const {roomInfoDrawerState} = state.ui
+
+  const room = rooms[ownProps.roomId]
+
+  let title = !!room ? room.name : 'Room'
+  title = title.split('/').reverse()[0]
+
   return {
     activeRoom,
     rooms,
@@ -751,7 +801,8 @@ function mapStateToProps(state, ownProps) {
     roomInfoDrawerState,
     notifications,
     route: {roomId: ownProps.roomId},
-    room: rooms[ownProps.roomId]
+    room,
+    title
   }
 }
 

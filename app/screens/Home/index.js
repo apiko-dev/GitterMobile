@@ -11,6 +11,7 @@ import Loading from '../../components/Loading'
 import {THEMES} from '../../constants'
 const {colors} = THEMES.gitterDefault
 
+export let homeNavigator = null
 
 class HomeScreen extends Component {
   constructor(props) {
@@ -18,14 +19,17 @@ class HomeScreen extends Component {
     this.renderBottom = this.renderBottom.bind(this)
     this.onRoomPress = this.onRoomPress.bind(this)
 
+    homeNavigator = this.props.navigator
+
     this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
 
     this.props.navigator.setButtons({
       leftButtons: [{
         title: 'Menu',
-        id: 'sideMenu'
-        // icon: iconsMap['menu-white'],
-        // showAsAction: 'always'
+        id: 'sideMenu',
+        icon: iconsMap['menu-white'],
+        iconColor: 'white',
+        showAsAction: 'always'
       }],
       rightButtons: [{
         title: 'Search',
@@ -45,6 +49,9 @@ class HomeScreen extends Component {
     if (event.type === 'NavBarButtonPress') {
       if (event.id === 'search') {
         this.props.navigator.push({screen: 'gm.Search'})
+      }
+      if (event.id === 'sideMenu') {
+        this.props.navigator.toggleDrawer({side: 'left', animated: true})
       }
     }
   }
@@ -149,13 +156,10 @@ HomeScreen.navigatorStyle = {
   navBarTextColor: 'white',
   topBarElevationShadowEnabled: true,
   statusBarColor: colors.darkRed,
-  statusBarTextColorScheme: 'dark',
-  navBarHideOnScroll: true,
-  drawUnderNavBar: true
+  statusBarTextColorScheme: 'dark'
 }
 
 HomeScreen.propTypes = {
-  onMenuTap: PropTypes.func.isRequired,
   isLoadingRooms: PropTypes.bool,
   isLoadingViewer: PropTypes.bool,
   userId: PropTypes.string,

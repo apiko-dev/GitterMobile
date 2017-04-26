@@ -64,7 +64,8 @@ export default class Application {
           passProps,
           navigatorStyle: {
             tabBarHidden: true,
-            drawUnderTabBar: true
+            drawUnderTabBar: true,
+            disabledBackGesture: true
           }
         },
         drawer: {
