@@ -1,6 +1,6 @@
 import {INITIALIZED, init} from './app'
 import {removeFayeEvents} from './realtime'
-import * as Navigation from './navigation'
+import {rootNavigator} from '../index'
 import {setItem, removeItem} from '../utils/storage'
 
 /**
@@ -18,7 +18,7 @@ export const LOGOUT = 'auth/LOGOUT'
  * Action Creators
  */
 
-export function loginByToken(token, navigator) {
+export function loginByToken(token) {
   return async dispatch => {
     try {
       dispatch({type: LOGINING})
@@ -26,8 +26,8 @@ export function loginByToken(token, navigator) {
       await setItem('token', token)
       dispatch({type: LOGIN_USER_BY_TOKEN, token})
 
-      navigator.resetTo({screen: 'gm.Launch'})
-      await dispatch(init(null, navigator))
+      rootNavigator.startAppWithScreen({screen: 'gm.Launch'})
+      await dispatch(init())
 
       dispatch({LOGINED_IN_SUCCESS})
     } catch (err) {
@@ -40,11 +40,11 @@ export function logOut() {
   return async dispatch => {
     try {
       await removeItem('token')
-      dispatch(Navigation.resetTo({name: 'login'}))
       dispatch({type: LOGOUT})
-      dispatch(removeFayeEvents())
+      // dispatch(removeFayeEvents())
+      rootNavigator.startAppWithScreen({screen: 'gm.Login'})
     } catch (error) {
-      console.warn("Can't logout. Error: ", error) // eslint-disable-line no-console
+      console.warn("Can't logout. Error: ", error.message) // eslint-disable-line no-console
     }
   }
 }

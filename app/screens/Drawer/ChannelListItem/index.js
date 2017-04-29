@@ -30,12 +30,14 @@ const ChannelListItem = ({
         {backgroundColor: itemStyles.backgroundColor}
       ]}
       key={id}>
-      <Avatar
-        src={src}
-        size={30} />
+      <View style={s.leftContainer}>
+        <Avatar
+          src={src}
+          size={30} />
 
-      <View style={s.headingContainer}>
-        <Text style={[s.heading, {color: itemStyles.color}]}>{name}</Text>
+        <View style={s.headingContainer}>
+          <Text style={[s.heading, {color: itemStyles.color}]}>{name}</Text>
+        </View>
       </View>
 
       {(!!unreadItems || !!mentions || !!lurk) &&

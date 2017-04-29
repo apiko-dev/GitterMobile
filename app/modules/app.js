@@ -10,7 +10,7 @@ import {
   subscribeToChatMessages,
   subscribeToRooms
 } from './realtime'
-import * as Navigation from './navigation'
+import {rootNavigator} from '../index'
 import * as GithubApi from '../api/github'
 import {Alert, Linking} from 'react-native'
 
@@ -25,22 +25,21 @@ export const CHANGE_APP_STATE = 'app/CHANGE_APP_STATE'
 /**
  * Action Creators
  */
-export function init(startAppWithScreen, navigator) {
+export function init() {
   return async (dispatch, getState) => {
     dispatch(setupAppStatusListener())
-    const navigate = startAppWithScreen ? startAppWithScreen : navigator.resetTo
     try {
       // debugger
       // checking internet connection
       const netStatus = await NetInfo.fetch()
       if (netStatus === 'none' || netStatus === 'NONE') {
-        navigate({screen: 'gm.NoInternet'})
+        rootNavigator.startAppWithScreen({screen: 'gm.NoInternet'})
         return
       }
 
       const token = await getItem('token')
       if (!token) {
-        navigate({screen: 'gm.Login'})
+        rootNavigator.startAppWithScreen({screen: 'gm.Login', showDrawer: false})
         return
       }
 
@@ -55,7 +54,7 @@ export function init(startAppWithScreen, navigator) {
         dispatch(setupFaye()),
       ])
 
-      navigate({screen: 'gm.Home'})
+      rootNavigator.startAppWithScreen({screen: 'gm.Home', showDrawer: true})
       dispatch(setupNetStatusListener())
       // if you need debug room screen, just comment nevigation to 'hone'
       // and uncomment navigation to 'room'
@@ -66,7 +65,7 @@ export function init(startAppWithScreen, navigator) {
       await dispatch(checkNewReleases())
     } catch (error) {
       dispatch({ type: INITIALIZED, error: error.message })
-      navigate({screen: 'gm.Login'})
+      rootNavigator.startAppWithScreen({screen: 'gm.Login'})
     }
   }
 }

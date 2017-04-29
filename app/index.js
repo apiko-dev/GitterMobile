@@ -4,6 +4,6 @@ import configureStore from './configureStore'
 import Application from './screens'
 
 const store = configureStore()
-const app = new Application(store, Provider)
+export const rootNavigator = new Application(store, Provider)
 
-app.run()
+rootNavigator.run()

@@ -23,6 +23,7 @@ export default class Application {
   constructor(store, Provider) {
     this._store = store
     this._provider = Provider
+    this._iconsLoaded = false
 
     this._configureScreens(store, Provider)
   }
@@ -52,31 +53,39 @@ export default class Application {
   }
 
   run() {
-    this._store.dispatch(init(this.startAppWithScreen))
+    this._store.dispatch(init())
   }
 
-  startAppWithScreen({screen, passProps}) {
-    iconsLoaded
-    .then(() =>
-      Navigation.startSingleScreenApp({
-        screen: {
-          screen,
-          passProps,
-          navigatorStyle: {
-            tabBarHidden: true,
-            drawUnderTabBar: true,
-            disabledBackGesture: true
-          }
-        },
-        drawer: {
-          left: {
-            screen: 'gm.Drawer'
-          }
-        }
-        // animationType: 'none'
+  startAppWithScreen(opts) {
+    if (this._iconsLoaded) {
+      this.startApp(opts)
+    } else {
+      iconsLoaded
+      .then(() => {
+        this._iconsLoaded = true
+        this.startApp(opts)
+      }).catch(error => {
+        console.error(error) // eslint-disable-line
       })
-    ).catch(error => {
-      console.error(error) // eslint-disable-line
-    })
+    }
+  }
+
+  startApp({screen, passProps, showDrawer = false}) {
+    const app = {
+      screen: {
+        screen,
+        passProps,
+        navigatorStyle: {
+          tabBarHidden: true,
+          drawUnderTabBar: true,
+          disabledBackGesture: true
+        }
+      }
+    }
+
+    Navigation.startSingleScreenApp(Object.assign(
+      app,
+      showDrawer ? {drawer: {left: {screen: 'gm.Drawer'}}} : {}
+    ))
   }
 }

@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import {View, ScrollView} from 'react-native';
+import {View, ScrollView, Platform} from 'react-native';
 import {connect} from 'react-redux'
 import s from './styles'
 import navigationStyles from '../../styles/common/navigationStyles'
@@ -18,6 +18,18 @@ class Message extends Component {
     this.handleAvatarPress = this.handleAvatarPress.bind(this)
 
     this.props.navigator.setTitle({title: 'Message'})
+    this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this))
+    this.props.navigator.setButtons(
+      Platform.OS === 'ios' ? {
+        leftButtons: [{
+          title: 'Close',
+          id: 'close',
+          iconColor: 'white',
+          // icon: iconsMap.back,
+          showAsAction: 'always'
+        }]
+      } : {}
+    )
   }
 
   componentWillMount() {
@@ -28,6 +40,16 @@ class Message extends Component {
   componentWillUnmount() {
     const {dispatch} = this.props
     dispatch(unsubscribeFromReadBy())
+  }
+
+  onNavigatorEvent(event) {
+    if (event.type === 'NavBarButtonPress') {
+      if (event.id === 'close') {
+        this.props.navigator.dismissModal({
+          animationType: 'slide-down'
+        })
+      }
+    }
   }
 
   handleAvatarPress(id, username) {

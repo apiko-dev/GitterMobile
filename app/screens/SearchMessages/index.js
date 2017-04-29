@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import {TextInput, View, Text, Clipboard, ToastAndroid} from 'react-native';
+import {TextInput, View, Text, Clipboard, ToastAndroid, Platform} from 'react-native';
 import {connect} from 'react-redux'
 import _ from 'lodash'
 import {setInputValue, searchRoomMessages, clearSearch} from '../../modules/search'
@@ -139,7 +139,7 @@ class SearchScreen extends Component {
 
     return (
       <Toolbar
-        navIconName="arrow-back"
+        navIconName={Platform.OS === 'ios' ? 'chevron-left' : 'arrow-back'}
         iconColor="white"
         onIconClicked={this.navigateBack}
         actions={actions}

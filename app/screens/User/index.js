@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import {Linking, ScrollView, View} from 'react-native';
+import {Linking, ScrollView, View, Platform} from 'react-native';
 import {connect} from 'react-redux'
 import ScrollableTabView from 'react-native-scrollable-tab-view'
 import s from './styles'
@@ -28,12 +28,34 @@ class UserScreen extends Component {
       activeTab: 0
     }
 
+    this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this))
     this.props.navigator.setTitle({title: 'User'})
+    this.props.navigator.setButtons(
+      Platform.OS === 'ios' ? {
+        leftButtons: [{
+          title: 'Close',
+          id: 'close',
+          iconColor: 'white',
+          // icon: iconsMap.back,
+          showAsAction: 'always'
+        }]
+      } : {}
+    )
   }
 
   componentWillMount() {
     const {dispatch, username} = this.props
     dispatch(getUser(username))
+  }
+
+  onNavigatorEvent(event) {
+    if (event.type === 'NavBarButtonPress') {
+      if (event.id === 'close') {
+        this.props.navigator.dismissModal({
+          animationType: 'slide-down'
+        })
+      }
+    }
   }
 
   handleTabChange({i}) {

@@ -3,10 +3,10 @@ import {Text, Image} from 'react-native';
 import Button from '../../components/Button'
 import {connect} from 'react-redux'
 import s from './styles'
-import * as Navigation from '../../modules/navigation'
 import {THEMES} from '../../constants'
 import {init} from '../../modules/app'
 const {colors} = THEMES.gitterDefault
+import {rootNavigator} from '../index'
 
 class NoInternetScreen extends Component {
   constructor(props) {
@@ -17,7 +17,7 @@ class NoInternetScreen extends Component {
 
   handleRetry() {
     const {dispatch} = this.props
-    dispatch(Navigation.resetTo({name: 'launch'}))
+    rootNavigator.startAppWithScreen({screen: 'gm.Launch'})
     dispatch(init())
   }
 

@@ -88,7 +88,19 @@ class Drawer extends Component {
   handleSettingsPress() {
     const {navigator} = this.props
     navigator.toggleDrawer({side: 'left', animated: true})
-    navigator.showModal({screen: 'gm.Settings', title: 'Settings', animationType: 'slide-up'}) // works
+    navigator.showModal(Object.assign({
+      screen: 'gm.Settings',
+      title: 'Settings',
+      animationType: 'slide-up',
+    }, iOS ? {navigatorButtons: {
+      leftButtons: [{
+        title: 'Close',
+        id: 'close',
+        iconColor: 'white',
+        // icon: iconsMap.back,
+        showAsAction: 'always'
+      }]
+    }} : {}))
   }
 
   handleSearchPress() {

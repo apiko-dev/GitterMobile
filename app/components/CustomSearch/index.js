@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import {TextInput, View} from 'react-native';
+import {TextInput, View, Platform} from 'react-native';
 import s from './styles'
 import Button from '../Button'
 import Icon from 'react-native-vector-icons/MaterialIcons'
@@ -29,9 +29,9 @@ class CustomSearch extends Component {
           onPress={() => onBackPress()}>
           <Icon
             style={{opacity: 0.6}}
-            name="arrow-back"
+            name={Platform.OS === 'ios' ? 'chevron-left' : 'arrow-back'}
             color="black"
-            size={25} />
+            size={26} />
         </Button>
         <View style={s.innerContainer}>
           <TextInput

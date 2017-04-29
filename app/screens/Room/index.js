@@ -85,8 +85,9 @@ class Room extends Component {
     this.handleSendingMessage = this.handleSendingMessage.bind(this)
     this.handleSharingRoom = this.handleSharingRoom.bind(this)
     this.handleSharingMessage = this.handleSharingMessage.bind(this)
+    this.handleShowModal = this.handleShowModal.bind(this)
 
-    this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+    this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this))
 
     this.state = {
       textInputValue: '',
@@ -98,8 +99,7 @@ class Room extends Component {
       this.props.navigator.setButtons({
         leftButtons: [{
           title: 'Menu',
-          id: 'drawerMenu',
-          icon: iconsMap['menu-white'],
+          id: 'sideMenu',
           iconColor: 'white',
           showAsAction: 'always'
         }]
@@ -240,7 +240,7 @@ class Room extends Component {
 
   onMessageLongPress(messageId) {
     const {navigator, route: {roomId}} = this.props
-    navigator.showModal({screen: 'gm.Message', passProps: {messageId, roomId}})
+    this.handleShowModal({screen: 'gm.Message', passProps: {messageId, roomId}})
   }
 
   onDelete(rowId, id) {
@@ -496,11 +496,11 @@ class Room extends Component {
     const {dispatch, route: {roomId}, navigator} = this.props
     switch (id) {
     case 'drawerMenu': return navigator.toggleDrawer({side: 'left', animated: true})
-    case 'search': return navigator.showModal({screen: 'gm.SearchMessages', passProps: {roomId}})
+    case 'search': return navigator.showModal({screen: 'gm.SearchMessages', passProps: {roomId}, animationType: 'slide-up'})
     case 'roomInfo': return this.roomInfoDrawer.openDrawer()
     case 'toggleFavorite': return dispatch(changeFavoriteStatus(roomId))
     case 'markAsRead': return dispatch(markAllAsRead(roomId))
-    case 'settings': return navigator.showModal({screen: 'gm.RoomSettings', passProps: {roomId}})
+    case 'settings': return this.handleShowModal({screen: 'gm.RoomSettings', passProps: {roomId}})
     case 'leave': return this.leaveRoom()
     case 'share': return this.handleSharingRoom(roomId)
     case 'showMoreIos': return this.handleOverflowClick()
@@ -508,6 +508,10 @@ class Room extends Component {
     default:
       break
     }
+  }
+
+  handleShowModal(opts) {
+    return this.props.navigator.showModal(opts)
   }
 
   handleCopyToClipboard(text) {
@@ -525,7 +529,7 @@ class Room extends Component {
 
   handleUserAvatarPress(id, username) {
     const {navigator} = this.props
-    navigator.showModal({screen: 'gm.User', passProps: {userId: id, username}})
+    this.handleShowModal({screen: 'gm.User', passProps: {userId: id, username}})
   }
 
   handleQuotePress(message) {

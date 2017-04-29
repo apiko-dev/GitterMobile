@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import {View, ScrollView, Picker, Text} from 'react-native';
+import {View, ScrollView, Picker, Text, Platform} from 'react-native';
 import {connect} from 'react-redux'
 import s from './styles'
 
@@ -25,6 +25,18 @@ class RoomSettings extends Component {
     }
 
     this.props.navigator.setTitle({title: 'Room settings'})
+    this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this))
+    this.props.navigator.setButtons(
+      Platform.OS === 'ios' ? {
+        leftButtons: [{
+          title: 'Close',
+          id: 'close',
+          iconColor: 'white',
+          // icon: iconsMap.back,
+          showAsAction: 'always'
+        }]
+      } : {}
+    )
   }
 
   componentWillMount() {
@@ -38,6 +50,16 @@ class RoomSettings extends Component {
       pickerState = 2
     }
     this.setState({pickerState})
+  }
+
+  onNavigatorEvent(event) {
+    if (event.type === 'NavBarButtonPress') {
+      if (event.id === 'close') {
+        this.props.navigator.dismissModal({
+          animationType: 'slide-down'
+        })
+      }
+    }
   }
 
   handlePickerChange(value, index) {

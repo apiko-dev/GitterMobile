@@ -9,7 +9,8 @@ const styles = StyleSheet.create({
   },
   logo: {
     fontSize: 40,
-    color: 'white'
+    color: 'white',
+    backgroundColor: 'transparent'
   }
 })
 

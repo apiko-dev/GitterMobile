@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import {ScrollView, View, Alert} from 'react-native';
+import {Platform, View, Alert} from 'react-native';
 import {connect} from 'react-redux'
 
 import s from './styles'
@@ -15,6 +15,31 @@ class Settings extends Component {
 
     this.renderSettings = this.renderSettings.bind(this)
     this.handleLogout = this.handleLogout.bind(this)
+
+    this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this))
+    this.props.navigator.setButtons(
+      Object.assign(
+        Platform.OS === 'ios' ? {navigatorButtons: {
+          leftButtons: [{
+            title: 'Close',
+            id: 'close',
+            iconColor: 'white',
+            // icon: iconsMap.back,
+            showAsAction: 'always'
+          }]
+        }} : {}
+      )
+    )
+  }
+
+  onNavigatorEvent(event) {
+    if (event.type === 'NavBarButtonPress') {
+      if (event.id === 'close') {
+        this.props.navigator.dismissModal({
+          animationType: 'slide-down'
+        })
+      }
+    }
   }
 
   onLogOut() {

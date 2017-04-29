@@ -1,9 +1,8 @@
 import React, {Component, PropTypes} from 'react';
-import {ToastAndroid, TextInput, View} from 'react-native';
+import {ToastAndroid, TextInput, View, Platform} from 'react-native';
 import {connect} from 'react-redux'
 import _ from 'lodash'
 import ScrollableTabView from 'react-native-scrollable-tab-view';
-import * as Navigation from '../../modules/navigation'
 import {setInputValue, searchUsers, searchRooms, clearSearch} from '../../modules/search'
 import s from './styles'
 import {THEMES} from '../../constants'
@@ -15,6 +14,7 @@ import SearchRoomsTab from './SearchRoomsTab'
 
 const {colors} = THEMES.gitterDefault
 import navigationStyles from '../../styles/common/navigationStyles'
+const iOS = Platform.OS === 'ios'
 
 class SearchScreen extends Component {
   constructor(props) {
@@ -120,7 +120,7 @@ class SearchScreen extends Component {
 
     return (
       <Toolbar
-        navIconName="arrow-back"
+        navIconName={iOS ? 'chevron-left' : 'arrow-back'}
         iconColor="white"
         onIconClicked={this.navigateBack}
         actions={actions}
