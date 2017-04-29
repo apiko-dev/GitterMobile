@@ -39,7 +39,8 @@ const SearchUsersTab = ({isLoadingUsers, usersResult, value, onPress}) => {
 
   return (
     <View style={s.container}>
-      <ScrollView>
+      <ScrollView
+        keyboardShouldPersistTaps="handled">
         {content}
       </ScrollView>
     </View>

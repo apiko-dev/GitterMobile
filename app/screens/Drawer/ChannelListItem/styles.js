@@ -5,17 +5,21 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingLeft: 16,
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
     height: 50,
     backgroundColor: 'white'
   },
   headingContainer: {
-    marginLeft: 10,
-    width: 210
+    marginLeft: 10
   },
   heading: {
     fontSize: 12,
     color: 'black'
+  },
+  leftContainer: {
+    flexDirection: 'row',
+    alignItems: 'center'
   }
 })
 

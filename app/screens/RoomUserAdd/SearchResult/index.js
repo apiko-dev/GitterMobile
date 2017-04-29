@@ -28,7 +28,8 @@ const SearchResult = ({resultItems, onUserItemPress, isLoading, onAddPress}) => 
 
   return (
     <View style={s.container}>
-      <ScrollView>
+      <ScrollView
+        keyboardShouldPersistTaps="handled">
         {resultItems.map(item => (
           <RoomUserItem
             {...item}

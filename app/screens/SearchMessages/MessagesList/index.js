@@ -8,7 +8,8 @@ const MessagesList = ({
   onPress,
   onUserAvatarPress
 }) => (
-  <ScrollView>
+  <ScrollView
+    keyboardShouldPersistTaps="handled">
     {items.map(item =>
       <Message
         {...item}

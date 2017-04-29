@@ -69,7 +69,7 @@ class Toolbar extends Component {
         <Icon
           name={navIconName}
           color={iconColor}
-          size={26} />
+          size={40} />
       </Button>
     )
   }
@@ -155,7 +155,7 @@ Toolbar.propTypes = {
   additionalIconTitle: PropTypes.string,
   onAdditionalIconPress: PropTypes.func,
   children: React.PropTypes.any,
-  style: PropTypes.object
+  style: PropTypes.any
 }
 
 export default Platform.OS === 'ios' ? Toolbar : Icon.ToolbarAndroid

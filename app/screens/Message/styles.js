@@ -4,7 +4,8 @@ const {colors} = THEMES.gitterDefault
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    backgroundColor: 'white'
   },
   toolbar: {
     height: 56,

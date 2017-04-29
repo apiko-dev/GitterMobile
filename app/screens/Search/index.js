@@ -1,9 +1,8 @@
 import React, {Component, PropTypes} from 'react';
-import {ToastAndroid, TextInput, View} from 'react-native';
+import {ToastAndroid, TextInput, View, Platform} from 'react-native';
 import {connect} from 'react-redux'
 import _ from 'lodash'
 import ScrollableTabView from 'react-native-scrollable-tab-view';
-import * as Navigation from '../../modules/navigation'
 import {setInputValue, searchUsers, searchRooms, clearSearch} from '../../modules/search'
 import s from './styles'
 import {THEMES} from '../../constants'
@@ -14,6 +13,8 @@ import SearchUsersTab from './SearchUsersTab'
 import SearchRoomsTab from './SearchRoomsTab'
 
 const {colors} = THEMES.gitterDefault
+import navigationStyles from '../../styles/common/navigationStyles'
+const iOS = Platform.OS === 'ios'
 
 class SearchScreen extends Component {
   constructor(props) {
@@ -44,8 +45,9 @@ class SearchScreen extends Component {
   }
 
   navigateBack() {
-    const {dispatch} = this.props
-    dispatch(Navigation.goBack())
+    const {dispatch, navigator} = this.props
+    // dispatch(Navigation.goBack())
+    navigator.pop()
     dispatch(clearSearch())
   }
 
@@ -69,8 +71,8 @@ class SearchScreen extends Component {
       ToastAndroid.show('Room not exist yet', ToastAndroid.SHORT)
       return
     }
-    const {dispatch} = this.props
-    dispatch(Navigation.goTo({name: 'room', roomId: id}))
+    const {navigator} = this.props
+    navigator.push({screen: 'gm.Room', passProps: {roomId: id}})
   }
 
   handleUserItemPress(id, username) {
@@ -78,8 +80,8 @@ class SearchScreen extends Component {
       ToastAndroid.show("User don't have gitter profile", ToastAndroid.SHORT)
       return
     }
-    const {dispatch} = this.props
-    dispatch(Navigation.goTo({name: 'user', userId: id, username}))
+    const {navigator} = this.props
+    navigator.showModal({screen: 'gm.User', passProps: {userId: id, username}})
   }
 
   handleTabChange({i}) {
@@ -113,12 +115,12 @@ class SearchScreen extends Component {
   renderToolbar() {
     const {value} = this.state
     const actions = !!value
-      ? [{title: 'Clear', iconName: 'close_white', iconColor: 'white', show: 'always'}]
+      ? [{title: 'Clear', iconName: 'close', iconColor: 'white', show: 'always'}]
       : []
 
     return (
       <Toolbar
-        navIconName="arrow-back"
+        navIconName={iOS ? 'chevron-left' : 'arrow-back'}
         iconColor="white"
         onIconClicked={this.navigateBack}
         actions={actions}
@@ -193,6 +195,11 @@ class SearchScreen extends Component {
       </View>
     )
   }
+}
+
+SearchScreen.navigatorStyle = {
+  ...navigationStyles,
+  navBarHidden: true
 }
 
 SearchScreen.propTypes = {

@@ -4,7 +4,7 @@ import s from './styles'
 import {connect} from 'react-redux'
 import _ from 'lodash'
 
-import * as Navigation from '../../modules/navigation'
+import navigationStyles from '../../styles/common/navigationStyles'
 import {searchUsers, clearSearch} from '../../modules/search'
 import {addUserToRoom} from '../../modules/rooms'
 
@@ -48,17 +48,17 @@ class RoomUserAddScreen extends Component {
   }
 
   handleBackPress() {
-    const {dispatch} = this.props
-    dispatch(Navigation.goBack())
+    const {navigator} = this.props
+    navigator.dismissModal()
   }
 
   handleUserItemPress(id, username) {
-    const {dispatch} = this.props
-    dispatch(Navigation.goTo({name: 'user', userId: id, username}))
+    const {navigator} = this.props
+    navigator.showModal({screen: 'gm.User', passProps: {userId: id, username}})
   }
 
   handleAddPress(username) {
-    const {dispatch, route: {roomId}} = this.props
+    const {dispatch, roomId} = this.props
     dispatch(addUserToRoom(roomId, username))
   }
 
@@ -109,8 +109,13 @@ class RoomUserAddScreen extends Component {
 RoomUserAddScreen.propTypes = {
   dispatch: PropTypes.func,
   usersResult: PropTypes.array,
-  route: PropTypes.object,
+  roomId: PropTypes.string,
   isLoading: PropTypes.bool
+}
+
+RoomUserAddScreen.navigatorStyle = {
+  ...navigationStyles,
+  navBarHidden: true
 }
 
 function mapStateToProps(state) {

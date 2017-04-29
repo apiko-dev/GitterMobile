@@ -1,12 +1,11 @@
 import React, {Component, PropTypes} from 'react';
-import {ScrollView, View, Alert} from 'react-native';
+import {Platform, View, Alert} from 'react-native';
 import {connect} from 'react-redux'
 
 import s from './styles'
-import * as Navigation from '../../modules/navigation'
 import {logOut} from '../../modules/auth'
+import navigationStyles from '../../styles/common/navigationStyles'
 
-import Toolbar from '../../components/Toolbar'
 import Group from './Group'
 import TextItem from './TextItem'
 
@@ -14,10 +13,33 @@ class Settings extends Component {
   constructor(props) {
     super(props)
 
-    this.renderToolbar = this.renderToolbar.bind(this)
-    this.navigateBack = this.navigateBack.bind(this)
     this.renderSettings = this.renderSettings.bind(this)
     this.handleLogout = this.handleLogout.bind(this)
+
+    this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this))
+    this.props.navigator.setButtons(
+      Object.assign(
+        Platform.OS === 'ios' ? {navigatorButtons: {
+          leftButtons: [{
+            title: 'Close',
+            id: 'close',
+            iconColor: 'white',
+            // icon: iconsMap.back,
+            showAsAction: 'always'
+          }]
+        }} : {}
+      )
+    )
+  }
+
+  onNavigatorEvent(event) {
+    if (event.type === 'NavBarButtonPress') {
+      if (event.id === 'close') {
+        this.props.navigator.dismissModal({
+          animationType: 'slide-down'
+        })
+      }
+    }
   }
 
   onLogOut() {
@@ -34,23 +56,6 @@ class Settings extends Component {
   handleLogout() {
     const {dispatch} = this.props
     dispatch(logOut())
-  }
-
-  navigateBack() {
-    const {dispatch} = this.props
-    dispatch(Navigation.goBack())
-  }
-
-  renderToolbar() {
-    return (
-      <Toolbar
-        navIconName="arrow-back"
-        iconColor="white"
-        onIconClicked={this.navigateBack}
-        title="Settings"
-        titleColor="white"
-        style={s.toolbar} />
-    )
   }
 
   renderSettings() {
@@ -71,9 +76,7 @@ class Settings extends Component {
   render() {
     return (
       <View style={s.container}>
-        {this.renderToolbar()}
         {this.renderSettings()}
-
       </View>
     )
   }
@@ -82,6 +85,10 @@ class Settings extends Component {
 Settings.propTypes = {
   dispatch: PropTypes.func,
   readAllMessages: PropTypes.object
+}
+
+Settings.navigatorStyle = {
+  ...navigationStyles
 }
 
 

@@ -1,7 +1,8 @@
-import React, {Component, PropTypes} from 'react';
-import {InteractionManager, DrawerLayoutAndroid, ToastAndroid, Clipboard, Alert, ListView, View, Platform, KeyboardAvoidingView} from 'react-native';
+import React, {Component, PropTypes} from 'react'
+import {Keyboard, ActionSheetIOS, DrawerLayoutAndroid, ToastAndroid, Clipboard, Alert, ListView, View, Platform, KeyboardAvoidingView} from 'react-native';
 import {connect} from 'react-redux'
 import Share from 'react-native-share'
+import navigationStyles from '../../styles/common/navigationStyles'
 import _ from 'lodash'
 import DrawerLayoutJs from 'react-native-drawer-layout'
 const DrawerLayout = Platform.OS === 'ios' ? DrawerLayoutJs : DrawerLayoutAndroid
@@ -40,7 +41,6 @@ import {
 //   unsubscribeToChatMessages
 // } from '../../modules/realtime'
 import {changeRoomInfoDrawerState} from '../../modules/ui'
-import * as Navigation from '../../modules/navigation'
 
 import RoomInfoScreen from '../RoomInfo'
 
@@ -50,6 +50,7 @@ import SendMessageField from './SendMessageField'
 import JoinRoomField from './JoinRoomField'
 import LoadingMoreSnack from '../../components/LoadingMoreSnack'
 import FailedToLoad from '../../components/FailedToLoad'
+import {iconsMap} from '../../utils/iconsMap'
 
 const COMMAND_REGEX = /\/\S+/
 const iOS = Platform.OS === 'ios'
@@ -82,15 +83,38 @@ class Room extends Component {
     this.handleChangeVisibleRows = this.handleChangeVisibleRows.bind(this)
     this.handleReadMessages = _.debounce(this.handleReadMessages.bind(this), 250)
     this.handleSendingMessage = this.handleSendingMessage.bind(this)
-    this.onNavigateBack = this.onNavigateBack.bind(this)
     this.handleSharingRoom = this.handleSharingRoom.bind(this)
     this.handleSharingMessage = this.handleSharingMessage.bind(this)
+    this.handleShowModal = this.handleShowModal.bind(this)
+
+    this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this))
 
     this.state = {
       textInputValue: '',
       editing: false,
       editMessage: {}
     }
+
+    if (!iOS) {
+      this.props.navigator.setButtons({
+        leftButtons: [{
+          title: 'Menu',
+          id: 'sideMenu',
+          iconColor: 'white',
+          showAsAction: 'always'
+        }]
+      })
+    }
+  }
+
+  componentWillMount() {
+    const {navigator, room, title} = this.props
+    this.prepareDataSources()
+    navigator.setTitle({title})
+    this.props.navigator.setButtons({
+      rightButtons: this.getButtons(room, iOS)
+    })
+    Keyboard.dismiss()
   }
 
   componentDidMount() {
@@ -98,21 +122,29 @@ class Room extends Component {
     const {activeRoom, rooms, route: { roomId }, dispatch, listViewData} = this.props
     // dispatch(subscribeToChatMessages(roomId))
     dispatch(changeRoomInfoDrawerState('close'))
-    InteractionManager.runAfterInteractions(() => {
-      dispatch(clearMessagesError())
-      if (activeRoom !== roomId) {
-        dispatch(selectRoom(roomId))
-      }
-      if (!rooms[roomId]) {
-        dispatch(getRoom(roomId))
-      }
-      dispatch(getNotificationSettings(roomId))
-      if (!listViewData[roomId]) {
-        dispatch(getRoomMessages(roomId))
-      } else {
-        dispatch(getRoomMessagesIfNeeded(roomId))
-      }
-    })
+
+    dispatch(clearMessagesError())
+    if (activeRoom !== roomId) {
+      dispatch(selectRoom(roomId))
+    }
+    if (!rooms[roomId]) {
+      dispatch(getRoom(roomId))
+    }
+    dispatch(getNotificationSettings(roomId))
+    if (!listViewData[roomId]) {
+      dispatch(getRoomMessages(roomId))
+    } else {
+      dispatch(getRoomMessagesIfNeeded(roomId))
+    }
+  }
+
+  componentWillReceiveProps({room, title}) {
+    if (room !== this.props.room) {
+      this.props.navigator.setTitle({title})
+      this.props.navigator.setButtons({
+        rightButtons: this.getButtons(room, iOS)
+      })
+    }
   }
 
   componentWillUnmount() {
@@ -120,9 +152,10 @@ class Room extends Component {
     // dispatch(unsubscribeToChatMessages(roomId))
   }
 
-  onNavigateBack() {
-    const {dispatch} = this.props
-    dispatch(Navigation.goBack())
+  onNavigatorEvent(event) {
+    if (event.type === 'NavBarButtonPress') {
+      this.handleToolbarActionSelected(event)
+    }
   }
 
   onEndReached() {
@@ -206,8 +239,8 @@ class Room extends Component {
   }
 
   onMessageLongPress(messageId) {
-    const {dispatch, route: {roomId}} = this.props
-    dispatch(Navigation.goTo({name: 'message', messageId, roomId}))
+    const {navigator, route: {roomId}} = this.props
+    this.handleShowModal({screen: 'gm.Message', passProps: {messageId, roomId}})
   }
 
   onDelete(rowId, id) {
@@ -285,6 +318,95 @@ class Room extends Component {
     const {dispatch, route: {roomId}} = this.props
     dispatch(clearMessagesError())
     dispatch(getRoomMessages(roomId))
+  }
+
+  getButtons(room, onlyFiltered = false) {
+    let actions = []
+
+    if (iOS) {
+      actions.push({
+        title: 'More',
+        icon: iconsMap['more-vert'],
+        showAsAction: 'always',
+        iconColor: 'white',
+        id: 'showMoreIos',
+        showInBottomSheet: false
+      })
+    }
+
+    if (!!room && room.roomMember) {
+      const newAction = [{
+        title: 'Mark all as read',
+        showAsAction: 'never',
+        id: 'markAsRead',
+        showInBottomSheet: true
+      }, {
+        title: 'Settings',
+        showAsAction: 'never',
+        id: 'settings',
+        showInBottomSheet: true
+      }, {
+        title: 'Leave room',
+        showAsAction: 'never',
+        id: 'leave',
+        showInBottomSheet: true
+      }, {
+        title: 'Share room',
+        showAsAction: 'never',
+        id: 'share',
+        showInBottomSheet: true
+      }, {
+        title: room.hasOwnProperty('favourite') ? 'Remove from favorite' : 'Add to favorite',
+        showAsAction: 'never',
+        id: 'toggleFavorite',
+        showInBottomSheet: true
+      }, {
+        title: 'Search',
+        icon: iconsMap.search,
+        showAsAction: 'always',
+        iconColor: 'white',
+        id: 'search',
+        showInBottomSheet: true
+      }]
+
+      actions = actions.concat(newAction)
+    }
+
+    if (!!room) {
+      actions.push({
+        title: 'Open room info',
+        icon: iconsMap['info-outline'],
+        showAsAction: 'always',
+        id: 'roomInfo',
+        showInBottomSheet: false
+      })
+    }
+
+    return onlyFiltered ? actions.filter(item => item.showInBottomSheet !== true) : actions
+  }
+
+  handleOverflowClick() {
+    const {title, room} = this.props
+    const actions = this.getButtons(room, false)
+
+    const newActions = actions.map(({title, id}, index) => ({
+      index,
+      title,
+      id
+    }))
+
+    const options = {
+      options: newActions.map(i => i.title).concat('Close'),
+      cancelButtonIndex: newActions.length,
+      title
+    }
+
+    ActionSheetIOS.showActionSheetWithOptions(
+      options,
+      index => index === newActions.length
+        ? () => {}
+        : this.onNavigatorEvent({type: 'NavBarButtonPress', id: newActions[index].id})
+    )
   }
 
   handleSendingMessage(text) {
@@ -370,19 +492,26 @@ class Room extends Component {
     }
   }
 
-  handleToolbarActionSelected(index) {
-    const {dispatch, route: {roomId}} = this.props
-    switch (index) {
-    case 0: return dispatch(Navigation.goTo({name: 'searchMessages', roomId}))
-    case 1: return this.roomInfoDrawer.openDrawer()
-    case 2: return dispatch(changeFavoriteStatus(roomId))
-    case 3: return dispatch(markAllAsRead(roomId))
-    case 4: return dispatch(Navigation.goTo({name: 'roomSettings', roomId}))
-    case 5: return this.leaveRoom()
-    case 6: return this.handleSharingRoom(roomId)
+  handleToolbarActionSelected({id}) {
+    const {dispatch, route: {roomId}, navigator} = this.props
+    switch (id) {
+    case 'drawerMenu': return navigator.toggleDrawer({side: 'left', animated: true})
+    case 'search': return navigator.showModal({screen: 'gm.SearchMessages', passProps: {roomId}, animationType: 'slide-up'})
+    case 'roomInfo': return this.roomInfoDrawer.openDrawer()
+    case 'toggleFavorite': return dispatch(changeFavoriteStatus(roomId))
+    case 'markAsRead': return dispatch(markAllAsRead(roomId))
+    case 'settings': return this.handleShowModal({screen: 'gm.RoomSettings', passProps: {roomId}})
+    case 'leave': return this.leaveRoom()
+    case 'share': return this.handleSharingRoom(roomId)
+    case 'showMoreIos': return this.handleOverflowClick()
+    case 'back': return navigator.pop()
     default:
       break
     }
+  }
+
+  handleShowModal(opts) {
+    return this.props.navigator.showModal(opts)
   }
 
   handleCopyToClipboard(text) {
@@ -399,8 +528,8 @@ class Room extends Component {
   }
 
   handleUserAvatarPress(id, username) {
-    const {dispatch} = this.props
-    dispatch(Navigation.goTo({name: 'user', userId: id, username}))
+    const {navigator} = this.props
+    this.handleShowModal({screen: 'gm.User', passProps: {userId: id, username}})
   }
 
   handleQuotePress(message) {
@@ -484,12 +613,6 @@ class Room extends Component {
     if (!listViewData[roomId]) {
       const ds = new ListView.DataSource({rowHasChanged: (row1, row2) => {
         return row1 !== row2
-        //   return true
-        // } else if (r1.text === r2.text) {
-        //   return false
-        // } else {
-          // return true
-        // }
       }})
       dispatch(prepareListView(roomId, ds.cloneWithRows([])))
     }
@@ -501,91 +624,22 @@ class Room extends Component {
     let actions = []
 
     // TODO: Update one action instead
-    if (!!room && room.roomMember) {
-      if (room.hasOwnProperty('favourite')) {
-        actions = [{
-          title: 'Search',
-          iconName: 'search',
-          show: 'always',
-          iconColor: 'white'
-        },
-        {
-          title: 'Open room info',
-          iconName: 'info-outline',
-          show: 'never',
-          iconColor: 'white'
-        },
-        {
-          title: 'Remove from favorite',
-          show: 'never'
-        },
-        {
-          title: 'Mark all as read',
-          show: 'never'
-        },
-        {
-          title: 'Settings',
-          show: 'never'
-        },
-        {
-          title: 'Leave room',
-          show: 'never'
-        },
-        {
-          title: 'Share room',
-          show: 'never'
-        }]
-      } else {
-        actions = [{
-          title: 'Search',
-          iconName: 'search',
-          show: 'always',
-          iconColor: 'white'
-        },
-        {
-          title: 'Open room info',
-          iconName: 'info-outline',
-          show: 'never',
-          iconColor: 'white'
-        },
-        {
-          title: 'Add to favorite',
-          show: 'never'
-        },
-        {
-          title: 'Mark all as read',
-          show: 'never'
-        },
-        {
-          title: 'Settings',
-          show: 'never'
-        },
-        {
-          title: 'Leave room',
-          show: 'never'
-        },
-        {
-          title: 'Share room',
-          show: 'never'
-        }]
-      }
-    }
 
     let roomName = !!room ? room.name : ''
     roomName = roomName.split('/').reverse()[0]
 
-    return (
-      <Toolbar
-        navIconName={iOS ? 'arrow-back' : 'menu'}
-        iconColor="white"
-        onIconClicked={iOS ? this.onNavigateBack : this.props.onMenuTap}
-        actions={actions}
-        onActionSelected={this.handleToolbarActionSelected}
-        overflowIconName="more-vert"
-        title={roomName}
-        titleColor="white"
-        style={s.toolbar} />
-    )
+    // return (
+    //   <Toolbar
+    //     navIconName={iOS ? 'arrow-back' : 'menu'}
+    //     iconColor="white"
+    //     onIconClicked={iOS ? this.onNavigateBack : this.props.onMenuTap}
+    //     actions={actions}
+    //     onActionSelected={this.handleToolbarActionSelected}
+    //     overflowIconName="more-vert"
+    //     title={roomName}
+    //     titleColor="white"
+    //     style={s.toolbar} />
+    // )
   }
 
   renderBottom() {
@@ -649,10 +703,11 @@ class Room extends Component {
   }
 
   renderRoomInfo() {
-    const {route} = this.props
+    const {route, navigator} = this.props
     return (
       <RoomInfoScreen
         route={route}
+        navigator={navigator}
         drawer={this.roomInfoDrawer} />
     )
   }
@@ -672,7 +727,6 @@ class Room extends Component {
     if (!rooms[route.roomId]) {
       return (
         <View style={s.container}>
-          {this.renderToolbar()}
           {this.renderLoading()}
         </View>
       )
@@ -691,8 +745,6 @@ class Room extends Component {
           drawerPosition={DrawerLayout.positions.Right}
           renderNavigationView={this.renderRoomInfo}
           keyboardDismissMode="on-drag">
-
-              {this.renderToolbar()}
               {isLoadingMore ? this.renderLoadingMore() : null}
               {isLoadingMessages ? this.renderLoading() : this.renderListView()}
               {getMessagesError || isLoadingMessages || _.has(listView, 'data') &&
@@ -719,13 +771,26 @@ Room.propTypes = {
   currentUser: PropTypes.object,
   getMessagesError: PropTypes.bool,
   roomInfoDrawerState: PropTypes.string,
-  notifications: PropTypes.object
+  notifications: PropTypes.object,
+  navigator: PropTypes.object
 }
 
-function mapStateToProps(state) {
+Room.navigatorStyle = {
+  ...navigationStyles,
+  collapsingToolBarImage: iconsMap['more-vert'],
+  collapsingToolBarCollapsedColor: 'white'
+}
+
+function mapStateToProps(state, ownProps) {
   const {listView, isLoading, isLoadingMore, byRoom, hasNoMore, entities} = state.messages
   const {activeRoom, rooms, notifications} = state.rooms
   const {roomInfoDrawerState} = state.ui
+
+  const room = rooms[ownProps.roomId]
+
+  let title = !!room ? room.name : 'Room'
+  title = title.split('/').reverse()[0]
+
   return {
     activeRoom,
     rooms,
@@ -738,7 +803,10 @@ function mapStateToProps(state) {
     hasNoMore,
     currentUser: state.viewer.user,
     roomInfoDrawerState,
-    notifications
+    notifications,
+    route: {roomId: ownProps.roomId},
+    room,
+    title
   }
 }
 

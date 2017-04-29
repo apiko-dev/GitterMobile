@@ -25,7 +25,7 @@ export default class SendMessageField extends Component {
   }
 
   componentWillReceiveProps({value}) {
-    if (!this.state.value.length) {
+    if (this.props.value !== value) {
       this.setState({value})
     }
   }

@@ -17,6 +17,8 @@ import {THEMES} from '../../constants'
 const {colors} = THEMES.gitterDefault
 const iOS = Platform.OS === 'ios'
 
+import {homeNavigator} from '../Home'
+
 class Drawer extends Component {
   constructor(props) {
     super(props)
@@ -31,9 +33,10 @@ class Drawer extends Component {
   }
 
   onRoomPress(id) {
-    const {dispatch, navigateTo} = this.props
-    navigateTo({name: 'room', roomId: id})
-    dispatch(selectRoom(id))
+    const {navigator} = this.props
+    navigator.toggleDrawer({side: 'left', animated: true})
+    // navigator.push({screen: 'gm.Room', passProps: {roomId: id}}) // doesn't work
+    homeNavigator.push({screen: 'gm.Room', passProps: {roomId: id}}) // works
   }
 
   onLongRoomPress(id) {
@@ -83,13 +86,28 @@ class Drawer extends Component {
   }
 
   handleSettingsPress() {
-    const {navigateTo} = this.props
-    navigateTo({name: 'settings'})
+    const {navigator} = this.props
+    navigator.toggleDrawer({side: 'left', animated: true})
+    navigator.showModal(Object.assign({
+      screen: 'gm.Settings',
+      title: 'Settings',
+      animationType: 'slide-up',
+    }, iOS ? {navigatorButtons: {
+      leftButtons: [{
+        title: 'Close',
+        id: 'close',
+        iconColor: 'white',
+        // icon: iconsMap.back,
+        showAsAction: 'always'
+      }]
+    }} : {}))
   }
 
   handleSearchPress() {
-    const {navigateTo} = this.props
-    navigateTo({name: 'search'})
+    const {navigator} = this.props
+    navigator.toggleDrawer({side: 'left', animated: true})
+    homeNavigator.push({screen: 'gm.Search'}) // works
+    // navigator.push({screen: 'gm.Search'}) // doesn't work
   }
 
   handleDialogPress(index, text, id) {
@@ -140,7 +158,7 @@ Drawer.propTypes = {
   dispatch: PropTypes.func.isRequired,
   isLoadingUser: PropTypes.bool,
   isLoadingRooms: PropTypes.bool,
-  navigateTo: PropTypes.func.isRequired,
+  navigator: PropTypes.object.isRequired,
   user: PropTypes.object,
   ids: PropTypes.array,
   rooms: PropTypes.object,

@@ -2,36 +2,64 @@ import React, {Component, PropTypes} from 'react';
 import {ScrollView, Text, View} from 'react-native';
 import {connect} from 'react-redux'
 import s from './styles'
-import * as Navigation from '../../modules/navigation'
+import {iconsMap} from '../../utils/iconsMap'
 
 import HomeRoomItem from './HomeRoomItem'
 import HomeRoomItemMy from './HomeRoomItemMy'
 import Loading from '../../components/Loading'
-import Toolbar from '../../components/Toolbar'
 
 import {THEMES} from '../../constants'
 const {colors} = THEMES.gitterDefault
 
+export let homeNavigator = null
 
 class HomeScreen extends Component {
   constructor(props) {
     super(props)
     this.renderBottom = this.renderBottom.bind(this)
-    this.renderToolbar = this.renderToolbar.bind(this)
     this.onRoomPress = this.onRoomPress.bind(this)
-    this.handleActionPress = this.handleActionPress.bind(this)
+
+    homeNavigator = this.props.navigator
+
+    this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+
+    this.props.navigator.setButtons({
+      leftButtons: [{
+        title: 'Menu',
+        id: 'sideMenu',
+        icon: iconsMap['menu-white'],
+        iconColor: 'white',
+        showAsAction: 'always'
+      }],
+      rightButtons: [{
+        title: 'Search',
+        id: 'search',
+        icon: iconsMap['search-white'],
+        showAsAction: 'always'
+      }]
+    })
+
+    this.props.navigator.setTitle({
+      title: 'Home'
+    })
+  }
+
+
+  onNavigatorEvent(event) {
+    if (event.type === 'NavBarButtonPress') {
+      if (event.id === 'search') {
+        this.props.navigator.push({screen: 'gm.Search'})
+      }
+      if (event.id === 'sideMenu') {
+        this.props.navigator.toggleDrawer({side: 'left', animated: true})
+      }
+    }
   }
 
   onRoomPress(id) {
-    this.props.navigateTo({name: 'room', roomId: id})
+    this.props.navigator.push({screen: 'gm.Room', passProps: {roomId: id}})
   }
 
-  handleActionPress(index) {
-    const {dispatch} = this.props
-    if (index === 0) {
-      dispatch(Navigation.goTo({name: 'search'}))
-    }
-  }
 
   renderOrgs(orgs) {
     if (orgs.length === 0) {
@@ -110,29 +138,10 @@ class HomeScreen extends Component {
     )
   }
 
-  renderToolbar() {
-    const actions = [
-      {title: 'Search', iconName: 'search', iconColor: 'white', show: 'always'}
-    ]
-    return (
-      <Toolbar
-        actions={actions}
-        navIconName="menu"
-        iconColor="white"
-        onIconClicked={this.props.onMenuTap}
-        onActionSelected={this.handleActionPress}
-        title="Home"
-        titleColor="white"
-        style={s.toolbar} />
-    )
-  }
-
-
   render() {
     return (
       <View style={s.container}>
-        {this.renderToolbar()}
-        <ScrollView>
+        <ScrollView contentContainerStyle={s.scrollContainer}>
           {this.renderBottom()}
         </ScrollView>
       </View>
@@ -140,8 +149,17 @@ class HomeScreen extends Component {
   }
 }
 
+
+HomeScreen.navigatorStyle = {
+  navBarBackgroundColor: colors.raspberry,
+  navBarButtonColor: 'white',
+  navBarTextColor: 'white',
+  topBarElevationShadowEnabled: true,
+  statusBarColor: colors.darkRed,
+  statusBarTextColorScheme: 'dark'
+}
+
 HomeScreen.propTypes = {
-  onMenuTap: PropTypes.func.isRequired,
   isLoadingRooms: PropTypes.bool,
   isLoadingViewer: PropTypes.bool,
   userId: PropTypes.string,
@@ -149,7 +167,7 @@ HomeScreen.propTypes = {
   roomsIds: PropTypes.array,
   suggested: PropTypes.array,
   dispatch: PropTypes.func,
-  navigateTo: PropTypes.func
+  navigator: PropTypes.object
 }
 
 HomeScreen.defaultProps = {

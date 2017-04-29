@@ -22,7 +22,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     fontSize: 24,
     color: 'white',
-    lineHeight: 40
+    lineHeight: 40,
+    backgroundColor: 'transparent'
   },
   group: {
     // flexDirection: 'column'

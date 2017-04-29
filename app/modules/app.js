@@ -10,7 +10,7 @@ import {
   subscribeToChatMessages,
   subscribeToRooms
 } from './realtime'
-import * as Navigation from './navigation'
+import {rootNavigator} from '../index'
 import * as GithubApi from '../api/github'
 import {Alert, Linking} from 'react-native'
 
@@ -29,17 +29,17 @@ export function init() {
   return async (dispatch, getState) => {
     dispatch(setupAppStatusListener())
     try {
-      debugger
+      // debugger
       // checking internet connection
       const netStatus = await NetInfo.fetch()
       if (netStatus === 'none' || netStatus === 'NONE') {
-        dispatch(Navigation.resetTo({name: 'noInternet'}))
+        rootNavigator.startAppWithScreen({screen: 'gm.NoInternet'})
         return
       }
 
       const token = await getItem('token')
       if (!token) {
-        dispatch(Navigation.resetTo({name: 'login'}))
+        rootNavigator.startAppWithScreen({screen: 'gm.Login', showDrawer: false})
         return
       }
 
@@ -53,19 +53,19 @@ export function init() {
         dispatch(getRooms()),
         dispatch(setupFaye()),
       ])
-      await dispatch(setupNetStatusListener())
-      await dispatch(checkNewReleases())
-      dispatch(Navigation.resetTo({name: 'home'}))
 
+      rootNavigator.startAppWithScreen({screen: 'gm.Home', showDrawer: true})
+      dispatch(setupNetStatusListener())
       // if you need debug room screen, just comment nevigation to 'hone'
       // and uncomment navigation to 'room'
       // dispatch(Navigation.resetTo({name: 'user', userId: '52ce7f4eed5ab0b3bf053782', username: 'blia'}))
       // dispatch(Navigation.resetTo({name: 'room', roomId: '54774579db8155e6700d8cc6'}))
       await dispatch(getSuggestedRooms())
       // dispatch(Navigation.resetTo({name: 'roomUsers', roomId: '56a41e0fe610378809bde160'}))
+      await dispatch(checkNewReleases())
     } catch (error) {
       dispatch({ type: INITIALIZED, error: error.message })
-      dispatch(Navigation.goAndReplace({name: 'login'}))
+      rootNavigator.startAppWithScreen({screen: 'gm.Login'})
     }
   }
 }

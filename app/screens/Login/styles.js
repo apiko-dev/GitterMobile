@@ -11,14 +11,16 @@ const styles = StyleSheet.create({
   },
   logo: {
     fontSize: 40,
-    color: 'white'
+    color: 'white',
+    backgroundColor: 'transparent'
   },
   hero: {
     marginTop: 20,
     marginHorizontal: 20,
     fontSize: 24,
     color: 'white',
-    lineHeight: 40
+    lineHeight: 40,
+    backgroundColor: 'transparent'
   },
   buttonGroup: {
     flexDirection: 'row'

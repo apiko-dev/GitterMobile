@@ -1,8 +1,7 @@
 import React, {Component, PropTypes} from 'react';
-import {TextInput, View, Text, Clipboard, ToastAndroid} from 'react-native';
+import {TextInput, View, Text, Clipboard, ToastAndroid, Platform} from 'react-native';
 import {connect} from 'react-redux'
 import _ from 'lodash'
-import * as Navigation from '../../modules/navigation'
 import {setInputValue, searchRoomMessages, clearSearch} from '../../modules/search'
 import s from './styles'
 import {THEMES} from '../../constants'
@@ -14,6 +13,8 @@ import Toolbar from '../../components/Toolbar'
 import Loading from '../../components/Loading'
 import MessagesList from './MessagesList'
 import BottomSheet from '../../../libs/react-native-android-bottom-sheet'
+
+import navigationStyles from '../../styles/common/navigationStyles'
 
 const {colors} = THEMES.gitterDefault
 
@@ -89,18 +90,18 @@ class SearchScreen extends Component {
   }
 
   handleUserAvatarPress(id, username) {
-    const {dispatch} = this.props
-    dispatch(Navigation.goTo({name: 'user', userId: id, username}))
+    const {navigator} = this.props
+    navigator.showModal({screen: 'gm.User', passProps: {userId: id, username}})
   }
 
   handleMessageLongPress(messageId) {
-    const {dispatch, route: {roomId}} = this.props
-    dispatch(Navigation.goTo({name: 'message', messageId, roomId}))
+    const {navigator, roomId} = this.props
+    navigator.showModal({screen: 'gm.Message', passProps: {messageId, roomId, fromSearch: true}})
   }
 
   navigateBack() {
-    const {dispatch} = this.props
-    dispatch(Navigation.goBack())
+    const {dispatch, navigator} = this.props
+    navigator.dismissModal()
     dispatch(clearSearch())
   }
 
@@ -119,7 +120,7 @@ class SearchScreen extends Component {
   }
 
   searchRequest(text) {
-    const {dispatch, route: {roomId}} = this.props
+    const {dispatch, roomId} = this.props
 
     dispatch(setInputValue(text))
 
@@ -133,12 +134,12 @@ class SearchScreen extends Component {
   renderToolbar() {
     const {value} = this.state
     const actions = !!value
-      ? [{title: 'Clear', iconName: 'close_white', iconColor: 'white', show: 'always'}]
+      ? [{title: 'Clear', iconName: 'close', iconColor: 'white', show: 'always'}]
       : []
 
     return (
       <Toolbar
-        navIconName="arrow-back"
+        navIconName={Platform.OS === 'ios' ? 'chevron-left' : 'arrow-back'}
         iconColor="white"
         onIconClicked={this.navigateBack}
         actions={actions}
@@ -207,6 +208,11 @@ SearchScreen.propTypes = {
   room: PropTypes.object
 }
 
+SearchScreen.navigatorStyle = {
+  ...navigationStyles,
+  navBarHidden: true
+}
+
 function mapStateToProps(state, ownProps) {
   const {
     isLoadingRoomMessages,
@@ -218,7 +224,7 @@ function mapStateToProps(state, ownProps) {
     isLoadingRoomMessages,
     inputValue,
     roomMessagesResult,
-    room: rooms[ownProps.route.roomId]
+    room: rooms[ownProps.roomId]
   }
 }
 

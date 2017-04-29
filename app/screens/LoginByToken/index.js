@@ -20,21 +20,18 @@ class LoginByTokenScreen extends Component {
   }
 
   handleLogin() {
-    const {dispatch} = this.props
+    const {dispatch, navigator} = this.props
     const {token} = this.state
     if (!token.trim()) {
       return
     }
-    dispatch(loginByToken(token))
+    dispatch(loginByToken(token, navigator))
   }
 
   render() {
     return (
       <Image style={s.container}
         source={require('../../images/gitter-background.jpg')}>
-        <Text style={s.logo}>
-          Login by token
-        </Text>
         <Text style={s.hero}>
           <Link to="https://developer.gitter.im/login" fontSize={24}>Sign in</Link> to Gitter
         to get your authentication token. Copy it and paste into the textinput below.
@@ -60,6 +57,15 @@ class LoginByTokenScreen extends Component {
       </Image>
     )
   }
+}
+
+LoginByTokenScreen.navigatorStyle = {
+  navBarBackgroundColor: colors.raspberry,
+  navBarButtonColor: 'white',
+  navBarTextColor: 'white',
+  topBarElevationShadowEnabled: true,
+  statusBarColor: colors.darkRed,
+  statusBarTextColorScheme: 'dark'
 }
 
 LoginByTokenScreen.propTypes = {

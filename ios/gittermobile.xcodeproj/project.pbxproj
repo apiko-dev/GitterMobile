@@ -37,6 +37,7 @@
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		8FE07625E0436CCA9378D0F5 /* libPods-GitterMobile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 363931A2889A820ADD609F06 /* libPods-GitterMobile.a */; };
+		DE151CD61EA8124E002A2063 /* libReactNativeNavigation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DE151CD41EA81238002A2063 /* libReactNativeNavigation.a */; };
 		DE7E01951EA2A25B0081B152 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DE7E018D1EA2A25B0081B152 /* Entypo.ttf */; };
 		DE7E01961EA2A25B0081B152 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DE7E018E1EA2A25B0081B152 /* EvilIcons.ttf */; };
 		DE7E01971EA2A25B0081B152 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DE7E018F1EA2A25B0081B152 /* FontAwesome.ttf */; };
@@ -46,6 +47,7 @@
 		DE7E019B1EA2A25B0081B152 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DE7E01931EA2A25B0081B152 /* Octicons.ttf */; };
 		DE7E019C1EA2A25B0081B152 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DE7E01941EA2A25B0081B152 /* Zocial.ttf */; };
 		DE7E01A01EA2A52F0081B152 /* FayeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DE7E019F1EA2A52F0081B152 /* FayeManager.m */; };
+		DEAB4DB01EA816D200A44FF8 /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BF06B0101EA29D9A0090FB51 /* libRNVectorIcons.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -245,6 +247,13 @@
 			remoteGlobalIDString = 5DBEB1501B18CEA900B34395;
 			remoteInfo = RNVectorIcons;
 		};
+		DE151CD31EA81238002A2063 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DE151CB61EA81238002A2063 /* ReactNativeNavigation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D8AFADBD1BEE6F3F00A4592D;
+			remoteInfo = ReactNativeNavigation;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -275,6 +284,7 @@
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		8BA6F015997B8EC10E29E478 /* Pods-GitterMobile.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GitterMobile.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GitterMobile/Pods-GitterMobile.debug.xcconfig"; sourceTree = "<group>"; };
 		BF06B00B1EA29D9A0090FB51 /* RNVectorIcons.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNVectorIcons.xcodeproj; path = "../node_modules/react-native-vector-icons/RNVectorIcons.xcodeproj"; sourceTree = "<group>"; };
+		DE151CB61EA81238002A2063 /* ReactNativeNavigation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeNavigation.xcodeproj; path = "../node_modules/react-native-navigation/ios/ReactNativeNavigation.xcodeproj"; sourceTree = "<group>"; };
 		DE7E018D1EA2A25B0081B152 /* Entypo.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Entypo.ttf; sourceTree = "<group>"; };
 		DE7E018E1EA2A25B0081B152 /* EvilIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = EvilIcons.ttf; sourceTree = "<group>"; };
 		DE7E018F1EA2A25B0081B152 /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome.ttf; sourceTree = "<group>"; };
@@ -301,6 +311,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DEAB4DB01EA816D200A44FF8 /* libRNVectorIcons.a in Frameworks */,
+				DE151CD61EA8124E002A2063 /* libReactNativeNavigation.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
 				5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */,
 				00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */,
@@ -485,6 +497,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				DE151CB61EA81238002A2063 /* ReactNativeNavigation.xcodeproj */,
 				BF06B00B1EA29D9A0090FB51 /* RNVectorIcons.xcodeproj */,
 				5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
@@ -541,6 +554,14 @@
 			isa = PBXGroup;
 			children = (
 				BF06B0101EA29D9A0090FB51 /* libRNVectorIcons.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		DE151CB71EA81238002A2063 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DE151CD41EA81238002A2063 /* libReactNativeNavigation.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -727,6 +748,10 @@
 				{
 					ProductGroup = 146834001AC3E56700842450 /* Products */;
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
+				},
+				{
+					ProductGroup = DE151CB71EA81238002A2063 /* Products */;
+					ProjectRef = DE151CB61EA81238002A2063 /* ReactNativeNavigation.xcodeproj */;
 				},
 				{
 					ProductGroup = BF06B00C1EA29D9A0090FB51 /* Products */;
@@ -924,6 +949,13 @@
 			fileType = archive.ar;
 			path = libRNVectorIcons.a;
 			remoteRef = BF06B00F1EA29D9A0090FB51 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DE151CD41EA81238002A2063 /* libReactNativeNavigation.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libReactNativeNavigation.a;
+			remoteRef = DE151CD31EA81238002A2063 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -1156,6 +1188,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/MZFayeClient\"",
+					"\"${PODS_ROOT}/Headers/Public/SocketRocket\"",
+					"$(SRCROOT)/../node_modules/react-native-navigation/ios/**",
+				);
 				INFOPLIST_FILE = GitterMobile/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
@@ -1180,6 +1219,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/MZFayeClient\"",
+					"\"${PODS_ROOT}/Headers/Public/SocketRocket\"",
+					"$(SRCROOT)/../node_modules/react-native-navigation/ios/**",
+				);
 				INFOPLIST_FILE = GitterMobile/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (

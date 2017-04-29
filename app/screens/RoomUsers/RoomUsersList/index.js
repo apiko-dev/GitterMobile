@@ -38,7 +38,8 @@ export default class RoomUsersList extends Component {
           dataSource={listViewData.dataSource}
           onEndReached={this.props.onEndReached}
           scrollRenderAheadDistance={1000}
-          onEndReachedThreshold={500}s
+          onEndReachedThreshold={500}
+          keyboardShouldPersistTaps="handled"
           pageSize={30}
           initialListSize={30}
           renderRow={(rowData, _, rowId) => this.renderRow(rowData, rowId)} />

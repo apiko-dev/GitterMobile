@@ -85,8 +85,8 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.1"
 
     defaultConfig {
         applicationId "com.gittermobile"
@@ -150,6 +150,7 @@ dependencies {
     compile project(':react-native-android-bottom-sheet')
     compile project(':react-native-vector-icons')
     compile project(':react-native-share')
+    compile project(':react-native-navigation')
 }
 
 // Run this once to be able to run the application with BUCK
