@@ -306,7 +306,7 @@ export function changeNotificationSettings(roomId, index) {
 export function refreshRooms() {
   return async (dispatch, getState) => {
     dispatch(getRooms())
-    await checkFayeConnection()
+    // await checkFayeConnection()
   }
 }
 

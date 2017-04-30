@@ -22,6 +22,7 @@
     "android-release": "node node_modules/react-native/local-cli/cli.js run-android --variant=release"
   },
   "dependencies": {
+    "faye": "^1.2.4",
     "lodash": "^4.2.1",
     "moment": "^2.11.2",
     "react": "16.0.0-alpha.6",
@@ -42,14 +43,15 @@
     "remote-redux-devtools": "^0.1.1"
   },
   "devDependencies": {
+    "babel-eslint": "~4.1.6",
     "babel-jest": "19.0.0",
     "babel-preset-react-native": "1.9.1",
-    "jest": "19.0.2",
-    "react-test-renderer": "16.0.0-alpha.6",
     "eslint": "~1.10.3",
     "eslint-config-airbnb": "~2.1.1",
     "eslint-plugin-react": "~3.13.1",
-    "babel-eslint": "~4.1.6"
+    "faye": "^1.2.4",
+    "jest": "19.0.2",
+    "react-test-renderer": "16.0.0-alpha.6"
   },
   "jest": {
     "preset": "react-native"

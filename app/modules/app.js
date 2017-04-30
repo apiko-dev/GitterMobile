@@ -4,7 +4,7 @@ import {getRooms, getSuggestedRooms} from './rooms'
 import {initializeUi} from './ui'
 import {NetInfo, AppState} from 'react-native'
 import {
-  setupFayeEvents,
+  // setupFayeEvents,
   setupFaye,
   onNetStatusChangeFaye,
   subscribeToChatMessages,
@@ -43,7 +43,7 @@ export function init() {
         return
       }
 
-      dispatch(setupFayeEvents())
+      // dispatch(setupFayeEvents())
       dispatch({ type: INITIALIZED, token })
 
       // getting base current user's information
@@ -75,7 +75,7 @@ function setupNetStatusListener() {
     NetInfo.isConnected.addEventListener('change',
       async status => {
         dispatch({type: CHANGE_NET_STATUS, payload: status})
-        await dispatch(onNetStatusChangeFaye(status))
+        // await dispatch(onNetStatusChangeFaye(status))
       }
     );
   }
@@ -93,15 +93,15 @@ function setupAppStatusListener() {
         if (!token.length || !netStatus) {
           return
         }
-        const {fayeConnected} = getState().app
-        if (!fayeConnected) {
-          await setupFaye()
-        }
+        // const {fayeConnected} = getState().app
+        // if (!fayeConnected) {
+        //   await setupFaye()
+        // }
 
-        const {activeRoom} = getState().rooms
-        if (!!activeRoom) {
-          dispatch(subscribeToChatMessages(activeRoom))
-        }
+        // const {activeRoom} = getState().rooms
+        // if (!!activeRoom) {
+        //   dispatch(subscribeToChatMessages(activeRoom))
+        // }
         dispatch(subscribeToRooms())
       } catch (error) {
         console.log(error)
