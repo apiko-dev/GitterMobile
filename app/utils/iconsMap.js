@@ -1,5 +1,6 @@
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import {icons} from '../constants'
+import {PixelRatio, Platform} from 'react-native'
 
 export const iconsMap = {};
 export const iconsLoaded = new Promise((resolve, reject) => {
@@ -9,7 +10,7 @@ export const iconsLoaded = new Promise((resolve, reject) => {
       const Provider = MaterialIcons
       return Provider.getImageSource(
         icon.icon,
-        icon.size,
+        Platform.OS === 'ios' ? icon.size : PixelRatio.getPixelSizeForLayoutSize(icon.size),
         icon.color
       )
     })
