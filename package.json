@@ -22,7 +22,7 @@
     "android-release": "node node_modules/react-native/local-cli/cli.js run-android --variant=release"
   },
   "dependencies": {
-    "faye": "^1.2.4",
+    "halley": "git+ssh://git@github.com/terrysahaidak/react-native-halley.git#master",
     "lodash": "^4.2.1",
     "moment": "^2.11.2",
     "react": "16.0.0-alpha.6",

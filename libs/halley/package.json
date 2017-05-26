@@ -1,0 +1,140 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "git+ssh://git@github.com:terrysahaidak/react-native-halley.git#master",
+        "scope": null,
+        "escapedName": null,
+        "name": null,
+        "rawSpec": "git+ssh://git@github.com:terrysahaidak/react-native-halley.git#master",
+        "spec": "git+ssh://git@github.com/terrysahaidak/react-native-halley.git#master",
+        "type": "hosted",
+        "hosted": {
+          "type": "github",
+          "ssh": "git@github.com:terrysahaidak/react-native-halley.git#master",
+          "sshUrl": "git+ssh://git@github.com/terrysahaidak/react-native-halley.git#master",
+          "httpsUrl": "git+https://github.com/terrysahaidak/react-native-halley.git#master",
+          "gitUrl": "git://github.com/terrysahaidak/react-native-halley.git#master",
+          "shortcut": "github:terrysahaidak/react-native-halley#master",
+          "directUrl": "https://raw.githubusercontent.com/terrysahaidak/react-native-halley/master/package.json"
+        }
+      },
+      "/Users/terry/Projects/Gitter/GitterMobile"
+    ]
+  ],
+  "_from": "git+ssh://git@github.com/terrysahaidak/react-native-halley.git#master",
+  "_id": "halley@0.5.2",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/halley",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "git+ssh://git@github.com:terrysahaidak/react-native-halley.git#master",
+    "scope": null,
+    "escapedName": null,
+    "name": null,
+    "rawSpec": "git+ssh://git@github.com:terrysahaidak/react-native-halley.git#master",
+    "spec": "git+ssh://git@github.com/terrysahaidak/react-native-halley.git#master",
+    "type": "hosted",
+    "hosted": {
+      "type": "github",
+      "ssh": "git@github.com:terrysahaidak/react-native-halley.git#master",
+      "sshUrl": "git+ssh://git@github.com/terrysahaidak/react-native-halley.git#master",
+      "httpsUrl": "git+https://github.com/terrysahaidak/react-native-halley.git#master",
+      "gitUrl": "git://github.com/terrysahaidak/react-native-halley.git#master",
+      "shortcut": "github:terrysahaidak/react-native-halley#master",
+      "directUrl": "https://raw.githubusercontent.com/terrysahaidak/react-native-halley/master/package.json"
+    }
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "git+ssh://git@github.com/terrysahaidak/react-native-halley.git#279aa5f20df2d08d27a60e3386b80af8ab9a5fd3",
+  "_shasum": "1fafc6f92484ed8dd8beff4d0dd0280a0dbf6018",
+  "_shrinkwrap": null,
+  "_spec": "git+ssh://git@github.com:terrysahaidak/react-native-halley.git#master",
+  "_where": "/Users/terry/Projects/Gitter/GitterMobile",
+  "author": {
+    "name": "Andrew Newdigate",
+    "email": "andrew@gitter.im"
+  },
+  "browser": "./browser-standalone",
+  "bugs": {
+    "url": "https://github.com/gitterHQ/halley/issues"
+  },
+  "dependencies": {
+    "backbone": "1.2.3",
+    "backbone-events-standalone": "git://github.com/suprememoocow/backbone-events-standalone.git#e3cf6aaf0742d655687296753836339dcf0ff483",
+    "bluebird": "^3.3.1",
+    "debug": "^2.0.0",
+    "faye-websocket": "~0.10.0",
+    "inherits": "^2.0.0",
+    "lodash": "^3.0.0"
+  },
+  "description": "A bayeux client for modern browsers and node. Forked from Faye",
+  "devDependencies": {
+    "coveralls": "^2.11.4",
+    "express": "^4.13.3",
+    "gitter-faye": "^1.1.0-h",
+    "gulp": "^3.9.0",
+    "gulp-gzip": "^1.2.0",
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-spawn-mocha": "^2.2.1",
+    "gulp-uglify": "^1.5.1",
+    "gulp-util": "^3.0.7",
+    "gulp-webpack": "^1.5.0",
+    "imports-loader": "^0.6.5",
+    "internal-ip": "^1.1.0",
+    "karma": "^0.13.15",
+    "karma-browserstack-launcher": "^0.1.7",
+    "karma-chrome-launcher": "^0.2.1",
+    "karma-firefox-launcher": "^0.1.7",
+    "karma-mocha": "^0.2.1",
+    "karma-safari-launcher": "^0.1.1",
+    "karma-webpack": "^1.7.0",
+    "lolex": "^1.3.2",
+    "mocha": "^2.3.4",
+    "mocha-loader": "^0.7.1",
+    "node-fetch": "^1.3.3",
+    "permessage-deflate": ">=0.1.0",
+    "server-destroy": "^1.0.1",
+    "setimmediate": "^1.0.4",
+    "sinon": "^1.12.1",
+    "sinon-browser-only": "^1.12.1",
+    "webpack": "^1.12.6",
+    "webpack-dev-middleware": "^1.2.0",
+    "whatwg-fetch": "^0.10.0",
+    "wtfnode": "^0.2.1"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "engines": {
+    "node": ">=0.8.0"
+  },
+  "gitHead": "279aa5f20df2d08d27a60e3386b80af8ab9a5fd3",
+  "homepage": "https://github.com/gitterHQ/halley#readme",
+  "keywords": [
+    "comet",
+    "websocket",
+    "pubsub",
+    "bayeux",
+    "ajax",
+    "http"
+  ],
+  "license": "MIT",
+  "main": "./index.js",
+  "name": "halley",
+  "optionalDependencies": {},
+  "readme": "# Halley\n\n[![Join the chat at https://gitter.im/gitterHQ/halley](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/gitterHQ/halley?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Build Status](https://travis-ci.org/gitterHQ/halley.svg)](https://travis-ci.org/gitterHQ/halley) [![Coverage Status](https://coveralls.io/repos/gitterHQ/halley/badge.svg?branch=master&service=github)](https://coveralls.io/github/gitterHQ/halley?branch=master)\n\nHalley is an experimental fork of James Coglan's excellent Faye library.\n\n## Differences from Faye\n\nThe main differences from Faye are (listed in no particular order):\n* **Uses promises** (and Bluebird's promise cancellation feature) to do the heavy-lifting whereever possible.\n* No Ruby client or server and no server support. Halley is a **Javascript Bayeux client only**\n* **Webpack/browserify packaging**\n* **Client reset support**. This will force the client to rehandshake. This can be useful when the application realises that the connection is dead before the bayeux client does and allows for faster recovery in these situations.\n* **No eventsource support** as we've found them to be unreliable in a ELB/haproxy setup\n* All **durations are in milliseconds**, not seconds\n* Wherever possible, implementations have been replaced with external libraries:\n  * Uses [bluebird](https://github.com/petkaantonov/bluebird/) for promises\n  * Uses backbone events (or backbone-events-standalone) for events\n  * Mocha/sinon/karma for testing\n\n## Why's it called \"Halley\"?\n\nLots of reasons! Halley implements the Bayeux Protocol. The [Bayeux Tapestry](https://en.wikipedia.org/wiki/Bayeux_Tapestry)\ncontains the first know depiction of Halley's Comet. Halley is a [cometd](https://cometd.org) client.\n\n### Usage\n\n### Basic Example\n\n```js\nvar Halley = require('halley');\nvar client = new Halley.Client('/bayeux');\n\nfunction onMessage(message) {\n  console.log('Incoming message', message);\n}\n\nclient.subscribe('/channel', onMessage);\n\nclient.publish('/channel2', { value: 1 })\n  .then(function(response) {\n    console.log('Publish returned', response);\n  })\n  .catch(function(err) {\n    console.error('Publish failed:', err);\n  });\n```\n\n### Advanced Example\n\n```js\nvar Halley = require('halley');\nvar Promise = require('bluebird');\n\n/** Create a client (showing the default options) */\nvar client = new Halley.Client('/bayeux', {\n  /* The amount of time to wait (in ms) between successive\n   * retries on a single message send */\n  retry: 30000,\n\n  /**\n   * An integer representing the minimum period of time, in milliseconds, for a\n   * client to delay subsequent requests to the /meta/connect channel.\n   * A negative period indicates that the message should not be retried.\n   * A client MUST implement interval support, but a client MAY exceed the\n   * interval provided by the server. A client SHOULD implement a backoff\n   * strategy to increase the interval if requests to the server fail without\n   * new advice being received from the server.\n   */\n  interval: 0,\n\n  /**\n   * An integer representing the period of time, in milliseconds, for the\n   * server to delay responses to the /meta/connect channel.\n   * This value is merely informative for clients. Bayeux servers SHOULD honor\n   * timeout advices sent by clients.\n   */\n  timeout: 30000,\n\n  /**\n   * The maximum number of milliseconds to wait before considering a\n   * request to the Bayeux server failed.\n   */\n  maxNetworkDelay: 30000,\n\n  /**\n   * The maximum number of milliseconds to wait for a WebSocket connection to\n   * be opened. It does not apply to HTTP connections.\n   */\n   connectTimeout: 30000,\n\n  /**\n   * Maximum time to wait on disconnect\n   */\n  disconnectTimeout: 10000\n});\n\nfunction onMessage(message) {\n  console.log('Incoming message', message);\n}\n\n/*\n *`.subscribe` returns a thenable with a `.unsubscribe` method\n * but will also resolve as a promise \n */\nvar subscription = client.subscribe('/channel', onMessage);\n\nsubscription\n  .then(function() {\n    console.log('Subscription successful');\n  })\n  .catch(function(err) {\n    console.log('Subscription failed: ', err);\n  });\n\n/** As an example, wait 10 seconds and cancel the subscription */\nPromise.delay(10000)\n  .then(function() {\n    return subscription.unsubscribe();\n  });\n```\n\n\n### Debugging\n\nHalley uses [debug](https://github.com/visionmedia/debug) for debugging.\n\n  * To enable in nodejs, `export DEBUG=halley:*`\n  * To enable in a browser, `window.localStorage.debug='halley:*'`\n\nTo limit the amount of debug logging produced, you can specify individual categories, eg `export DEBUG=halley:client`.\n\n## Tests\n\nMost of the tests in Halley are end-to-end integration tests, which means running a server environment alongside client tests which run in the browser.\n\nIn order to isolate tests from one another, the server will spawn a new Faye server and Proxy server for each test (and tear them down when the test is complete). \n\nSome of the tests connect to Faye directly, while other tests are performed via the Proxy server which is intended to simulate an reverse-proxy/ELB situation common in many production environments.\n\nThe tests do horrible things in order to test some of the situations we've discovered when using Bayeux and websockets on the web. Examples of things we test to ensure that the client recovers include:\n\n* Corrupting websocket streams, like bad MITM proxies sometimes do\n* Dropping random packets\n* Restarting the server during the test\n* Deleting the client connection from the server during the test\n* Not communicating TCP disconnects from the server-to-client and client-to-server when communicating via the proxy (a situation we've seen on ELB)\n\n## License\n\n(The MIT License)\n\nCopyright (c) 2009-2014 James Coglan and contributors\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of\nthis software and associated documentation files (the 'Software'), to deal in\nthe Software without restriction, including without limitation the rights to\nuse, copy, modify, merge, publish, distribute, sublicense, and/or sell copies\nof the Software, and to permit persons to whom the Software is furnished to do\nso, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n",
+  "readmeFilename": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gitterHQ/halley.git"
+  },
+  "scripts": {
+    "test": "gulp test"
+  },
+  "version": "0.5.2"
+}

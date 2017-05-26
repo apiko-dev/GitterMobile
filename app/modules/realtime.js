@@ -120,12 +120,18 @@ export function subscribeToRooms() {
       const {id} = getState().viewer.user
       const url = `/api/v1/user/${id}/rooms`
       const type = 'userRooms'
-      const result = await client.subscribe({
-        url,
-        type,
-        handler: evt => dispatch(dispatchRoomEvent(evt))
-      })
+      // const result = await client.subscribe({
+      //   url,
+      //   type,
+      //   handler: evt => dispatch(dispatchRoomEvent(evt))
+      // })
       dispatch({type: ROOMS_SUBSCRIBED})
+
+      // await client.subscribe({
+      //   url: `/api/v1/user/${id}`,
+      //   type,
+      //   handler: evt => console.log('USER: ', evt)
+      // })
     } catch (err) {
       console.log(err)
     }
@@ -137,7 +143,7 @@ export function subscribeToRooms() {
  */
 
 export function subscribeToChatMessages(roomId) {
-  return async dispatch => {
+  return async (dispatch, getState) => {
     try {
       const url = `/api/v1/rooms/${roomId}/chatMessages`
       const type = 'chatMessages'
@@ -147,6 +153,12 @@ export function subscribeToChatMessages(roomId) {
         handler: evt => dispatch(dispatchMessageEvent(evt))
       })
       dispatch({type: SUBSCRIBE_TO_CHAT_MESSAGES, roomId})
+      // const {id} = getState().viewer.user
+      // await client.subscribe({
+      //   url: `/api/v1/user/${id}/rooms/${roomId}/unreadItems`,
+      //   type: 'ureadItems',
+      //   handler: evt => console.log('UnreadItems: ', evt)
+      // })
     } catch (err) {
       console.log(err)
     }

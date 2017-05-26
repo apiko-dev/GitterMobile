@@ -73,10 +73,6 @@ class RoomSettings extends Component {
     const {dispatch, roomId} = this.props
 
     dispatch(changeNotificationSettings(roomId, pickerState))
-
-    setTimeout(() => {
-      this.navigateBack()
-    }, 500)
   }
 
   renderNotificationsSection() {

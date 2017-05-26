@@ -55,6 +55,7 @@ export function init() {
       ])
 
       rootNavigator.startAppWithScreen({screen: 'gm.Home', showDrawer: true})
+      dispatch(subscribeToRooms())
       dispatch(setupNetStatusListener())
       // if you need debug room screen, just comment nevigation to 'hone'
       // and uncomment navigation to 'room'

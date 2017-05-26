@@ -1,5 +1,6 @@
-import Faye from 'faye'
+import Faye from '../../libs/halley/browser-standalone'
 const noop = () => {}
+import {NetInfo} from 'react-native'
 
 class ClientAuthExt {
   constructor(token) {
@@ -9,7 +10,8 @@ class ClientAuthExt {
   outgoing(message, cb) {
     if (message.channel === '/meta/handshake') {
       if (!message.ext) { message.ext = {}; }
-      message.ext.token = this._token;
+      message.ext.token = this._token
+      message.ext.realtimeLibrary = 'halley'
     }
 
     cb(message);
@@ -56,14 +58,19 @@ class SnapshotExt {
 
 export default class HalleyClient {
   constructor({token, snapshotHandler}) {
-    this._client = new Faye.Client('https://ws.gitter.im/faye', {
-      timeout: 60,
-      retry: 1,
-      interval: 0
+    this._client = new Faye.Client('https://ws.gitter.im/bayeux', {
+      timeout: 60000,
+      retry: 1000,
+      interval: 1000
     })
     this._token = token
     this._snapshotHandler = snapshotHandler
     this._subsciptions = []
+    this._isConnectedToNetwork = true
+    this._transport = true
+
+    this.setupNetworkListeners()
+    this.setupInternetListener()
   }
 
   setToken(token) {
@@ -130,6 +137,34 @@ export default class HalleyClient {
           // .catch(err => rej(err))
       }
     })
+  }
+
+  setupNetworkListeners() {
+    // this._client.on('transport:down', () => {
+    //   this._transport = false
+    // })
+    //
+    // this._client.on('transport:up', () => {
+    //   this._transport = true
+    // })
+  }
+
+  setupInternetListener() {
+    // NetInfo.isConnected.addEventListener(
+    //   'change',
+    //   () => {
+    //     debugger
+    //     NetInfo.isConnected.fetch()
+    //       .then(isConnected => {
+    //         if (isConnected) {
+    //           this._client.connect()
+    //           // this._isConnectedToNetwork = true
+    //         } else {
+    //           // this._isConnectedToNetwork = false
+    //         }
+    //       })
+    //   }
+    // )
   }
 
   _checkSubscriptionAlreadyExist(subscriptionOptions) {

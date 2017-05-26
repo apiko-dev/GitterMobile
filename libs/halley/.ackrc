@@ -1,0 +1,4 @@
+--ignore-dir
+dist/
+--ignore-dir
+node_modules/

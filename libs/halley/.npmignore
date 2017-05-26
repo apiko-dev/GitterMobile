@@ -1,0 +1,8 @@
+*.gem
+build
+Gemfile.lock
+node_modules
+.wake.json
+coverage
+dist
+.env
