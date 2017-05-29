@@ -2,7 +2,8 @@ import React, {PropTypes} from 'react';
 import {View, Text} from 'react-native';
 import s from './styles'
 import Button from '../../../components/Button'
-import Icon from 'react-native-vector-icons/MaterialIcons'
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
 const UserInfo = ({id, company, location, email, profile, has_gitter_login: hasGitterLogin,
   onGithubPress, onEmailPress, onChatPrivatelyPress, currentUserId}) => {
@@ -10,7 +11,7 @@ const UserInfo = ({id, company, location, email, profile, has_gitter_login: hasG
     <View style={s.container}>
       {!!location && (
         <View style={s.item}>
-          <Icon
+          <MaterialIcon
             style={s.icon}
             name="location-on"
             color="black"
@@ -22,7 +23,7 @@ const UserInfo = ({id, company, location, email, profile, has_gitter_login: hasG
       )}
       {!!company && (
         <View style={s.item}>
-          <Icon
+          <MaterialIcon
             style={s.icon}
             name="business"
             color="black"
@@ -37,7 +38,7 @@ const UserInfo = ({id, company, location, email, profile, has_gitter_login: hasG
           <Button
             style={s.button}
             onPress={() => onEmailPress(email)}>
-            <Icon
+            <MaterialIcon
               style={s.icon}
               name="email"
               color="black"
@@ -51,7 +52,7 @@ const UserInfo = ({id, company, location, email, profile, has_gitter_login: hasG
           <Button
             style={s.button}
             onPress={() => onGithubPress(profile)}>
-            <Icon
+            <FontAwesomeIcon
               style={s.icon}
               name="github"
               color="black"
@@ -65,7 +66,7 @@ const UserInfo = ({id, company, location, email, profile, has_gitter_login: hasG
           <Button
             style={[s.button, s.chatPrivately]}
             onPress={() => onChatPrivatelyPress(id)}>
-            <Icon
+            <MaterialIcon
               style={s.icon}
               name="textsms"
               color="black"

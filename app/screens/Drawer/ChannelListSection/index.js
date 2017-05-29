@@ -1,5 +1,5 @@
-import React, {PropTypes} from 'react';
-import {View, Text, Image} from 'react-native';
+import React, {PropTypes} from 'react'
+import {View} from 'react-native'
 import s from './styles'
 import ChannelListItem from '../ChannelListItem'
 import Heading from '../../../components/Heading'
@@ -16,6 +16,8 @@ const ChannelListSection = ({
   sectionsState
 }) => {
   const icon = sectionsState[name] ? 'expand-more' : 'expand-less'
+  const filteredItems = items.filter(({ error }) => !error)
+
   return (
     <View>
       <Button
@@ -28,7 +30,7 @@ const ChannelListSection = ({
           size={16} />
       </Button>
       <View style={s.itemSection}>
-        {!sectionsState[name] && items && items.map(item => (
+        {!sectionsState[name] && filteredItems && filteredItems.map(item => (
           <ChannelListItem
             key={item.id}
             {...item}
