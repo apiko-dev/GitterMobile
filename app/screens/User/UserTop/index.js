@@ -9,19 +9,19 @@ const UserTop = ({displayName, username, github, gravatarImageUrl}) => {
 
   return (
     <View style={s.container}>
-    <View style={s.avatarWrapper}>
-      <Avatar
-        src={avatar}
-        size={80} />
-    </View>
-    <View style={s.displayNameWapper}>
-      <Text style={s.displayName}>
-        {displayName}
-      </Text>
-      <Text style={s.username}>
-        @{username}
-      </Text>
-    </View>
+      <View style={s.avatarWrapper}>
+        <Avatar
+          src={avatar}
+          size={80} />
+      </View>
+      <View style={s.displayNameWapper}>
+        <Text style={s.displayName}>
+          {displayName}
+        </Text>
+        <Text style={s.username}>
+          @{username}
+        </Text>
+      </View>
       {github && <View style={s.github}>
         <View style={s.githubItem}>
           <Text style={s.bold}>{github.followers}</Text>
@@ -36,7 +36,7 @@ const UserTop = ({displayName, username, github, gravatarImageUrl}) => {
           <Text style={s.githubItemText}>following</Text>
         </View>
       </View>}
-  </View>
+    </View>
   )
 }
 
