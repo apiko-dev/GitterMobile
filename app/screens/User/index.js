@@ -93,7 +93,7 @@ class UserScreen extends Component {
           </View>
           <View tabLabel="REPOS" style={s.container} />
         </ScrollableTabView>
-    </View>
+      </View>
     )
   }
 
