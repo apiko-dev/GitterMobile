@@ -169,11 +169,7 @@ export function joinUserRoom(username) {
     dispatch({type: JOIN_USER_ROOM, username})
 
     try {
-      let payload = await Api.joinRoom(token, username)
-      const { error } = payload
-      if (error) {
-        payload = await Api.joinRoomByUserName(token, username)
-      }
+      const payload = await Api.joinRoomByUserName(token, username)
 
       dispatch({type: JOIN_USER_ROOM_OK, payload})
     } catch (error) {
