@@ -60,6 +60,15 @@ export function joinRoom(token, userId, roomId) {
   })
 }
 
+export function joinRoomByUserName(token, username) {
+  return callApi(`/rooms`, token, {
+    method: 'POST',
+    body: JSON.stringify({
+      uri: username
+    })
+  })
+}
+
 export function roomInfo(token, uri) {
   return callApi(`rooms`, token, {
     method: 'POST',
