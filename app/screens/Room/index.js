@@ -660,9 +660,9 @@ class Room extends Component {
       : field
   }
 
-  renderLoading() {
+  renderLoading(height) {
     return (
-      <Loading color={colors.raspberry}/>
+      <Loading color={colors.raspberry} height={height}/>
     )
   }
 
@@ -731,7 +731,7 @@ class Room extends Component {
           drawerPosition={DrawerLayout.positions.Right}
           renderNavigationView={this.renderRoomInfo}
           keyboardDismissMode="on-drag">
-              {isLoadingMore ? this.renderLoading() : null}
+              {isLoadingMore ? this.renderLoading(40) : null}
               {isLoadingMessages ? this.renderLoading() : this.renderListView()}
               {getMessagesError || isLoadingMessages || _.has(listView, 'data') &&
                 listView.data.length === 0 ? null : this.renderBottom()}
