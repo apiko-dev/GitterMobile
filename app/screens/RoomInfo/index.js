@@ -1,12 +1,11 @@
 import React, {Component, PropTypes} from 'react';
-import {ScrollView, Linking, View} from 'react-native';
+import {ScrollView, Linking, View, Platform} from 'react-native';
 import {connect} from 'react-redux'
 import s from './styles'
 // import {THEMES} from '../../constants'
 // const {colors} = THEMES.gitterDefault
 import _ from 'lodash'
 
-import * as Navigation from '../../modules/navigation'
 import {clearRoomInfoError, getRoomInfo} from '../../modules/roomInfo'
 import {roomUsers} from '../../modules/users'
 import {unsubscribeToRoomEvents} from '../../modules/realtime'
@@ -45,10 +44,10 @@ class RoomInfoScreen extends Component {
 
     const {rooms, roomInfo, route: {roomId}, dispatch, roomInfoDrawerState, users} = nextProps
     const room = rooms[roomId]
-    if (!!room && roomInfoDrawerState === 'open' && !roomInfo[room.name]) {
+    if (!!room && (roomInfoDrawerState === 'open' || Platform.OS === 'ios') && !roomInfo[room.name]) {
       dispatch(getRoomInfo(room.name, roomId))
     }
-    if (!!room && roomInfoDrawerState === 'open' && !users[roomId]) {
+    if (!!room && (roomInfoDrawerState === 'open' || Platform.OS === 'ios') && !users[roomId]) {
       dispatch(roomUsers(roomId))
     }
   }
@@ -180,7 +179,8 @@ RoomInfoScreen.propTypes = {
   roomInfoDrawerState: PropTypes.string,
   isError: PropTypes.bool,
   users: PropTypes.object,
-  activity: PropTypes.object
+  activity: PropTypes.object,
+  navigator: PropTypes.object
 }
 
 function mapStateToProps(state) {

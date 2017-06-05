@@ -17,6 +17,7 @@ import RoomUserAdd from './RoomUserAdd'
 import Message from './Message'
 import Settings from './Settings'
 import SearchMessages from './SearchMessages'
+import RoomInfo from './RoomInfo'
 import RoomSettings from './RoomSettings'
 
 export default class Application {
@@ -41,6 +42,7 @@ export default class Application {
       Drawer,
       RoomUsers,
       RoomUserAdd,
+      RoomInfo,
       Message,
       Settings,
       SearchMessages,

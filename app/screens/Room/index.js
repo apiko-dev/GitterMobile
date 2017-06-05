@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 import Share from 'react-native-share'
 import navigationStyles from '../../styles/common/navigationStyles'
 import _ from 'lodash'
-import DrawerLayoutJs from 'react-native-drawer-layout'
+import {roomUsers} from '../../modules/users'
 import moment from 'moment'
 import BottomSheet from '../../../libs/react-native-android-bottom-sheet/index'
 import s from './styles'
@@ -45,7 +45,7 @@ import {iconsMap} from '../../utils/iconsMap'
 const COMMAND_REGEX = /\/\S+/
 const iOS = Platform.OS === 'ios'
 const {colors} = THEMES.gitterDefault
-const DrawerLayout = Platform.OS === 'ios' ? DrawerLayoutJs : DrawerLayoutAndroid
+const Layout = iOS ? View : DrawerLayoutAndroid
 
 class Room extends Component {
   constructor(props) {
@@ -489,7 +489,11 @@ class Room extends Component {
     switch (id) {
     case 'drawerMenu': return navigator.toggleDrawer({side: 'left', animated: true})
     case 'search': return navigator.showModal({screen: 'gm.SearchMessages', passProps: {roomId}, animationType: 'slide-up'})
-    case 'roomInfo': return this.roomInfoDrawer.openDrawer()
+    case 'roomInfo':
+      dispatch(roomUsers(roomId))
+      return Platform.OS === 'ios' ?
+        navigator.push({screen: 'gm.RoomInfo', passProps: {route: {roomId}}}) :
+        this.roomInfoDrawer.openDrawer()
     case 'toggleFavorite': return dispatch(changeFavoriteStatus(roomId))
     case 'markAsRead': return dispatch(markAllAsRead(roomId))
     case 'settings': return this.handleShowModal({screen: 'gm.RoomSettings', passProps: {roomId}})
@@ -520,7 +524,6 @@ class Room extends Component {
   }
 
   handleUserAvatarPress(id, username) {
-    const {navigator} = this.props
     this.handleShowModal({screen: 'gm.User', passProps: {userId: id, username}})
   }
 
@@ -722,21 +725,20 @@ class Room extends Component {
 
     return (
       <View style={s.container}>
-        <DrawerLayout
+        <Layout
           ref={component => this.roomInfoDrawer = component}
           style={{backgroundColor: 'white'}}
           drawerWidth={300}
           onDrawerOpen={() => dispatch(changeRoomInfoDrawerState('open'))}
           onDrawerClose={() => dispatch(changeRoomInfoDrawerState('close'))}
-          drawerPosition={DrawerLayout.positions.Right}
+          drawerPosition={!iOS && DrawerLayoutAndroid.positions.Right}
           renderNavigationView={this.renderRoomInfo}
           keyboardDismissMode="on-drag">
               {isLoadingMore ? this.renderLoading(40) : null}
               {isLoadingMessages ? this.renderLoading() : this.renderListView()}
               {getMessagesError || isLoadingMessages || _.has(listView, 'data') &&
                 listView.data.length === 0 ? null : this.renderBottom()}
-
-        </DrawerLayout>
+        </Layout>
       </View>
     )
   }
@@ -745,6 +747,8 @@ class Room extends Component {
 Room.propTypes = {
   activeRoom: PropTypes.string,
   rooms: PropTypes.object,
+  room: PropTypes.object,
+  title: PropTypes.string,
   onMenuTap: PropTypes.func,
   route: PropTypes.object,
   dispatch: PropTypes.func,
