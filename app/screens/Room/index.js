@@ -491,7 +491,7 @@ class Room extends Component {
     case 'search': return navigator.showModal({screen: 'gm.SearchMessages', passProps: {roomId}, animationType: 'slide-up'})
     case 'roomInfo':
       dispatch(roomUsers(roomId))
-      return Platform.OS === 'ios' ?
+      return iOS ?
         navigator.push({screen: 'gm.RoomInfo', passProps: {route: {roomId}}}) :
         this.roomInfoDrawer.openDrawer()
     case 'toggleFavorite': return dispatch(changeFavoriteStatus(roomId))
