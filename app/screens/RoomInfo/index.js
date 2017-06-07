@@ -2,8 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import {ScrollView, Linking, View, Platform} from 'react-native';
 import {connect} from 'react-redux'
 import s from './styles'
-// import {THEMES} from '../../constants'
-// const {colors} = THEMES.gitterDefault
+import navigationStyles from '../../styles/common/navigationStyles'
 import _ from 'lodash'
 
 import {clearRoomInfoError, getRoomInfo} from '../../modules/roomInfo'
@@ -18,6 +17,7 @@ import UserInfo from './UserInfo'
 import RoomUsers from './RoomUsers'
 import Activity from './Activity'
 
+const iOS = Platform.OS === 'ios';
 
 class RoomInfoScreen extends Component {
   constructor(props) {
@@ -30,6 +30,18 @@ class RoomInfoScreen extends Component {
     this.handleStatItemPress = this.handleStatItemPress.bind(this)
     this.handleAddPress = this.handleAddPress.bind(this)
     this.renderActivity = this.renderActivity.bind(this)
+
+    this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this))
+    this.props.navigator.setButtons(
+      iOS ? {
+        leftButtons: [{
+          title: 'Close',
+          id: 'close',
+          iconColor: 'white',
+          showAsAction: 'always'
+        }]
+      } : {}
+    )
   }
 
   componentDidMount() {
@@ -44,10 +56,10 @@ class RoomInfoScreen extends Component {
 
     const {rooms, roomInfo, route: {roomId}, dispatch, roomInfoDrawerState, users} = nextProps
     const room = rooms[roomId]
-    if (!!room && (roomInfoDrawerState === 'open' || Platform.OS === 'ios') && !roomInfo[room.name]) {
+    if (!!room && (roomInfoDrawerState === 'open' || iOS) && !roomInfo[room.name]) {
       dispatch(getRoomInfo(room.name, roomId))
     }
-    if (!!room && (roomInfoDrawerState === 'open' || Platform.OS === 'ios') && !users[roomId]) {
+    if (!!room && (roomInfoDrawerState === 'open' || iOS) && !users[roomId]) {
       dispatch(roomUsers(roomId))
     }
   }
@@ -56,6 +68,12 @@ class RoomInfoScreen extends Component {
     const {dispatch, route: {roomId}} = this.props
     dispatch(unsubscribeToRoomEvents(roomId))
     // console.warn('UNMOUNTED')
+  }
+
+  onNavigatorEvent({ type, id }) {
+    if (type === 'NavBarButtonPress' && id === 'close') {
+      this.props.navigator.pop()
+    }
   }
 
   handleUserPress(userId, username) {
@@ -116,7 +134,7 @@ class RoomInfoScreen extends Component {
     const {users, rooms, route: {roomId}} = this.props
     return (
       <RoomUsers
-        oneToOne={rooms[roomId].githubType === 'ONETOONE' ? true : false}
+        oneToOne={rooms[roomId].githubType === 'ONETOONE'}
         userCount={rooms[roomId].userCount}
         ids={users[roomId].ids}
         entities={users[roomId].entities}
@@ -182,6 +200,8 @@ RoomInfoScreen.propTypes = {
   activity: PropTypes.object,
   navigator: PropTypes.object
 }
+
+RoomInfoScreen.navigatorStyle = navigationStyles
 
 function mapStateToProps(state) {
   return {
