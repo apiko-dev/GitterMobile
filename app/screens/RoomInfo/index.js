@@ -31,17 +31,22 @@ class RoomInfoScreen extends Component {
     this.handleAddPress = this.handleAddPress.bind(this)
     this.renderActivity = this.renderActivity.bind(this)
 
-    this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this))
-    this.props.navigator.setButtons(
-      iOS ? {
-        leftButtons: [{
-          title: 'Close',
-          id: 'close',
-          iconColor: 'white',
-          showAsAction: 'always'
-        }]
-      } : {}
-    )
+    const {rooms, route: {roomId}} = this.props;
+
+    if (iOS) {
+      this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this))
+      this.props.navigator.setTitle({title: rooms[roomId].name})
+      this.props.navigator.setButtons(
+        iOS ? {
+          leftButtons: [{
+            title: 'Close',
+            id: 'close',
+            iconColor: 'white',
+            showAsAction: 'always'
+          }]
+        } : {}
+      )
+    }
   }
 
   componentDidMount() {

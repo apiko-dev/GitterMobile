@@ -78,6 +78,7 @@ class Room extends Component {
     this.handleSharingRoom = this.handleSharingRoom.bind(this)
     this.handleSharingMessage = this.handleSharingMessage.bind(this)
     this.handleShowModal = this.handleShowModal.bind(this)
+    this.toggleDrawerState = this.toggleDrawerState.bind(this)
 
     this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this))
 
@@ -484,6 +485,14 @@ class Room extends Component {
     }
   }
 
+  toggleDrawerState() {
+    if (this.props.roomInfoDrawerState === 'open') {
+      this.roomInfoDrawer.closeDrawer()
+    } else {
+      this.roomInfoDrawer.openDrawer()
+    }
+  }
+
   handleToolbarActionSelected({id}) {
     const {dispatch, route: {roomId}, navigator} = this.props
     switch (id) {
@@ -493,7 +502,7 @@ class Room extends Component {
       dispatch(roomUsers(roomId))
       return iOS ?
         navigator.push({screen: 'gm.RoomInfo', passProps: {route: {roomId}}}) :
-        this.roomInfoDrawer.openDrawer()
+        this.toggleDrawerState()
     case 'toggleFavorite': return dispatch(changeFavoriteStatus(roomId))
     case 'markAsRead': return dispatch(markAllAsRead(roomId))
     case 'settings': return this.handleShowModal({screen: 'gm.RoomSettings', passProps: {roomId}})
