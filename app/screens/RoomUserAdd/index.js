@@ -29,10 +29,6 @@ class RoomUserAddScreen extends Component {
     }
   }
 
-  componentDidMount() {
-    this.refs.customSearch.focus()
-  }
-
   componentMillMount() {
     const {dispatch} = this.props
     dispatch(clearSearch())
@@ -75,7 +71,6 @@ class RoomUserAddScreen extends Component {
   renderSearch() {
     return (
       <CustomSearch
-        ref="customSearch"
         value={this.state.value}
         onChange={this.handleChange.bind(this)}
         onBackPress={this.handleBackPress.bind(this)}
@@ -110,7 +105,8 @@ RoomUserAddScreen.propTypes = {
   dispatch: PropTypes.func,
   usersResult: PropTypes.array,
   roomId: PropTypes.string,
-  isLoading: PropTypes.bool
+  isLoading: PropTypes.bool,
+  navigator: PropTypes.object
 }
 
 RoomUserAddScreen.navigatorStyle = {
