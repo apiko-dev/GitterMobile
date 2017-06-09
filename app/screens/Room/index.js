@@ -714,7 +714,7 @@ class Room extends Component {
     const {rooms, listViewData, route, isLoadingMessages,
       isLoadingMore, getMessagesError, dispatch} = this.props
 
-    if (getMessagesError && !rooms[route.roomId]) {
+    if (getMessagesError && !rooms[route.roomId] || isLoadingMessages) {
       return (
         <FailedToLoad
           message="Failed to load room."
@@ -744,7 +744,7 @@ class Room extends Component {
           renderNavigationView={this.renderRoomInfo}
           keyboardDismissMode="on-drag">
               {isLoadingMore ? this.renderLoading(40) : null}
-              {isLoadingMessages ? this.renderLoading() : this.renderListView()}
+              {this.renderListView()}
               {getMessagesError || isLoadingMessages || _.has(listView, 'data') &&
                 listView.data.length === 0 ? null : this.renderBottom()}
         </Layout>
