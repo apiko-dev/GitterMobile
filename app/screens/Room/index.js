@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 import Share from 'react-native-share'
 import navigationStyles from '../../styles/common/navigationStyles'
 import _ from 'lodash'
-import DrawerLayoutJs from 'react-native-drawer-layout'
+import {roomUsers} from '../../modules/users'
 import moment from 'moment'
 import BottomSheet from '../../../libs/react-native-android-bottom-sheet/index'
 import s from './styles'
@@ -45,7 +45,7 @@ import {iconsMap} from '../../utils/iconsMap'
 const COMMAND_REGEX = /\/\S+/
 const iOS = Platform.OS === 'ios'
 const {colors} = THEMES.gitterDefault
-const DrawerLayout = Platform.OS === 'ios' ? DrawerLayoutJs : DrawerLayoutAndroid
+const Layout = iOS ? View : DrawerLayoutAndroid
 
 class Room extends Component {
   constructor(props) {
@@ -53,7 +53,6 @@ class Room extends Component {
     this.roomInfoDrawer = null
     this.readMessages = {}
 
-    this.renderToolbar = this.renderToolbar.bind(this)
     this.renderListView = this.renderListView.bind(this)
     this.prepareDataSources = this.prepareDataSources.bind(this)
     this.onEndReached = this.onEndReached.bind(this)
@@ -78,6 +77,7 @@ class Room extends Component {
     this.handleSharingRoom = this.handleSharingRoom.bind(this)
     this.handleSharingMessage = this.handleSharingMessage.bind(this)
     this.handleShowModal = this.handleShowModal.bind(this)
+    this.toggleDrawerState = this.toggleDrawerState.bind(this)
 
     this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this))
 
@@ -231,7 +231,7 @@ class Room extends Component {
   }
 
   onMessageLongPress(messageId) {
-    const {navigator, route: {roomId}} = this.props
+    const {route: {roomId}} = this.props
     this.handleShowModal({screen: 'gm.Message', passProps: {messageId, roomId}})
   }
 
@@ -378,7 +378,7 @@ class Room extends Component {
   }
 
   handleOverflowClick() {
-    const {title, room} = this.props
+    const {title: titleProp, room} = this.props
     const actions = this.getButtons(room, false)
 
     const newActions = actions.map(({title, id}, index) => ({
@@ -390,7 +390,7 @@ class Room extends Component {
     const options = {
       options: newActions.map(i => i.title).concat('Close'),
       cancelButtonIndex: newActions.length,
-      title
+      title: titleProp
     }
 
     ActionSheetIOS.showActionSheetWithOptions(
@@ -484,12 +484,23 @@ class Room extends Component {
     }
   }
 
+  toggleDrawerState() {
+    return this.roomInfoDrawer && this.props.roomInfoDrawerState !== 'open' ?
+      this.roomInfoDrawer.openDrawer() :
+      this.roomInfoDrawer.closeDrawer()
+  }
+
   handleToolbarActionSelected({id}) {
     const {dispatch, route: {roomId}, navigator} = this.props
     switch (id) {
     case 'drawerMenu': return navigator.toggleDrawer({side: 'left', animated: true})
     case 'search': return navigator.showModal({screen: 'gm.SearchMessages', passProps: {roomId}, animationType: 'slide-up'})
-    case 'roomInfo': return this.roomInfoDrawer.openDrawer()
+    case 'roomInfo': {
+      dispatch(roomUsers(roomId))
+      return iOS
+        ? navigator.push({screen: 'gm.RoomInfo', passProps: {route: {roomId}}})
+        : this.toggleDrawerState()
+    }
     case 'toggleFavorite': return dispatch(changeFavoriteStatus(roomId))
     case 'markAsRead': return dispatch(markAllAsRead(roomId))
     case 'settings': return this.handleShowModal({screen: 'gm.RoomSettings', passProps: {roomId}})
@@ -520,7 +531,6 @@ class Room extends Component {
   }
 
   handleUserAvatarPress(id, username) {
-    const {navigator} = this.props
     this.handleShowModal({screen: 'gm.User', passProps: {userId: id, username}})
   }
 
@@ -610,29 +620,6 @@ class Room extends Component {
     }
   }
 
-  renderToolbar() {
-    const {rooms, route} = this.props
-    const room = rooms[route.roomId]
-    let actions = []
-
-    // TODO: Update one action instead
-
-    let roomName = !!room ? room.name : ''
-    roomName = roomName.split('/').reverse()[0]
-
-    // return (
-    //   <Toolbar
-    //     navIconName={iOS ? 'arrow-back' : 'menu'}
-    //     iconColor="white"
-    //     onIconClicked={iOS ? this.onNavigateBack : this.props.onMenuTap}
-    //     actions={actions}
-    //     onActionSelected={this.handleToolbarActionSelected}
-    //     overflowIconName="more-vert"
-    //     title={roomName}
-    //     titleColor="white"
-    //     style={s.toolbar} />
-    // )
-  }
 
   renderBottom() {
     const {rooms, route: {roomId}} = this.props
@@ -715,7 +702,7 @@ class Room extends Component {
       )
     }
 
-    if (!rooms[route.roomId]) {
+    if (!rooms[route.roomId] || isLoadingMessages) {
       return (
         <View style={s.container}>
           {this.renderLoading()}
@@ -726,22 +713,19 @@ class Room extends Component {
     const listView = listViewData[route.roomId]
 
     return (
-      <View style={s.container}>
-        <DrawerLayout
-          ref={component => this.roomInfoDrawer = component}
-          style={{backgroundColor: 'white'}}
-          drawerWidth={300}
-          onDrawerOpen={() => dispatch(changeRoomInfoDrawerState('open'))}
-          onDrawerClose={() => dispatch(changeRoomInfoDrawerState('close'))}
-          drawerPosition={DrawerLayout.positions.Right}
-          renderNavigationView={this.renderRoomInfo}
-          keyboardDismissMode="on-drag">
-              {isLoadingMessages ? this.renderLoading() : this.renderListView()}
-              {getMessagesError || isLoadingMessages || _.has(listView, 'data') &&
-                listView.data.length === 0 ? null : this.renderBottom()}
-
-        </DrawerLayout>
-      </View>
+      <Layout
+        ref={component => this.roomInfoDrawer = component}
+        style={s.container}
+        drawerWidth={300}
+        onDrawerOpen={() => dispatch(changeRoomInfoDrawerState('open'))}
+        onDrawerClose={() => dispatch(changeRoomInfoDrawerState('close'))}
+        drawerPosition={!iOS && DrawerLayoutAndroid.positions.Right}
+        renderNavigationView={this.renderRoomInfo}
+        keyboardDismissMode="on-drag">
+            {this.renderListView()}
+            {getMessagesError || isLoadingMessages || _.has(listView, 'data') &&
+              listView.data.length === 0 ? null : this.renderBottom()}
+      </Layout>
     )
   }
 }
@@ -749,6 +733,8 @@ class Room extends Component {
 Room.propTypes = {
   activeRoom: PropTypes.string,
   rooms: PropTypes.object,
+  room: PropTypes.object,
+  title: PropTypes.string,
   onMenuTap: PropTypes.func,
   route: PropTypes.object,
   dispatch: PropTypes.func,

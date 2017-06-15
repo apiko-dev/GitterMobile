@@ -80,7 +80,6 @@ class RoomUsersScreen extends Component {
   renderSearch() {
     return (
       <CustomSearch
-        ref="customSearch"
         value={this.state.value}
         onChange={this.handleChange.bind(this)}
         onBackPress={this.handleBackPress.bind(this)}
@@ -125,7 +124,8 @@ RoomUsersScreen.propTypes = {
   roomUsersResult: PropTypes.array,
   roomId: PropTypes.string,
   isLoading: PropTypes.bool,
-  listViewData: PropTypes.object
+  listViewData: PropTypes.object,
+  navigator: PropTypes.object
 }
 
 RoomUsersScreen.navigatorStyle = {
