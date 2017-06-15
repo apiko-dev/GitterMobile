@@ -106,7 +106,7 @@ class UserScreen extends Component {
     }
     return (
       <ScrollView style={s.container}>
-        <UserTop {...user} />
+        <UserTop {...user} navigator={this.props.navigator} />
         <UserInfo {...user}
           onEmailPress={this.handleEmailPress.bind(this)}
           onGithubPress={this.handleGithubPress.bind(this)}
@@ -127,6 +127,9 @@ class UserScreen extends Component {
 }
 
 UserScreen.propTypes = {
+  user: PropTypes.object,
+  username: PropTypes.string,
+  navigator: PropTypes.object,
   dispatch: PropTypes.func,
   isLoadingUsers: PropTypes.bool,
   users: PropTypes.object,
@@ -139,7 +142,6 @@ UserScreen.navigatorStyle = {
 }
 
 function mapStateToProps(state, ownProps) {
-  // const {current} = state.navigation
   const {isLoadingUsers} = state.users
   const {id} = state.viewer.user
   return {

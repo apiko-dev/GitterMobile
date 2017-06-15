@@ -1,11 +1,11 @@
 import React, {PropTypes} from 'react'
 import {Platform} from 'react-native'
-import TransformableImage from 'react-native-transformable-image'
+import Image from 'react-native-transformable-image'
 import s from './styles'
+import navigationStyles from '../../styles/common/navigationStyles'
 
-const TransformableImageView = ({navigator, url}) => {
-  navigator.setTitle({title: 'Room settings'})
-  navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this))
+const TransformableImage = ({navigator, url}) => {
+  navigator.setOnNavigatorEvent(() => navigator.pop())
   navigator.setButtons(
     Platform.OS === 'ios'
       ? {
@@ -19,9 +19,13 @@ const TransformableImageView = ({navigator, url}) => {
       : {}
   )
 
-  return <TransformableImage
+  return <Image
     style={s.container}
-    source={{uri: url}}/>
+    source={{uri: url}} />
+}
+
+TransformableImage.navigatorStyle = {
+  ...navigationStyles
 }
 
 TransformableImage.propTypes = {

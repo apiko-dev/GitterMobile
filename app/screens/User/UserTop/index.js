@@ -1,19 +1,23 @@
 import React, {PropTypes} from 'react'
-import {View, Text} from 'react-native'
+import {View, Text, TouchableWithoutFeedback} from 'react-native'
 import Avatar from '../../../components/Avatar'
 import s from './styles'
 import {createGhAvatarLink} from '../../../utils/links'
 
-const UserTop = ({displayName, username, github, gravatarImageUrl}) => {
+const UserTop = ({displayName, username, github, gravatarImageUrl, navigator}) => {
   const avatar = github ? createGhAvatarLink(username, 200) : gravatarImageUrl
+  const onAvatarClick =
+    () => navigator.showModal({screen: 'gm.TransformableImage', passProps: { url: avatar }})
 
   return (
     <View style={s.container}>
-      <View style={s.avatarWrapper}>
-        <Avatar
-          src={avatar}
-          size={80} />
-      </View>
+      <TouchableWithoutFeedback onPress={onAvatarClick}>
+        <View style={s.avatarWrapper}>
+          <Avatar
+            src={avatar}
+            size={80} />
+        </View>
+      </TouchableWithoutFeedback>
       <View style={s.displayNameWapper}>
         <Text style={s.displayName}>
           {displayName}
