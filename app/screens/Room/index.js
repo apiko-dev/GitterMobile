@@ -660,14 +660,17 @@ class Room extends Component {
       : field
   }
 
-  renderLoading(height) {
+  renderLoading(height, size) {
     return (
-      <Loading color={colors.raspberry} height={height}/>
+      <Loading
+        size={size}
+        color={colors.raspberry}
+        height={height} />
     )
   }
 
   renderListView() {
-    const {listViewData, dispatch, route: {roomId}, getMessagesError} = this.props
+    const {listViewData, dispatch, route: {roomId}, getMessagesError, isLoadingMore} = this.props
     if (getMessagesError) {
       return (
         <FailedToLoad
@@ -684,7 +687,9 @@ class Room extends Component {
         onUsernamePress={this.handleUsernamePress.bind(this)}
         onUserAvatarPress={this.handleUserAvatarPress.bind(this)}
         dispatch={dispatch}
-        onEndReached={this.onEndReached.bind(this)} />
+        onEndReached={this.onEndReached.bind(this)}
+        renderTop={isLoadingMore}
+        renderTopComponent={() => this.renderLoading(40, 'small')} />
     )
   }
 
@@ -700,7 +705,7 @@ class Room extends Component {
 
   render() {
     const {rooms, listViewData, route, isLoadingMessages,
-      isLoadingMore, getMessagesError, dispatch} = this.props
+      getMessagesError, dispatch} = this.props
 
     if (getMessagesError && !rooms[route.roomId]) {
       return (
@@ -731,7 +736,6 @@ class Room extends Component {
           drawerPosition={DrawerLayout.positions.Right}
           renderNavigationView={this.renderRoomInfo}
           keyboardDismissMode="on-drag">
-              {isLoadingMore ? this.renderLoading(40) : null}
               {isLoadingMessages ? this.renderLoading() : this.renderListView()}
               {getMessagesError || isLoadingMessages || _.has(listView, 'data') &&
                 listView.data.length === 0 ? null : this.renderBottom()}

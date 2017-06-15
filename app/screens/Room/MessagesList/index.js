@@ -1,9 +1,10 @@
 import React, {Component, PropTypes} from 'react';
-import {View, ListView} from 'react-native';
+import {View, ListView, ScrollView, Text} from 'react-native';
 import moment from 'moment'
 import InvertibleScrollView from 'react-native-invertible-scroll-view'
 import Message from '../Message'
 import HistoryBegin from '../HistoryBegin'
+import s from './styles'
 
 export default class MessagesList extends Component {
   constructor(props) {
@@ -12,6 +13,7 @@ export default class MessagesList extends Component {
     this.renderRow = this.renderRow.bind(this)
     this.isCollapsed = this.isCollapsed.bind(this)
     this.handleOnLayout = this.handleOnLayout.bind(this)
+    this.renderScrollComponent = this.renderScrollComponent.bind(this)
 
     this.childHeights = {}
   }
@@ -71,6 +73,17 @@ export default class MessagesList extends Component {
     )
   }
 
+  renderScrollComponent(props) {
+    const {renderBottom, renderTop, renderBottomComponent, renderTopComponent} = this.props
+    return (
+      <ScrollView {...props}>
+        {renderBottom && <View style={s.verticallyInverted}>{renderBottomComponent()}</View>}
+        {props.children}
+        {renderTop && <View style={s.verticallyInverted}>{renderTopComponent()}</View>}
+      </ScrollView>
+    )
+  }
+
   render() {
     const {listViewData, onChangeVisibleRows} = this.props
 
@@ -89,6 +102,7 @@ export default class MessagesList extends Component {
           <InvertibleScrollView
             {...props}
             inverted
+            renderScrollComponent={this.renderScrollComponent}
             keyboardShouldPersistTaps="handled" />
         )}
         dataSource={listViewData.dataSource}
@@ -110,5 +124,9 @@ MessagesList.propTypes = {
   onLongPress: PropTypes.func,
   onUsernamePress: PropTypes.func,
   onUserAvatarPress: PropTypes.func,
-  onChangeVisibleRows: PropTypes.func
+  onChangeVisibleRows: PropTypes.func,
+  renderBottom: PropTypes.bool,
+  renderTop: PropTypes.bool,
+  renderBottomComponent: PropTypes.func,
+  renderTopComponent: PropTypes.func
 }
