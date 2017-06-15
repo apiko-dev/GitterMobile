@@ -53,7 +53,6 @@ class Room extends Component {
     this.roomInfoDrawer = null
     this.readMessages = {}
 
-    this.renderToolbar = this.renderToolbar.bind(this)
     this.renderListView = this.renderListView.bind(this)
     this.prepareDataSources = this.prepareDataSources.bind(this)
     this.onEndReached = this.onEndReached.bind(this)
@@ -232,7 +231,7 @@ class Room extends Component {
   }
 
   onMessageLongPress(messageId) {
-    const {navigator, route: {roomId}} = this.props
+    const {route: {roomId}} = this.props
     this.handleShowModal({screen: 'gm.Message', passProps: {messageId, roomId}})
   }
 
@@ -379,7 +378,7 @@ class Room extends Component {
   }
 
   handleOverflowClick() {
-    const {title, room} = this.props
+    const {title: titleProp, room} = this.props
     const actions = this.getButtons(room, false)
 
     const newActions = actions.map(({title, id}, index) => ({
@@ -391,7 +390,7 @@ class Room extends Component {
     const options = {
       options: newActions.map(i => i.title).concat('Close'),
       cancelButtonIndex: newActions.length,
-      title
+      title: titleProp
     }
 
     ActionSheetIOS.showActionSheetWithOptions(
@@ -498,9 +497,9 @@ class Room extends Component {
     case 'search': return navigator.showModal({screen: 'gm.SearchMessages', passProps: {roomId}, animationType: 'slide-up'})
     case 'roomInfo': {
       dispatch(roomUsers(roomId))
-      return iOS ?
-        navigator.push({screen: 'gm.RoomInfo', passProps: {route: {roomId}}}) :
-        this.toggleDrawerState()
+      return iOS
+        ? navigator.push({screen: 'gm.RoomInfo', passProps: {route: {roomId}}})
+        : this.toggleDrawerState()
     }
     case 'toggleFavorite': return dispatch(changeFavoriteStatus(roomId))
     case 'markAsRead': return dispatch(markAllAsRead(roomId))
@@ -621,29 +620,6 @@ class Room extends Component {
     }
   }
 
-  renderToolbar() {
-    const {rooms, route} = this.props
-    const room = rooms[route.roomId]
-    let actions = []
-
-    // TODO: Update one action instead
-
-    let roomName = !!room ? room.name : ''
-    roomName = roomName.split('/').reverse()[0]
-
-    // return (
-    //   <Toolbar
-    //     navIconName={iOS ? 'arrow-back' : 'menu'}
-    //     iconColor="white"
-    //     onIconClicked={iOS ? this.onNavigateBack : this.props.onMenuTap}
-    //     actions={actions}
-    //     onActionSelected={this.handleToolbarActionSelected}
-    //     overflowIconName="more-vert"
-    //     title={roomName}
-    //     titleColor="white"
-    //     style={s.toolbar} />
-    // )
-  }
 
   renderBottom() {
     const {rooms, route: {roomId}} = this.props
@@ -671,14 +647,17 @@ class Room extends Component {
       : field
   }
 
-  renderLoading(height) {
+  renderLoading(height, size) {
     return (
-      <Loading color={colors.raspberry} height={height}/>
+      <Loading
+        size={size}
+        color={colors.raspberry}
+        height={height} />
     )
   }
 
   renderListView() {
-    const {listViewData, dispatch, route: {roomId}, getMessagesError} = this.props
+    const {listViewData, dispatch, route: {roomId}, getMessagesError, isLoadingMore} = this.props
     if (getMessagesError) {
       return (
         <FailedToLoad
@@ -695,7 +674,9 @@ class Room extends Component {
         onUsernamePress={this.handleUsernamePress.bind(this)}
         onUserAvatarPress={this.handleUserAvatarPress.bind(this)}
         dispatch={dispatch}
-        onEndReached={this.onEndReached.bind(this)} />
+        onEndReached={this.onEndReached.bind(this)}
+        renderTop={isLoadingMore}
+        renderTopComponent={() => this.renderLoading(40, 'small')} />
     )
   }
 
@@ -711,7 +692,7 @@ class Room extends Component {
 
   render() {
     const {rooms, listViewData, route, isLoadingMessages,
-      isLoadingMore, getMessagesError, dispatch} = this.props
+      getMessagesError, dispatch} = this.props
 
     if (getMessagesError && !rooms[route.roomId]) {
       return (
@@ -741,7 +722,6 @@ class Room extends Component {
         drawerPosition={!iOS && DrawerLayoutAndroid.positions.Right}
         renderNavigationView={this.renderRoomInfo}
         keyboardDismissMode="on-drag">
-            {isLoadingMore ? this.renderLoading(40) : null}
             {this.renderListView()}
             {getMessagesError || isLoadingMessages || _.has(listView, 'data') &&
               listView.data.length === 0 ? null : this.renderBottom()}

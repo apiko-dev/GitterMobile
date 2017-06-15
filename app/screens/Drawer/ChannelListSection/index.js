@@ -16,7 +16,6 @@ const ChannelListSection = ({
   sectionsState
 }) => {
   const icon = sectionsState[name] ? 'expand-more' : 'expand-less'
-  const filteredItems = items.filter(({ error }) => !error)
 
   return (
     <View>
@@ -30,7 +29,7 @@ const ChannelListSection = ({
           size={16} />
       </Button>
       <View style={s.itemSection}>
-        {!sectionsState[name] && filteredItems && filteredItems.map(item => (
+        {!sectionsState[name] && items && items.map(item => (
           <ChannelListItem
             key={item.id}
             {...item}
