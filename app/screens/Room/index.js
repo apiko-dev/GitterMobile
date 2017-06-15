@@ -5,15 +5,11 @@ import Share from 'react-native-share'
 import navigationStyles from '../../styles/common/navigationStyles'
 import _ from 'lodash'
 import DrawerLayoutJs from 'react-native-drawer-layout'
-const DrawerLayout = Platform.OS === 'ios' ? DrawerLayoutJs : DrawerLayoutAndroid
 import moment from 'moment'
 import BottomSheet from '../../../libs/react-native-android-bottom-sheet/index'
-import Toolbar from '../../components/Toolbar'
 import s from './styles'
 import {quoteLink} from '../../utils/links'
 import {THEMES} from '../../constants'
-const {colors} = THEMES.gitterDefault
-
 import {
   getRoom,
   selectRoom,
@@ -37,23 +33,19 @@ import {
   readMessages,
   sendStatusMessage
 } from '../../modules/messages'
-// import {
-//   unsubscribeToChatMessages
-// } from '../../modules/realtime'
 import {changeRoomInfoDrawerState} from '../../modules/ui'
-
 import RoomInfoScreen from '../RoomInfo'
-
 import Loading from '../../components/Loading'
 import MessagesList from './MessagesList'
 import SendMessageField from './SendMessageField'
 import JoinRoomField from './JoinRoomField'
-import LoadingMoreSnack from '../../components/LoadingMoreSnack'
 import FailedToLoad from '../../components/FailedToLoad'
 import {iconsMap} from '../../utils/iconsMap'
 
 const COMMAND_REGEX = /\/\S+/
 const iOS = Platform.OS === 'ios'
+const {colors} = THEMES.gitterDefault
+const DrawerLayout = Platform.OS === 'ios' ? DrawerLayoutJs : DrawerLayoutAndroid
 
 class Room extends Component {
   constructor(props) {
@@ -668,20 +660,17 @@ class Room extends Component {
       : field
   }
 
-  renderLoadingMore() {
+  renderLoading(height, size) {
     return (
-      <LoadingMoreSnack loading/>
-    )
-  }
-
-  renderLoading() {
-    return (
-      <Loading color={colors.raspberry}/>
+      <Loading
+        size={size}
+        color={colors.raspberry}
+        height={height} />
     )
   }
 
   renderListView() {
-    const {listViewData, dispatch, route: {roomId}, getMessagesError} = this.props
+    const {listViewData, dispatch, route: {roomId}, getMessagesError, isLoadingMore} = this.props
     if (getMessagesError) {
       return (
         <FailedToLoad
@@ -698,7 +687,9 @@ class Room extends Component {
         onUsernamePress={this.handleUsernamePress.bind(this)}
         onUserAvatarPress={this.handleUserAvatarPress.bind(this)}
         dispatch={dispatch}
-        onEndReached={this.onEndReached.bind(this)} />
+        onEndReached={this.onEndReached.bind(this)}
+        renderTop={isLoadingMore}
+        renderTopComponent={() => this.renderLoading(40, 'small')} />
     )
   }
 
@@ -714,7 +705,7 @@ class Room extends Component {
 
   render() {
     const {rooms, listViewData, route, isLoadingMessages,
-      isLoadingMore, getMessagesError, dispatch} = this.props
+      getMessagesError, dispatch} = this.props
 
     if (getMessagesError && !rooms[route.roomId]) {
       return (
@@ -745,7 +736,6 @@ class Room extends Component {
           drawerPosition={DrawerLayout.positions.Right}
           renderNavigationView={this.renderRoomInfo}
           keyboardDismissMode="on-drag">
-              {isLoadingMore ? this.renderLoadingMore() : null}
               {isLoadingMessages ? this.renderLoading() : this.renderListView()}
               {getMessagesError || isLoadingMessages || _.has(listView, 'data') &&
                 listView.data.length === 0 ? null : this.renderBottom()}

@@ -3,24 +3,19 @@ import {ActivityIndicator, View} from 'react-native';
 import {THEMES} from '../../constants'
 const {colors} = THEMES.gitterDefault
 
-const Loading = ({size, height, color}) => {
-  return (
-    <View style={{
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      height
-    }}>
-      <View
-        style={{height, width: height}}>
-        <ActivityIndicator
-          animating
-          size={size}
-          color={color || colors.raspberry}/>
-      </View>
-    </View>
-  )
-}
+const Loading = ({size, height, color}) => (
+  <View style={{
+    flex: height ? 0 : 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height
+  }}>
+    <ActivityIndicator
+      animating
+      size={size}
+      color={color || colors.raspberry}/>
+  </View>
+)
 
 Loading.propTypes = {
   size: PropTypes.string,
@@ -29,8 +24,7 @@ Loading.propTypes = {
 }
 
 Loading.defaultProps = {
-  size: 'large',
-  height: 50
+  size: 'large'
 }
 
 export default Loading
