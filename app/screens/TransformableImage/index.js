@@ -5,7 +5,17 @@ import s from './styles'
 import navigationStyles from '../../styles/common/navigationStyles'
 
 const TransformableImage = ({navigator, url}) => {
-  navigator.setOnNavigatorEvent(() => navigator.pop())
+  const onNavigatorEvent = (event) => {
+    if (event.type === 'NavBarButtonPress') {
+      if (event.id === 'close') {
+        navigator.dismissModal({
+          animationType: 'slide-down'
+        })
+      }
+    }
+  }
+
+  navigator.setOnNavigatorEvent(onNavigatorEvent)
   navigator.setButtons(
     Platform.OS === 'ios'
       ? {
