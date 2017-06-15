@@ -733,22 +733,20 @@ class Room extends Component {
     const listView = listViewData[route.roomId]
 
     return (
-      <View style={s.container}>
-        <Layout
-          ref={component => this.roomInfoDrawer = component}
-          style={{backgroundColor: 'white'}}
-          drawerWidth={300}
-          onDrawerOpen={() => dispatch(changeRoomInfoDrawerState('open'))}
-          onDrawerClose={() => dispatch(changeRoomInfoDrawerState('close'))}
-          drawerPosition={!iOS && DrawerLayoutAndroid.positions.Right}
-          renderNavigationView={this.renderRoomInfo}
-          keyboardDismissMode="on-drag">
-              {isLoadingMore ? this.renderLoading(40) : null}
-              {this.renderListView()}
-              {getMessagesError || isLoadingMessages || _.has(listView, 'data') &&
-                listView.data.length === 0 ? null : this.renderBottom()}
-        </Layout>
-      </View>
+      <Layout
+        ref={component => this.roomInfoDrawer = component}
+        style={s.container}
+        drawerWidth={300}
+        onDrawerOpen={() => dispatch(changeRoomInfoDrawerState('open'))}
+        onDrawerClose={() => dispatch(changeRoomInfoDrawerState('close'))}
+        drawerPosition={!iOS && DrawerLayoutAndroid.positions.Right}
+        renderNavigationView={this.renderRoomInfo}
+        keyboardDismissMode="on-drag">
+            {isLoadingMore ? this.renderLoading(40) : null}
+            {this.renderListView()}
+            {getMessagesError || isLoadingMessages || _.has(listView, 'data') &&
+              listView.data.length === 0 ? null : this.renderBottom()}
+      </Layout>
     )
   }
 }
