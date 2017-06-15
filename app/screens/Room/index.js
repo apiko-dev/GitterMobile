@@ -486,11 +486,9 @@ class Room extends Component {
   }
 
   toggleDrawerState() {
-    if (this.props.roomInfoDrawerState === 'open') {
+    return this.roomInfoDrawer && this.props.roomInfoDrawerState !== 'open' ?
+      this.roomInfoDrawer.openDrawer() :
       this.roomInfoDrawer.closeDrawer()
-    } else {
-      this.roomInfoDrawer.openDrawer()
-    }
   }
 
   handleToolbarActionSelected({id}) {
@@ -498,11 +496,12 @@ class Room extends Component {
     switch (id) {
     case 'drawerMenu': return navigator.toggleDrawer({side: 'left', animated: true})
     case 'search': return navigator.showModal({screen: 'gm.SearchMessages', passProps: {roomId}, animationType: 'slide-up'})
-    case 'roomInfo':
+    case 'roomInfo': {
       dispatch(roomUsers(roomId))
       return iOS ?
         navigator.push({screen: 'gm.RoomInfo', passProps: {route: {roomId}}}) :
         this.toggleDrawerState()
+    }
     case 'toggleFavorite': return dispatch(changeFavoriteStatus(roomId))
     case 'markAsRead': return dispatch(markAllAsRead(roomId))
     case 'settings': return this.handleShowModal({screen: 'gm.RoomSettings', passProps: {roomId}})
