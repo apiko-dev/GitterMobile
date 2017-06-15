@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import {View, ListView, ScrollView, Text} from 'react-native';
+import {View, ListView, ScrollView} from 'react-native';
 import moment from 'moment'
 import InvertibleScrollView from 'react-native-invertible-scroll-view'
 import Message from '../Message'
