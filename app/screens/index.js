@@ -19,6 +19,7 @@ import Settings from './Settings'
 import SearchMessages from './SearchMessages'
 import RoomInfo from './RoomInfo'
 import RoomSettings from './RoomSettings'
+import TransformableImage from './TransformableImage'
 
 export default class Application {
   constructor(store, Provider) {
@@ -46,7 +47,8 @@ export default class Application {
       Message,
       Settings,
       SearchMessages,
-      RoomSettings
+      RoomSettings,
+      TransformableImage
     }
 
     Object.keys(screens).map(key => {

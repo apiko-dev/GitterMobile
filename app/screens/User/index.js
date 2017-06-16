@@ -23,6 +23,7 @@ class UserScreen extends Component {
     this.handleGithubPress = this.handleGithubPress.bind(this)
     this.handleEmailPress = this.handleEmailPress.bind(this)
     this.handleChatPrivatelyPress = this.handleChatPrivatelyPress.bind(this)
+    this.handleAvatarOnPress = this.handleAvatarOnPress.bind(this)
 
     this.state = {
       activeTab: 0
@@ -55,6 +56,14 @@ class UserScreen extends Component {
           animationType: 'slide-down'
         })
       }
+    }
+  }
+
+  handleAvatarOnPress(avatar) {
+    const {navigator} = this.props
+
+    return () => {
+      navigator.showModal({screen: 'gm.TransformableImage', passProps: { url: avatar }})
     }
   }
 
@@ -106,7 +115,7 @@ class UserScreen extends Component {
     }
     return (
       <ScrollView style={s.container}>
-        <UserTop {...user} />
+        <UserTop {...user} avatarOnPress={this.handleAvatarOnPress} />
         <UserInfo {...user}
           onEmailPress={this.handleEmailPress.bind(this)}
           onGithubPress={this.handleGithubPress.bind(this)}
@@ -127,6 +136,9 @@ class UserScreen extends Component {
 }
 
 UserScreen.propTypes = {
+  user: PropTypes.object,
+  username: PropTypes.string,
+  navigator: PropTypes.object,
   dispatch: PropTypes.func,
   isLoadingUsers: PropTypes.bool,
   users: PropTypes.object,
@@ -139,7 +151,6 @@ UserScreen.navigatorStyle = {
 }
 
 function mapStateToProps(state, ownProps) {
-  // const {current} = state.navigation
   const {isLoadingUsers} = state.users
   const {id} = state.viewer.user
   return {
