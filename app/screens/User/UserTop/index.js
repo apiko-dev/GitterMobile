@@ -4,14 +4,12 @@ import Avatar from '../../../components/Avatar'
 import s from './styles'
 import {createGhAvatarLink} from '../../../utils/links'
 
-const UserTop = ({displayName, username, github, gravatarImageUrl, navigator}) => {
+const UserTop = ({displayName, username, github, gravatarImageUrl, avatarOnPress}) => {
   const avatar = github ? createGhAvatarLink(username, 200) : gravatarImageUrl
-  const onAvatarClick =
-    () => navigator.showModal({screen: 'gm.TransformableImage', passProps: { url: avatar }})
 
   return (
     <View style={s.container}>
-      <TouchableWithoutFeedback onPress={onAvatarClick}>
+      <TouchableWithoutFeedback onPress={avatarOnPress(avatar)}>
         <View style={s.avatarWrapper}>
           <Avatar
             src={avatar}
@@ -45,6 +43,7 @@ const UserTop = ({displayName, username, github, gravatarImageUrl, navigator}) =
 }
 
 UserTop.propTypes = {
+  avatarOnPress: PropTypes.func,
   displayName: PropTypes.string,
   username: PropTypes.string,
   github: PropTypes.object
