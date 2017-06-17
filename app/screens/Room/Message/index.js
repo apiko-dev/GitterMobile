@@ -64,7 +64,7 @@ class Message extends Component {
   }
 
   renderMessageText() {
-    const {text, username} = this.props
+    const {text, username, onImagePress} = this.props
 
     if (this.props.hasOwnProperty('editedAt') && !text) {
       return (
@@ -77,7 +77,8 @@ class Message extends Component {
       <ParsedText
         text={text}
         username={username}
-        handleUrlPress={this.handleUrlPress} />
+        onImagePress={onImagePress}
+        onUrlPress={this.handleUrlPress} />
     )
   }
 
@@ -204,7 +205,8 @@ Message.propTypes = {
   isCollapsed: PropTypes.bool,
   status: PropTypes.bool,
   onLayout: PropTypes.func,
-  unread: PropTypes.bool
+  unread: PropTypes.bool,
+  onImagePress: PropTypes.func
 }
 
 function mapStateToProps(state) {

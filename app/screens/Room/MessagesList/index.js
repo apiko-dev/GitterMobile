@@ -51,7 +51,7 @@ export default class MessagesList extends Component {
   }
 
   renderRow(rowData, rowId) {
-    const {onPress, onLongPress, onUsernamePress, onUserAvatarPress} = this.props
+    const {onPress, onLongPress, onUsernamePress, onUserAvatarPress, onImagePress} = this.props
     if (!!rowData.hasNoMore) {
       return (
         <HistoryBegin />
@@ -62,6 +62,7 @@ export default class MessagesList extends Component {
 
     return (
       <Message
+        onImagePress={onImagePress}
         onLayout={(e) => this.handleOnLayout(e, rowId)}
         onPress={onPress}
         rowId={rowId}
@@ -128,5 +129,6 @@ MessagesList.propTypes = {
   renderBottom: PropTypes.bool,
   renderTop: PropTypes.bool,
   renderBottomComponent: PropTypes.func,
-  renderTopComponent: PropTypes.func
+  renderTopComponent: PropTypes.func,
+  onImagePress: PropTypes.func
 }

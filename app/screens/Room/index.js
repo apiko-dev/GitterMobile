@@ -78,6 +78,7 @@ class Room extends Component {
     this.handleSharingRoom = this.handleSharingRoom.bind(this)
     this.handleSharingMessage = this.handleSharingMessage.bind(this)
     this.handleShowModal = this.handleShowModal.bind(this)
+    this.handleImagePress = this.handleImagePress.bind(this)
 
     this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this))
 
@@ -401,6 +402,13 @@ class Room extends Component {
     )
   }
 
+  handleImagePress(matches) {
+    const {navigator} = this.props
+    if (matches && matches[3]) {
+      navigator.showModal({screen: 'gm.TransformableImage', passProps: { url: matches[3] }})
+    }
+  }
+
   handleSendingMessage(text) {
     const {dispatch, route: {roomId}} = this.props
 
@@ -688,6 +696,7 @@ class Room extends Component {
         onUserAvatarPress={this.handleUserAvatarPress.bind(this)}
         dispatch={dispatch}
         onEndReached={this.onEndReached.bind(this)}
+        onImagePress={this.handleImagePress}
         renderTop={isLoadingMore}
         renderTopComponent={() => this.renderLoading(40, 'small')} />
     )

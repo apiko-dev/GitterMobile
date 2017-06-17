@@ -1,41 +1,69 @@
-import React, {PropTypes} from 'react'
-import {Platform} from 'react-native'
+import React, {PropTypes, Component} from 'react'
+import {Platform, Image as RNImage} from 'react-native'
 import Image from 'react-native-transformable-image'
 import s from './styles'
 import navigationStyles from '../../styles/common/navigationStyles'
 
-const TransformableImage = ({navigator, url}) => {
-  const onNavigatorEvent = (event) => {
+class TransformableImage extends Component {
+  constructor(props) {
+    super(props)
+
+    props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this))
+    props.navigator.setButtons(
+      Platform.OS === 'ios'
+        ? {
+          leftButtons: [{
+            title: 'Close',
+            id: 'close',
+            iconColor: 'white',
+            showAsAction: 'always'
+          }]
+        }
+        : {}
+    )
+
+    this.state = {
+      pixels: {}
+    }
+  }
+
+  componentWillMount() {
+    RNImage.getSize(this.props.url, (width, height) =>
+      this.setState({pixels: {width, height}})
+    )
+  }
+
+  onNavigatorEvent(event) {
     if (event.type === 'NavBarButtonPress') {
       if (event.id === 'close') {
-        navigator.dismissModal({
+        this.props.navigator.dismissModal({
           animationType: 'slide-down'
         })
       }
     }
   }
 
-  navigator.setOnNavigatorEvent(onNavigatorEvent)
-  navigator.setButtons(
-    Platform.OS === 'ios'
-      ? {
-        leftButtons: [{
-          title: 'Close',
-          id: 'close',
-          iconColor: 'white',
-          showAsAction: 'always'
-        }]
-      }
-      : {}
-  )
+  render() {
+    const {url} = this.props
+    const {pixels} = this.state
 
-  return <Image
-    style={s.container}
-    source={{uri: url}} />
+    return (
+      <Image
+        enableTransform
+        enableScale
+        enableTranslate
+        pixels={pixels}
+        style={s.container}
+        source={{uri: url}} />
+    )
+  }
 }
 
 TransformableImage.navigatorStyle = {
-  ...navigationStyles
+  ...navigationStyles,
+  navBarTransparent: true,
+  drawUnderNavBar: true,
+  navBarBlur: true
 }
 
 TransformableImage.propTypes = {

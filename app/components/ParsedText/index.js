@@ -1,7 +1,8 @@
-import React, {PropTypes} from 'react';
-import {Text} from 'react-native';
+import React, {PropTypes} from 'react'
 import Parser from 'react-native-parsed-text'
-import Emoji from '../Emoji'
+import renderEmoji from './renderEmoji'
+import renderImage from './renderImage'
+import renderCodespan from './renderCodespan'
 import s from './styles'
 
 const MENTION_REGEX = /(([^`]|^)@([a-zA-Z0-9_\-]+))/
@@ -12,48 +13,22 @@ const THUMBSDOWN = /:\-1:/
 const CODE_REGEX = /(^|[^\\])(`+)([^\r]*?[^`])\2(?!`)/m
 const IMAGE_REGEX = /!\[(.*?)]\s?\([ \t]*()<?(\S+?)>?(?: =([*\d]+[A-Za-z%]{0,4})x([*\d]+[A-Za-z%]{0,4}))?[ \t]*(?:(['"])(.*?)\6[ \t]*)?\)/g
 
-const renderEmoji = (matchingString, matches) => {
-  const name = matches[0].replace(/:/g, '')
-  return (
-    <Emoji name={name} />
-  )
-}
-
-const renderImage = (matchingString, matches) => {
-  console.log(matchingString, matches)
-  return <Text style={{color: 'red'}}>{`IMAGE ${matches[1]} IMAGE`}</Text>
-}
-
-const renderCodespan = (matchingString, matches) => {
-  let component
-  matchingString.replace(/(^|[^\\])(`+)([^\r]*?[^`])\2(?!`)/gm,
-  (wholeMatch, m1, m2, m3) => {
-    let c = m3;
-    c = c.replace(/^([ \t]*)/g, '');	// leading whitespace
-    c = c.replace(/[ \t]*$/g, '');	// trailing whitespace
-    component = (
-      <Text> <Text style={s.codespan}>{c}</Text></Text>
-    )
-  })
-  return component
-}
-
 const ParsedText = ({
   text,
   username,
-  handleUrlPress,
-  handleImagePress
+  onUrlPress,
+  onImagePress
 }) => {
   const patterns = [
-    {pattern: IMAGE_REGEX, renderText: renderImage, onPress: handleImagePress},
-    {type: 'url', style: s.url, onPress: handleUrlPress},
+    {pattern: IMAGE_REGEX, renderText: renderImage, onPress: rawText => onImagePress(IMAGE_REGEX.exec(rawText))},
+    {type: 'url', style: s.url, onPress: onUrlPress},
     {pattern: new RegExp(`@${username}`), style: s.selfMention},
     {pattern: MENTION_REGEX, style: s.mention},
     {pattern: GROUP_MENTION_REGEX, style: s.groupMention},
     {pattern: EMOJI_REGEX, style: s.emoji, renderText: renderEmoji},
     {pattern: THUMBSUP, style: s.emoji, renderText: renderEmoji},
     {pattern: THUMBSDOWN, style: s.emoji, renderText: renderEmoji},
-    {pattern: CODE_REGEX, renderText: renderCodespan},
+    {pattern: CODE_REGEX, renderText: renderCodespan}
   ]
 
   return (
@@ -67,8 +42,8 @@ const ParsedText = ({
 
 ParsedText.propTypes = {
   text: PropTypes.string,
-  handleUrlPress: PropTypes.func,
-  handleImagePress: PropTypes.func
+  onUrlPress: PropTypes.func,
+  onImagePress: PropTypes.func
 }
 
 export default ParsedText
