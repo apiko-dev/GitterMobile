@@ -402,10 +402,10 @@ class Room extends Component {
     )
   }
 
-  handleImagePress(matches) {
+  handleImagePress(matches, link) {
     const {navigator} = this.props
-    if (matches && matches[3]) {
-      navigator.showModal({screen: 'gm.TransformableImage', passProps: { url: matches[3] }})
+    if (matches && matches[link ? 5 : 3]) {
+      navigator.showModal({screen: 'gm.TransformableImage', passProps: { url: matches[link ? 5 : 3] }})
     }
   }
 
