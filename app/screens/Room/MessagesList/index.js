@@ -1,7 +1,8 @@
-import React, {Component, PropTypes} from 'react';
-import {View, ListView, ScrollView} from 'react-native';
+import React, {Component, PropTypes} from 'react'
+import {View, ListView, ScrollView, Dimensions} from 'react-native'
 import moment from 'moment'
 import InvertibleScrollView from 'react-native-invertible-scroll-view'
+import ScrollToTop from 'react-native-scrolltotop'
 import Message from '../Message'
 import HistoryBegin from '../HistoryBegin'
 import s from './styles'
@@ -14,8 +15,24 @@ export default class MessagesList extends Component {
     this.isCollapsed = this.isCollapsed.bind(this)
     this.handleOnLayout = this.handleOnLayout.bind(this)
     this.renderScrollComponent = this.renderScrollComponent.bind(this)
+    this.onScroll = this.onScroll.bind(this)
+
+    this.state = {
+      scroll: {
+        isScrollButtonVisible: false,
+        offsetY: 0
+      }
+    }
 
     this.childHeights = {}
+  }
+
+  onScroll(e) {
+    const offsetY = e.nativeEvent.contentOffset.y
+    const height = this.childHeights[0]
+    const isScrollButtonVisible = offsetY > height && this.state.scroll.offsetY > offsetY
+
+    this.setState({...this.state, scroll: { offsetY, isScrollButtonVisible }})
   }
 
   isCollapsed(rowData, rowId) {
@@ -36,13 +53,8 @@ export default class MessagesList extends Component {
     const previousDate = moment(previousMessage.sent)
     const dateNow = moment()
 
-    if (rowData.fromUser.username === previousMessage.fromUser.username &&
-        (currentDate.diff(previousDate, 'minutes') < 5 || dateNow.diff(previousDate, 'minutes') < 5)
-      ) {
-      return true
-    }
-
-    return false
+    return rowData.fromUser.username === previousMessage.fromUser.username &&
+      (currentDate.diff(previousDate, 'minutes') < 5 || dateNow.diff(previousDate, 'minutes') < 5)
   }
 
   handleOnLayout(e, rowId) {
@@ -76,7 +88,7 @@ export default class MessagesList extends Component {
   renderScrollComponent(props) {
     const {renderBottom, renderTop, renderBottomComponent, renderTopComponent} = this.props
     return (
-      <ScrollView {...props}>
+      <ScrollView ref={rootView => this.rootView = rootView} {...props}>
         {renderBottom && <View style={s.verticallyInverted}>{renderBottomComponent()}</View>}
         {props.children}
         {renderTop && <View style={s.verticallyInverted}>{renderTopComponent()}</View>}
@@ -86,16 +98,19 @@ export default class MessagesList extends Component {
 
   render() {
     const {listViewData, onChangeVisibleRows} = this.props
+    // 160 - default padding bottom, 54 - bottom height
+    const top = Dimensions.get('window').height - (160 + 54)
 
     if (!listViewData) {
-      return <View style={{flex: 1}} />
+      return <View style={s.rootStyle} />
     }
 
     // debugger
 
-    return (
+    return (<View style={s.rootStyle}>
       <ListView
-        ref="listView"
+        ref="listview"
+        onScroll={this.onScroll}
         childSizes={this.childHeights}
         onChangeVisibleRows={(a, b) => onChangeVisibleRows(a, b)}
         renderScrollComponent={props => (
@@ -112,6 +127,8 @@ export default class MessagesList extends Component {
         pageSize={14}
         initialListSize={14}
         renderRow={(rowData, _, rowId) => this.renderRow(rowData, rowId)} />
+        {this.state.scroll.isScrollButtonVisible && <ScrollToTop root={this} top={top}/>}
+      </View>
     )
   }
 }
