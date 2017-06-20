@@ -1,4 +1,4 @@
-import Faye from '../../libs/halley/browser-standalone'
+import Faye from 'react-native-halley'
 const noop = () => {}
 import {NetInfo} from 'react-native'
 
@@ -59,9 +59,12 @@ class SnapshotExt {
 export default class HalleyClient {
   constructor({token, snapshotHandler}) {
     this._client = new Faye.Client('https://ws.gitter.im/bayeux', {
-      timeout: 60000,
-      retry: 1000,
-      interval: 1000
+      timeout: 3000,
+      retry: 3000,
+      interval: 0,
+      maxNetworkDelay: 3000,
+      connectTimeout: 3000,
+      disconnectTimeout: 1000
     })
     this._token = token
     this._snapshotHandler = snapshotHandler
