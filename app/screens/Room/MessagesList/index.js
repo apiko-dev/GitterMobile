@@ -1,14 +1,13 @@
 import React, {Component, PropTypes} from 'react'
-import {View, ListView, ScrollView, Dimensions} from 'react-native'
+import {View, ListView, ScrollView} from 'react-native'
 import _ from 'lodash'
 import moment from 'moment'
 import InvertibleScrollView from 'react-native-invertible-scroll-view'
-import ScrollToTop from 'react-native-scrolltotop'
+import ScrollToTop from '../../../components/ScrollToTop'
 import Message from '../Message'
 import HistoryBegin from '../HistoryBegin'
 import s from './styles'
 import {THEMES} from '../../../constants'
-import {iconsMap} from '../../../utils/iconsMap'
 const {colors} = THEMES.gitterDefault
 
 export default class MessagesList extends Component {
@@ -137,14 +136,15 @@ export default class MessagesList extends Component {
           renderRow={(rowData, __, rowId) => this.renderRow(rowData, rowId)} />
 
         {isScrollButtonVisible && (
-            <ScrollToTop
-              root={this}
-              width={42}
-              height={42}
-              imageUri={iconsMap['expand-more'].uri}
-              bgColor={colors.raspberry}
-              top={Dimensions.get('window').height - 180}
-              left={Dimensions.get('window').width - 60} />
+          <ScrollToTop
+            root={this}
+            width={42}
+            height={42}
+            backgroundColor={colors.raspberry}
+            bottom={12}
+            right={12}
+            icon="expand-more"
+            iconSize={12} />
         )}
       </View>
     )
