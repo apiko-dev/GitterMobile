@@ -1,4 +1,5 @@
-import React, {PropTypes} from 'react';
+import PropTypes from 'prop-types'
+import React from 'react'
 import {View} from 'react-native';
 
 const Divider = ({inset, style, light}) => {

@@ -24,12 +24,9 @@ const styles = StyleSheet.create({
     height: 25,
     opacity: 0.6
   },
-  innerContainer: {
+  textInput: {
     flex: 1,
     height,
-    justifyContent: 'center'
-  },
-  textInput: {
     backgroundColor: 'white',
     fontSize: 18
   }

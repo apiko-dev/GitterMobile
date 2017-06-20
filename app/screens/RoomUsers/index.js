@@ -1,4 +1,5 @@
-import React, {Component, PropTypes} from 'react';
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
 import {View, ListView} from 'react-native';
 import s from './styles'
 import {connect} from 'react-redux'
@@ -80,7 +81,6 @@ class RoomUsersScreen extends Component {
   renderSearch() {
     return (
       <CustomSearch
-        ref="customSearch"
         value={this.state.value}
         onChange={this.handleChange.bind(this)}
         onBackPress={this.handleBackPress.bind(this)}
@@ -125,7 +125,8 @@ RoomUsersScreen.propTypes = {
   roomUsersResult: PropTypes.array,
   roomId: PropTypes.string,
   isLoading: PropTypes.bool,
-  listViewData: PropTypes.object
+  listViewData: PropTypes.object,
+  navigator: PropTypes.object
 }
 
 RoomUsersScreen.navigatorStyle = {

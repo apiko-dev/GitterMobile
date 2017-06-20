@@ -1,5 +1,6 @@
-import React, {PropTypes} from 'react';
-import {View, Text, Image} from 'react-native';
+import PropTypes from 'prop-types'
+import React from 'react'
+import {View} from 'react-native'
 import s from './styles'
 import ChannelListItem from '../ChannelListItem'
 import Heading from '../../../components/Heading'
@@ -16,6 +17,7 @@ const ChannelListSection = ({
   sectionsState
 }) => {
   const icon = sectionsState[name] ? 'expand-more' : 'expand-less'
+
   return (
     <View>
       <Button

@@ -1,4 +1,5 @@
-import React, {Component, PropTypes} from 'react';
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
 import {Linking, ScrollView, View, Platform} from 'react-native';
 import {connect} from 'react-redux'
 import ScrollableTabView from 'react-native-scrollable-tab-view'
@@ -93,7 +94,7 @@ class UserScreen extends Component {
           </View>
           <View tabLabel="REPOS" style={s.container} />
         </ScrollableTabView>
-    </View>
+      </View>
     )
   }
 

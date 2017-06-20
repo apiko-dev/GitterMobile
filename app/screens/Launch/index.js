@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component} from 'react'
 import {Text, Image, StatusBar} from 'react-native';
 import s from './styles'
 import {THEMES} from '../../constants'

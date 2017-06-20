@@ -1,4 +1,5 @@
-import React, {Component, PropTypes} from 'react';
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
 import {View} from 'react-native';
 import s from './styles'
 import {connect} from 'react-redux'
@@ -27,10 +28,6 @@ class RoomUserAddScreen extends Component {
     this.state = {
       value: ''
     }
-  }
-
-  componentDidMount() {
-    this.refs.customSearch.focus()
   }
 
   componentMillMount() {
@@ -75,7 +72,6 @@ class RoomUserAddScreen extends Component {
   renderSearch() {
     return (
       <CustomSearch
-        ref="customSearch"
         value={this.state.value}
         onChange={this.handleChange.bind(this)}
         onBackPress={this.handleBackPress.bind(this)}
@@ -110,7 +106,8 @@ RoomUserAddScreen.propTypes = {
   dispatch: PropTypes.func,
   usersResult: PropTypes.array,
   roomId: PropTypes.string,
-  isLoading: PropTypes.bool
+  isLoading: PropTypes.bool,
+  navigator: PropTypes.object
 }
 
 RoomUserAddScreen.navigatorStyle = {
