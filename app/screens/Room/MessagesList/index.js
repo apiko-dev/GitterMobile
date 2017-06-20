@@ -1,5 +1,6 @@
 import React, {Component, PropTypes} from 'react'
-import {View, ListView, ScrollView, Dimensions} from 'react-native'
+import {View, ListView, ScrollView} from 'react-native'
+import _ from 'lodash'
 import moment from 'moment'
 import InvertibleScrollView from 'react-native-invertible-scroll-view'
 import ScrollToTop from 'react-native-scrolltotop'
@@ -16,6 +17,7 @@ export default class MessagesList extends Component {
     this.handleOnLayout = this.handleOnLayout.bind(this)
     this.renderScrollComponent = this.renderScrollComponent.bind(this)
     this.onScroll = this.onScroll.bind(this)
+    this.handleOffsetChange = _.debounce(this.handleOffsetChange.bind(this), 250)
 
     this.state = {
       scroll: {
@@ -32,7 +34,15 @@ export default class MessagesList extends Component {
     const height = this.childHeights[0]
     const isScrollButtonVisible = offsetY > height && this.state.scroll.offsetY > offsetY
 
-    this.setState({...this.state, scroll: { offsetY, isScrollButtonVisible }})
+    this.handleOffsetChange(offsetY)
+
+    if (this.state.scroll.isScrollButtonVisible !== isScrollButtonVisible) {
+      this.setState({ scroll: {...this.state.scroll, isScrollButtonVisible}})
+    }
+  }
+
+  handleOffsetChange(offsetY) {
+    this.setState({ scroll: {...this.state.scroll, offsetY}})
   }
 
   isCollapsed(rowData, rowId) {
@@ -88,7 +98,7 @@ export default class MessagesList extends Component {
   renderScrollComponent(props) {
     const {renderBottom, renderTop, renderBottomComponent, renderTopComponent} = this.props
     return (
-      <ScrollView ref={rootView => this.rootView = rootView} {...props}>
+      <ScrollView {...props}>
         {renderBottom && <View style={s.verticallyInverted}>{renderBottomComponent()}</View>}
         {props.children}
         {renderTop && <View style={s.verticallyInverted}>{renderTopComponent()}</View>}
@@ -98,8 +108,6 @@ export default class MessagesList extends Component {
 
   render() {
     const {listViewData, onChangeVisibleRows} = this.props
-    // 160 - default padding bottom, 54 - bottom height
-    const top = Dimensions.get('window').height - (160 + 54)
 
     if (!listViewData) {
       return <View style={s.rootStyle} />
@@ -126,8 +134,10 @@ export default class MessagesList extends Component {
         onEndReachedThreshold={500}
         pageSize={14}
         initialListSize={14}
-        renderRow={(rowData, _, rowId) => this.renderRow(rowData, rowId)} />
-        {this.state.scroll.isScrollButtonVisible && <ScrollToTop root={this} top={top}/>}
+        renderRow={(rowData, __, rowId) => this.renderRow(rowData, rowId)} />
+        {this.state.scroll.isScrollButtonVisible && <View style={s.verticallyInverted}>
+          <ScrollToTop root={this} top={30}/>
+        </View>}
       </View>
     )
   }
