@@ -3,10 +3,10 @@ import {
   Dimensions,
   TouchableOpacity,
   PixelRatio,
-  Image
+  View
 } from 'react-native'
 import s from './styles'
-import iconsMap from '../../utils/iconsMap'
+import Icon from 'react-native-vector-icons/MaterialIcons'
 
 class ScrollToTop extends Component {
   _onPress() {
@@ -39,15 +39,10 @@ class ScrollToTop extends Component {
           right,
           bottom
         }]}>
-        <Image
-          resizeMode="center"
-          source={{
-            uri: iconsMap[icon].uri,
-            width: size,
-            height: size
-          }}
-          width={size}
-          height={size} />
+          <Icon
+            size={iconSize}
+            color="white"
+            name={icon} />
       </TouchableOpacity>
     );
   }

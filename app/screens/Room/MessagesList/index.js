@@ -19,7 +19,7 @@ export default class MessagesList extends Component {
     this.handleOnLayout = this.handleOnLayout.bind(this)
     this.renderScrollComponent = this.renderScrollComponent.bind(this)
     this.onScroll = this.onScroll.bind(this)
-    this.handleOffsetChange = _.debounce(this.handleOffsetChange.bind(this), 250)
+    this.handleOffsetChange = _.debounce(this.handleOffsetChange.bind(this), 50)
 
     this.state = {
       isScrollButtonVisible: false,
@@ -144,7 +144,7 @@ export default class MessagesList extends Component {
             bottom={12}
             right={12}
             icon="expand-more"
-            iconSize={12} />
+            iconSize={24} />
         )}
       </View>
     )
