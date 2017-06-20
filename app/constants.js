@@ -52,5 +52,6 @@ export const icons = {
   'more-vert': {icon: 'more-vert', color: 'white', size: 24},
   'info-outline': {icon: 'info-outline', color: 'white', size: 24},
   'back': {icon: iOS ? 'chevron-left' : 'arrow-back', color: 'white', size: 24},
-  'forward': iOS ? {icon: 'chevron-right', color: 'white', size: 40} : {icon: 'arrow-forward', color: 'white', size: 24}
+  'forward': iOS ? {icon: 'chevron-right', color: 'white', size: 40} : {icon: 'arrow-forward', color: 'white', size: 24},
+  'expand-more': {icon: 'expand-more', color: 'white', size: 24}
 }

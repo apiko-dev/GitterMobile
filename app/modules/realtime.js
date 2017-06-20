@@ -57,7 +57,7 @@ export function checkFayeConnection() {
   return async (dispatch, getState) => {
     try {
       const connectionStatus = await FayeGitter.checkConnectionStatus()
-      console.log('CONNECTION_STATUS', connectionStatus)
+      // console.log('CONNECTION_STATUS', connectionStatus)
       if (!connectionStatus) {
         await dispatch(setupFaye())
       }
@@ -166,7 +166,7 @@ export function removeFayeEvents() {
 
 function parseEvent(event) {
   return (dispatch, getState) => {
-    console.log('MESSAGE', event)
+    // console.log('MESSAGE', event)
     const message = JSON.parse(event.json)
 
     const {id} = getState().viewer.user
@@ -328,7 +328,7 @@ export function pushSubscription(subscription) {
     const {subscriptions} = getState().realtime
     if (!subscriptions.find(item => item === subscription)) {
       dispatch({type: PUSH_SUBSCRIPTION, subscription})
-      console.log('PUSH_SUBSCRIPTION', subscription)
+      // console.log('PUSH_SUBSCRIPTION', subscription)
     }
   }
 }
@@ -338,7 +338,7 @@ export function deleteSubscription(subscription) {
     const {subscriptions} = getState().realtime
     if (!!subscriptions.find(item => item === subscription)) {
       dispatch({type: DELETE_SUBSCRIPTION, subscription})
-      console.log('DELETE_SUBSCRIPTION', subscription)
+      // console.log('DELETE_SUBSCRIPTION', subscription)
     }
   }
 }

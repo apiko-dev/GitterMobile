@@ -104,7 +104,7 @@ function setupAppStatusListener() {
         }
         dispatch(subscribeToRooms())
       } catch (error) {
-        console.log(error)
+        // console.log(error)
       }
     })
   }
@@ -114,7 +114,7 @@ export function checkNewReleases() {
   return async dispatch => {
     try {
       const payload = await GithubApi.checkNewReleases()
-      console.log(payload)
+      // console.log(payload)
       if (payload[0].name !== global.CURRENT_VERSION) {
         Alert.alert(
           'New version available',
@@ -126,7 +126,7 @@ export function checkNewReleases() {
         )
       }
     } catch (error) {
-      console.log(error)
+      // console.log(error)
     }
   }
 }
