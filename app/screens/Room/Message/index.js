@@ -11,6 +11,8 @@ import Avatar from '../../../components/Avatar'
 import StatusMessage from '../StatusMessage'
 import Button from '../../../components/Button'
 
+import {MarkdownView} from 'react-native-markdown-view'
+
 class Message extends Component {
   constructor(props) {
     super(props)
@@ -73,12 +75,17 @@ class Message extends Component {
         </Text>
       )
     }
+    // return (
+    //   <ParsedText
+    //     text={text}
+    //     username={username}
+    //     onImagePress={onImagePress}
+    //     onUrlPress={this.handleUrlPress} />
+    // )
     return (
-      <ParsedText
-        text={text}
-        username={username}
-        onImagePress={onImagePress}
-        onUrlPress={this.handleUrlPress} />
+      <MarkdownView>
+        {text}
+      </MarkdownView>
     )
   }
 
