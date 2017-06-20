@@ -1,10 +1,15 @@
-import React, {Component, PropTypes} from 'react';
-import {View, ListView, ScrollView} from 'react-native';
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
+import {View, ListView, ScrollView} from 'react-native'
+import _ from 'lodash'
 import moment from 'moment'
 import InvertibleScrollView from 'react-native-invertible-scroll-view'
+import ScrollToTop from '../../../components/ScrollToTop'
 import Message from '../Message'
 import HistoryBegin from '../HistoryBegin'
 import s from './styles'
+import {THEMES} from '../../../constants'
+const {colors} = THEMES.gitterDefault
 
 export default class MessagesList extends Component {
   constructor(props) {
@@ -14,8 +19,31 @@ export default class MessagesList extends Component {
     this.isCollapsed = this.isCollapsed.bind(this)
     this.handleOnLayout = this.handleOnLayout.bind(this)
     this.renderScrollComponent = this.renderScrollComponent.bind(this)
+    this.onScroll = this.onScroll.bind(this)
+    this.handleOffsetChange = _.debounce(this.handleOffsetChange.bind(this), 50)
+
+    this.state = {
+      isScrollButtonVisible: false,
+      offsetY: 0
+    }
 
     this.childHeights = {}
+  }
+
+  onScroll(e) {
+    const offsetY = e.nativeEvent.contentOffset.y
+    const height = this.childHeights[0]
+    const isScrollButtonVisible = offsetY > height && this.state.offsetY > offsetY
+
+    this.handleOffsetChange(offsetY)
+
+    if (this.state.isScrollButtonVisible !== isScrollButtonVisible) {
+      this.setState({isScrollButtonVisible})
+    }
+  }
+
+  handleOffsetChange(offsetY) {
+    this.setState({offsetY})
   }
 
   isCollapsed(rowData, rowId) {
@@ -36,18 +64,12 @@ export default class MessagesList extends Component {
     const previousDate = moment(previousMessage.sent)
     const dateNow = moment()
 
-    if (rowData.fromUser.username === previousMessage.fromUser.username &&
-        (currentDate.diff(previousDate, 'minutes') < 5 || dateNow.diff(previousDate, 'minutes') < 5)
-      ) {
-      return true
-    }
-
-    return false
+    return rowData.fromUser.username === previousMessage.fromUser.username &&
+      (currentDate.diff(previousDate, 'minutes') < 5 || dateNow.diff(previousDate, 'minutes') < 5)
   }
 
   handleOnLayout(e, rowId) {
     this.childHeights[+rowId] = e.nativeEvent.layout.height
-    // debugger
   }
 
   renderRow(rowData, rowId) {
@@ -86,32 +108,45 @@ export default class MessagesList extends Component {
 
   render() {
     const {listViewData, onChangeVisibleRows} = this.props
+    const {isScrollButtonVisible} = this.state
 
     if (!listViewData) {
-      return <View style={{flex: 1}} />
+      return <View style={s.rootStyle} />
     }
 
-    // debugger
-
     return (
-      <ListView
-        ref="listView"
-        childSizes={this.childHeights}
-        onChangeVisibleRows={(a, b) => onChangeVisibleRows(a, b)}
-        renderScrollComponent={props => (
-          <InvertibleScrollView
-            {...props}
-            inverted
-            renderScrollComponent={this.renderScrollComponent}
-            keyboardShouldPersistTaps="handled" />
-        )}
-        dataSource={listViewData.dataSource}
-        onEndReached={this.props.onEndReached}
-        scrollRenderAheadDistance={1000}
-        onEndReachedThreshold={500}
-        pageSize={14}
-        initialListSize={14}
-        renderRow={(rowData, _, rowId) => this.renderRow(rowData, rowId)} />
+      <View style={s.rootStyle}>
+        <ListView
+          ref="listview"
+          onScroll={this.onScroll}
+          childSizes={this.childHeights}
+          onChangeVisibleRows={(a, b) => onChangeVisibleRows(a, b)}
+          renderScrollComponent={props => (
+            <InvertibleScrollView
+              {...props}
+              inverted
+              renderScrollComponent={this.renderScrollComponent}
+              keyboardShouldPersistTaps="handled" />
+          )}
+          dataSource={listViewData.dataSource}
+          onEndReached={this.props.onEndReached}
+          scrollRenderAheadDistance={1000}
+          onEndReachedThreshold={500}
+          pageSize={14}
+          initialListSize={14}
+          renderRow={(rowData, __, rowId) => this.renderRow(rowData, rowId)} />
+
+        <ScrollToTop
+          root={this}
+          visible={isScrollButtonVisible}
+          width={42}
+          height={42}
+          backgroundColor={colors.raspberry}
+          bottom={12}
+          right={12}
+          icon="expand-more"
+          iconSize={24} />
+      </View>
     )
   }
 }

@@ -1,4 +1,5 @@
-import React, {Component, PropTypes} from 'react';
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
 import {Text, Image, View, ToastAndroid} from 'react-native';
 import Button from '../../components/Button'
 import s from './styles'

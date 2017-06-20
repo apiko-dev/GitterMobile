@@ -1,4 +1,5 @@
-import React, {Component, PropTypes} from 'react';
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
 import {Text, Linking} from 'react-native';
 import s from './styles'
 import {THEMES} from '../../constants'

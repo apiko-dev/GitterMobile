@@ -1,4 +1,5 @@
-import React, {Component, PropTypes} from 'react';
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
 import {ToastAndroid, TextInput, View, Platform} from 'react-native';
 import {connect} from 'react-redux'
 import _ from 'lodash'

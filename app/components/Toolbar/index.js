@@ -1,4 +1,5 @@
-import React, {PropTypes, Component} from 'react';
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
 import {View, Text, Platform, ActionSheetIOS} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons'
 
@@ -23,7 +24,7 @@ class Toolbar extends Component {
       return
     }
 
-    console.log('ACTIONS!!!', actions)
+    // console.log('ACTIONS!!!', actions)
 
     const newActions = actions.map(({title, show}, index) => {
       if (show === 'never') {
@@ -34,7 +35,7 @@ class Toolbar extends Component {
       }
     }).filter(item => !!item)
 
-    console.log('newActions', newActions)
+    // console.log('newActions', newActions)
     const options = {
       options: newActions.map(({title}) => title).concat('Close'),
       cancelButtonIndex: newActions.length,
@@ -154,7 +155,7 @@ Toolbar.propTypes = {
   additionalIcon: PropTypes.element,
   additionalIconTitle: PropTypes.string,
   onAdditionalIconPress: PropTypes.func,
-  children: React.PropTypes.any,
+  children: PropTypes.any,
   style: PropTypes.any
 }
 
