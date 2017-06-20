@@ -1,14 +1,32 @@
 import React, {Component, PropTypes} from 'react'
 import {
-  Dimensions,
   TouchableOpacity,
-  PixelRatio,
-  View
+  Animated
 } from 'react-native'
 import s from './styles'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 
 class ScrollToTop extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      bottom: new Animated.Value(-54)
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.visible !== nextProps.visible) {
+      Animated.timing(
+        this.state.bottom,
+        {
+          toValue: nextProps.visible ? 0 : -54,
+          duration: 200
+        },
+      ).start()
+    }
+  }
+
   _onPress() {
     this.props.root.refs.listview.scrollTo({x: 0, y: 0, animated: true});
   }
@@ -26,24 +44,25 @@ class ScrollToTop extends Component {
       iconSize
     } = this.props
 
-    const size = PixelRatio.getPixelSizeForLayoutSize(iconSize)
-
     return (
-      <TouchableOpacity
-        onPress={this._onPress.bind(this)}
-        style={[s.container, {
-          borderRadius: isRadius ? borderRadius : 0,
-          backgroundColor,
-          width,
-          height,
-          right,
-          bottom
-        }]}>
+      <Animated.View
+        style={{bottom: this.state.bottom}}>
+        <TouchableOpacity
+          onPress={this._onPress.bind(this)}
+          style={[s.container, {
+            borderRadius: isRadius ? borderRadius : 0,
+            backgroundColor,
+            width,
+            height,
+            right,
+            bottom
+          }]}>
           <Icon
             size={iconSize}
             color="white"
             name={icon} />
-      </TouchableOpacity>
+        </TouchableOpacity>
+      </Animated.View>
     );
   }
 }
@@ -52,8 +71,6 @@ ScrollToTop.defaultProps = {
   isRadius: true,
   width: 60,
   height: 60,
-  right: Dimensions.get('window').width - 80,
-  top: Dimensions.get('window').height - 160,
   borderRadius: 30,
   backgroundColor: 'white'
 }
@@ -69,7 +86,8 @@ ScrollToTop.propTypes = {
   root: PropTypes.object,
   bottom: PropTypes.number,
   icon: PropTypes.string,
-  iconSize: PropTypes.number
+  iconSize: PropTypes.number,
+  visible: PropTypes.bool
 }
 
 export default ScrollToTop

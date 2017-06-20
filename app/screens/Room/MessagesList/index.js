@@ -135,17 +135,16 @@ export default class MessagesList extends Component {
           initialListSize={14}
           renderRow={(rowData, __, rowId) => this.renderRow(rowData, rowId)} />
 
-        {isScrollButtonVisible && (
-          <ScrollToTop
-            root={this}
-            width={42}
-            height={42}
-            backgroundColor={colors.raspberry}
-            bottom={12}
-            right={12}
-            icon="expand-more"
-            iconSize={24} />
-        )}
+        <ScrollToTop
+          root={this}
+          visible={isScrollButtonVisible}
+          width={42}
+          height={42}
+          backgroundColor={colors.raspberry}
+          bottom={12}
+          right={12}
+          icon="expand-more"
+          iconSize={24} />
       </View>
     )
   }
