@@ -1,4 +1,5 @@
-import React, {PropTypes, Component} from 'react';
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
 import {View, Text, Platform, ActionSheetIOS} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons'
 
@@ -154,7 +155,7 @@ Toolbar.propTypes = {
   additionalIcon: PropTypes.element,
   additionalIconTitle: PropTypes.string,
   onAdditionalIconPress: PropTypes.func,
-  children: React.PropTypes.any,
+  children: PropTypes.any,
   style: PropTypes.any
 }
 

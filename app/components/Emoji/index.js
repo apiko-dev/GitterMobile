@@ -1,4 +1,5 @@
-import React, {PropTypes} from 'react';
+import PropTypes from 'prop-types'
+import React from 'react'
 import {Image, Text, PixelRatio, Platform} from 'react-native';
 import {emoji} from '../../images/emoji'
 const iOS = Platform.OS === 'ios'
