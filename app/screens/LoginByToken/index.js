@@ -26,7 +26,7 @@ class LoginByTokenScreen extends Component {
     if (!token.trim()) {
       return
     }
-    dispatch(loginByToken(token, navigator))
+    dispatch(loginByToken({token}, navigator))
   }
 
   render() {
