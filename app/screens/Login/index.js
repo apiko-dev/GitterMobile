@@ -25,7 +25,7 @@ class LoginScreen extends Component {
         <View style={s.buttonGroup}>
           <Button
             style={[s.buttonStyle, {backgroundColor: colors.darkRed}]}
-            onPress={() => ToastAndroid.show('Login by WebView is not supported yet', ToastAndroid.SHORT)}>
+            onPress={() => navigator.push({screen: 'gm.LoginByWebView', animated: true, title: 'Login by WebView'})}>
             <Text pointerEvents="none"
               style={s.buttonText}>
               Login by WebView

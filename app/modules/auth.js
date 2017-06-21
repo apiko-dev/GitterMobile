@@ -1,3 +1,4 @@
+import * as Api from '../api/gitter'
 import {INITIALIZED, init} from './app'
 import {removeFayeEvents} from './realtime'
 import {rootNavigator} from '../index'
@@ -18,13 +19,20 @@ export const LOGOUT = 'auth/LOGOUT'
  * Action Creators
  */
 
-export function loginByToken(token) {
+export function loginByToken({token, code}) {
   return async dispatch => {
     try {
       dispatch({type: LOGINING})
 
-      await setItem('token', token)
-      dispatch({type: LOGIN_USER_BY_TOKEN, token})
+      let authToken = token
+
+      if (code) {
+        const res = await Api.getToken(code)
+        authToken = res.access_token
+      }
+
+      await setItem('token', authToken)
+      dispatch({type: LOGIN_USER_BY_TOKEN, token: authToken})
 
       rootNavigator.startAppWithScreen({screen: 'gm.Launch'})
       await dispatch(init())

@@ -24,7 +24,15 @@ See [Roadmap](https://github.com/terrysahaidak/project/issues/5).
 - [Redux](http://redux.js.org/)
 
 ## Installation
-Once you have downloaded or cloned this repository, run `npm install` inside the directory, then read usage.
+Once you have downloaded or cloned this repository, run `npm install` inside the directory, then you need to create `local.js` file inside `app` directory with following content:
+
+```
+export const CLIENT_ID = 'oauth key'
+export const CLIENT_SECRET = 'oauth secret'
+export const REDIRECT_URI = 'redirect url'
+```
+
+Each of the fields you can get [here](https://developer.gitter.im/apps).
 
 ## Usage
 - [Setting up React Native](https://facebook.github.io/react-native/docs/getting-started.html)
