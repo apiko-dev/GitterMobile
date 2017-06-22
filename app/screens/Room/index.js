@@ -634,6 +634,7 @@ class Room extends Component {
     const field = (
       <SendMessageField
         ref="sendMessageField"
+        editing={this.state.editing}
         onSending={this.onSending.bind(this)}
         onChange={this.onTextFieldChange.bind(this)}
         value={this.state.textInputValue} />

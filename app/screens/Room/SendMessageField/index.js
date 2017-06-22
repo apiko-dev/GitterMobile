@@ -4,6 +4,8 @@ import {TextInput, View, Text} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import Button from '../../../components/Button'
 import s from './styles'
+import {THEMES} from '../../../constants'
+const {colors} = THEMES.gitterDefault
 
 export default class SendMessageField extends Component {
   constructor(props) {
@@ -64,6 +66,8 @@ export default class SendMessageField extends Component {
 
   render() {
     const {value, height} = this.state
+    const {editing} = this.props
+
     return (
       <View style={s.container}>
         <View style={s.innerContainer}>
@@ -88,9 +92,9 @@ export default class SendMessageField extends Component {
           onPress={() => this.sendMessage()}
           style={s.button}>
           <Icon
-            style={{opacity: !value.trim() ? 0.2 : 1}}
-            name="send"
-            color="black"
+            style={{opacity: !value.trim() ? 0.5 : 1}}
+            name={editing ? 'check' : 'send'}
+            color={colors.raspberry}
             size={30} />
         </Button>
       </View>
@@ -102,5 +106,6 @@ export default class SendMessageField extends Component {
 SendMessageField.propTypes = {
   onSending: PropTypes.func,
   value: PropTypes.string,
-  onChange: PropTypes.func
+  onChange: PropTypes.func,
+  editing: PropTypes.bool
 }
