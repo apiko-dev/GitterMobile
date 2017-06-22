@@ -12,6 +12,8 @@ import Avatar from '../../../components/Avatar'
 import StatusMessage from '../StatusMessage'
 import Button from '../../../components/Button'
 
+const handleUrlPress = (url) => Linking.openURL(url)
+
 class Message extends Component {
   constructor(props) {
     super(props)
@@ -22,26 +24,18 @@ class Message extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    if (!_.isEqual(this.props, nextProps)) {
-      return true
-    } else {
-      return false
-    }
+    return !_.isEqual(this.props, nextProps)
   }
 
   onMessagePress() {
     const {id, onPress, text, rowId} = this.props
-    const failed = !!this.props.failed && this.props.failed === true
+    const failed = this.props.failed === true
     onPress(id, rowId, text, failed)
   }
 
   onLongPress() {
     const {id, onLongPress} = this.props
     onLongPress(id)
-  }
-
-  handleUrlPress(url) {
-    Linking.openURL(url)
   }
 
   renderDate() {
@@ -76,9 +70,9 @@ class Message extends Component {
     }
     return (
       <ParsedText
+        navigator={this.props.navigator}
         text={text}
-        username={username}
-        handleUrlPress={this.handleUrlPress} />
+        username={username} />
     )
   }
 
@@ -106,7 +100,7 @@ class Message extends Component {
           text={text}
           onLongPress={this.onLongPress.bind(this)}
           onPress={this.onMessagePress.bind(this)}
-          handleUrlPress={this.handleUrlPress.bind(this)}
+          handleUrlPress={handleUrlPress}
           backgroundColor={backgroundColor}
           opacity={readStatusOpacity} />
       )
@@ -188,6 +182,7 @@ Message.defaultProps = {
 }
 
 Message.propTypes = {
+  navigator: PropTypes.object,
   id: PropTypes.string,
   rowId: PropTypes.number,
   text: PropTypes.string,

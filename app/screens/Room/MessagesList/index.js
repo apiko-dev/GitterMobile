@@ -86,6 +86,7 @@ export default class MessagesList extends Component {
       <Message
         onLayout={(e) => this.handleOnLayout(e, rowId)}
         onPress={onPress}
+        navigator={this.props.navigator}
         rowId={rowId}
         isCollapsed={isCollapsed}
         onLongPress={onLongPress}
@@ -153,6 +154,7 @@ export default class MessagesList extends Component {
 
 MessagesList.propTypes = {
   onPress: PropTypes.func,
+  navigator: PropTypes.object,
   listViewData: PropTypes.object,
   dispatch: PropTypes.func,
   onEndReached: PropTypes.func,

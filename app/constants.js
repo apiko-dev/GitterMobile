@@ -55,3 +55,10 @@ export const icons = {
   'forward': iOS ? {icon: 'chevron-right', color: 'white', size: 40} : {icon: 'arrow-forward', color: 'white', size: 24},
   'expand-more': {icon: 'expand-more', color: 'white', size: 24}
 }
+
+export const GITTER_REGEXPS = {
+  baseUrl: /\bhttps:\/\/gitter.im\/\b/,
+  roomParamsExp: /([a-zA-Z0-9]+)\/([a-zA-Z0-9]+)/,
+  messageParamsExp: /([a-zA-Z0-9]+)\/api\?at=([a-z0-9]{24})/,
+  groupParamsExp: /([a-zA-Z0-9]+)\/home/
+}

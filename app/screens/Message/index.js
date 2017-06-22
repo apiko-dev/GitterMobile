@@ -5,6 +5,7 @@ import {connect} from 'react-redux'
 import s from './styles'
 import navigationStyles from '../../styles/common/navigationStyles'
 
+import { getSingleMessage } from '../../modules/messages'
 import {subscribeToReadBy, unsubscribeFromReadBy} from '../../modules/realtime'
 
 import ReadBy from './ReadBy'
@@ -34,7 +35,13 @@ class Message extends Component {
   }
 
   componentWillMount() {
-    const {dispatch, roomId, messageId} = this.props
+    const {dispatch, roomId, messageId, route} = this.props
+    if (route) {
+      const {roomName, messageId: routeMessageId} = route
+
+      dispatch(getSingleMessage(roomName, routeMessageId))
+    }
+
     dispatch(subscribeToReadBy(roomId, messageId))
   }
 
@@ -98,6 +105,10 @@ class Message extends Component {
 }
 
 Message.propTypes = {
+  fromSearch: PropTypes.bool,
+  roomId: PropTypes.string,
+  messageId: PropTypes.string,
+  navigator: PropTypes.object,
   dispatch: PropTypes.func,
   route: PropTypes.object,
   messages: PropTypes.object,

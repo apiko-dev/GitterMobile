@@ -670,6 +670,7 @@ class Room extends Component {
       <MessagesList
         onChangeVisibleRows={this.handleChangeVisibleRows}
         listViewData={listViewData[roomId]}
+        navigator={this.props.navigator}
         onPress={this.onMessagePress.bind(this)}
         onLongPress={this.onMessageLongPress.bind(this)}
         onUsernamePress={this.handleUsernamePress.bind(this)}
