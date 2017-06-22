@@ -1,9 +1,11 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import {TextInput, View, Text} from 'react-native';
+import {TextInput, View, Text, Platform} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import Button from '../../../components/Button'
 import s from './styles'
+import {THEMES} from '../../../constants'
+const {colors} = THEMES.gitterDefault
 
 export default class SendMessageField extends Component {
   constructor(props) {
@@ -16,7 +18,7 @@ export default class SendMessageField extends Component {
     this.handleChangeText = this.handleChangeText.bind(this)
 
     this.state = {
-      height: 56,
+      height: 40,
       value: ''
     }
   }
@@ -59,23 +61,26 @@ export default class SendMessageField extends Component {
       return
     }
     onSending()
-    this.setState({height: 56, value: ''})
+    this.setState({height: 40, value: ''})
   }
 
   render() {
     const {value, height} = this.state
+    const {editing} = this.props
+    const MAX_HEIGHT = Platform.OS === 'android' ? Math.max(40, height) : 'auto'
+
     return (
       <View style={s.container}>
         <View style={s.innerContainer}>
           <TextInput
             ref="textInput"
             multiline
-            style={[s.textInput, {height: height > 90 ? 90 : Math.max(56, height)}]}
+            style={[s.textInput, {height: height > 90 ? 90 : MAX_HEIGHT}]}
             value={value}
             keyboardShouldPersistTaps={false}
             underlineColorAndroid="white"
             onChangeText={this.handleChangeText}
-            placeholder="Type your message here..." />
+            placeholder="Message..." />
             <Text
               ref="hidden"
               onLayout={this.handleChangeSize}
@@ -88,10 +93,10 @@ export default class SendMessageField extends Component {
           onPress={() => this.sendMessage()}
           style={s.button}>
           <Icon
-            style={{opacity: !value.trim() ? 0.2 : 1}}
-            name="send"
-            color="black"
-            size={30} />
+            style={{opacity: !value.trim() ? 0.5 : 1}}
+            name={editing ? 'check' : 'send'}
+            color={colors.raspberry}
+            size={28} />
         </Button>
       </View>
 
@@ -102,5 +107,6 @@ export default class SendMessageField extends Component {
 SendMessageField.propTypes = {
   onSending: PropTypes.func,
   value: PropTypes.string,
-  onChange: PropTypes.func
+  onChange: PropTypes.func,
+  editing: PropTypes.bool
 }
