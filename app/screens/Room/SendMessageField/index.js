@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import {TextInput, View, Text} from 'react-native';
+import {TextInput, View, Text, Platform} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import Button from '../../../components/Button'
 import s from './styles'
@@ -67,6 +67,7 @@ export default class SendMessageField extends Component {
   render() {
     const {value, height} = this.state
     const {editing} = this.props
+    const MAX_HEIGHT = Platform.OS === 'android' ? Math.max(56, height) : 'auto'
 
     return (
       <View style={s.container}>
@@ -74,12 +75,12 @@ export default class SendMessageField extends Component {
           <TextInput
             ref="textInput"
             multiline
-            style={[s.textInput, {height: height > 90 ? 90 : Math.max(56, height)}]}
+            style={[s.textInput, {height: height > 90 ? 90 : MAX_HEIGHT}]}
             value={value}
             keyboardShouldPersistTaps={false}
             underlineColorAndroid="white"
             onChangeText={this.handleChangeText}
-            placeholder="Type your message here..." />
+            placeholder="Message..." />
             <Text
               ref="hidden"
               onLayout={this.handleChangeSize}

@@ -22,7 +22,7 @@ const style = StyleSheet.create({
   },
   textInput: {
     backgroundColor: 'white',
-    fontSize: 14,
+    fontSize: 16,
     paddingTop: 0,
     paddingBottom: 0,
     textAlignVertical: 'center'
