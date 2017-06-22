@@ -1,12 +1,10 @@
 const apiUrl = 'https://api.gitter.im/v1'
-import {CLIENT_ID, CLIENT_SECRET} from '../local'
+import {CLIENT_ID, CLIENT_SECRET, REDIRECT_URI} from '../local'
 
 export const gitterLoginUrl = () => {
-  const clientId = CLIENT_ID
   const responseType = 'code'
-  const redirectUri = 'gittermobile://code'
 
-  return `https://gitter.im/login/oauth/authorize?client_id=${clientId}&response_type=${responseType}&redirect_uri=${redirectUri}`
+  return `https://gitter.im/login/oauth/authorize?client_id=${CLIENT_ID}&response_type=${responseType}&redirect_uri=${REDIRECT_URI}`
 }
 
 export function getToken(code) {
@@ -14,7 +12,7 @@ export function getToken(code) {
     client_id: CLIENT_ID,
     client_secret: CLIENT_SECRET,
     code,
-    redirect_uri: 'gittermobile://code',
+    redirect_uri: REDIRECT_URI,
     grant_type: 'authorization_code'
   }
 
