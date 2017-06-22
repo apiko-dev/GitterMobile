@@ -18,7 +18,7 @@ export default class SendMessageField extends Component {
     this.handleChangeText = this.handleChangeText.bind(this)
 
     this.state = {
-      height: 56,
+      height: 40,
       value: ''
     }
   }
@@ -61,13 +61,13 @@ export default class SendMessageField extends Component {
       return
     }
     onSending()
-    this.setState({height: 56, value: ''})
+    this.setState({height: 40, value: ''})
   }
 
   render() {
     const {value, height} = this.state
     const {editing} = this.props
-    const MAX_HEIGHT = Platform.OS === 'android' ? Math.max(56, height) : 'auto'
+    const MAX_HEIGHT = Platform.OS === 'android' ? Math.max(40, height) : 'auto'
 
     return (
       <View style={s.container}>
@@ -96,7 +96,7 @@ export default class SendMessageField extends Component {
             style={{opacity: !value.trim() ? 0.5 : 1}}
             name={editing ? 'check' : 'send'}
             color={colors.raspberry}
-            size={30} />
+            size={28} />
         </Button>
       </View>
 
