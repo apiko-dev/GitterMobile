@@ -106,7 +106,7 @@ class UserScreen extends Component {
       )
     }
     return (
-      <ScrollView style={s.container}>
+      <ScrollView contentContainerStyle={s.container}>
         <UserTop {...user} />
         <UserInfo {...user}
           onEmailPress={this.handleEmailPress.bind(this)}
@@ -132,7 +132,10 @@ UserScreen.propTypes = {
   isLoadingUsers: PropTypes.bool,
   users: PropTypes.object,
   route: PropTypes.object,
-  currentUserId: PropTypes.string
+  currentUserId: PropTypes.string,
+  user: PropTypes.object,
+  navigator: PropTypes.object,
+  username: PropTypes.string
 }
 
 UserScreen.navigatorStyle = {
