@@ -19,9 +19,13 @@ const HomeRoomItem = ({id, name, userCount, oneToOne, onPress, ...props}) => {
       <Avatar
         src={src}
         size={50} />
-
       <View style={s.infoContainer}>
-        <Text style={s.name}>{name}</Text>
+        <Text
+          numberOfLines={1}
+          ellipsizeMode="tail"
+          style={s.name}>
+          {name}
+        </Text>
         <Text style={s.userCount}>{userCount} people</Text>
       </View>
     </Button>

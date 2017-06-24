@@ -26,17 +26,22 @@ const HomeRoomItemMy = ({
         size={50} />
 
       <View style={s.headingContainer}>
-        <Text style={s.heading}>{name}</Text>
+        <Text
+          numberOfLines={1}
+          ellipsizeMode="tail"
+          style={s.heading}>
+          {name}
+        </Text>
         <Text style={s.userCount}>{userCount} people</Text>
       </View>
-
       {(!!unreadItems || !!mentions || !!lurk) &&
         <View style={s.unread}>
-          <UnreadBadge
-            unreadItems={unreadItems}
-            mentions={mentions}
-            lurk={lurk} />
-      </View>}
+        <UnreadBadge
+        unreadItems={unreadItems}
+        mentions={mentions}
+        lurk={lurk} />
+        </View>}
+
     </Button>
   )
 }
