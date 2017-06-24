@@ -22,7 +22,7 @@ class HomeScreen extends Component {
 
     homeNavigator = this.props.navigator
 
-    this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+    this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this))
 
     this.props.navigator.setButtons({
       leftButtons: [{

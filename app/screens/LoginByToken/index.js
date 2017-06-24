@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import {TextInput, Text, Image} from 'react-native';
+import {TextInput, Text, View, Linking} from 'react-native';
 import s from './styles'
 import {connect} from 'react-redux'
 import {loginByToken} from '../../modules/auth'
+import iconsMap from '../../utils/iconsMap'
 
-import Link from '../../components/Link'
 import Button from '../../components/Button'
 import {THEMES} from '../../constants'
 const {colors} = THEMES.gitterDefault
@@ -14,9 +14,20 @@ class LoginByTokenScreen extends Component {
   constructor(props) {
     super(props)
     this.handleLogin = this.handleLogin.bind(this)
+    this.handleChangeText = this.handleChangeText.bind(this)
+
+    this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this))
 
     this.state = {
       token: ''
+    }
+  }
+
+  onNavigatorEvent(event) {
+    if (event.type === 'NavBarButtonPress') {
+      if (event.id === 'submit') {
+        this.handleLogin()
+      }
     }
   }
 
@@ -29,33 +40,52 @@ class LoginByTokenScreen extends Component {
     dispatch(loginByToken({token}, navigator))
   }
 
+  handleChangeText(e) {
+    let rightButtons = []
+    if (e.nativeEvent.text.trim().length) {
+      rightButtons = [{
+        title: 'Submit',
+        id: 'submit',
+        icon: iconsMap.checkmark,
+        showAsAction: 'always'
+      }]
+    }
+    this.props.navigator.setButtons({rightButtons})
+    this.setState({token: e.nativeEvent.text.trim()})
+  }
+
   render() {
     return (
-      <Image style={s.container}
-        source={require('../../images/gitter-background.jpg')}>
-        <Text style={s.hero}>
-          <Link to="https://developer.gitter.im/login" fontSize={24}>Sign in</Link> to Gitter
-        to get your authentication token. Copy it and paste into the textinput below.
-        </Text>
-
+      <View style={s.container}>
+        <View style={s.textfieldContainer}>
           <TextInput
+            disableFullscreenUI
+            autoCorrect={false}
+            spellCheck={false}
             value={this.state.token}
             placeholder="Paste token here..."
+            placeholderTextColor={colors.raspberry}
             style={s.textfield}
             underlineColorAndroid="white"
-            placeholderTextColor="black"
-            onChange={(e) => this.setState({token: e.nativeEvent.text})} />
+            onChange={this.handleChangeText} />
+        </View>
+        <View style={s.hintContainer}>
+          <Text style={s.hint}>
+            To get your authentication token press "Get token" button. It will open developer.gitter.im site in your browser.{'\n'}{'\n'}After signing in you will see caption "Personal Access Token". Below that caption will be your access token.{'\n'}{'\n'}Copy it and paste inside text input. Then press check mark.
+          </Text>
+        </View>
+        <View style={s.buttonContainer}>
           <Button
             rippleColor={colors.raspberry}
-            style={[s.buttonStyle, {backgroundColor: colors.darkRed}]}
-            onPress={() => this.handleLogin()}>
+            style={[s.buttonStyle, {backgroundColor: colors.raspberry}]}
+            onPress={() => Linking.openURL('https://developer.gitter.im/login')}>
             <Text pointerEvents="none"
               style={s.buttonText}>
-              Submit
+              Get token
             </Text>
           </Button>
-
-      </Image>
+        </View>
+      </View>
     )
   }
 }
