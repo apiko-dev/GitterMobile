@@ -50,6 +50,11 @@ export function getToken(code) {
 /**
  * Authed user stuff
  */
+
+export function me(token) {
+  return callApi('user/me', token)
+}
+
 export function currentUser(token) {
   return callApi('user', token)
 }

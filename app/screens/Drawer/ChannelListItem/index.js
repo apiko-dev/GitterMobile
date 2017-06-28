@@ -37,15 +37,20 @@ const ChannelListItem = ({
           size={30} />
 
         <View style={s.headingContainer}>
-          <Text style={[s.heading, {color: itemStyles.color}]}>{name}</Text>
+          <Text
+            numberOfLines={1}
+            ellipsizeMode="tail"
+            style={[s.heading, {color: itemStyles.color}]}>
+            {name}
+          </Text>
         </View>
-      </View>
-
-      {(!!unreadItems || !!mentions || !!lurk) &&
-        <UnreadBadge
+        {(!!unreadItems || !!mentions || !!lurk) &&
+          <UnreadBadge
           unreadItems={unreadItems}
           mentions={mentions}
           lurk={lurk} />}
+      </View>
+
     </Button>
   )
 }

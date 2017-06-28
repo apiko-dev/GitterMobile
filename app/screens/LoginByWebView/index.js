@@ -2,13 +2,11 @@ import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import {
   WebView,
-  Image,
-  Text,
   View
 } from 'react-native'
 import {connect} from 'react-redux'
 
-import Loading from '../../components/Loading'
+import LoadingOverlay from '../../components/LoadingOverlay'
 
 import {THEMES} from '../../constants'
 const {colors} = THEMES.gitterDefault
@@ -46,34 +44,23 @@ class LoginByWebView extends Component {
 
   renderLoading() {
     return (
-      <View style={s.loadingContainer}>
-        <Loading />
-        <Text style={s.logo}>
-          Signing in...
-        </Text>
-      </View>
+      <LoadingOverlay text="Signing in..." />
     )
   }
 
   render() {
     const {loading} = this.state
     return (
-      <Image style={s.container}
-        source={require('../../images/gitter-background.jpg')}>
-        {loading
-          ? (
-            this.renderLoading()
-          ) : (
-            <WebView
-              style={{flex: 1}}
-              automaticallyAdjustContentInsets
-              domStorageEnabled
-              javaScriptEnabled
-              onNavigationStateChange={this.handleNavigationStateChange}
-              source={{uri: gitterLoginUrl()}} />
-          )
-        }
-      </Image>
+      <View style={s.container}>
+        <WebView
+          style={{flex: 1}}
+          automaticallyAdjustContentInsets
+          domStorageEnabled
+          javaScriptEnabled
+          onNavigationStateChange={this.handleNavigationStateChange}
+          source={{uri: gitterLoginUrl()}} />
+        {true && this.renderLoading()}
+      </View>
     )
   }
 }

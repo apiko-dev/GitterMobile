@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import {Text, Image, View, ToastAndroid} from 'react-native';
+import {Text, View} from 'react-native';
 import Button from '../../components/Button'
 import s from './styles'
 import {connect} from 'react-redux'
@@ -12,35 +12,29 @@ class LoginScreen extends Component {
   render() {
     const {navigator} = this.props
     return (
-      <Image style={s.container}
-        source={require('../../images/gitter-background.jpg')}>
+      <View style={s.container}>
         <Text style={s.logo}>
           GitterMobile
         </Text>
-        <Text style={s.hero}>
-          To start using Gitter mobile you should login first.
-          You can login by oauth2 through WebView or just
-          copy/paste authentication token.
-        </Text>
         <View style={s.buttonGroup}>
           <Button
-            style={[s.buttonStyle, {backgroundColor: colors.darkRed}]}
-            onPress={() => navigator.push({screen: 'gm.LoginByWebView', animated: true, title: 'Login by WebView'})}>
+            style={s.buttonStyle}
+            onPress={() => navigator.push({screen: 'gm.LoginByWebView', animated: true, title: 'Login'})}>
             <Text pointerEvents="none"
               style={s.buttonText}>
-              Login by WebView
+              Login
             </Text>
           </Button>
           <Button
-            style={[s.buttonStyle, {backgroundColor: colors.darkRed}]}
-            onPress={() => navigator.push({screen: 'gm.LoginByToken', animated: true, title: 'Login by token'})}>
+            style={s.buttonStyle}
+            onPress={() => navigator.push({screen: 'gm.LoginByToken', animated: true, title: 'Paste token'})}>
             <Text pointerEvents="none"
               style={s.buttonText}>
-              Login by Token
+              Paste token
             </Text>
           </Button>
         </View>
-      </Image>
+      </View>
     )
   }
 }

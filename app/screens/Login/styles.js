@@ -1,13 +1,13 @@
 import {StyleSheet, Dimensions} from 'react-native'
-import backgroundImage from '../../styles/common/BackgroundImage'
 import {THEMES} from '../../constants'
 const {colors} = THEMES.gitterDefault
 
 const styles = StyleSheet.create({
   container: {
-    ...backgroundImage,
-    justifyContent: 'space-around',
-    alignItems: 'center',
+    flex: 1,
+    backgroundColor: colors.raspberry,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   logo: {
     fontSize: 40,
@@ -23,21 +23,22 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent'
   },
   buttonGroup: {
-    flexDirection: 'row'
+    position: 'absolute',
+    bottom: 20
   },
   buttonStyle: {
-    margin: 10,
-    backgroundColor: colors.primaryButton,
-    width: 150,
-    height: 40,
+    backgroundColor: 'white',
+    marginBottom: 16,
+    height: 35,
     borderRadius: 2,
     justifyContent: 'center',
     alignItems: 'center',
-    elevation: 2
+    elevation: 4
   },
   buttonText: {
-    color: 'white',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    paddingHorizontal: 40,
+    color: colors.raspberry
   }
 })
 

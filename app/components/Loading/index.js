@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import {ActivityIndicator, View} from 'react-native';
+import {ActivityIndicator, View, Text} from 'react-native';
 import {THEMES} from '../../constants'
 const {colors} = THEMES.gitterDefault
 
-const Loading = ({size, height, color}) => (
+const Loading = ({size, height, color, text}) => (
   <View style={{
     flex: height ? 0 : 1,
     justifyContent: 'center',
@@ -15,6 +15,16 @@ const Loading = ({size, height, color}) => (
       animating
       size={size}
       color={color || colors.raspberry}/>
+    {text && (
+      <Text style={{
+        fontSize: 18,
+        backgroundColor: 'transparent',
+        marginTop: 16,
+        color: color || colors.raspberry
+      }}>
+        {text}
+      </Text>
+    )}
   </View>
 )
 

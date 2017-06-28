@@ -8,16 +8,45 @@ import {setItem, removeItem} from '../utils/storage'
  * Constants
  */
 
+const TOKEN_REGEX = /^[a-z\d]*$/i
+
 export const LOGINING = 'auth/LOGINING'
 export const LOGINED_IN_SUCCESS = 'auth/LOGINED_IN_SUCCESS'
 export const LOGIN_USER = 'auth/LOGIN_USER'
 export const LOGIN_USER_BY_TOKEN = 'auth/LOGIN_USER_BY_TOKEN'
 export const UNEXPECTED_ERROR = 'auth/UNEXPECTED_ERROR'
 export const LOGOUT = 'auth/LOGOUT'
+export const CHECK_TOKEN = 'auth/CHECK_TOKEN'
+export const CHECK_TOKEN_OK = 'auth/CHECK_TOKEN_OK'
+export const CHECK_TOKEN_ERROR = 'auth/CHECK_TOKEN_ERROR'
 
 /**
  * Action Creators
  */
+
+export function checkToken({token}) {
+  return async dispatch => {
+    try {
+      dispatch({type: CHECK_TOKEN})
+
+      if (!TOKEN_REGEX.test(token)) {
+        throw new Error('Bad token.')
+      }
+
+      const user = await Api.me(token)
+
+      if (!!user.error) {
+        throw new Error('Unable to authenticate. Please try again.')
+      }
+
+      dispatch({type: CHECK_TOKEN_OK})
+
+      await dispatch(loginByToken({token}))
+    } catch (err) {
+      dispatch({type: CHECK_TOKEN_ERROR, error: err.message})
+    }
+  }
+}
 
 export function loginByToken({token, code}) {
   return async dispatch => {
@@ -37,9 +66,9 @@ export function loginByToken({token, code}) {
       rootNavigator.startAppWithScreen({screen: 'gm.Launch'})
       await dispatch(init())
 
-      dispatch({LOGINED_IN_SUCCESS})
+      dispatch({type: LOGINED_IN_SUCCESS})
     } catch (err) {
-      dispatch({type: UNEXPECTED_ERROR, error: err})
+      dispatch({type: UNEXPECTED_ERROR, error: err.message})
     }
   }
 }
@@ -66,7 +95,7 @@ const initialState = {
   loginedIn: false,
   token: '',
   error: false,
-  errors: {}
+  errors: ''
 }
 
 export default function auth(state = initialState, action) {
@@ -75,7 +104,8 @@ export default function auth(state = initialState, action) {
     if (!!action.token) {
       return {...state,
         loginedIn: true,
-        token: action.token
+        token: action.token,
+        error: false
       }
     } else {
       return {...state,
@@ -84,12 +114,18 @@ export default function auth(state = initialState, action) {
       }
     }
   }
+
+  case CHECK_TOKEN:
   case LOGINING: {
     return {...state,
-      logining: true
+      logining: true,
+      error: false,
+      errors: ''
     }
   }
 
+
+  case CHECK_TOKEN_OK:
   case LOGINED_IN_SUCCESS: {
     return {...state,
       logining: false
@@ -102,6 +138,14 @@ export default function auth(state = initialState, action) {
       token: action.token
     }
   }
+
+  case CHECK_TOKEN_ERROR:
+  case UNEXPECTED_ERROR:
+    return {...state,
+      error: true,
+      logining: false,
+      errors: action.error
+    }
 
   case LOGOUT: {
     return initialState
