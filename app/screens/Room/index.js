@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import {Keyboard, ActionSheetIOS, DrawerLayoutAndroid, ToastAndroid, Clipboard, Alert, ListView, View, Platform, KeyboardAvoidingView} from 'react-native';
+import {Linking, Keyboard, ActionSheetIOS, DrawerLayoutAndroid, ToastAndroid, Clipboard, Alert, ListView, View, Platform, KeyboardAvoidingView} from 'react-native';
 import {connect} from 'react-redux'
 import Share from 'react-native-share'
 import navigationStyles from '../../styles/common/navigationStyles'
@@ -11,6 +11,8 @@ import BottomSheet from '../../../libs/react-native-android-bottom-sheet/index'
 import s from './styles'
 import {quoteLink} from '../../utils/links'
 import {THEMES} from '../../constants'
+import {parseGitterGroupUrl, parseGitterMessageUrl, parseGitterRoomUrl} from '../../utils/parseUrl'
+import {GITTER_REGEXPS} from '../../constants'
 import {
   getRoom,
   selectRoom,
@@ -43,6 +45,7 @@ import JoinRoomField from './JoinRoomField'
 import FailedToLoad from '../../components/FailedToLoad'
 import {iconsMap} from '../../utils/iconsMap'
 
+const {baseUrl, groupParamsExp, messageParamsExp, roomParamsExp} = GITTER_REGEXPS
 const COMMAND_REGEX = /\/\S+/
 const iOS = Platform.OS === 'ios'
 const {colors} = THEMES.gitterDefault
@@ -79,6 +82,10 @@ class Room extends Component {
     this.handleSharingMessage = this.handleSharingMessage.bind(this)
     this.handleShowModal = this.handleShowModal.bind(this)
     this.toggleDrawerState = this.toggleDrawerState.bind(this)
+    this.handleUrlClick = this.handleUrlClick.bind(this)
+    this.handleGitterRoomUrlClick = this.handleGitterRoomUrlClick.bind(this)
+    this.handleGitterGroupUrlClick = this.handleGitterGroupUrlClick.bind(this)
+    this.handleGitterMessageUrlClick = this.handleGitterMessageUrlClick.bind(this)
 
     this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this))
 
@@ -111,6 +118,8 @@ class Room extends Component {
   }
 
   componentDidMount() {
+    Linking.addEventListener('url', this.handleUrlClick);
+
     this.prepareDataSources()
     const {activeRoom, rooms, route: { roomId }, dispatch, listViewData} = this.props
     // dispatch(subscribeToChatMessages(roomId))
@@ -141,6 +150,7 @@ class Room extends Component {
   }
 
   componentWillUnmount() {
+    Linking.removeEventListener('url', this.handleUrlClick);
     // const {dispatch, route: {roomId}} = this.props
     // dispatch(unsubscribeToChatMessages(roomId))
   }
@@ -376,6 +386,42 @@ class Room extends Component {
     }
 
     return onlyFiltered ? actions.filter(item => item.showInBottomSheet !== true) : actions
+  }
+
+  handleUrlClick({url}) {
+    const messageUrlPattern = new RegExp(`${baseUrl.source}${messageParamsExp.source}`)
+    const groupUrlPattern = new RegExp(`${baseUrl.source}${groupParamsExp.source}`)
+    const roomUrlPattern = new RegExp(`${baseUrl.source}${roomParamsExp.source}`)
+
+    if (messageUrlPattern.test(url)) {
+      return this.handleGitterMessageUrlClick(url)
+    }
+
+    if (groupUrlPattern.test(url)) {
+      return this.handleGitterGroupUrlClick(url)
+    }
+
+    if (roomUrlPattern.test(url)) {
+      return this.handleGitterRoomUrlClick(url)
+    }
+  }
+
+  handleGitterRoomUrlClick(url) {
+    const {ownerName, roomName} = parseGitterRoomUrl(url)
+    console.log(ownerName, roomName)
+    this.props.navigator.push({screen: 'gm.Room'})
+  }
+
+  handleGitterMessageUrlClick(url) {
+    const {roomName, atParam} = parseGitterMessageUrl(url)
+    console.log(atParam, roomName)
+    this.props.navigator.push({screen: 'gm.Message', passProps: {route: {roomName, messageId: atParam}}})
+  }
+
+  handleGitterGroupUrlClick(url) {
+    const {groupName} = parseGitterGroupUrl(url)
+    console.log(groupName)
+    this.props.navigator.push({screen: 'gm.Home'})
   }
 
   handleOverflowClick() {
