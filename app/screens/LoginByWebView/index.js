@@ -59,7 +59,7 @@ class LoginByWebView extends Component {
           javaScriptEnabled
           onNavigationStateChange={this.handleNavigationStateChange}
           source={{uri: gitterLoginUrl()}} />
-        {true && this.renderLoading()}
+        {loading && this.renderLoading()}
       </View>
     )
   }
