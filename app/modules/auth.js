@@ -8,7 +8,7 @@ import {setItem, removeItem} from '../utils/storage'
  * Constants
  */
 
-const TOKEN_REGEX = /^[a-z][a-z\d]*$/i
+const TOKEN_REGEX = /^[a-z\d]*$/i
 
 export const LOGINING = 'auth/LOGINING'
 export const LOGINED_IN_SUCCESS = 'auth/LOGINED_IN_SUCCESS'
