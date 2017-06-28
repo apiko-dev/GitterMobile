@@ -39,6 +39,11 @@ const styles = StyleSheet.create({
   },
   hint: {
     color: colors.secondaryFont
+  },
+  error: {
+    color: colors.red,
+    marginBottom: 16,
+    fontSize: 18
   }
 })
 

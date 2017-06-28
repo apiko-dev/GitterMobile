@@ -3,9 +3,10 @@ import React, { Component } from 'react'
 import {TextInput, Text, View, Linking} from 'react-native';
 import s from './styles'
 import {connect} from 'react-redux'
-import {loginByToken} from '../../modules/auth'
+import {checkToken} from '../../modules/auth'
 import iconsMap from '../../utils/iconsMap'
 
+import LoadingOverlay from '../../components/LoadingOverlay'
 import Button from '../../components/Button'
 import {THEMES} from '../../constants'
 const {colors} = THEMES.gitterDefault
@@ -37,7 +38,7 @@ class LoginByTokenScreen extends Component {
     if (!token.trim()) {
       return
     }
-    dispatch(loginByToken({token}, navigator))
+    dispatch(checkToken({token}, navigator))
   }
 
   handleChangeText(e) {
@@ -54,7 +55,14 @@ class LoginByTokenScreen extends Component {
     this.setState({token: e.nativeEvent.text.trim()})
   }
 
+  renderLoading() {
+    return (
+      <LoadingOverlay text="Checking token..." />
+    )
+  }
+
   render() {
+    const {logining, errors, error} = this.props
     return (
       <View style={s.container}>
         <View style={s.textfieldContainer}>
@@ -69,6 +77,7 @@ class LoginByTokenScreen extends Component {
             underlineColorAndroid="white"
             onChange={this.handleChangeText} />
         </View>
+        {error && <Text style={s.error}>{errors}</Text>}
         <View style={s.hintContainer}>
           <Text style={s.hint}>
             To get your authentication token press "Get token" button. It will open developer.gitter.im site in your browser.{'\n'}{'\n'}After signing in you will see caption "Personal Access Token". Below that caption will be your access token.{'\n'}{'\n'}Copy it and paste inside text input. Then press check mark.
@@ -85,6 +94,8 @@ class LoginByTokenScreen extends Component {
             </Text>
           </Button>
         </View>
+
+        {logining && this.renderLoading()}
       </View>
     )
   }
@@ -103,4 +114,14 @@ LoginByTokenScreen.propTypes = {
   dispatch: PropTypes.func
 }
 
-export default connect()(LoginByTokenScreen)
+function mapStateToProps(state) {
+  const {logining, errors, error} = state.auth
+
+  return {
+    logining,
+    errors,
+    error
+  }
+}
+
+export default connect(mapStateToProps)(LoginByTokenScreen)
