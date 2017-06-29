@@ -19,7 +19,6 @@ class UserScreen extends Component {
     super(props)
 
     this.renderTabs = this.renderTabs.bind(this)
-    this.renderUserInfoTab = this.renderUserInfoTab.bind(this)
     this.handleTabChange = this.handleTabChange.bind(this)
     this.handleGithubPress = this.handleGithubPress.bind(this)
     this.handleEmailPress = this.handleEmailPress.bind(this)
@@ -98,31 +97,27 @@ class UserScreen extends Component {
     )
   }
 
-  renderUserInfoTab() {
+  render() {
     const {isLoadingUsers, user, currentUserId} = this.props
     if (isLoadingUsers || !user) {
       return (
-        <Loading />
+        <View style={s.loadingContainer}>
+          <Loading />
+        </View>
       )
     }
-    return (
-      <ScrollView contentContainerStyle={s.container}>
-        <UserTop {...user} />
-        <UserInfo {...user}
-          onEmailPress={this.handleEmailPress.bind(this)}
-          onGithubPress={this.handleGithubPress.bind(this)}
-          onChatPrivatelyPress={this.handleChatPrivatelyPress.bind(this)}
-          currentUserId={currentUserId} />
-      </ScrollView>
-    )
-  }
 
-
-  render() {
     return (
       <View style={s.container}>
-        {this.renderUserInfoTab()}
-      </View>
+      <ScrollView>
+          <UserTop {...user} />
+          <UserInfo {...user}
+            onEmailPress={this.handleEmailPress.bind(this)}
+            onGithubPress={this.handleGithubPress.bind(this)}
+            onChatPrivatelyPress={this.handleChatPrivatelyPress.bind(this)}
+            currentUserId={currentUserId} />
+            </ScrollView>
+        </View>
     )
   }
 }

@@ -4,6 +4,15 @@ const {colors} = THEMES.gitterDefault
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    backgroundColor: 'white',
+    height: '100%'
+  },
+  loadingContainer: {
+    height: '100%',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: 'white'
   },
   toolbar: {
