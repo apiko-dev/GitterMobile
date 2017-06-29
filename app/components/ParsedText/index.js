@@ -35,7 +35,6 @@ const renderCodespan = (matchingString, matches) => {
 
 const ParsedText = ({text, username}) => {
   const patterns = [
-    {pattern: /\bgitterim\b:\/\//, style: s.url, onPress: (url) => Linking.openURL(url)},
     {type: 'url', style: s.url, onPress: (url) => Linking.openURL(url)},
     {pattern: new RegExp(`@${username}`), style: s.selfMention},
     {pattern: MENTION_REGEX, style: s.mention},

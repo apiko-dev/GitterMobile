@@ -118,8 +118,6 @@ class Room extends Component {
   }
 
   componentDidMount() {
-    Linking.addEventListener('url', this.handleUrlClick);
-
     this.prepareDataSources()
     const {activeRoom, rooms, route: { roomId }, dispatch, listViewData} = this.props
     // dispatch(subscribeToChatMessages(roomId))
@@ -150,14 +148,23 @@ class Room extends Component {
   }
 
   componentWillUnmount() {
-    Linking.removeEventListener('url', this.handleUrlClick);
     // const {dispatch, route: {roomId}} = this.props
     // dispatch(unsubscribeToChatMessages(roomId))
   }
 
-  onNavigatorEvent(event) {
-    if (event.type === 'NavBarButtonPress') {
+  onNavigatorEvent({type, id}) {
+    if (type === 'NavBarButtonPress') {
       this.handleToolbarActionSelected(event)
+    }
+
+    switch (id) {
+    case 'willAppear': {
+      return Linking.addEventListener('url', this.handleUrlClick)
+    }
+    case 'willDisappear': {
+      return Linking.removeEventListener('url', this.handleUrlClick);
+    }
+    default: break
     }
   }
 
