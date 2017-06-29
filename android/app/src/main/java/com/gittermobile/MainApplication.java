@@ -3,6 +3,7 @@ package com.gittermobile;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.RNFetchBlob.RNFetchBlobPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -60,6 +61,7 @@ public class MainApplication extends NavigationApplication {
       new ReactNativeDialogsPackage(),
       new FayeGitterPackage(),
       new RNDeviceInfo(),
+      new RNFetchBlobPackage(),
       new AndroidBottomSheetPackage()
     );
   }

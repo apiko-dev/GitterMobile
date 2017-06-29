@@ -20,6 +20,7 @@ import SearchMessages from './SearchMessages'
 import RoomInfo from './RoomInfo'
 import RoomSettings from './RoomSettings'
 import LoginByWebView from './LoginByWebView'
+import ImageLightbox from './ImageLightbox'
 
 export default class Application {
   constructor(store, Provider) {
@@ -48,7 +49,8 @@ export default class Application {
       Settings,
       SearchMessages,
       RoomSettings,
-      LoginByWebView
+      LoginByWebView,
+      ImageLightbox
     }
 
     Object.keys(screens).map(key => {

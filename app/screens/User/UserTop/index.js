@@ -1,20 +1,23 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import {View, Text} from 'react-native'
+import {View, Text, TouchableOpacity} from 'react-native'
 import Avatar from '../../../components/Avatar'
 import s from './styles'
 import {createGhAvatarLink} from '../../../utils/links'
 
-const UserTop = ({displayName, username, github, gravatarImageUrl}) => {
+const UserTop = ({displayName, username, github, gravatarImageUrl, onAvatarPress}) => {
   const avatar = github ? createGhAvatarLink(username, 200) : gravatarImageUrl
 
   return (
     <View style={s.container}>
-      <View style={s.avatarWrapper}>
-        <Avatar
-          src={avatar}
-          size={80} />
-      </View>
+      <TouchableOpacity
+        onPress={() => onAvatarPress(avatar)}>
+        <View style={s.avatarWrapper}>
+          <Avatar
+            src={avatar}
+            size={80} />
+        </View>
+      </TouchableOpacity>
       <View style={s.displayNameWapper}>
         <Text style={s.displayName}>
           {displayName}
