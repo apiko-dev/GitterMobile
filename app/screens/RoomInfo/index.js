@@ -29,6 +29,7 @@ class RoomInfoScreen extends Component {
     this.handleUserPress = this.handleUserPress.bind(this)
     this.handleUrlPress = this.handleUrlPress.bind(this)
     this.handleStatItemPress = this.handleStatItemPress.bind(this)
+    this.handleAvatarOnPress = this.handleAvatarOnPress.bind(this)
     this.handleAddPress = this.handleAddPress.bind(this)
     this.renderActivity = this.renderActivity.bind(this)
 
@@ -105,6 +106,20 @@ class RoomInfoScreen extends Component {
     navigator.showModal({screen: 'gm.RoomUsers', passProps: {roomId}})
   }
 
+  handleAvatarOnPress(url, title) {
+    const {navigator} = this.props
+
+    navigator.showModal({
+      screen: 'gm.ImageLightbox',
+      title,
+      passProps: { url },
+      style: {
+        backgroundBlur: 'dark',
+        backgroundColor: '#ff000080'
+      }
+    })
+  }
+
   refetchData() {
     const {rooms, route: {roomId}, dispatch} = this.props
     const room = rooms[roomId]
@@ -118,6 +133,7 @@ class RoomInfoScreen extends Component {
     if (rooms[roomId].githubType === 'REPO') {
       return (
         <RepoInfo
+          onAvatarPress={this.handleAvatarOnPress}
           onStatItemPress={this.handleStatItemPress.bind(this)}
           handleUrlPress={this.handleUrlPress.bind(this)}
           {...roomInfo[rooms[roomId].name]} />
@@ -127,11 +143,13 @@ class RoomInfoScreen extends Component {
     if (rooms[roomId].githubType === 'ONETOONE') {
       return (
         <UserInfo
+          onAvatarPress={this.handleAvatarOnPress}
           {...roomInfo[rooms[roomId].name]} />
       )
     }
     return (
       <RoomInfo
+        onAvatarPress={this.handleAvatarOnPress}
         {...roomInfo[rooms[roomId].name]} />
     )
   }
