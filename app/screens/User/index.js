@@ -23,6 +23,7 @@ class UserScreen extends Component {
     this.handleGithubPress = this.handleGithubPress.bind(this)
     this.handleEmailPress = this.handleEmailPress.bind(this)
     this.handleChatPrivatelyPress = this.handleChatPrivatelyPress.bind(this)
+    this.handleAvatarOnPress = this.handleAvatarOnPress.bind(this)
 
     this.state = {
       activeTab: 0
@@ -97,6 +98,20 @@ class UserScreen extends Component {
     )
   }
 
+  handleAvatarOnPress(avatar) {
+    const {navigator, user} = this.props
+
+    navigator.showModal({
+      screen: 'gm.ImageLightbox',
+      title: user.displayName || `@${user.username}`,
+      passProps: { url: avatar },
+      style: {
+        backgroundBlur: 'dark',
+        backgroundColor: '#ff000080'
+      }
+    })
+  }
+
   render() {
     const {isLoadingUsers, user, currentUserId} = this.props
     if (isLoadingUsers || !user) {
@@ -110,7 +125,7 @@ class UserScreen extends Component {
     return (
       <View style={s.container}>
       <ScrollView>
-          <UserTop {...user} />
+          <UserTop {...user} onAvatarPress={this.handleAvatarOnPress} />
           <UserInfo {...user}
             onEmailPress={this.handleEmailPress.bind(this)}
             onGithubPress={this.handleGithubPress.bind(this)}

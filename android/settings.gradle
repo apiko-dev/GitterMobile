@@ -1,4 +1,6 @@
 rootProject.name = 'gittermobile'
+include ':react-native-fetch-blob'
+project(':react-native-fetch-blob').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-fetch-blob/android')
 
 include ':app', ':react-native-android-bottom-sheet', ':react-native-gitter-faye', ':react-native-dialogs'
 project(':react-native-android-bottom-sheet').projectDir = new File(rootProject.projectDir, '../libs/react-native-android-bottom-sheet')
