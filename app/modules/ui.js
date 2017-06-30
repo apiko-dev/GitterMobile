@@ -9,7 +9,12 @@ export function initializeUi() {
   return async dispatch => {
     const payload = await getItem('uiReducer')
 
-    dispatch({type: INITIALIZE_UI, payload: JSON.parse(payload)})
+    dispatch({
+      type: INITIALIZE_UI,
+      payload: typeof payload === 'string'
+        ? JSON.parse(payload)
+        : payload
+    })
   }
 }
 
@@ -57,7 +62,7 @@ export default function ui(state = initialState, action) {
   switch (action.type) {
 
   case INITIALIZE_UI:
-    return Object.assign({}, state, action.payload ? action.payload : initialState)
+    return Object.assign({}, state, action.payload || initialState)
 
   case CHANGE_ROOM_INFO_DRAWER_STATE:
     return {...state,
