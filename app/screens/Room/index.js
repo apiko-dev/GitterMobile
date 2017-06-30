@@ -34,7 +34,7 @@ import {
   readMessages,
   sendStatusMessage
 } from '../../modules/messages'
-import {changeRoomInfoDrawerState} from '../../modules/ui'
+import {changeRoomInfoDrawerState, setRoomTextInputState} from '../../modules/ui'
 import RoomInfoScreen from '../RoomInfo'
 import Loading from '../../components/Loading'
 import MessagesList from './MessagesList'
@@ -74,6 +74,7 @@ class Room extends Component {
     this.onResendingMessage = this.onResendingMessage.bind(this)
     this.handleChangeVisibleRows = this.handleChangeVisibleRows.bind(this)
     this.handleReadMessages = _.debounce(this.handleReadMessages.bind(this), 250)
+    this.handleSaveDraftInput = _.debounce(this.handleSaveDraftInput.bind(this), 500)
     this.handleSendingMessage = this.handleSendingMessage.bind(this)
     this.handleSharingRoom = this.handleSharingRoom.bind(this)
     this.handleSharingMessage = this.handleSharingMessage.bind(this)
@@ -112,7 +113,7 @@ class Room extends Component {
 
   componentDidMount() {
     this.prepareDataSources()
-    const {activeRoom, rooms, route: { roomId }, dispatch, listViewData} = this.props
+    const {activeRoom, rooms, route: { roomId }, dispatch, listViewData, textInputInitialValue} = this.props
     // dispatch(subscribeToChatMessages(roomId))
     dispatch(changeRoomInfoDrawerState('close'))
 
@@ -129,6 +130,8 @@ class Room extends Component {
     } else {
       dispatch(getRoomMessagesIfNeeded(roomId))
     }
+
+    this.setState({textInputValue: textInputInitialValue || ''})
   }
 
   componentWillReceiveProps({room, title}) {
@@ -137,6 +140,13 @@ class Room extends Component {
       this.props.navigator.setButtons({
         rightButtons: this.getButtons(room, iOS)
       })
+    }
+  }
+
+  componentDidUpdate(prevProps, {textInputValue: textInputValuePrev}) {
+    const {textInputValue} = this.state
+    if (textInputValue !== textInputValuePrev) {
+      this.handleSaveDraftInput(textInputValue)
     }
   }
 
@@ -376,6 +386,11 @@ class Room extends Component {
     }
 
     return onlyFiltered ? actions.filter(item => item.showInBottomSheet !== true) : actions
+  }
+
+  handleSaveDraftInput(text) {
+    const {dispatch, route: {roomId}} = this.props
+    dispatch(setRoomTextInputState(roomId, text))
   }
 
   handleOverflowClick() {
@@ -750,7 +765,8 @@ Room.propTypes = {
   getMessagesError: PropTypes.bool,
   roomInfoDrawerState: PropTypes.string,
   notifications: PropTypes.object,
-  navigator: PropTypes.object
+  navigator: PropTypes.object,
+  textInputInitialValue: PropTypes.string
 }
 
 Room.navigatorStyle = {
@@ -762,7 +778,7 @@ Room.navigatorStyle = {
 function mapStateToProps(state, ownProps) {
   const {listView, isLoading, isLoadingMore, byRoom, hasNoMore, entities} = state.messages
   const {activeRoom, rooms, notifications} = state.rooms
-  const {roomInfoDrawerState} = state.ui
+  const {roomInfoDrawerState, roomInputStateById} = state.ui
 
   const room = rooms[ownProps.roomId]
 
@@ -784,7 +800,8 @@ function mapStateToProps(state, ownProps) {
     notifications,
     route: {roomId: ownProps.roomId},
     room,
-    title
+    title,
+    textInputInitialValue: roomInputStateById[ownProps.roomId]
   }
 }
 
