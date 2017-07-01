@@ -9,8 +9,10 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     alignItems: 'center',
     justifyContent: 'center',
-    elevation: 10,
-    backgroundColor: 'white'
+    elevation: 8,
+    backgroundColor: 'white',
+    borderTopWidth: 1,
+    borderTopColor: '#f0eef0'
   },
   text: {
     color: colors.raspberry,
