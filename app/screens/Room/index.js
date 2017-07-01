@@ -52,6 +52,7 @@ class Room extends Component {
   constructor(props) {
     super(props)
     this.roomInfoDrawer = null
+    this.sendMessageField = {}
     this.readMessages = {}
 
     this.renderListView = this.renderListView.bind(this)
@@ -106,7 +107,7 @@ class Room extends Component {
     this.prepareDataSources()
     navigator.setTitle({title})
     this.props.navigator.setButtons({
-      rightButtons: this.getButtons(room, iOS)
+      rightButtons: this.getRightButtons(room, iOS)
     })
     Keyboard.dismiss()
   }
@@ -138,7 +139,7 @@ class Room extends Component {
     if (room !== this.props.room) {
       this.props.navigator.setTitle({title})
       this.props.navigator.setButtons({
-        rightButtons: this.getButtons(room, iOS)
+        rightButtons: this.getRightButtons(room, iOS)
       })
     }
   }
@@ -231,7 +232,7 @@ class Room extends Component {
       }
       const experied = moment(message.sent).add(5, 'm')
       if (currentUser.username === message.fromUser.username &&
-        moment().isBefore(experied) && !!message.text) {
+        moment().isBefore(experied) && !!message.text && !this.state.editing) {
         options.items.push('Edit', 'Delete')
       }
     }
@@ -283,33 +284,54 @@ class Room extends Component {
       }
     })
 
+    this.props.navigator.setTitle({title: 'Editing'})
+    this.props.navigator.setButtons({
+      rightButtons: [],
+      leftButtons: [{
+        title: 'Cancel',
+        id: 'cancel',
+        icon: iconsMap.closeIcon,
+        iconColor: 'white',
+        showAsAction: 'always'
+      }]
+    })
+
     // triggers two times because sometimes it won't focus
-    setTimeout(() => this.refs.sendMessageField.focus(), 200)
+    this.sendMessageField.focus()
   }
 
-  onEndEdit() {
-    const {dispatch, route: {roomId}, entities} = this.props
+  onEndEdit(cancel) {
+    const {dispatch, route: {roomId}, entities, title, room} = this.props
     const {textInputValue, editMessage: {id, rowId}} = this.state
-    const message = entities[id]
-    const experied = moment(message.sent).add(5, 'm')
 
-    if (moment().isAfter(experied)) {
-      this.setState({
-        editing: false,
-        textInputValue: '',
-        editMessage: {}
-      })
-      this.refs.sendMessageField.blur()
-      ToastAndroid.show("Can't edit message.", ToastAndroid.SHORT)
-      return false
+    if (!cancel) {
+      const message = entities[id]
+      const experied = moment(message.sent).add(5, 'm')
+
+      if (moment().isAfter(experied)) {
+        this.setState({
+          editing: false,
+          textInputValue: '',
+          editMessage: {}
+        })
+        this.sendMessageField.blur()
+        ToastAndroid.show("Can't edit message.", ToastAndroid.SHORT)
+        return false
+      }
+
+      dispatch(updateMessage(roomId, id, textInputValue, rowId))
     }
 
-    dispatch(updateMessage(roomId, id, textInputValue, rowId))
-    this.refs.sendMessageField.blur()
+    this.sendMessageField.blur()
     this.setState({
       editing: false,
       editMessage: {},
       textInputValue: ''
+    })
+    this.props.navigator.setTitle({title})
+    this.props.navigator.setButtons({
+      rightButtons: this.getRightButtons(room, iOS),
+      leftButtons: this.getLeftButtons()
     })
   }
 
@@ -323,7 +345,7 @@ class Room extends Component {
     dispatch(getRoomMessages(roomId))
   }
 
-  getButtons(room, onlyFiltered = false) {
+  getRightButtons(room, onlyFiltered = false) {
     let actions = []
 
     if (iOS) {
@@ -388,6 +410,17 @@ class Room extends Component {
     return onlyFiltered ? actions.filter(item => item.showInBottomSheet !== true) : actions
   }
 
+  getLeftButtons() {
+    return iOS
+      ? []
+      : [{
+        title: 'Menu',
+        id: 'sideMenu',
+        iconColor: 'white',
+        showAsAction: 'always'
+      }]
+  }
+
   handleSaveDraftInput(text) {
     const {dispatch, route: {roomId}} = this.props
     dispatch(setRoomTextInputState(roomId, text))
@@ -395,7 +428,7 @@ class Room extends Component {
 
   handleOverflowClick() {
     const {title: titleProp, room} = this.props
-    const actions = this.getButtons(room, false)
+    const actions = this.getRightButtons(room, false)
 
     const newActions = actions.map(({title, id}, index) => ({
       index,
@@ -524,6 +557,7 @@ class Room extends Component {
     case 'share': return this.handleSharingRoom(roomId)
     case 'showMoreIos': return this.handleOverflowClick()
     case 'back': return navigator.pop()
+    case 'cancel': return this.onEndEdit(true)
     default:
       break
     }
@@ -543,7 +577,7 @@ class Room extends Component {
     this.setState({
       textInputValue: !!textInputValue ? `${textInputValue} @${username} ` : `@${username} `
     })
-    this.refs.sendMessageField.focus()
+    this.sendMessageField.focus()
   }
 
   handleUserAvatarPress(id, username) {
@@ -555,7 +589,7 @@ class Room extends Component {
     this.setState({
       textInputValue: !!textInputValue ? `${textInputValue}\n> ${message.text}\n\n ` : `> ${message.text}\n\n `
     })
-    this.refs.sendMessageField.focus()
+    this.sendMessageField.focus()
   }
 
   handleQuoteWithLinkPress(message) {
@@ -573,7 +607,7 @@ class Room extends Component {
     this.setState({
       textInputValue: !!textInputValue ? `${textInputValue}\n${link} ` : `${link} `
     })
-    this.refs.sendMessageField.focus()
+    this.sendMessageField.focus()
   }
 
   handleChangeVisibleRows(visibleRows, changedRows) {
@@ -648,7 +682,7 @@ class Room extends Component {
 
     const field = (
       <SendMessageField
-        ref="sendMessageField"
+        ref={ref => (this.sendMessageField = ref)}
         editing={this.state.editing}
         onSending={this.onSending.bind(this)}
         onChange={this.onTextFieldChange.bind(this)}
@@ -684,6 +718,7 @@ class Room extends Component {
     }
     return (
       <MessagesList
+        editing={this.state.editing}
         onChangeVisibleRows={this.handleChangeVisibleRows}
         listViewData={listViewData[roomId]}
         onPress={this.onMessagePress.bind(this)}
