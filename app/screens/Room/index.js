@@ -584,6 +584,9 @@ class Room extends Component {
   }
 
   handleUsernamePress(username) {
+    const {room} = this.props
+    if (!!room && !room.roomMember) return
+
     const {textInputValue} = this.state
     this.setState({
       textInputValue: !!textInputValue ? `${textInputValue} @${username} ` : `@${username} `
