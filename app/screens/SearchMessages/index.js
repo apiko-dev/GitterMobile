@@ -13,7 +13,7 @@ import Toolbar from '../../components/Toolbar'
 
 import Loading from '../../components/Loading'
 import MessagesList from './MessagesList'
-import BottomSheet from '../../../libs/react-native-android-bottom-sheet'
+import BottomSheet from '../../../libs/react-native-android-bottom-sheet/index'
 
 import navigationStyles from '../../styles/common/navigationStyles'
 

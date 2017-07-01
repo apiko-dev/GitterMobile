@@ -14,7 +14,8 @@ const styles = StyleSheet.create({
   },
   text: {
     textAlign: 'center',
-    fontSize: 24
+    fontSize: 14,
+    paddingTop: 16
   },
   textInput: {
     color: 'white',
