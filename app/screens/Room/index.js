@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import {Keyboard, ActionSheetIOS, DrawerLayoutAndroid, ToastAndroid, Clipboard, Alert, ListView, View, Platform, KeyboardAvoidingView} from 'react-native';
+import {Keyboard, ActionSheetIOS, DrawerLayoutAndroid, ToastAndroid, Clipboard, Alert, ListView, View, Platform, KeyboardAvoidingView, Linking} from 'react-native';
 import {connect} from 'react-redux'
 import Share from 'react-native-share'
 import navigationStyles from '../../styles/common/navigationStyles'
@@ -81,6 +81,7 @@ class Room extends Component {
     this.handleSharingMessage = this.handleSharingMessage.bind(this)
     this.handleShowModal = this.handleShowModal.bind(this)
     this.toggleDrawerState = this.toggleDrawerState.bind(this)
+    this.handleArchivesOpen = this.handleArchivesOpen.bind(this)
 
     this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this))
 
@@ -361,6 +362,11 @@ class Room extends Component {
 
     if (!!room && room.roomMember) {
       const newAction = [{
+        title: 'Archives',
+        showAsAction: 'never',
+        id: 'archives',
+        showInBottomSheet: true
+      }, {
         title: 'Mark all as read',
         showAsAction: 'never',
         id: 'markAsRead',
@@ -558,9 +564,14 @@ class Room extends Component {
     case 'showMoreIos': return this.handleOverflowClick()
     case 'back': return navigator.pop()
     case 'cancel': return this.onEndEdit(true)
+    case 'archives': return this.handleArchivesOpen()
     default:
       break
     }
+  }
+
+  handleArchivesOpen() {
+    Linking.openURL(`https://gitter.im${this.props.room.url}/archives/all`)
   }
 
   handleShowModal(opts) {
