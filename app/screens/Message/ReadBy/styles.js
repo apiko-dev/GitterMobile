@@ -5,7 +5,8 @@ const styles = StyleSheet.create({
     // flex: 1
   },
   usersContainer: {
-    padding: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 4,
     alignItems: 'center',
     flexWrap: 'wrap',
     flexDirection: 'row'

@@ -7,8 +7,8 @@ const style = StyleSheet.create({
     flexWrap: 'wrap',
     paddingLeft: 15,
     paddingRight: 15,
-    paddingTop: 5,
-    paddingBottom: 5
+    paddingTop: 16,
+    paddingBottom: 4
   },
   content: {
     flex: 1,
