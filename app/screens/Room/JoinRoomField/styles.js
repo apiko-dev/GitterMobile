@@ -5,7 +5,7 @@ const {colors} = THEMES.gitterDefault
 
 const styles = StyleSheet.create({
   container: {
-    height: 56,
+    height: 52,
     alignSelf: 'stretch',
     alignItems: 'center',
     justifyContent: 'center',
