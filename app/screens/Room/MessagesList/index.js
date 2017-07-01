@@ -22,6 +22,7 @@ export default class MessagesList extends Component {
     this.renderScrollComponent = this.renderScrollComponent.bind(this)
     this.onScroll = this.onScroll.bind(this)
     this.handleOffsetChange = _.debounce(this.handleOffsetChange.bind(this), 50)
+    this.handleOnMessageLongPress = this.handleOnMessageLongPress.bind(this)
 
     this.state = {
       isScrollButtonVisible: false,
@@ -73,8 +74,13 @@ export default class MessagesList extends Component {
     this.childHeights[+rowId] = e.nativeEvent.layout.height
   }
 
+  handleOnMessageLongPress(...args) {
+    if (this.props.editing) return
+    this.props.onLongPress(...args)
+  }
+
   renderRow(rowData, rowId) {
-    const {onPress, onLongPress, onUsernamePress, onUserAvatarPress} = this.props
+    const {onPress, onUsernamePress, onUserAvatarPress, editing} = this.props
     if (!!rowData.hasNoMore) {
       return (
         <HistoryBegin />
@@ -89,7 +95,7 @@ export default class MessagesList extends Component {
         onPress={onPress}
         rowId={rowId}
         isCollapsed={isCollapsed}
-        onLongPress={onLongPress}
+        onLongPress={this.handleOnMessageLongPress}
         onUsernamePress={onUsernamePress}
         onUserAvatarPress={onUserAvatarPress}
         {...rowData} />
@@ -164,5 +170,6 @@ MessagesList.propTypes = {
   renderBottom: PropTypes.bool,
   renderTop: PropTypes.bool,
   renderBottomComponent: PropTypes.func,
-  renderTopComponent: PropTypes.func
+  renderTopComponent: PropTypes.func,
+  editing: PropTypes.bool
 }
