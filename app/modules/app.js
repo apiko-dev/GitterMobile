@@ -43,24 +43,27 @@ export function init() {
         return
       }
 
-      dispatch(setupFayeEvents())
       dispatch({ type: INITIALIZED, token })
 
+      rootNavigator.startAppWithScreen({screen: 'gm.Home', showDrawer: true})
       // getting base current user's information
       await dispatch(getCurrentUser())
-      await dispatch(initializeUi())
+
       await Promise.all([
-        dispatch(getRooms()),
-        dispatch(setupFaye()),
+        dispatch(initializeUi()),
+        dispatch(getRooms())
       ])
 
-      rootNavigator.startAppWithScreen({screen: 'gm.Home', showDrawer: true})
       dispatch(setupNetStatusListener())
       // if you need debug room screen, just comment nevigation to 'hone'
       // and uncomment navigation to 'room'
       // dispatch(Navigation.resetTo({name: 'user', userId: '52ce7f4eed5ab0b3bf053782', username: 'blia'}))
       // dispatch(Navigation.resetTo({name: 'room', roomId: '54774579db8155e6700d8cc6'}))
-      await dispatch(getSuggestedRooms())
+      await Promise.all([
+        dispatch(setupFayeEvents()),
+        dispatch(setupFaye()),
+        dispatch(getSuggestedRooms())
+      ])
       // dispatch(Navigation.resetTo({name: 'roomUsers', roomId: '56a41e0fe610378809bde160'}))
       await dispatch(checkNewReleases())
     } catch (error) {
