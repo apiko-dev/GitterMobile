@@ -11,6 +11,7 @@ import ParsedText from '../../../components/ParsedText'
 import Avatar from '../../../components/Avatar'
 import StatusMessage from '../StatusMessage'
 import Button from '../../../components/Button'
+import Markdown from '../../../components/Markdown'
 
 class Message extends Component {
   constructor(props) {
@@ -75,11 +76,16 @@ class Message extends Component {
       )
     }
     return (
-      <ParsedText
-        text={text}
-        username={username}
-        handleUrlPress={this.handleUrlPress} />
+      <Markdown>
+        {text}
+      </Markdown>
     )
+    // return (
+    //   <ParsedText
+    //     text={text}
+    //     username={username}
+    //     handleUrlPress={this.handleUrlPress} />
+    // )
   }
 
   render() {
