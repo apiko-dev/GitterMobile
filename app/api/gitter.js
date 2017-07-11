@@ -71,6 +71,10 @@ export function room(token, id) {
   return callApi('rooms/' + id, token)
 }
 
+export function roomByUrl(token, url) {
+  return callApi(`rooms?q=${url}`, token)
+}
+
 export function roomMessages(token, id, limit) {
   return callApi(`rooms/${id}/chatMessages?limit=${limit}`, token)
 }

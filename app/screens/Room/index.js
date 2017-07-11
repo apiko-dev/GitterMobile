@@ -21,7 +21,8 @@ import {
   leaveRoom,
   markAllAsRead,
   getNotificationSettings,
-  changeNotificationSettings
+  changeNotificationSettings,
+  getRoomByUrl
 } from '../../modules/rooms'
 import {
   getRoomMessages,
@@ -154,7 +155,7 @@ class Room extends Component {
 
   onNavigatorEvent({type, id}) {
     if (type === 'NavBarButtonPress') {
-      this.handleToolbarActionSelected(event)
+      this.handleToolbarActionSelected(id)
     }
 
     switch (id) {
@@ -414,9 +415,11 @@ class Room extends Component {
   }
 
   handleGitterRoomUrlClick(url) {
+    const {dispatch, navigator} = this.props
     const {ownerName, roomName} = parseGitterRoomUrl(url)
-    console.log(ownerName, roomName)
-    this.props.navigator.push({screen: 'gm.Room'})
+    const navigateOnSuccess = (roomId) => { navigator.push({screen: 'gm.Room', passProps: {roomId}})}
+
+    dispatch(getRoomByUrl(`${ownerName}/${roomName}`, navigateOnSuccess))
   }
 
   handleGitterMessageUrlClick(url) {
@@ -544,7 +547,7 @@ class Room extends Component {
       this.roomInfoDrawer.closeDrawer()
   }
 
-  handleToolbarActionSelected({id}) {
+  handleToolbarActionSelected(id) {
     const {dispatch, route: {roomId}, navigator} = this.props
     switch (id) {
     case 'drawerMenu': return navigator.toggleDrawer({side: 'left', animated: true})
@@ -552,7 +555,7 @@ class Room extends Component {
     case 'roomInfo': {
       dispatch(roomUsers(roomId))
       return iOS
-        ? navigator.push({screen: 'gm.RoomInfo', passProps: {route: {roomId}}})
+        ? navigator.push({screen: 'gm.RoomInfo', passProps: {roomId}})
         : this.toggleDrawerState()
     }
     case 'toggleFavorite': return dispatch(changeFavoriteStatus(roomId))
@@ -666,6 +669,7 @@ class Room extends Component {
 
   prepareDataSources() {
     const {listViewData, route: {roomId}, dispatch} = this.props
+
     if (!listViewData[roomId]) {
       const ds = new ListView.DataSource({rowHasChanged: (row1, row2) => {
         return row1 !== row2
@@ -818,7 +822,7 @@ function mapStateToProps(state, ownProps) {
   const {activeRoom, rooms, notifications} = state.rooms
   const {roomInfoDrawerState} = state.ui
 
-  const room = rooms[ownProps.roomId]
+  const room = rooms[ownProps.roomId || ownProps.route.roomId]
 
   let title = !!room ? room.name : 'Room'
   title = title.split('/').reverse()[0]

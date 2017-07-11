@@ -94,6 +94,25 @@ export function getRoom(id) {
 }
 
 /**
+ * Return room by uri
+ */
+
+export function getRoomByUrl(url, navigateOnSuccess) {
+  return async (dispatch, getState) => {
+    const {token} = getState().auth
+    dispatch({type: ROOM})
+    try {
+      const {results: [room]} = await Api.roomByUrl(token, url)
+      dispatch({type: ROOM_RECEIVED, payload: room})
+
+      navigateOnSuccess(room.id)
+    } catch (error) {
+      dispatch({type: ROOM_FAILED, error})
+    }
+  }
+}
+
+/**
  * Returns suggested rooms by user id
  */
 export function getSuggestedRooms() {
@@ -172,6 +191,7 @@ export function joinUserRoom(username) {
       const payload = await Api.joinRoomByUserName(token, username)
 
       dispatch({type: JOIN_USER_ROOM_OK, payload})
+      return Promise.resolve(payload)
     } catch (error) {
       dispatch({type: JOIN_USER_ROOM_FAILED, error})
     }

@@ -27,7 +27,6 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-			  <string>https</string>
 				<string>gitterim</string>
 			</array>
 		</dict>
