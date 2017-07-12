@@ -97,12 +97,12 @@ export function getRoom(id) {
  * Return room by uri
  */
 
-export function getRoomByUrl(url, navigateOnSuccess) {
+export function getRoomByUrl(url, navigateOnSuccess = () => {}) {
   return async (dispatch, getState) => {
     const {token} = getState().auth
     dispatch({type: ROOM})
     try {
-      const {results: [room]} = await Api.roomByUrl(token, url)
+      const {results: [room]} = await Api.roomsByUri(token, url)
       dispatch({type: ROOM_RECEIVED, payload: room})
 
       navigateOnSuccess(room.id)

@@ -14,6 +14,7 @@ import settings from './settings'
 import realtime from './realtime'
 import activity from './activity'
 import navigation from './navigation'
+import groups from './groups'
 
 const rootReducer = combineReducers({
   ui,
@@ -29,6 +30,7 @@ const rootReducer = combineReducers({
   settings,
   realtime,
   activity,
+  groups,
   navigation
 })
 

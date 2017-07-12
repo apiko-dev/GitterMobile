@@ -3,9 +3,11 @@ import { GITTER_REGEXPS } from '../constants'
 const { baseUrl, groupParamsExp, messageParamsExp, roomParamsExp } = GITTER_REGEXPS
 
 export const parseGitterRoomUrl = (url) => {
-  const [, ownerName, roomName] = roomParamsExp.exec(url.replace(baseUrl, ''))
+  const uri = url.replace(baseUrl, '')
+  const [, ownerName, roomName] = roomParamsExp.exec(uri)
 
   return {
+    uri,
     ownerName,
     roomName
   }

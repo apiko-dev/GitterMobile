@@ -64,6 +64,14 @@ export function currentUserSuggested(token, id) {
 }
 
 /**
+ * Groups
+ */
+
+export function groupRooms(token, id) {
+  return callApi(`groups/${id}/rooms`, token)
+}
+
+/**
  * Rooms resource
  */
 
@@ -71,8 +79,8 @@ export function room(token, id) {
   return callApi('rooms/' + id, token)
 }
 
-export function roomByUrl(token, url) {
-  return callApi(`rooms?q=${url}`, token)
+export function roomsByUri(token, uri) {
+  return callApi(`rooms?q=${uri}`, token)
 }
 
 export function roomMessages(token, id, limit) {

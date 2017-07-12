@@ -37,6 +37,7 @@ import {
   readMessages,
   sendStatusMessage
 } from '../../modules/messages'
+import { getGroupIdByName } from '../../modules/groups'
 import {changeRoomInfoDrawerState} from '../../modules/ui'
 import RoomInfoScreen from '../RoomInfo'
 import Loading from '../../components/Loading'
@@ -416,10 +417,10 @@ class Room extends Component {
 
   handleGitterRoomUrlClick(url) {
     const {dispatch, navigator} = this.props
-    const {ownerName, roomName} = parseGitterRoomUrl(url)
-    const navigateOnSuccess = (roomId) => { navigator.push({screen: 'gm.Room', passProps: {roomId}})}
+    const {uri} = parseGitterRoomUrl(url)
+    const navigateOnSuccess = roomId => navigator.push({screen: 'gm.Room', passProps: {roomId}})
 
-    dispatch(getRoomByUrl(`${ownerName}/${roomName}`, navigateOnSuccess))
+    dispatch(getRoomByUrl(uri, navigateOnSuccess))
   }
 
   handleGitterMessageUrlClick(url) {
@@ -429,9 +430,11 @@ class Room extends Component {
   }
 
   handleGitterGroupUrlClick(url) {
+    const {dispatch, navigator} = this.props
     const {groupName} = parseGitterGroupUrl(url)
-    console.log(groupName)
-    this.props.navigator.push({screen: 'gm.Home'})
+    const navigateOnSuccess = groupId => navigator.push({screen: 'gm.Group', passProps: {groupId, groupName}})
+
+    dispatch(getGroupIdByName(groupName, navigateOnSuccess))
   }
 
   handleOverflowClick() {
