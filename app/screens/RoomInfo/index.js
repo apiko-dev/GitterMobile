@@ -197,7 +197,9 @@ class RoomInfoScreen extends Component {
 RoomInfoScreen.propTypes = {
   dispatch: PropTypes.func,
   drawer: PropTypes.element,
-  route: PropTypes.object,
+  route: PropTypes.shape({
+    roomId: PropTypes.string
+  }),
   roomInfo: PropTypes.object,
   rooms: PropTypes.object,
   roomInfoDrawerState: PropTypes.string,

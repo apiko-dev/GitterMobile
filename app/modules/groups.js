@@ -10,26 +10,35 @@ export const GROUP_ROOMS = 'groups/GROUPS_ROOMS'
 export const GROUP_ROOMS_RECEIVED = 'groups/GROUP_ROOMS_RECEIVED'
 export const GROUP_FOUND = 'groups/GROUP_FOUND'
 export const GROUP_ROOMS_FAILED = 'groups/GROUP_ROOMS_FAILED'
+const func = () => {}
 
-export function getGroupIdByName(groupName, navigateOnSuccess = () => {}) {
+export function getGroupIdByName(groupName, navigateOnSuccess = func, handleError = func) {
   return async (dispatch, getState) => {
     try {
       const {token} = getState().auth
       const {results: rooms} = await Api.roomsByUri(token, groupName)
       const groupRegExp = new RegExp(`\\b${groupName}\/`)
 
+      if (!rooms) {
+        throw new Error('Probably such group is not exist.')
+      }
+
       // Get group id
-      const {groupId} = _.find(rooms, ({uri}) => groupRegExp.test(uri))
+      const matchedGroup = _.find(rooms, ({uri}) => groupRegExp.test(uri))
+
+      if (!matchedGroup) {
+        throw new Error(`Group '${groupName}' not found.`)
+      }
+
       const payload = {
-        id: groupId,
+        id: matchedGroup.groupId,
         name: groupName
       }
 
       dispatch({type: GROUP_FOUND, payload})
-      navigateOnSuccess(groupId)
+      navigateOnSuccess(matchedGroup.groupId)
     } catch (error) {
-      console.log(error)
-      // TODO: Handle error
+      handleError(error)
     }
   }
 }

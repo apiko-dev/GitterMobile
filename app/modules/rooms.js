@@ -46,6 +46,7 @@ export const GET_NOTIFICATION_SETTINGS_OK = 'rooms/GET_NOTIFICATION_SETTINGS_OK'
 export const GET_NOTIFICATION_SETTINGS_ERROR = 'rooms/GET_NOTIFICATION_SETTINGS_ERROR'
 export const CHANGE_NOTIFICATION_SETTINGS_OK = 'rooms/CHANGE_NOTIFICATION_SETTINGS_OK'
 export const CHANGE_NOTIFICATION_SETTINGS_ERROR = 'rooms/CHANGE_NOTIFICATION_SETTINGS_ERROR'
+const func = () => {}
 
 /**
  * Action Creators
@@ -97,16 +98,21 @@ export function getRoom(id) {
  * Return room by uri
  */
 
-export function getRoomByUrl(url, navigateOnSuccess = () => {}) {
+export function getRoomByUrl(url, navigateOnSuccess = func, handleError = func) {
   return async (dispatch, getState) => {
     const {token} = getState().auth
     dispatch({type: ROOM})
     try {
       const {results: [room]} = await Api.roomsByUri(token, url)
+      if (!room) {
+        throw new Error('Room not found.')
+      }
+
       dispatch({type: ROOM_RECEIVED, payload: room})
 
       navigateOnSuccess(room.id)
     } catch (error) {
+      handleError(error)
       dispatch({type: ROOM_FAILED, error})
     }
   }

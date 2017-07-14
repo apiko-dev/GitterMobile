@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import {Linking, Keyboard, ActionSheetIOS, DrawerLayoutAndroid, ToastAndroid, Clipboard, Alert, ListView, View, Platform, KeyboardAvoidingView} from 'react-native';
 import {connect} from 'react-redux'
 import Share from 'react-native-share'
+import Toast, {DURATION} from 'react-native-easy-toast'
 import navigationStyles from '../../styles/common/navigationStyles'
 import _ from 'lodash'
 import {roomUsers} from '../../modules/users'
@@ -88,6 +89,7 @@ class Room extends Component {
     this.handleGitterRoomUrlClick = this.handleGitterRoomUrlClick.bind(this)
     this.handleGitterGroupUrlClick = this.handleGitterGroupUrlClick.bind(this)
     this.handleGitterMessageUrlClick = this.handleGitterMessageUrlClick.bind(this)
+    this.showToast = _.curry(this.showToast.bind(this))
 
     this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this))
 
@@ -420,7 +422,7 @@ class Room extends Component {
     const {uri} = parseGitterRoomUrl(url)
     const navigateOnSuccess = roomId => navigator.push({screen: 'gm.Room', passProps: {roomId}})
 
-    dispatch(getRoomByUrl(uri, navigateOnSuccess))
+    dispatch(getRoomByUrl(uri, navigateOnSuccess, this.showToast('Unable to access room data.')))
   }
 
   handleGitterMessageUrlClick(url) {
@@ -429,7 +431,7 @@ class Room extends Component {
     const navigateOnSuccess = roomId =>
       navigator.push({screen: 'gm.Message', passProps: {route: {roomId, messageId}}})
 
-    dispatch(getRoomByUrl(roomName, navigateOnSuccess))
+    dispatch(getRoomByUrl(roomName, navigateOnSuccess, this.showToast('Unable to access room data.')))
   }
 
   handleGitterGroupUrlClick(url) {
@@ -437,7 +439,7 @@ class Room extends Component {
     const {groupName} = parseGitterGroupUrl(url)
     const navigateOnSuccess = groupId => navigator.push({screen: 'gm.Group', passProps: {groupId}})
 
-    dispatch(getGroupIdByName(groupName, navigateOnSuccess))
+    dispatch(getGroupIdByName(groupName, navigateOnSuccess, this.showToast('Unable to access group data.')))
   }
 
   handleOverflowClick() {
@@ -561,7 +563,7 @@ class Room extends Component {
     case 'roomInfo': {
       dispatch(roomUsers(roomId))
       return iOS
-        ? navigator.push({screen: 'gm.RoomInfo', passProps: {roomId}})
+        ? navigator.push({screen: 'gm.RoomInfo', passProps: {route: {roomId}}})
         : this.toggleDrawerState()
     }
     case 'toggleFavorite': return dispatch(changeFavoriteStatus(roomId))
@@ -684,6 +686,9 @@ class Room extends Component {
     }
   }
 
+  showToast(errorTitle, {message}) {
+    this.toast.show(`${errorTitle}${'\n'}${message}`, DURATION.LENGTH_SHORT)
+  }
 
   renderBottom() {
     const {rooms, route: {roomId}} = this.props
@@ -788,9 +793,13 @@ class Room extends Component {
         drawerPosition={!iOS && DrawerLayoutAndroid.positions.Right}
         renderNavigationView={this.renderRoomInfo}
         keyboardDismissMode="on-drag">
-            {this.renderListView()}
-            {getMessagesError || isLoadingMessages || _.has(listView, 'data') &&
-              listView.data.length === 0 ? null : this.renderBottom()}
+        {this.renderListView()}
+        {getMessagesError || isLoadingMessages || _.has(listView, 'data') &&
+          listView.data.length === 0 ? null : this.renderBottom()}
+        <Toast
+          ref={toast => this.toast = toast}
+          style={{backgroundColor: colors.red}}
+          position="top" />
       </Layout>
     )
   }

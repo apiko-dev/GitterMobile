@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import React, {Component} from 'react'
-import {View, ScrollView, Platform} from 'react-native';
+import {View, ScrollView, Platform} from 'react-native'
 import {connect} from 'react-redux'
 import s from './styles'
 import navigationStyles from '../../styles/common/navigationStyles'
@@ -8,6 +8,7 @@ import Loading from '../../components/Loading'
 import {THEMES} from '../../constants'
 import {getSingleMessage} from '../../modules/messages'
 import {subscribeToReadBy, unsubscribeFromReadBy} from '../../modules/realtime'
+import FailedToLoad from '../../components/FailedToLoad'
 
 import ReadBy from './ReadBy'
 import Msg from './Message'
@@ -21,6 +22,7 @@ class Message extends Component {
     this.renderMessage = this.renderMessage.bind(this)
     this.renderReadBy = this.renderReadBy.bind(this)
     this.handleAvatarPress = this.handleAvatarPress.bind(this)
+    this.retryToLoadMessage = this.componentWillMount.bind(this)
 
     this.props.navigator.setTitle({title: 'Message'})
     this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this))
@@ -108,6 +110,14 @@ class Message extends Component {
       )
     }
 
+    if (this.props.error) {
+      return (
+        <FailedToLoad
+          message="Failed to load message."
+          onRetry={this.retryToLoadMessage} />
+      )
+    }
+
     return (
       <View style={s.container}>
         <ScrollView>
@@ -129,6 +139,7 @@ Message.propTypes = {
     roomId: PropTypes.string,
     messageId: PropTypes.string
   }),
+  error: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
   isLoadingMessage: PropTypes.bool,
   messages: PropTypes.object,
   readBy: PropTypes.object,
@@ -149,7 +160,8 @@ function mapStateToProps(state, props) {
     viewer: state.viewer.user,
     roomMessagesResult: state.search.roomMessagesResult,
     roomId: props.roomId || props.route.roomId,
-    messageId: props.messageId || props.route.messageId
+    messageId: props.messageId || props.route.messageId,
+    error: state.messages.singleMessageError ? state.messages.errors : null
   }
 }
 

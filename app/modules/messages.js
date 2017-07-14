@@ -358,6 +358,7 @@ const initialState = {
     // [id]: bool
   },
   isLoadingMessage: false,
+  singleMessageError: false,
   messages: {}
 }
 
@@ -754,10 +755,10 @@ export default function messages(state = initialState, action) {
       isLoadingMessage: false,
       entities: {...state.entities,
         [action.messageId]: action.payload
-      }
+      },
+      singleMessageError: false
     }
 
-  case SINGLE_MESSAGE_ERROR:
   case ROOM_MESSAGES_BEFORE_FAILED:
   case ROOM_MESSAGES_FAILED:
     return {...state,
@@ -766,6 +767,11 @@ export default function messages(state = initialState, action) {
       isLoadingMessage: false,
       error: true,
       errors: action.error
+    }
+
+  case SINGLE_MESSAGE_ERROR:
+    return {...state,
+      singleMessageError: true
     }
 
   default:
