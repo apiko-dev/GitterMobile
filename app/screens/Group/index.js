@@ -17,7 +17,7 @@ class Group extends Component {
     super(props)
 
     this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this))
-    this.props.navigator.setTitle({title: this.props.groupName})
+    this.props.navigator.setTitle({title: this.props.name})
     this.props.navigator.setButtons({
       leftButtons: [{
         title: 'Menu',
@@ -95,14 +95,15 @@ Group.propTypes = {
   navigator: PropTypes.object,
   isLoading: PropTypes.bool,
   dispatch: PropTypes.func,
-  groupName: PropTypes.string
+  name: PropTypes.string
 }
 
 const mapStateToProps = ({groups: {groups, ...info}}, {groupId}) => {
-  const rooms = groups[groupId] || []
+  const {rooms, name} = groups[groupId]
 
   return ({
-    rooms,
+    rooms: rooms || [],
+    name,
     ...info
   })
 }

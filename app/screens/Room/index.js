@@ -424,15 +424,18 @@ class Room extends Component {
   }
 
   handleGitterMessageUrlClick(url) {
-    const {roomName, atParam} = parseGitterMessageUrl(url)
-    console.log(atParam, roomName)
-    this.props.navigator.push({screen: 'gm.Message', passProps: {route: {roomName, messageId: atParam}}})
+    const {dispatch, navigator} = this.props
+    const {roomName, atParam: messageId} = parseGitterMessageUrl(url)
+    const navigateOnSuccess = roomId =>
+      navigator.push({screen: 'gm.Message', passProps: {route: {roomId, messageId}}})
+
+    dispatch(getRoomByUrl(roomName, navigateOnSuccess))
   }
 
   handleGitterGroupUrlClick(url) {
     const {dispatch, navigator} = this.props
     const {groupName} = parseGitterGroupUrl(url)
-    const navigateOnSuccess = groupId => navigator.push({screen: 'gm.Group', passProps: {groupId, groupName}})
+    const navigateOnSuccess = groupId => navigator.push({screen: 'gm.Group', passProps: {groupId}})
 
     dispatch(getGroupIdByName(groupName, navigateOnSuccess))
   }

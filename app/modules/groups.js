@@ -8,6 +8,7 @@ import {LOGOUT} from './auth'
 
 export const GROUP_ROOMS = 'groups/GROUPS_ROOMS'
 export const GROUP_ROOMS_RECEIVED = 'groups/GROUP_ROOMS_RECEIVED'
+export const GROUP_FOUND = 'groups/GROUP_FOUND'
 export const GROUP_ROOMS_FAILED = 'groups/GROUP_ROOMS_FAILED'
 
 export function getGroupIdByName(groupName, navigateOnSuccess = () => {}) {
@@ -18,11 +19,16 @@ export function getGroupIdByName(groupName, navigateOnSuccess = () => {}) {
       const groupRegExp = new RegExp(`\\b${groupName}\/`)
 
       // Get group id
-      const matchedGroup = _.find(rooms, ({uri}) => groupRegExp.test(uri))
-      const {groupId} = matchedGroup
+      const {groupId} = _.find(rooms, ({uri}) => groupRegExp.test(uri))
+      const payload = {
+        id: groupId,
+        name: groupName
+      }
 
+      dispatch({type: GROUP_FOUND, payload})
       navigateOnSuccess(groupId)
     } catch (error) {
+      console.log(error)
       // TODO: Handle error
     }
   }
@@ -68,15 +74,36 @@ export default function groups(state = initialState, action) {
     }
   }
 
+  case GROUP_FOUND: {
+    const groupId = action.payload.id
+    const group = state.groups[groupId]
+
+    return {...state,
+      isLoading: false,
+      ids: state.ids.concat(groupId),
+      groups: {
+        ...state.groups,
+        [groupId]: {
+          ...group,
+          ...action.payload
+        }
+      }
+    }
+  }
+
   case GROUP_ROOMS_RECEIVED: {
     const currentGroupId = action.payload.groupId
+    const group = state.groups[currentGroupId]
 
     return {...state,
       isLoading: false,
       ids: state.ids.concat(currentGroupId),
       groups: {
         ...state.groups,
-        [currentGroupId]: action.payload.rooms
+        [currentGroupId]: {
+          ...group,
+          rooms: action.payload.rooms
+        }
       }
     }
   }

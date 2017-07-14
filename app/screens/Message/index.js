@@ -1,22 +1,25 @@
 import PropTypes from 'prop-types'
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import {View, ScrollView, Platform} from 'react-native';
 import {connect} from 'react-redux'
 import s from './styles'
 import navigationStyles from '../../styles/common/navigationStyles'
-
-import { getSingleMessage } from '../../modules/messages'
+import Loading from '../../components/Loading'
+import {THEMES} from '../../constants'
+import {getSingleMessage} from '../../modules/messages'
 import {subscribeToReadBy, unsubscribeFromReadBy} from '../../modules/realtime'
 
 import ReadBy from './ReadBy'
 import Msg from './Message'
+
+const {colors} = THEMES.gitterDefault
 
 class Message extends Component {
   constructor(props) {
     super(props)
 
     this.renderMessage = this.renderMessage.bind(this)
-    // this.renderReadBy = this.renderReadBy.bind(this)
+    this.renderReadBy = this.renderReadBy.bind(this)
     this.handleAvatarPress = this.handleAvatarPress.bind(this)
 
     this.props.navigator.setTitle({title: 'Message'})
@@ -35,14 +38,14 @@ class Message extends Component {
   }
 
   componentWillMount() {
-    const {dispatch, roomId, messageId, route} = this.props
+    const {dispatch, route, roomId, messageId} = this.props
     if (route) {
-      const {roomName, messageId: routeMessageId} = route
-
-      dispatch(getSingleMessage(roomName, routeMessageId))
+      dispatch(getSingleMessage(roomId, messageId))
     }
 
-    dispatch(subscribeToReadBy(roomId, messageId))
+    if (!this.props.isLoadingMessage) {
+      dispatch(subscribeToReadBy(roomId, messageId))
+    }
   }
 
   componentWillUnmount() {
@@ -71,6 +74,10 @@ class Message extends Component {
       ? roomMessagesResult.find(item => item.id === messageId)
       : messages[messageId]
 
+    if (!message) {
+      return null
+    }
+
     return (
       <Msg
         username={viewer.username}
@@ -93,6 +100,14 @@ class Message extends Component {
   }
 
   render() {
+    if (this.props.isLoadingMessage) {
+      return (
+        <View style={s.container}>
+          <Loading color={colors.raspberry} />
+        </View>
+      )
+    }
+
     return (
       <View style={s.container}>
         <ScrollView>
@@ -110,7 +125,11 @@ Message.propTypes = {
   messageId: PropTypes.string,
   navigator: PropTypes.object,
   dispatch: PropTypes.func,
-  route: PropTypes.object,
+  route: PropTypes.shape({
+    roomId: PropTypes.string,
+    messageId: PropTypes.string
+  }),
+  isLoadingMessage: PropTypes.bool,
   messages: PropTypes.object,
   readBy: PropTypes.object,
   viewer: PropTypes.object,
@@ -122,12 +141,15 @@ Message.navigatorStyle = {
   screenBackgroundColor: 'white'
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, props) {
   return {
+    isLoadingMessage: state.messages.isLoadingMessage,
     messages: state.messages.entities,
     readBy: state.readBy.byMessage,
     viewer: state.viewer.user,
-    roomMessagesResult: state.search.roomMessagesResult
+    roomMessagesResult: state.search.roomMessagesResult,
+    roomId: props.roomId || props.route.roomId,
+    messageId: props.messageId || props.route.messageId
   }
 }
 

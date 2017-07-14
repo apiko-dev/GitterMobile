@@ -59,6 +59,6 @@ export const icons = {
 export const GITTER_REGEXPS = {
   baseUrl: /\bhttps:\/\/gitter.im\/\b/,
   roomParamsExp: /([a-zA-Z0-9]+)\/\b([a-zA-Z0-9]+)\b/,
-  messageParamsExp: /([a-zA-Z0-9]+)\/api\?at=([a-z0-9]{24})/,
+  messageParamsExp: /\b([a-zA-Z0-9/]+)\b\?at=([a-z0-9]{24})/,
   groupParamsExp: /([a-zA-Z0-9]+)\/\bhome\b/
 }

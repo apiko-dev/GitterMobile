@@ -150,12 +150,12 @@ export function getRoomMessagesIfNeeded(roomId) {
 export function receiveRoomMessagesSnapshot(roomId, snapshot) {
   return (dispatch, getState) => {
     const listView = getState().messages.listView[roomId]
-    if (!listView.data.length | !snapshot.length) {
+    if (!listView || !listView.data.length || !snapshot.length) {
       return
     }
 
     const index = _.findIndex(snapshot, listView.data[0])
-    if (index === -1 | index === 29) {
+    if (index === -1 || index === 29) {
       return
     }
 
@@ -297,8 +297,8 @@ export function deleteFailedMessage(rowId, roomId) {
 
 export function getSingleMessage(roomId, messageId) {
   return async (dispatch, getState) => {
+    dispatch({type: SINGLE_MESSAGE})
     const {token} = getState().auth
-    dispatch({type: SINGLE_MESSAGE, roomId, messageId})
 
     try {
       const payload = await Api.getMessage(token, roomId, messageId)
@@ -752,7 +752,7 @@ export default function messages(state = initialState, action) {
   case SINGLE_MESSAGE_OK:
     return {...state,
       isLoadingMessage: false,
-      messages: {...state.messages,
+      entities: {...state.entities,
         [action.messageId]: action.payload
       }
     }
